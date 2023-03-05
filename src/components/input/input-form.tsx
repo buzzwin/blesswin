@@ -130,9 +130,7 @@ export function InputForm({
         {isVisibilityShown && (
           <motion.button
             type='button'
-            className='custom-button accent-tab accent-bg-tab flex cursor-not-allowed items-center gap-1
-                       self-start border border-light-line-reply py-0 px-3 text-main-accent
-                       hover:bg-main-accent/10 active:bg-main-accent/20 dark:border-light-secondary'
+            className='custom-button accent-tab accent-bg-tab flex cursor-not-allowed items-center gap-1 self-start border border-light-line-reply px-3 py-0 text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20 dark:border-light-secondary'
             {...fromTop}
           >
             <p className='font-bold'>Everyone</p>
@@ -142,11 +140,12 @@ export function InputForm({
         <div className='flex items-center gap-3'>
           <TextArea
             id={formId}
-            className='w-full min-w-0 resize-none bg-transparent text-xl outline-none
-                       placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
+            className='w-full min-w-0 resize-none bg-transparent text-xl outline-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
             value={inputValue}
             placeholder={
-              reply || replyModal ? 'Tweet your reply' : "What's happening?"
+              reply || replyModal
+                ? 'Tweet your reply'
+                : 'What are you watching?'
             }
             onBlur={handleShowHideNav(true)}
             minRows={loading ? 1 : modal && !isUploadingImages ? 3 : 1}
@@ -175,8 +174,7 @@ export function InputForm({
         >
           <button
             type='button'
-            className='custom-button accent-tab accent-bg-tab flex cursor-not-allowed items-center gap-1 py-0
-                       px-3 text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20'
+            className='custom-button accent-tab accent-bg-tab flex cursor-not-allowed items-center gap-1 px-3 py-0 text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20'
           >
             <HeroIcon className='h-4 w-4' iconName='GlobeAmericasIcon' />
             <p className='font-bold'>Everyone can reply</p>

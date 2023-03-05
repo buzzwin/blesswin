@@ -37,21 +37,17 @@ export function SearchBar(): JSX.Element {
       className='hover-animation sticky top-0 z-10 -my-2 bg-main-background py-2'
       onSubmit={handleSubmit}
     >
-      <label
-        className='group flex items-center justify-between gap-4 rounded-full
-                   bg-main-search-background px-4 py-2 transition focus-within:bg-main-background
-                   focus-within:ring-2 focus-within:ring-main-accent'
+      {/* <label
+        className='flex items-center justify-between gap-4 px-4 py-2 transition rounded-full group bg-main-search-background focus-within:bg-main-background focus-within:ring-2 focus-within:ring-main-accent'
       >
         <i>
           <HeroIcon
-            className='h-5 w-5 text-light-secondary transition-colors 
-                       group-focus-within:text-main-accent dark:text-dark-secondary'
+            className='w-5 h-5 transition-colors text-light-secondary group-focus-within:text-main-accent dark:text-dark-secondary'
             iconName='MagnifyingGlassIcon'
           />
         </i>
         <input
-          className='peer flex-1 bg-transparent outline-none 
-                     placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
+          className='flex-1 bg-transparent outline-none peer placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
           type='text'
           placeholder='Search Twitter'
           ref={inputRef}
@@ -68,9 +64,9 @@ export function SearchBar(): JSX.Element {
           onClick={clearInputValue(true)}
           disabled={!inputValue}
         >
-          <HeroIcon className='h-3 w-3 stroke-white' iconName='XMarkIcon' />
+          <HeroIcon className='w-3 h-3 stroke-white' iconName='XMarkIcon' />
         </Button>
-      </label>
+      </label> */}
     </form>
   );
 }
