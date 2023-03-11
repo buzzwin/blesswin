@@ -1,5 +1,5 @@
 import { FormEvent, ChangeEvent, useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { debounce } from 'lodash'; // import the debounce function from lodash library
 import SpinnerComponent from '@components/common/spinner';
 import SearchResults from './searchresults';
@@ -26,6 +26,10 @@ interface SelectedShow {
   name: string;
 }
 
+interface TmdbResponse {
+  results: SearchResult[];
+}
+
 interface AutocompleteState {
   selectedValue: string;
   filteredItems: string[];
@@ -43,15 +47,13 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     review: ''
   });
 
-  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (
+    e: ChangeEvent<HTMLInputElement>
+  ): Promise<void> => {
     const { name, value } = e.target;
     setSearchText(value);
-    try {
-      await handleSearch(e);
-      console.log('handleSearch');
-    } catch (error) {
-      console.error('Error handling search:', error);
-    }
+    await handleSearch(e);
+    console.log('handleSearch');
   };
 
   const handleReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -76,17 +78,7 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   };
 
   const [searchText, setSearchText] = useState('');
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([
-    {
-      id: 0,
-      title: '',
-      releaseDate: '',
-      overview: '',
-      poster_path: '',
-      vote_average: 0,
-      name: ''
-    }
-  ]);
+  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [hidden, setHidden] = useState(true);
   const [selectedShow, setSelectedShow] = useState<SelectedShow>({
     // set the selected show state
@@ -99,23 +91,29 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     name: ''
   });
 
-  const handleSearch = debounce(
-    async (query: ChangeEvent<HTMLInputElement>): Promise<void> => {
-      setLoading(true);
-      const apiKey = process.env.TMDB_API_KEY;
-      const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=${
-        apiKey ?? ''
-      }&query=${
-        query.target.value
-      }&limit=5&sort_by=popularity.desc,release_date.desc&sort_order=desc`;
-      const response: AxiosResponse<SearchResult[]> = await axios.get(apiUrl);
-      const results: SearchResult[] = response.data;
-      setSearchResults(results);
+  // debounce the handleSearch function
+  const handleSearch = debounce(async (e: ChangeEvent<HTMLInputElement>) => {
+    setLoading(true);
+    const queryString: string = e.target.value ?? '';
+    if (queryString === '') {
+      setSearchResults([]);
+      return;
+    }
 
-      setLoading(false);
-    },
-    1500
-  );
+    const apiKey = '0af4f0642998fa986fe260078ab69ab6';
+    const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${queryString}&limit=5&sort_by=popularity.desc,release_date.desc&sort_order=desc`;
+    // const response = (await axios.get(apiUrl ?? '')) as any;
+    // const results = response.data.results as SearchResult[];
+    try {
+      const response = await axios.get<TmdbResponse>(apiUrl);
+      setSearchResults(response.data.results);
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+
+    setLoading(false);
+  }, 1500); // set the delay time to 500ms
 
   const handleSelect = (searchResult: SearchResult) => {
     console.log('Selected: ', searchResult);
@@ -212,10 +210,12 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
 
             <div className='flex items-center justify-center pt-4'>
               <img
-                src={`https://image.tmdb.org/t/p/w500/${
-                  selectedShow.poster_path ?? 'placeholder.jpg'
-                }`}
-                alt={selectedShow.title ?? null}
+                src={
+                  selectedShow.poster_path
+                    ? `https://image.tmdb.org/t/p/w500/${selectedShow.poster_path}`
+                    : ''
+                }
+                alt={selectedShow.title}
                 className='h-1/2 w-1/2 object-cover'
               />
               <div className='p-4'>

@@ -35,6 +35,8 @@ export default function Search() {
 
     const response: MyAxiosResponse = await axios.get(apiUrl);
     const results: SearchResults[] = response.data.results;
+    console.log('results', results);
+    setSearchResults(results);
   };
 
   return (
@@ -76,14 +78,14 @@ export default function Search() {
                   </p>
                 )}
                 {result.vote_average && (
-                  <p className='text-base text-gray-700'>{`Rating: ${result.vote_average}/10`}</p>
+                  <div className='text-base text-gray-700'>{`Rating: ${result.vote_average}/10`}</div>
                 )}
               </div>
             </li>
           ))}
         </ul>
       ) : (
-        <p>No search results to display</p>
+        <div>No search results to display</div>
       )}
     </div>
   );
