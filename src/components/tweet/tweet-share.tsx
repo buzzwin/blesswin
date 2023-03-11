@@ -66,11 +66,7 @@ export function TweetShare({
               open && 'text-accent-blue inner:bg-accent-blue/10'
             )}
           >
-            <i
-              className='relative rounded-full p-2 not-italic duration-200 group-hover:bg-accent-blue/10 
-                         group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-2 
-                         group-focus-visible:ring-accent-blue/80 group-active:bg-accent-blue/20'
-            >
+            <i className='relative rounded-full p-2 not-italic duration-200 group-hover:bg-accent-blue/10 group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-2 group-focus-visible:ring-accent-blue/80 group-active:bg-accent-blue/20'>
               <HeroIcon
                 className={viewTweet ? 'h-6 w-6' : 'h-5 w-5'}
                 iconName='ArrowUpTrayIcon'
@@ -92,7 +88,7 @@ export function TweetShare({
                   onClick={preventBubbling(handleCopy(close))}
                 >
                   <HeroIcon iconName='LinkIcon' />
-                  Copy link to Tweet
+                  Copy link to Buzz
                 </Popover.Button>
                 {!tweetIsBookmarked ? (
                   <Popover.Button

@@ -20,32 +20,32 @@ const options: Readonly<Options> = [
     name: 'Media',
     iconName: 'PhotoIcon',
     disabled: false
-  },
-  {
-    name: 'GIF',
-    iconName: 'GifIcon',
-    disabled: true
-  },
-  {
-    name: 'Poll',
-    iconName: 'ChartBarIcon',
-    disabled: true
-  },
-  {
-    name: 'Emoji',
-    iconName: 'FaceSmileIcon',
-    disabled: true
-  },
-  {
-    name: 'Schedule',
-    iconName: 'CalendarDaysIcon',
-    disabled: true
-  },
-  {
-    name: 'Location',
-    iconName: 'MapPinIcon',
-    disabled: true
   }
+  // {
+  //   name: 'GIF',
+  //   iconName: 'GifIcon',
+  //   disabled: true
+  // },
+  // {
+  //   name: 'Poll',
+  //   iconName: 'ChartBarIcon',
+  //   disabled: true
+  // },
+  // {
+  //   name: 'Emoji',
+  //   iconName: 'FaceSmileIcon',
+  //   disabled: true
+  // },
+  // {
+  //   name: 'Schedule',
+  //   iconName: 'CalendarDaysIcon',
+  //   disabled: true
+  // },
+  // {
+  //   name: 'Location',
+  //   iconName: 'MapPinIcon',
+  //   disabled: true
+  // }
 ];
 
 type InputOptionsProps = {
@@ -96,8 +96,7 @@ export function InputOptions({
         />
         {filteredOptions.map(({ name, iconName, disabled }, index) => (
           <Button
-            className='accent-tab accent-bg-tab group relative rounded-full p-2 
-                       hover:bg-main-accent/10 active:bg-main-accent/20'
+            className='accent-tab accent-bg-tab group relative rounded-full p-2 hover:bg-main-accent/10 active:bg-main-accent/20'
             onClick={index === 0 ? onClick : undefined}
             disabled={disabled}
             key={name}
@@ -141,7 +140,7 @@ export function InputOptions({
                      enabled:active:bg-main-accent/75'
           disabled={!isValidTweet}
         >
-          {reply ? 'Reply' : 'Tweet'}
+          {reply ? 'Reply' : 'Buzz'}
         </Button>
       </div>
     </motion.div>

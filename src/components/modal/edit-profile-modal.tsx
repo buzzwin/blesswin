@@ -1,8 +1,14 @@
 import { useRef } from 'react';
 import cn from 'clsx';
+import {
+  ArrowUturnDownIcon,
+  CameraIcon,
+  XMarkIcon
+} from '@heroicons/react/24/solid';
+
 import { MainHeader } from '@components/home/main-header';
 import { Button } from '@components/ui/button';
-import { HeroIcon } from '@components/ui/hero-icon';
+
 import { NextImage } from '@components/ui/next-image';
 import { ToolTip } from '@components/ui/tooltip';
 import type { ReactNode, ChangeEvent } from 'react';
@@ -58,20 +64,16 @@ export function EditProfileModal({
       >
         <div className='ml-auto flex items-center gap-3'>
           <Button
-            className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
-                       active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
-                       dark:active:bg-dark-primary/10'
+            className='dark-bg-tab group relative p-2 hover:bg-light-primary/10 active:bg-light-primary/20 dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/10'
             onClick={resetUserEditData}
             disabled={loading}
           >
-            <HeroIcon className='h-5 w-5' iconName={'ArrowPathIcon'} />
-            <ToolTip tip='Reset' />
+            <ArrowUturnDownIcon className='h-6 w-6' />
+
+            <ToolTip tip='Clear' />
           </Button>
           <Button
-            className='bg-light-primary py-1 px-4 font-bold text-white focus-visible:bg-light-primary/90 
-                       enabled:hover:bg-light-primary/90 enabled:active:bg-light-primary/80 disabled:brightness-75
-                       dark:bg-light-border dark:text-light-primary dark:focus-visible:bg-light-border/90
-                       dark:enabled:hover:bg-light-border/90 dark:enabled:active:bg-light-border/75'
+            className='bg-light-primary px-4 py-1 font-bold text-white focus-visible:bg-light-primary/90 enabled:hover:bg-light-primary/90 enabled:active:bg-light-primary/80 disabled:brightness-75 dark:bg-light-border dark:text-light-primary dark:focus-visible:bg-light-border/90 dark:enabled:hover:bg-light-border/90 dark:enabled:active:bg-light-border/75'
             onClick={updateData}
             disabled={!!inputNameError}
             loading={loading}
@@ -107,28 +109,24 @@ export function EditProfileModal({
           ) : (
             <div className='h-full bg-light-line-reply dark:bg-dark-line-reply' />
           )}
-          <div className='absolute left-1/2 top-1/2 flex -translate-y-1/2 -translate-x-1/2 gap-4'>
+          <div className='absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 gap-4'>
             <Button
-              className='group/inner relative bg-light-primary/60 p-2 hover:bg-image-preview-hover/50
-                         focus-visible:bg-image-preview-hover/50'
+              className='group/inner relative bg-light-primary/60 p-2 hover:bg-image-preview-hover/50 focus-visible:bg-image-preview-hover/50'
               onClick={handleClick('cover')}
             >
-              <HeroIcon
-                className='hover-animation h-6 w-6 text-dark-primary group-hover:text-white'
-                iconName='CameraIcon'
-              />
+              <CameraIcon className='hover-animation h-6 w-6 text-dark-primary group-hover:text-white' />
               <ToolTip groupInner tip='Add photo' />
             </Button>
             {coverPhotoURL && (
               <Button
-                className='group/inner relative bg-light-primary/60 p-2 hover:bg-image-preview-hover/50
-                           focus-visible:bg-image-preview-hover/50'
+                className='group/inner relative bg-light-primary/60 p-2 hover:bg-image-preview-hover/50 focus-visible:bg-image-preview-hover/50'
                 onClick={removeCoverImage}
               >
-                <HeroIcon
-                  className='hover-animation h-6 w-6 text-dark-primary group-hover:text-white'
+                {/* <HeroIcon
+                  className='w-6 h-6 hover-animation text-dark-primary group-hover:text-white'
                   iconName='XMarkIcon'
-                />
+                /> */}
+                <XMarkIcon className='hover-animation h-6 w-6 text-dark-primary group-hover:text-white' />
                 <ToolTip groupInner tip='Remove photo' />
               </Button>
             )}
@@ -143,10 +141,7 @@ export function EditProfileModal({
               ref={profileInputFileRef}
               onChange={editImage('profile')}
             />
-            <div
-              className='group absolute aspect-square w-24 -translate-y-1/2
-                         overflow-hidden rounded-full xs:w-32 sm:w-36'
-            >
+            <div className='group absolute aspect-square w-24 -translate-y-1/2 overflow-hidden rounded-full xs:w-32 sm:w-36'>
               <NextImage
                 useSkeleton
                 className='h-full w-full bg-main-background inner:!m-1 inner:rounded-full'
@@ -157,33 +152,31 @@ export function EditProfileModal({
                 layout='fill'
               />
               <Button
-                className='group/inner absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
-                           bg-light-primary/60 p-2 hover:bg-image-preview-hover/50 
-                           focus-visible:bg-image-preview-hover/50'
+                className='group/inner absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 bg-light-primary/60 p-2 hover:bg-image-preview-hover/50 focus-visible:bg-image-preview-hover/50'
                 onClick={handleClick('profile')}
               >
-                <HeroIcon
-                  className='hover-animation h-6 w-6 text-dark-primary group-hover:text-white'
+                {/* <HeroIcon
+                  className='w-6 h-6 hover-animation text-dark-primary group-hover:text-white'
                   iconName='CameraIcon'
                 />
+                 */}
+                <CameraIcon className='hover-animation h-6 w-6 text-dark-primary group-hover:text-white' />
                 <ToolTip groupInner tip='Add photo' />
               </Button>
             </div>
           </div>
           {children}
-          <Button
-            className='accent-tab -mx-4 mb-4 flex cursor-not-allowed items-center justify-between rounded-none
-                       py-2 hover:bg-light-primary/10 active:bg-light-primary/20 disabled:brightness-100
-                       dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+          {/* <Button
+            className='flex items-center justify-between py-2 mb-4 -mx-4 rounded-none cursor-not-allowed accent-tab hover:bg-light-primary/10 active:bg-light-primary/20 disabled:brightness-100 dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
           >
             <span className='mx-2 text-xl'>Switch to professional</span>
             <i>
               <HeroIcon
-                className='h-6 w-6 text-light-secondary dark:text-dark-secondary'
+                className='w-6 h-6 text-light-secondary dark:text-dark-secondary'
                 iconName='ChevronRightIcon'
               />
             </i>
-          </Button>
+          </Button> */}
         </div>
       </section>
     </>

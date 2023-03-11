@@ -6,6 +6,7 @@ import { Modal } from '@components/modal/modal';
 import { ActionModal } from '@components/modal/action-modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
+
 import type {
   ReactNode,
   RefObject,
@@ -14,6 +15,8 @@ import type {
   ClipboardEvent
 } from 'react';
 import type { Variants } from 'framer-motion';
+import ViewingActivityForm from '@components/activity/ViewingActivityForm';
+import { ViewingActivity } from '@components/activity/types';
 
 type InputFormProps = {
   modal?: boolean;
@@ -27,7 +30,7 @@ type InputFormProps = {
   replyModal?: boolean;
   isValidTweet: boolean;
   isUploadingImages: boolean;
-  sendTweet: () => Promise<void>;
+  sendTweet: (data: ViewingActivity) => Promise<void>;
   handleFocus: () => void;
   discardTweet: () => void;
   handleChange: ({
@@ -73,17 +76,17 @@ export function InputForm({
 
   useEffect(() => handleShowHideNav(true), []);
 
-  const handleKeyboardShortcut = ({
-    key,
-    ctrlKey
-  }: KeyboardEvent<HTMLTextAreaElement>): void => {
-    if (!modal && key === 'Escape')
-      if (isValidTweet) {
-        inputRef.current?.blur();
-        openModal();
-      } else discardTweet();
-    else if (ctrlKey && key === 'Enter' && isValidTweet) void sendTweet();
-  };
+  // const handleKeyboardShortcut = ({ data,
+  //   key,
+  //   ctrlKey
+  // }: KeyboardEvent<HTMLTextAreaElement>): void => {
+  //   if (!modal && key === 'Escape')
+  //     if (isValidTweet) {
+  //       inputRef.current?.blur();
+  //       openModal();
+  //     } else discardTweet();
+  //   else if (ctrlKey && key === 'Enter' && isValidTweet) void sendTweet(data);
+  // };
 
   const handleShowHideNav = (blur?: boolean) => (): void => {
     const sidebar = document.getElementById('sidebar') as HTMLElement;
@@ -108,6 +111,16 @@ export function InputForm({
     closeModal();
   };
 
+  const handleSave = async (data: ViewingActivity) => {
+    console.log('Input', data);
+    try {
+      await sendTweet(data);
+      console.log('Tweet sent successfully');
+    } catch (error) {
+      console.error('Error sending tweet:', error);
+    }
+  };
+
   const isVisibilityShown = visited && !reply && !replyModal && !loading;
 
   return (
@@ -118,7 +131,7 @@ export function InputForm({
         closeModal={closeModal}
       >
         <ActionModal
-          title='Discard Tweet?'
+          title='Discard Buzz?'
           description='This can’t be undone and you’ll lose your draft.'
           mainBtnClassName='bg-accent-red hover:bg-accent-red/90 active:bg-accent-red/75'
           mainBtnLabel='Discard'
@@ -127,25 +140,25 @@ export function InputForm({
         />
       </Modal>
       <div className='flex flex-col gap-6'>
-        {isVisibilityShown && (
+        {/* {isVisibilityShown && (
           <motion.button
             type='button'
-            className='custom-button accent-tab accent-bg-tab flex cursor-not-allowed items-center gap-1 self-start border border-light-line-reply px-3 py-0 text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20 dark:border-light-secondary'
+            className='flex items-center self-start gap-1 px-3 py-0 border cursor-not-allowed custom-button accent-tab accent-bg-tab border-light-line-reply text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20 dark:border-light-secondary'
             {...fromTop}
           >
             <p className='font-bold'>Everyone</p>
-            <HeroIcon className='h-4 w-4' iconName='ChevronDownIcon' />
+            <HeroIcon className='w-4 h-4' iconName='ChevronDownIcon' />
           </motion.button>
-        )}
+        )} */}
         <div className='flex items-center gap-3'>
-          <TextArea
+          <ViewingActivityForm onSave={handleSave} />
+
+          {/* <TextArea
             id={formId}
-            className='w-full min-w-0 resize-none bg-transparent text-xl outline-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
+            className='w-full min-w-0 text-xl bg-transparent outline-none resize-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
             value={inputValue}
             placeholder={
-              reply || replyModal
-                ? 'Tweet your reply'
-                : 'What are you watching?'
+              reply || replyModal ? 'Send your reply' : 'What are you watching?'
             }
             onBlur={handleShowHideNav(true)}
             minRows={loading ? 1 : modal && !isUploadingImages ? 3 : 1}
@@ -155,7 +168,7 @@ export function InputForm({
             onKeyUp={handleKeyboardShortcut}
             onChange={handleChange}
             ref={inputRef}
-          />
+          /> */}
           {reply && !visited && (
             <Button
               className='cursor-pointer bg-main-accent px-4 py-1.5 font-bold text-white opacity-50'
@@ -172,13 +185,13 @@ export function InputForm({
           className='flex border-b border-light-border pb-2 dark:border-dark-border'
           {...fromBottom}
         >
-          <button
+          {/* <button
             type='button'
-            className='custom-button accent-tab accent-bg-tab flex cursor-not-allowed items-center gap-1 px-3 py-0 text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20'
+            className='flex items-center gap-1 px-3 py-0 cursor-not-allowed custom-button accent-tab accent-bg-tab text-main-accent hover:bg-main-accent/10 active:bg-main-accent/20'
           >
-            <HeroIcon className='h-4 w-4' iconName='GlobeAmericasIcon' />
+            <HeroIcon className='w-4 h-4' iconName='GlobeAmericasIcon' />
             <p className='font-bold'>Everyone can reply</p>
-          </button>
+          </button> */}
         </motion.div>
       )}
     </div>

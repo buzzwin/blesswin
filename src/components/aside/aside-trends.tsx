@@ -22,11 +22,11 @@ type AsideTrendsProps = {
 };
 
 export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
-  const { data, loading } = useTrends(1, inTrendsPage ? 100 : 10, {
-    refreshInterval: 30000
-  });
+  // const { data, loading } = useTrends(1, inTrendsPage ? 100 : 10, {
+  //   refreshInterval: 30000
+  // });
 
-  const { trends, location } = data ?? {};
+  //const { trends, location } = data ?? {};
 
   return (
     <section
@@ -35,7 +35,7 @@ export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
           'hover-animation rounded-2xl bg-main-sidebar-background'
       )}
     >
-      {loading ? (
+      {/* {loading ? (
         <Loading />
       ) : trends ? (
         <motion.div
@@ -60,8 +60,7 @@ export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
                     onClick={preventBubbling()}
                   >
                     <HeroIcon
-                      className='h-5 w-5 text-light-secondary group-hover:text-accent-blue 
-                                 group-focus-visible:text-accent-blue dark:text-dark-secondary'
+                      className='w-5 h-5 text-light-secondary group-hover:text-accent-blue group-focus-visible:text-accent-blue dark:text-dark-secondary'
                       iconName='EllipsisHorizontalIcon'
                     />
                     <ToolTip tip='More' />
@@ -83,8 +82,7 @@ export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
           {!inTrendsPage && (
             <Link href='/trends'>
               <a
-                className='custom-button accent-tab hover-card block w-full rounded-2xl
-                           rounded-t-none text-center text-main-accent'
+                className='block w-full text-center rounded-t-none custom-button accent-tab hover-card rounded-2xl text-main-accent'
               >
                 Show more
               </a>
@@ -93,7 +91,7 @@ export function AsideTrends({ inTrendsPage }: AsideTrendsProps): JSX.Element {
         </motion.div>
       ) : (
         <Error />
-      )}
+      )} */}
     </section>
   );
 }

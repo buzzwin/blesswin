@@ -122,7 +122,7 @@ export function TweetActions({
   const handlePin = async (): Promise<void> => {
     await managePinnedTweet(tweetIsPinned ? 'unpin' : 'pin', userId, tweetId);
     toast.success(
-      `Your tweet was ${tweetIsPinned ? 'unpinned' : 'pinned'} to your profile`
+      `Your Buzz was ${tweetIsPinned ? 'unpinned' : 'pinned'} to your profile`
     );
     pinCloseModal();
   };
@@ -136,7 +136,9 @@ export function TweetActions({
       await manageFollow(...args);
 
       toast.success(
-        `You ${type === 'follow' ? 'followed' : 'unfollowed'} @${username}`
+        `You ${
+          type === 'follow' ? 'are a fan of' : 'no longer a fan of'
+        } @${username}`
       );
     };
 
@@ -198,8 +200,7 @@ export function TweetActions({
             >
               <div className='group relative'>
                 <HeroIcon
-                  className='h-5 w-5 text-light-secondary group-hover:text-accent-blue
-                             group-focus-visible:text-accent-blue dark:text-dark-secondary/80'
+                  className='h-5 w-5 text-light-secondary group-hover:text-accent-blue group-focus-visible:text-accent-blue dark:text-dark-secondary/80'
                   iconName='EllipsisHorizontalIcon'
                 />
                 {!open && <ToolTip tip='More' />}
@@ -216,8 +217,7 @@ export function TweetActions({
                 >
                   {(isAdmin || isOwner) && (
                     <Popover.Button
-                      className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 text-accent-red
-                                 hover:bg-main-sidebar-background'
+                      className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 text-accent-red hover:bg-main-sidebar-background'
                       as={Button}
                       onClick={preventBubbling(removeOpenModal)}
                     >

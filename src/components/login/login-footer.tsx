@@ -4,15 +4,12 @@ const footerLinks = [
   ['Privacy Policy', 'https://buzzwin.com/tos'],
   ['Cookie Policy', 'https://support.buzzwin.com/articles/20170514'],
   ['Accessibility', 'https://help.buzzwin.com/resources/accessibility'],
-  [
-    'Ads Info',
-    'https://business.buzzwin.com/en/help/troubleshooting/how-twitter-ads-work.html'
-  ],
+  ['Ads Info', 'https://business.buzzwin.com/how-ads-work.html'],
   ['Blog', 'https://blog.buzzwin.com'],
-  ['Status', 'https://status.twitterstat.us'],
+  ['Status', 'https://status.buzzwin.us'],
   ['Careers', 'https://careers.buzzwin.com'],
   ['Brand Resources', 'https://about.buzzwin.com/press/brand-assets'],
-  ['Advertising', 'https://ads.buzzwin.com/?ref=gl-tw-tw-twitter-advertise'],
+  ['Advertising', 'https://ads.buzzwin.com/'],
   ['Marketing', 'https://marketing.buzzwin.com'],
   ['Twitter for Business', 'https://business.buzzwin.com'],
   ['Developers', 'https://developer.buzzwin.com'],

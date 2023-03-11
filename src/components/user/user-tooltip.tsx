@@ -72,7 +72,7 @@ export function UserTooltip({
             <div className='-mx-4 -mt-4'>
               {coverPhotoURL ? (
                 <Link href={userLink}>
-                  <a className='blur-picture'>
+                  <div className='blur-picture'>
                     <NextImage
                       useSkeleton
                       className='relative h-24'
@@ -81,7 +81,7 @@ export function UserTooltip({
                       alt={name}
                       layout='fill'
                     />
-                  </a>
+                  </div>
                 </Link>
               ) : (
                 <div className='h-16 rounded-t-2xl bg-light-line-reply dark:bg-dark-line-reply' />
@@ -118,11 +118,7 @@ export function UserTooltip({
           <div className='text-secondary flex gap-4'>
             {allStats.map(([id, label, stat]) => (
               <Link href={`${userLink}/${id}`} key={id}>
-                <a
-                  className='hover-animation flex h-4 items-center gap-1 border-b border-b-transparent 
-                             outline-none hover:border-b-light-primary focus-visible:border-b-light-primary
-                             dark:hover:border-b-dark-primary dark:focus-visible:border-b-dark-primary'
-                >
+                <a className='hover-animation flex h-4 items-center gap-1 border-b border-b-transparent outline-none hover:border-b-light-primary focus-visible:border-b-light-primary dark:hover:border-b-dark-primary dark:focus-visible:border-b-dark-primary'>
                   <p className='font-bold'>{stat}</p>
                   <p className='text-light-secondary dark:text-dark-secondary'>
                     {label}

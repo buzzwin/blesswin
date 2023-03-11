@@ -1,7 +1,6 @@
 import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import cn from 'clsx';
-import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
 import type { ChangeEvent, FormEvent, KeyboardEvent } from 'react';
 

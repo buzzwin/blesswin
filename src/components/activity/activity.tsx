@@ -3,7 +3,7 @@ import { ActivityItem } from '@components/activity/ActivityItem';
 
 interface Activity {
   id: number;
-  username: String;
+  username: string;
   verb: string;
   name: string;
   network: string;
@@ -88,7 +88,7 @@ const activityData: Activity[] = [
 
 const ActivityFeed: React.FC = () => {
   return (
-    <div className='dark: rounded-lg bg-white bg-gray-800 p-4 text-light-primary shadow-md dark:text-dark-primary'>
+    <div className='rounded-lg bg-gray-800 p-4 text-light-primary shadow-md dark:text-dark-primary'>
       <h2 className='mb-4 text-lg font-bold'>Activity Feed</h2>
       {activityData.map((activity) => (
         <ActivityItem key={activity.id} activity={activity} />

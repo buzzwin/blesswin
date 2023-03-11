@@ -24,6 +24,7 @@ import type { Variants } from 'framer-motion';
 import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
 import type { FilesWithId, ImagesPreview, ImageData } from '@lib/types/file';
+import { ViewingActivity } from '@components/activity/types';
 
 type InputProps = {
   modal?: boolean;
@@ -72,7 +73,8 @@ export function Input({
     []
   );
 
-  const sendTweet = async (): Promise<void> => {
+  const sendTweet = async (data: ViewingActivity): Promise<void> => {
+    console.log('Send Tweet *********', data);
     inputRef.current?.blur();
 
     setLoading(true);
@@ -82,7 +84,8 @@ export function Input({
     const userId = user?.id as string;
 
     const tweetData: WithFieldValue<Omit<Tweet, 'id'>> = {
-      text: inputValue.trim() || null,
+      text: `${user?.name ?? ''} ${data.status} ${data.title ?? ''}`,
+      viewingActivity: data,
       parent: isReplying && parent ? parent : null,
       images: await uploadImages(userId, selectedImages),
       userLikes: [],
@@ -90,7 +93,8 @@ export function Input({
       createdAt: serverTimestamp(),
       updatedAt: null,
       userReplies: 0,
-      userRetweets: []
+      userRetweets: [],
+      photoURL: user?.photoURL as string
     };
 
     await sleep(500);
@@ -114,7 +118,7 @@ export function Input({
     toast.success(
       () => (
         <span className='flex gap-2'>
-          Your Tweet was sent
+          Your Buzz was sent
           <Link href={`/tweet/${tweetId}`}>
             <a className='custom-underline font-bold'>View</a>
           </Link>
@@ -183,7 +187,7 @@ export function Input({
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    void sendTweet();
+    //void sendTweet();
   };
 
   const handleFocus = (): void => setVisited(!loading);

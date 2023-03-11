@@ -21,8 +21,8 @@ export function StatsEmpty({
         <div className='flex flex-col items-center gap-6'>
           {imageData && (
             <NextImage
-              width={336}
-              height={168}
+              width={200}
+              height={250}
               src={imageData.src}
               alt={imageData.alt}
             />

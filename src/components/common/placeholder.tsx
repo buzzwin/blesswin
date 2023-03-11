@@ -10,7 +10,10 @@ export function Placeholder(): JSX.Element {
         image='/home.png'
       />
       <i>
-        <CustomIcon className='h-20 w-20 text-[#1DA1F2]' iconName='PinIcon' />
+        <CustomIcon
+          className='h-20 w-20 text-[#1DA1F2]'
+          iconName='TwitterIcon'
+        />
       </i>
     </main>
   );

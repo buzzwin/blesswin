@@ -1,3 +1,4 @@
+import { ViewingActivity } from '@components/activity/types';
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 import type { ImagesPreview } from './file';
 import type { User } from './user';
@@ -13,6 +14,8 @@ export type Tweet = {
   updatedAt: Timestamp | null;
   userReplies: number;
   userRetweets: string[];
+  viewingActivity: ViewingActivity;
+  photoURL: string;
 };
 
 export type TweetWithUser = Tweet & { user: User };

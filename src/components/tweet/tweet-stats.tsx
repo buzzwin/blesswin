@@ -102,14 +102,14 @@ export function TweetStats({
           onClick={openModal}
           disabled={reply}
         />
-        <TweetOption
+        {/* <TweetOption
           className={cn(
             'hover:text-accent-green focus-visible:text-accent-green',
             tweetIsRetweeted && 'text-accent-green [&>i>svg]:[stroke-width:2px]'
           )}
           iconClassName='group-hover:bg-accent-green/10 group-active:bg-accent-green/20
                          group-focus-visible:bg-accent-green/10 group-focus-visible:ring-accent-green/80'
-          tip={tweetIsRetweeted ? 'Undo Retweet' : 'Retweet'}
+          tip={tweetIsRetweeted ? 'Undo Boost' : 'Boost'}
           move={tweetMove}
           stats={currentTweets}
           iconName='ArrowPathRoundedSquareIcon'
@@ -119,7 +119,7 @@ export function TweetStats({
             userId,
             tweetId
           )}
-        />
+        /> */}
         <TweetOption
           className={cn(
             'hover:text-accent-pink focus-visible:text-accent-pink',
@@ -130,7 +130,7 @@ export function TweetStats({
           tip={tweetIsLiked ? 'Unlike' : 'Like'}
           move={likeMove}
           stats={currentLikes}
-          iconName='HeartIcon'
+          iconName='FireIcon'
           viewTweet={viewTweet}
           onClick={manageLike(
             tweetIsLiked ? 'unlike' : 'like',
@@ -139,7 +139,7 @@ export function TweetStats({
           )}
         />
         <TweetShare userId={userId} tweetId={tweetId} viewTweet={viewTweet} />
-        {isOwner && (
+        {/* {isOwner && (
           <TweetOption
             className='hover:text-accent-blue focus-visible:text-accent-blue'
             iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
@@ -148,7 +148,7 @@ export function TweetStats({
             iconName='ChartPieIcon'
             disabled
           />
-        )}
+        )} */}
       </div>
     </>
   );

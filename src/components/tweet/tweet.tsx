@@ -91,7 +91,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         <TweetReplyModal tweet={tweet} closeModal={closeModal} />
       </Modal>
       <Link href={tweetLink} scroll={!reply}>
-        <a
+        <div
           className={cn(
             `accent-tab hover-card relative flex flex-col 
              gap-y-4 px-4 py-3 outline-none duration-200`,
@@ -111,9 +111,9 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 tweetIsRetweeted && (
                   <TweetStatus type='tweet'>
                     <Link href={profileUsername as string}>
-                      <a className='custom-underline truncate text-sm font-bold'>
+                      <div className='custom-underline truncate text-sm font-bold'>
                         {userId === profileId ? 'You' : profileName} Retweeted
-                      </a>
+                      </div>
                     </Link>
                   </TweetStatus>
                 )
@@ -198,7 +198,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               </div>
             </div>
           </div>
-        </a>
+        </div>
       </Link>
     </motion.article>
   );

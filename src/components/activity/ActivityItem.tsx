@@ -1,8 +1,18 @@
+interface Activity {
+  id: number;
+  username: string;
+  verb: string;
+  name: string;
+  network: string;
+  releaseDate: string;
+  time: string;
+}
+
 export const ActivityItem: React.FC<{ activity: Activity }> = ({
   activity
 }) => {
   const {
-    activity: id,
+    verb: id,
     username,
     verb,
     name,

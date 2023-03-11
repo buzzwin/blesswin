@@ -114,13 +114,11 @@ export function UpdateUsername(): JSX.Element {
         </UsernameModal>
       </Modal>
       <Button
-        className='dark-bg-tab group relative p-2 hover:bg-light-primary/10
-                   active:bg-light-primary/20 dark:hover:bg-dark-primary/10 
-                   dark:active:bg-dark-primary/20'
+        className='dark-bg-tab group relative p-2 hover:bg-light-primary/10 active:bg-light-primary/20 dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
         onClick={openModal}
       >
-        <HeroIcon className='h-5 w-5' iconName='SparklesIcon' />
-        <ToolTip tip='Top tweets' />
+        <HeroIcon className='h-5 w-5' iconName='UserIcon' />
+        <ToolTip tip='Update UserName' />
       </Button>
     </>
   );

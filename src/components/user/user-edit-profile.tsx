@@ -218,13 +218,13 @@ export function UserEditProfile({ hide }: UserEditProfileProps): JSX.Element {
       inputId: 'location',
       inputValue: editUserData.location,
       inputLimit: 30
-    },
-    {
-      label: 'Website',
-      inputId: 'website',
-      inputValue: editUserData.website,
-      inputLimit: 100
     }
+    // {
+    //   label: 'Website',
+    //   inputId: 'website',
+    //   inputValue: editUserData.website,
+    //   inputLimit: 100
+    // }
   ];
 
   return (
