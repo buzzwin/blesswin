@@ -24,7 +24,7 @@ export const notifyEmail = regionalFunctions.firestore
       }
     });
 
-    const tweetLink = `https://twitter-clone-ccrsxx.vercel.app/tweet/${snapshot.id}`;
+    const tweetLink = `https://www.buzzwin.com/buzz/${snapshot.id}`;
 
     const emailHeader = `New Tweet${
       parent ? ' reply' : ''

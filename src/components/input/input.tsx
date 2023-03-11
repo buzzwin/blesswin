@@ -119,7 +119,7 @@ export function Input({
       () => (
         <span className='flex gap-2'>
           Your Buzz was sent
-          <Link href={`/tweet/${tweetId}`}>
+          <Link href={`/buzz/${tweetId}`}>
             <a className='custom-underline font-bold'>View</a>
           </Link>
         </span>

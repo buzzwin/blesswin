@@ -45,7 +45,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
 
   const { open, openModal, closeModal } = useModal();
 
-  const tweetLink = `/tweet/${tweetId}`;
+  const tweetLink = `/buzz/${tweetId}`;
 
   const userId = user?.id as string;
 
@@ -135,10 +135,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
             previewCount={images.length}
           />
         )}
-        <div
-          className='inner:hover-animation inner:border-b inner:border-light-border
-                     dark:inner:border-dark-border'
-        >
+        <div className='inner:hover-animation inner:border-b inner:border-light-border dark:inner:border-dark-border'>
           <TweetDate viewTweet tweetLink={tweetLink} createdAt={createdAt} />
           <TweetStats
             viewTweet

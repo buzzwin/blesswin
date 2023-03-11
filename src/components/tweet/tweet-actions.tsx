@@ -51,13 +51,12 @@ type PinModalData = Record<'title' | 'description' | 'mainBtnLabel', string>;
 
 const pinModalData: Readonly<PinModalData[]> = [
   {
-    title: 'Pin Tweet to from profile?',
-    description:
-      'This will appear at the top of your profile and replace any previously pinned Tweet.',
+    title: 'Pin this as your favorite Buzz?',
+    description: 'This will appear at the top of your profile.',
     mainBtnLabel: 'Pin'
   },
   {
-    title: 'Unpin Tweet from profile?',
+    title: 'Unpin Buzz from profile?',
     description:
       'This will no longer appear automatically at the top of your profile.',
     mainBtnLabel: 'Unpin'
@@ -99,7 +98,7 @@ export function TweetActions({
       if (parentId) {
         const parentSnapshot = await getDoc(doc(tweetsCollection, parentId));
         if (parentSnapshot.exists()) {
-          await push(`/tweet/${parentId}`, undefined, { scroll: false });
+          await push(`/buzz/${parentId}`, undefined, { scroll: false });
           delayScroll(200)();
           await sleep(50);
         } else await push('/home');

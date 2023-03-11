@@ -28,11 +28,8 @@ export function ViewParentTweet({
   if (!data)
     return (
       <div className='px-4 pt-3 pb-2'>
-        <p
-          className='rounded-2xl bg-main-sidebar-background py-3 px-1 pl-4 
-                     text-light-secondary dark:text-dark-secondary'
-        >
-          This Tweet was deleted by the Tweet author.{' '}
+        <p className='rounded-2xl bg-main-sidebar-background px-1 py-3 pl-4 text-light-secondary dark:text-dark-secondary'>
+          This Buzz was deleted by the Tweet author.{' '}
           <a
             className='custom-underline text-main-accent'
             href='https://help.buzzwin.com/rules-and-policies/notices-on-twitter'

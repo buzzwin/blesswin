@@ -115,9 +115,9 @@ export function InputForm({
     console.log('Input', data);
     try {
       await sendTweet(data);
-      console.log('Tweet sent successfully');
+      console.log('Buzz sent successfully');
     } catch (error) {
-      console.error('Error sending tweet:', error);
+      console.error('Error sending buzz:', error);
     }
   };
 
