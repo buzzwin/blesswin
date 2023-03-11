@@ -112,7 +112,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                   <TweetStatus type='tweet'>
                     <Link href={profileUsername as string}>
                       <div className='custom-underline truncate text-sm font-bold'>
-                        {userId === profileId ? 'You' : profileName} Retweeted
+                        {userId === profileId ? 'You' : profileName} ReBuzzed
                       </div>
                     </Link>
                   </TweetStatus>

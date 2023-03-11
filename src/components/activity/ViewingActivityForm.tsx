@@ -149,6 +149,8 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
           <option value='just started'>Just started</option>
           <option value='is watching'>Currently watching</option>
           <option value='finished'>Finished</option>
+          <option value='hates'>Hated</option>
+          <option value='loves'>Loved</option>
         </select>
       </div>
 
