@@ -17,7 +17,7 @@ const Terms: React.FC = () => {
   };
   return (
     <div>
-      <SEO title='People / Twitter' />
+      <SEO title='People / Buzzwin' />
       <MainHeader useActionButton title='Home' action={handleBack} />
       <section>
         <div>

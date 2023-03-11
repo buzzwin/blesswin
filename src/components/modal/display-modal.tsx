@@ -30,18 +30,15 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
       <div className='flex flex-col gap-3 text-center'>
         <h2 className='text-2xl font-bold'>Customize your view</h2>
         <p className='text-light-secondary dark:text-dark-secondary'>
-          These settings affect all the Twitter accounts on this browser.
+          These settings affect all the Buzzwin accounts on this browser.
         </p>
       </div>
-      <article
-        className='hover-animation mx-8 rounded-2xl border 
-                   border-light-border px-4 py-3 dark:border-dark-border'
-      >
+      <article className='hover-animation mx-8 rounded-2xl border border-light-border px-4 py-3 dark:border-dark-border'>
         <div className='grid grid-cols-[auto,1fr] gap-3'>
-          <UserAvatar src='/assets/twitter-avatar.jpg' alt='Twitter' />
+          <UserAvatar src='/assets/twitter-avatar.jpg' alt='buzzwin' />
           <div>
             <div className='flex gap-1'>
-              <UserName verified name='Twitter' />
+              <UserName verified name='Buzzwin' />
               <p className='text-light-secondary dark:text-dark-secondary'>
                 @twitter
               </p>
@@ -51,9 +48,8 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
               </div>
             </div>
             <p className='whitespace-pre-line break-words'>
-              At the heart of Twitter are short messages called Tweets — just
-              like this one — which can include photos, videos, links, text,
-              hashtags, and mentions like{' '}
+              Buzzwin is a social media platform that allows you to connect with
+              like-minded people and share what you are watching with the world.
               <span className='text-main-accent'>@twitter</span>.
             </p>
           </div>
@@ -63,10 +59,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <p className='text-sm font-bold text-light-secondary dark:text-dark-secondary'>
           Color
         </p>
-        <div
-          className='hover-animation grid grid-cols-3 grid-rows-2 justify-items-center gap-3 
-                     rounded-2xl bg-main-sidebar-background py-3 xs:grid-cols-6 xs:grid-rows-none'
-        >
+        <div className='hover-animation grid grid-cols-3 grid-rows-2 justify-items-center gap-3 rounded-2xl bg-main-sidebar-background py-3 xs:grid-cols-6 xs:grid-rows-none'>
           {accentsColor.map((accentColor) => (
             <InputAccentRadio type={accentColor} key={accentColor} />
           ))}
@@ -76,10 +69,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <p className='text-sm font-bold text-light-secondary dark:text-dark-secondary'>
           Background
         </p>
-        <div
-          className='hover-animation grid grid-rows-3 gap-3 rounded-2xl bg-main-sidebar-background
-                     px-4 py-3 xs:grid-cols-3 xs:grid-rows-none'
-        >
+        <div className='hover-animation grid grid-rows-3 gap-3 rounded-2xl bg-main-sidebar-background px-4 py-3 xs:grid-cols-3 xs:grid-rows-none'>
           {themes.map(([themeType, label]) => (
             <InputThemeRadio type={themeType} label={label} key={themeType} />
           ))}

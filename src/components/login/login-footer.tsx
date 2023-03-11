@@ -11,7 +11,6 @@ const footerLinks = [
   ['Brand Resources', 'https://about.buzzwin.com/press/brand-assets'],
   ['Advertising', 'https://ads.buzzwin.com/'],
   ['Marketing', 'https://marketing.buzzwin.com'],
-  ['Twitter for Business', 'https://business.buzzwin.com'],
   ['Developers', 'https://developer.buzzwin.com'],
   ['Directory', 'https://buzzwin.com/i/directory/profiles'],
   ['Settings', 'https://buzzwin.com/settings']

@@ -23,21 +23,21 @@ const SearchResults: React.FC<SearchResultProps> = ({ results, onSelect }) => {
           {/* Display movie or TV show poster as card image */}
 
           <img
-            className='h-1/3 w-1/3'
+            className='h-1/3 w-1/3 bg-gray-300'
             src={
               result.poster_path
                 ? `https://image.tmdb.org/t/p/w500/${result.poster_path}`
-                : ''
+                : '/movie.png'
             }
-            alt={result.title}
+            alt={result.title || result.name || ''}
           />
 
-          <div className='px-6 py-4'>
+          <div className='px-6 py-4 text-gray-300'>
             {/* Display movie or TV show title and release date */}
 
             <div className='mb-2 text-xl font-bold'>{result.title}</div>
 
-            <p className='text-base text-gray-700'>{result.releaseDate}</p>
+            <p className='mb-2 text-xl font-bold'>{result.releaseDate}</p>
           </div>
         </div>
       ))}

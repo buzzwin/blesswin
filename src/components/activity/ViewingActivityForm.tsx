@@ -194,17 +194,17 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
 
             <div className='flex items-center justify-between'>
               <button
-                className='focus:shadow-outline rounded bg-main-accent px-4 py-2 font-bold text-white hover:bg-blue-700 focus:outline-none'
-                onClick={handleSave}
-              >
-                Save
-              </button>
-              <button
                 className='focus:shadow-outline rounded bg-gray-400 px-4 py-2 font-bold text-white hover:bg-gray-500 focus:outline-none'
                 type='button'
                 onClick={handleCancel}
               >
                 Cancel!
+              </button>
+              <button
+                className='focus:shadow-outline rounded bg-green-700 px-4 py-2 font-bold text-white hover:bg-main-accent focus:outline-none'
+                onClick={handleSave}
+              >
+                Save
               </button>
             </div>
 

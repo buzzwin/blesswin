@@ -16,11 +16,11 @@ type Options = {
 }[];
 
 const options: Readonly<Options> = [
-  {
-    name: 'Media',
-    iconName: 'PhotoIcon',
-    disabled: false
-  }
+  // {
+  //   name: 'Media',
+  //   iconName: 'PhotoIcon',
+  //   disabled: false
+  // }
   // {
   //   name: 'GIF',
   //   iconName: 'GifIcon',
@@ -133,7 +133,7 @@ export function InputOptions({
             </>
           )}
         </motion.div>
-        <Button
+        {/* <Button
           type='submit'
           className='accent-tab bg-main-accent px-4 py-1.5 font-bold text-white
                      enabled:hover:bg-main-accent/90
@@ -141,7 +141,7 @@ export function InputOptions({
           disabled={!isValidTweet}
         >
           {reply ? 'Reply' : 'Buzz'}
-        </Button>
+        </Button> */}
       </div>
     </motion.div>
   );
