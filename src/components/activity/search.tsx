@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import Head from 'next/head';
 import { ChangeEvent, FormEvent } from 'react';
@@ -13,6 +13,12 @@ interface SearchResults {
   name: string;
 }
 
+interface MyAxiosResponse extends AxiosResponse {
+  data: {
+    results: SearchResults[];
+  };
+}
+
 export default function Search() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResults[]>([]);
@@ -23,11 +29,12 @@ export default function Search() {
 
   const handleSearchSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    //const apiKey = process.env.TMDB_API_KEY;
-    const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=0af4f0642998fa986fe260078ab69ab6&query=${searchQuery}`;
-    const response = await axios.get(apiUrl);
-    const results = response.data.results;
-    setSearchResults(results);
+    const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=0af4f0642998fa986fe260078ab69ab6&query=${
+      searchQuery ?? ''
+    }`;
+
+    const response: MyAxiosResponse = await axios.get(apiUrl);
+    const results: SearchResults[] = response.data.results;
   };
 
   return (

@@ -1,5 +1,5 @@
 import { FormEvent, ChangeEvent, useState } from 'react';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { debounce } from 'lodash'; // import the debounce function from lodash library
 import SpinnerComponent from '@components/common/spinner';
 import SearchResults from './searchresults';
@@ -43,12 +43,15 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     review: ''
   });
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSearchText(value);
-    handleSearch(e)?.then(() => {
+    try {
+      await handleSearch(e);
       console.log('handleSearch');
-    });
+    } catch (error) {
+      console.error('Error handling search:', error);
+    }
   };
 
   const handleReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
@@ -96,17 +99,23 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     name: ''
   });
 
-  // debounce the handleSearch function
-  const handleSearch = debounce(async (query) => {
-    setLoading(true);
-    const apiKey = process.env.TMDB_API_KEY;
-    const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=0af4f0642998fa986fe260078ab69ab6&query=${query.target.value}&limit=5&sort_by=popularity.desc,release_date.desc&sort_order=desc`;
-    const response = await axios.get(apiUrl);
-    const results = response.data.results;
-    setSearchResults(results);
+  const handleSearch = debounce(
+    async (query: ChangeEvent<HTMLInputElement>): Promise<void> => {
+      setLoading(true);
+      const apiKey = process.env.TMDB_API_KEY;
+      const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=${
+        apiKey ?? ''
+      }&query=${
+        query.target.value
+      }&limit=5&sort_by=popularity.desc,release_date.desc&sort_order=desc`;
+      const response: AxiosResponse<SearchResult[]> = await axios.get(apiUrl);
+      const results: SearchResult[] = response.data;
+      setSearchResults(results);
 
-    setLoading(false);
-  }, 1500); // set the delay time to 500ms
+      setLoading(false);
+    },
+    1500
+  );
 
   const handleSelect = (searchResult: SearchResult) => {
     console.log('Selected: ', searchResult);
@@ -203,8 +212,10 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
 
             <div className='flex items-center justify-center pt-4'>
               <img
-                src={`https://image.tmdb.org/t/p/w500${selectedShow.poster_path}`}
-                alt={selectedShow.title}
+                src={`https://image.tmdb.org/t/p/w500/${
+                  selectedShow.poster_path ?? 'placeholder.jpg'
+                }`}
+                alt={selectedShow.title ?? null}
                 className='h-1/2 w-1/2 object-cover'
               />
               <div className='p-4'>

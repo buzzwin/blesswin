@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { SearchResult } from './types';
 
 import React from 'react';
+import Image from 'next/image';
 
 interface SearchResultProps {
   results: SearchResult[];
@@ -22,10 +23,13 @@ const SearchResults: React.FC<SearchResultProps> = ({ results, onSelect }) => {
         >
           {/* Display movie or TV show poster as card image */}
 
-          <img
-            className='h-1/3 w-1/3'
-            src={`https://image.tmdb.org/t/p/w500/${result.poster_path}`}
-            alt={result.title}
+          <Image
+            src={`https://image.tmdb.org/t/p/w500/${
+              result.poster_path ?? 'placeholder.jpg'
+            }`}
+            alt={result.title || ''}
+            width={500}
+            height={750}
           />
 
           <div className='px-6 py-4'>
