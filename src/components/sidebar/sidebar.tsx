@@ -29,20 +29,20 @@ const navLinks: Readonly<NavLink[]> = [
   //   href: '/explore',
   //   linkName: 'Explore',
   //   iconName: 'HashtagIcon',
-  //   disabled: true,
+  //   disabled: false,
   //   canBeHidden: true
   // },
   // {
   //   href: '/notifications',
   //   linkName: 'Notifications',
   //   iconName: 'BellIcon',
-  //   disabled: true
+  //   disabled: false
   // },
   // {
   //   href: '/messages',
   //   linkName: 'Messages',
   //   iconName: 'EnvelopeIcon',
-  //   disabled: true
+  //   disabled: false
   // },
   {
     href: '/bookmarks',
@@ -54,7 +54,7 @@ const navLinks: Readonly<NavLink[]> = [
   //   href: '/lists',
   //   linkName: 'Lists',
   //   iconName: 'Bars3BottomLeftIcon',
-  //   disabled: true,
+  //   disabled: false,
   //   canBeHidden: true
   // }
 ];

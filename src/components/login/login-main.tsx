@@ -9,9 +9,9 @@ export function LoginMain(): JSX.Element {
   const { signInWithGoogle } = useAuth();
 
   return (
-    <main className='grid grid-cols-12 gap-4'>
-      <div className='light:text-gray-700 col-span-1'></div>
-      <div className='light:text-gray-700 col-span-4 bg-gray-800'>
+    <main className='md: grid grid-cols-12 gap-4 sm:grid-cols-1'>
+      <div className='light:text-gray-700 md:col-span-1'></div>
+      <div className='light:text-gray-700 bg-gray-800 md:col-span-4'>
         <div className='flex w-full flex-col items-center'>
           <div className='pt-16 pb-2 text-center text-2xl text-gray-400'>
             Tired of trying to find the right movie or show to watch?

@@ -32,7 +32,7 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
     href: '/lists',
     linkName: 'Lists',
     iconName: 'Bars3BottomLeftIcon',
-    disabled: true
+    disabled: false
   },
   {
     href: '/people',
@@ -46,13 +46,13 @@ const bottomNavLinks: Readonly<MobileNavLink[]> = [
     href: '/settings',
     linkName: 'Settings and privacy',
     iconName: 'Cog8ToothIcon',
-    disabled: true
+    disabled: false
   },
   {
     href: '/help-center',
     linkName: 'Help center',
     iconName: 'QuestionMarkCircleIcon',
-    disabled: true
+    disabled: false
   }
 ];
 

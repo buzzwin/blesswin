@@ -3,7 +3,7 @@ export interface SearchResult {
     title: string;
     releaseDate: string;
     overview: string;
-    poster_path: string | null;
+    poster_path: string;
     vote_average: number;
     name: string;
   }
@@ -12,8 +12,8 @@ export interface SearchResult {
   export interface ViewingActivity {
     tmdbId: string;
     title: string;
-    status: string;
+    status: string | 'is watching';
     rating: string;
     review: string;
-    poster_path: string | "https://plchldr.co/i/500x250";
+    poster_path: string | 'https://plchldr.co/i/500x250';
   }

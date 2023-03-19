@@ -22,7 +22,7 @@ interface SelectedShow {
   title: string;
   releaseDate: string;
   overview: string;
-  poster_path: string | null;
+  poster_path: string;
   vote_average: number;
   name: string;
 }
@@ -45,7 +45,8 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     title: '',
     status: '',
     rating: '',
-    review: ''
+    review: '',
+    poster_path: ''
   });
 
   const handleInputChange = async (

@@ -24,27 +24,27 @@ const options: Readonly<Options> = [
   // {
   //   name: 'GIF',
   //   iconName: 'GifIcon',
-  //   disabled: true
+  //   disabled: false
   // },
   // {
   //   name: 'Poll',
   //   iconName: 'ChartBarIcon',
-  //   disabled: true
+  //   disabled: false
   // },
   // {
   //   name: 'Emoji',
   //   iconName: 'FaceSmileIcon',
-  //   disabled: true
+  //   disabled: false
   // },
   // {
   //   name: 'Schedule',
   //   iconName: 'CalendarDaysIcon',
-  //   disabled: true
+  //   disabled: false
   // },
   // {
   //   name: 'Location',
   //   iconName: 'MapPinIcon',
-  //   disabled: true
+  //   disabled: false
   // }
 ];
 
