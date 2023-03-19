@@ -54,8 +54,8 @@ export default function UserTweets(): JSX.Element {
         <Loading className='mt-5' />
       ) : !mergedTweets ? (
         <StatsEmpty
-          title={`@${username as string} hasn't tweeted`}
-          description='When they do, their Buzzes will show up here.'
+          title={`Welcome @${username as string} to Buzzwin!`}
+          description='When ready, share your favorite shows and movies and they will show up here.'
         />
       ) : (
         <AnimatePresence mode='popLayout'>
