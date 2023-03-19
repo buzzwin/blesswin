@@ -9,6 +9,8 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
 import { MenuLink } from './menu-link';
 import type { Variants } from 'framer-motion';
+import { ActionModal } from '@components/modal/action-modal';
+import { useAuth } from '@lib/context/auth-context';
 
 export const variants: Variants = {
   initial: { opacity: 0, y: 50 },
@@ -22,9 +24,40 @@ export const variants: Variants = {
 
 export function MoreSettings(): JSX.Element {
   const { open, openModal, closeModal } = useModal();
+  const {
+    open: logOutOpen,
+    openModal: logOutOpenModal,
+    closeModal: logOutCloseModal
+  } = useModal();
+
+  const { signOut } = useAuth();
 
   return (
     <>
+      <Modal
+        modalClassName='max-w-xs bg-main-background w-full p-8 rounded-2xl'
+        open={logOutOpen}
+        closeModal={logOutCloseModal}
+      >
+        <ActionModal
+          useIcon
+          focusOnMainBtn
+          title='Log out of Buzzwin?'
+          description='You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.'
+          mainBtnLabel='Log out'
+          action={signOut}
+          closeModal={logOutCloseModal}
+        />
+      </Modal>
+      <Button
+        className='accent-tab accent-bg-tab flex items-center gap-2 rounded-md p-1.5 font-bold transition
+                         hover:bg-light-primary/10 focus-visible:ring-2 first:focus-visible:ring-[#878a8c] 
+                         dark:hover:bg-dark-primary/10 dark:focus-visible:ring-white'
+        onClick={logOutOpenModal}
+      >
+        <HeroIcon className='h-5 w-5' iconName='ArrowRightOnRectangleIcon' />
+        Log out
+      </Button>
       <Modal
         modalClassName='max-w-xl bg-main-background w-full p-8 rounded-2xl hover-animation'
         open={open}
