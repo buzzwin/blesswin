@@ -15,4 +15,5 @@ export interface SearchResult {
     status: string;
     rating: string;
     review: string;
+    poster_path: string | "https://plchldr.co/i/500x250";
   }

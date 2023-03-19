@@ -112,7 +112,7 @@ export function TweetActions({
     ]);
 
     toast.success(
-      `${isInAdminControl ? `@${username}'s` : 'Your'} Tweet was deleted`
+      `${isInAdminControl ? `@${username}'s` : 'Your'} Buzz was deleted`
     );
 
     removeCloseModal();

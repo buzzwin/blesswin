@@ -13,6 +13,7 @@ interface ViewingActivityFormProps {
     status: string;
     rating: string;
     review: string;
+    poster_path: string;
   }) => void;
 }
 
@@ -125,7 +126,8 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
       ...prevState,
       title: searchResult.title || searchResult.name,
       tmdbId: searchResult.id.toString(),
-      rating: searchResult.vote_average.toString()
+      rating: searchResult.vote_average.toString(),
+      poster_path: searchResult.poster_path
     }));
   };
 

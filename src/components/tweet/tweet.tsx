@@ -36,6 +36,7 @@ export const variants: Variants = {
 export function Tweet(tweet: TweetProps): JSX.Element {
   const {
     id: tweetId,
+    viewingActivity,
     text,
     modal,
     images,
@@ -94,7 +95,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         <div
           className={cn(
             `accent-tab hover-card relative flex flex-col 
-             gap-y-4 px-4 py-3 outline-none duration-200`,
+             gap-y-4 px-4 py-4 outline-none duration-200`,
             parentTweet
               ? 'mt-0.5 pt-2.5 pb-0'
               : 'border-b border-light-border dark:border-dark-border'
@@ -105,7 +106,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             <AnimatePresence initial={false}>
               {modal ? null : pinned ? (
                 <TweetStatus type='pin'>
-                  <p className='text-sm font-bold'>Pinned Tweet</p>
+                  <p className='text-sm font-bold'>Pinned Buzz</p>
                 </TweetStatus>
               ) : (
                 tweetIsRetweeted && (
@@ -145,17 +146,32 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 </div>
                 <div className='px-4'>
                   {!modal && (
-                    <TweetActions
-                      isOwner={isOwner}
-                      ownerId={ownerId}
-                      tweetId={tweetId}
-                      parentId={parentId}
-                      username={username}
-                      hasImages={!!images}
-                      createdBy={createdBy}
-                    />
+                    <div className=''>
+                      <div className='relative'>
+                        <div className='px-4 py-6'>
+                          <TweetActions
+                            isOwner={isOwner}
+                            ownerId={ownerId}
+                            tweetId={tweetId}
+                            parentId={parentId}
+                            username={username}
+                            hasImages={!!images}
+                            createdBy={createdBy}
+                          />
+                        </div>
+                      </div>
+                    </div>
                   )}
                 </div>
+                <img
+                  className='h-full w-1/5 rounded-sm'
+                  src={
+                    viewingActivity.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${viewingActivity.poster_path}`
+                      : '/movie.png'
+                  }
+                  alt={viewingActivity.title || 'No Image'}
+                />
               </div>
               {(reply || modal) && (
                 <p
