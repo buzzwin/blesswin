@@ -39,9 +39,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
           <div>
             <div className='flex gap-1'>
               <UserName verified name='Buzzwin' />
-              <p className='text-light-secondary dark:text-dark-secondary'>
-                @twitter
-              </p>
+              <p className='text-light-secondary dark:text-dark-secondary'></p>
               <div className='flex gap-1 text-light-secondary dark:text-dark-secondary'>
                 <i>·</i>
                 <p>26m</p>
@@ -50,7 +48,6 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
             <p className='whitespace-pre-line break-words'>
               Buzzwin is a social media platform that allows you to connect with
               like-minded people and share what you are watching with the world.
-              <span className='text-main-accent'>@twitter</span>.
             </p>
           </div>
         </div>
