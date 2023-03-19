@@ -18,6 +18,8 @@ import { TweetDate } from './tweet-date';
 import type { Variants } from 'framer-motion';
 import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
+import { AcademicCapIcon } from '@heroicons/react/24/solid';
+import { ActivityItem } from '@components/activity/ActivityItem';
 
 export type TweetProps = Tweet & {
   user: User;
@@ -121,29 +123,16 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               )}
             </AnimatePresence>
             <div className='flex flex-col items-center gap-2'>
-              <UserTooltip avatar modal={modal} {...tweetUserData}>
-                <UserAvatar src={photoURL} alt={name} username={username} />
-              </UserTooltip>
+              {/* <UserTooltip avatar modal={modal} {...tweetUserData}> */}
+              {/* <UserAvatar src={photoURL} alt={name} username={username} /> */}
+              {/* </UserTooltip> */}
               {parentTweet && (
                 <i className='hover-animation h-full w-0.5 bg-light-line-reply dark:bg-dark-line-reply' />
               )}
             </div>
             <div className='flex min-w-0 flex-col'>
               <div className='flex justify-between gap-2 text-light-secondary dark:text-dark-secondary'>
-                <div className='flex gap-1 truncate xs:overflow-visible xs:whitespace-normal'>
-                  <UserTooltip modal={modal} {...tweetUserData}>
-                    <UserName
-                      name={name}
-                      username={username}
-                      verified={verified}
-                      className='text-light-primary dark:text-dark-primary'
-                    />
-                  </UserTooltip>
-                  <UserTooltip modal={modal} {...tweetUserData}>
-                    <UserUsername username={username} />
-                  </UserTooltip>
-                  <TweetDate tweetLink={tweetLink} createdAt={createdAt} />
-                </div>
+                <div className='flex gap-1 truncate xs:overflow-visible xs:whitespace-normal'></div>
                 <div className='px-4'>
                   {!modal && (
                     <div className=''>
@@ -163,15 +152,6 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                     </div>
                   )}
                 </div>
-                <img
-                  className='h-full w-1/5 rounded-sm'
-                  src={
-                    viewingActivity.poster_path
-                      ? `https://image.tmdb.org/t/p/w500/${viewingActivity.poster_path}`
-                      : '/movie.png'
-                  }
-                  alt={viewingActivity.title || 'No Image'}
-                />
               </div>
               {(reply || modal) && (
                 <p
@@ -188,9 +168,17 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                   </Link>
                 </p>
               )}
-              {text && (
-                <p className='whitespace-pre-line break-words'>{text}</p>
+              {/* {text && (
+                <p className='break-words whitespace-pre-line'>{text}</p>
+              )} */}
+              {viewingActivity && (
+                <ActivityItem
+                  activity={viewingActivity}
+                  user={tweetUserData}
+                  modal={modal}
+                />
               )}
+
               <div className='mt-1 flex flex-col gap-2'>
                 {images && (
                   <ImagePreview

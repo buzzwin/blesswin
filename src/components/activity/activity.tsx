@@ -1,88 +1,136 @@
 import React from 'react';
 import { ActivityItem } from '@components/activity/ActivityItem';
-
-interface Activity {
-  id: number;
-  username: string;
-  verb: string;
-  name: string;
-  network: string;
-  releaseDate: string;
-  time: string;
-}
-
-const activityData: Activity[] = [
+import { Activity, ViewingActivity } from './types';
+import { Timestamp } from 'firebase/firestore';
+const randomNumber = Math.floor(Math.random() * 16);
+const activityData: ViewingActivity[] = [
   {
     id: 1,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'jdoe',
-    verb: 'added to watchlist',
-    name: 'Inception',
+    status: 'added to watchlist',
+    title: 'Inception',
     network: 'HBO',
     releaseDate: '2010-07-16',
-    time: '2022-02-28 10:00:00'
+    time: '2022-02-28 10:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   },
   {
     id: 2,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'MikeM',
-    verb: 'added to watchlist',
-    name: 'Stranger Things',
+    status: 'added to watchlist',
+    title: 'Stranger Things',
     network: 'Netflix',
     releaseDate: '2016-07-15',
-    time: '2022-02-27 12:00:00'
+    time: '2022-02-27 12:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   },
   {
     id: 3,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'sarahJoe',
-    verb: 'watched',
-    name: 'The Dark Knight',
+    status: 'watched',
+    title: 'The Dark Knight',
     network: 'Amazon Prime Video',
     releaseDate: '2008-07-18',
-    time: '2022-02-26 16:00:00'
+    time: '2022-02-26 16:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   },
   {
     id: 4,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'jderocks',
-    verb: 'added to watchlist',
-    name: 'Breaking Bad',
+    status: 'added to watchlist',
+    title: 'Breaking Bad',
     network: 'Netflix',
     releaseDate: '2008-01-20',
-    time: '2022-02-26 10:00:00'
+    time: '2022-02-26 10:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   },
   {
     id: 5,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'oHiCoolGuy',
-    verb: 'watched',
-    name: 'Game of Thrones',
+    status: 'watched',
+    title: 'Game of Thrones',
     network: 'HBO',
     releaseDate: '2011-04-17',
-    time: '2022-02-25 14:00:00'
+    time: '2022-02-25 14:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   },
   {
     id: 6,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'totallyNotABot',
-    verb: 'added to watchlist',
-    name: 'The Shawshank Redemption',
+    status: 'added to watchlist',
+    title: 'The Shawshank Redemption',
     network: 'Amazon Prime Video',
     releaseDate: '1994-09-23',
-    time: '2022-02-24 12:00:00'
+    time: '2022-02-24 12:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   },
   {
     id: 6,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'randomMan',
-    verb: 'follows the show',
-    name: 'The Last Kingdom',
+    status: 'follows the show',
+    title: 'The Last Kingdom',
     network: 'HBO',
     releaseDate: '1994-09-23',
-    time: '2022-02-24 12:00:00'
+    time: '2022-02-24 12:00:00',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'
   },
   {
     id: 6,
+    tmdbId: '',
+    rating: '',
+    review: '',
     username: 'randomMan',
-    verb: 'hates the show',
-    name: 'The White Lotus',
+    status: 'hates the show',
+    title: 'The White Lotus',
     network: 'HBO',
     releaseDate: '1994-09-23',
-    time: '2022-02-24 12:00:00'
+    time: '2022-02-24 12:00:00',
+    poster_path:
+      'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg',
+    photoURL:
+      'https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}'
   }
 ];
 
@@ -91,7 +139,30 @@ const ActivityFeed: React.FC = () => {
     <div className='rounded-lg bg-gray-800 p-4 text-light-primary shadow-md dark:text-dark-primary'>
       <h2 className='mb-4 text-lg font-bold'>Activity Feed</h2>
       {activityData.map((activity) => (
-        <ActivityItem key={activity.id} activity={activity} />
+        <ActivityItem
+          key={activity.id}
+          activity={activity}
+          user={{
+            id: '',
+            bio: null,
+            name: '',
+            theme: null,
+            accent: null,
+            website: null,
+            location: null,
+            username: '',
+            photoURL: '',
+            verified: false,
+            following: [],
+            followers: [],
+            createdAt: new Timestamp(),
+            updatedAt: null,
+            totalTweets: 0,
+            totalPhotos: 0,
+            pinnedTweet: null,
+            coverPhotoURL: null
+          }}
+        />
       ))}
     </div>
   );
