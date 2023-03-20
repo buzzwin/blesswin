@@ -58,7 +58,7 @@ export const ActivityItem: React.FC<{
         )}
       </div>
 
-      <div className='ml-3'>
+      <div className='w-full'>
         <p className='dark:text-white-300 light:text-gray-900 text-md font-medium'>
           <span className='nowrap'>
             <span className='light: text-red-600, dark: text-yellow-300'>
@@ -67,14 +67,16 @@ export const ActivityItem: React.FC<{
             {status} {title}
           </span>
         </p>
-        {/* <p className='text-sm text-gray-500'>
+        <div className='ml-3'>
+          {/* <p className='text-sm text-gray-500'>
           Released on {releaseDate} | {diffDays} days ago
         </p> */}
-        <p className='text-sm text-gray-500'>{review}</p>
-        {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
+          <p className='text-sm text-gray-500'>{review}</p>
+          {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
+        </div>
       </div>
       {useAuth().user && (
-        <div className='ml-auto transform transition duration-300 ease-in-out hover:scale-105'>
+        <div className='w-full'>
           <img
             className='h-36 rounded-r-xl'
             src={

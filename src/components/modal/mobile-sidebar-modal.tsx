@@ -18,25 +18,25 @@ import type { User } from '@lib/types/user';
 export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
 
 const topNavLinks: Readonly<MobileNavLink[]> = [
-  {
-    href: '/trends',
-    linkName: 'Topics',
-    iconName: 'ChatBubbleBottomCenterTextIcon'
-  },
+  // {
+  //   href: '/trends',
+  //   linkName: 'Topics',
+  //   iconName: 'ChatBubbleBottomCenterTextIcon'
+  // },
   {
     href: '/bookmarks',
     linkName: 'Bookmarks',
     iconName: 'BookmarkIcon'
   },
-  {
-    href: '/lists',
-    linkName: 'Lists',
-    iconName: 'Bars3BottomLeftIcon',
-    disabled: false
-  },
+  // {
+  //   href: '/lists',
+  //   linkName: 'Lists',
+  //   iconName: 'Bars3BottomLeftIcon',
+  //   disabled: false
+  // },
   {
     href: '/people',
-    linkName: 'Twitter Circle',
+    linkName: 'Fans',
     iconName: 'UserGroupIcon'
   }
 ];
