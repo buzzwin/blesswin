@@ -42,18 +42,18 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
 ];
 
 const bottomNavLinks: Readonly<MobileNavLink[]> = [
-  {
-    href: '/settings',
-    linkName: 'Settings and privacy',
-    iconName: 'Cog8ToothIcon',
-    disabled: false
-  },
-  {
-    href: '/help-center',
-    linkName: 'Help center',
-    iconName: 'QuestionMarkCircleIcon',
-    disabled: false
-  }
+  // {
+  //   href: '/settings',
+  //   linkName: 'Settings and privacy',
+  //   iconName: 'Cog8ToothIcon',
+  //   disabled: false
+  // },
+  // {
+  //   href: '/help-center',
+  //   linkName: 'Help center',
+  //   iconName: 'QuestionMarkCircleIcon',
+  //   disabled: false
+  // }
 ];
 
 type Stats = [string, string, number];
@@ -121,7 +121,7 @@ export function MobileSidebarModal({
           useIcon
           focusOnMainBtn
           title='Log out of Buzzwin?'
-          description='You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.'
+          description='We would love for you to log back in another time. '
           mainBtnLabel='Log out'
           action={signOut}
           closeModal={logOutCloseModal}

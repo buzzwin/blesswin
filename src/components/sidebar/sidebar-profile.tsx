@@ -31,7 +31,7 @@ export function SidebarProfile(): JSX.Element {
           useIcon
           focusOnMainBtn
           title='Log out of Buzzwin?'
-          description='You can always log back in at any time. If you just want to switch accounts, you can do that by adding an existing account.'
+          description='We would love for you to log back in another time.'
           mainBtnLabel='Log out'
           action={signOut}
           closeModal={closeModal}
@@ -69,8 +69,7 @@ export function SidebarProfile(): JSX.Element {
                   static
                 >
                   <Menu.Item
-                    className='flex items-center justify-between gap-4 border-b 
-                               border-light-border px-4 py-3 dark:border-dark-border'
+                    className='flex items-center justify-between gap-4 border-b border-light-border px-4 py-3 dark:border-dark-border'
                     as='div'
                     disabled
                   >
@@ -92,7 +91,7 @@ export function SidebarProfile(): JSX.Element {
                     {({ active }): JSX.Element => (
                       <Button
                         className={cn(
-                          'flex w-full gap-3 rounded-md rounded-t-none p-4',
+                          'flex w-full items-center justify-between gap-3 rounded-md rounded-t-none px-4 py-3',
                           active && 'bg-main-sidebar-background'
                         )}
                         onClick={openModal}

@@ -37,13 +37,13 @@ export function TweetShare({
         type === 'bookmark'
           ? (): JSX.Element => (
               <span className='flex gap-2'>
-                Tweet added to your Bookmarks
+                Buzz added to your Bookmarks
                 <Link href='/bookmarks'>
                   <a className='custom-underline font-bold'>View</a>
                 </Link>
               </span>
             )
-          : 'Tweet removed from your bookmarks'
+          : 'Buzz removed from your bookmarks'
       );
     };
 
@@ -99,7 +99,7 @@ export function TweetShare({
                     )}
                   >
                     <HeroIcon iconName='BookmarkIcon' />
-                    Bookmark
+                    Add to WatchList
                   </Popover.Button>
                 ) : (
                   <Popover.Button
@@ -110,7 +110,7 @@ export function TweetShare({
                     )}
                   >
                     <HeroIcon iconName='BookmarkSlashIcon' />
-                    Remove Tweet from Bookmarks
+                    Remove Buzz from Bookmarks
                   </Popover.Button>
                 )}
               </Popover.Panel>

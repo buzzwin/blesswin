@@ -15,13 +15,14 @@ type UsernameModalProps = {
 const usernameModalData = [
   {
     title: 'What should we call you?',
-    description: 'Your @username is unique. You can always change it later.',
+    description:
+      'Your @username is unique. We would love for you to change it later.',
     cancelLabel: 'Skip'
   },
   {
     title: 'Change your username?',
     description:
-      'Your @username is unique. You can always change it here again.',
+      'Your @username is unique. We would love for you to change it here again.',
     cancelLabel: 'Cancel'
   }
 ] as const;
