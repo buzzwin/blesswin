@@ -46,7 +46,7 @@ export default function TweetId(): JSX.Element {
   const parentId = tweetData?.parent?.id;
 
   const pageTitle = tweetData
-    ? `${tweetData.user.name} on Twitter: "${text ?? ''}${
+    ? `${tweetData.user.name} on Buzzwin: "${text ?? ''}${
         images ? ` (${imagesLength} image${isPlural(imagesLength)})` : ''
       }" / Buzzwin`
     : null;
