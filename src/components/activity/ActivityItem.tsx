@@ -30,7 +30,7 @@ export const ActivityItem: React.FC<{
   //const { user } = useAuth();
 
   return (
-    <div className='flex items-center gap-4 rounded-lg shadow-lg transition duration-300 ease-in-out hover:inset-0'>
+    <div className='flex items-center gap-4 rounded-lg transition duration-300 ease-in-out'>
       <div className='flex flex-shrink-0 flex-col'>
         {useAuth().user ? (
           <div>
@@ -61,7 +61,7 @@ export const ActivityItem: React.FC<{
       <div className='w-full'>
         <p className='dark:text-white-300 light:text-gray-900 text-md font-medium'>
           <span className='nowrap'>
-            <span className='light: text-red-600, dark: text-yellow-300'>
+            <span className='text-rose-600 dark:text-yellow-300'>
               {username}
             </span>{' '}
             {status} {title}

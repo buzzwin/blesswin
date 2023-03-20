@@ -10,9 +10,9 @@ type DisplayModalProps = {
 };
 
 const themes: Readonly<[Theme, string][]> = [
-  ['light', 'Default'],
-  ['dim', 'Dim'],
-  ['dark', 'Lights out']
+  ['light', 'Light Mode'],
+  ['dim', 'Gray Mode'],
+  ['dark', 'Dark Mode']
 ];
 
 const accentsColor: Readonly<Accent[]> = [
@@ -29,21 +29,21 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
     <div className='flex flex-col items-center gap-6'>
       <div className='flex flex-col gap-3 text-center'>
         <h2 className='text-2xl font-bold'>Customize your view</h2>
-        <p className='text-light-secondary dark:text-dark-secondary'>
+        {/* <p className='text-light-secondary dark:text-dark-secondary'>
           These settings affect all the Buzzwin accounts on this browser.
-        </p>
+        </p> */}
       </div>
       <article className='hover-animation mx-8 rounded-2xl border border-light-border px-4 py-3 dark:border-dark-border'>
         <div className='grid grid-cols-[auto,1fr] gap-3'>
-          <UserAvatar src='/assets/twitter-avatar.jpg' alt='buzzwin' />
+          <UserAvatar src='/assets/logoTR.png' alt='buzzwin' />
           <div>
             <div className='flex gap-1'>
-              <UserName verified name='Buzzwin' />
+              {/* <UserName verified name='Buzzwin' /> */}
               <p className='text-light-secondary dark:text-dark-secondary'></p>
-              <div className='flex gap-1 text-light-secondary dark:text-dark-secondary'>
+              {/* <div className='flex gap-1 text-light-secondary dark:text-dark-secondary'>
                 <i>·</i>
                 <p>26m</p>
-              </div>
+              </div> */}
             </div>
             <p className='whitespace-pre-line break-words'>
               Buzzwin is a social media platform that allows you to connect with
@@ -52,6 +52,17 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
           </div>
         </div>
       </article>
+
+      <div className='flex w-full flex-col gap-1'>
+        <p className='text-center text-sm font-bold text-light-secondary dark:text-dark-secondary'>
+          Change your theme
+        </p>
+        <div className='hover-animation grid grid-rows-3 gap-3 rounded-2xl bg-main-sidebar-background px-4 py-3 xs:grid-cols-3 xs:grid-rows-none'>
+          {themes.map(([themeType, label]) => (
+            <InputThemeRadio type={themeType} label={label} key={themeType} />
+          ))}
+        </div>
+      </div>
       <div className='flex w-full flex-col gap-1'>
         <p className='text-sm font-bold text-light-secondary dark:text-dark-secondary'>
           Color
@@ -59,16 +70,6 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <div className='hover-animation grid grid-cols-3 grid-rows-2 justify-items-center gap-3 rounded-2xl bg-main-sidebar-background py-3 xs:grid-cols-6 xs:grid-rows-none'>
           {accentsColor.map((accentColor) => (
             <InputAccentRadio type={accentColor} key={accentColor} />
-          ))}
-        </div>
-      </div>
-      <div className='flex w-full flex-col gap-1'>
-        <p className='text-sm font-bold text-light-secondary dark:text-dark-secondary'>
-          Background
-        </p>
-        <div className='hover-animation grid grid-rows-3 gap-3 rounded-2xl bg-main-sidebar-background px-4 py-3 xs:grid-cols-3 xs:grid-rows-none'>
-          {themes.map(([themeType, label]) => (
-            <InputThemeRadio type={themeType} label={label} key={themeType} />
           ))}
         </div>
       </div>

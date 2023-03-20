@@ -93,6 +93,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
       >
         <TweetReplyModal tweet={tweet} closeModal={closeModal} />
       </Modal>
+
       <Link href={tweetLink} scroll={!reply}>
         <div
           className={cn(

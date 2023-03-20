@@ -49,16 +49,16 @@
   }
 
   .custom-button {
-    @apply hover-animation rounded-lg p-3 disabled:cursor-not-allowed cursor-pointer disabled:opacity-50;
+    @apply hover-animation rounded-md p-3 disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .custom-underline {
-    @apply hover-animation underline decoration-transparent outline-none transition [text-decoration-thickness:1px] 
+    @apply hover-animation underline decoration-transparent outline-2 transition [text-decoration-thickness:10px] 
            hover:decoration-inherit focus-visible:decoration-inherit;
   }
 
   .main-tab {
-    @apply outline-none focus-visible:ring-2 focus-visible:ring-[#878a8c] focus-visible:transition-shadow 
+    @apply outline-none focus-visible:ring-2 focus-visible:ring-[#f1f4f6] focus-visible:transition-shadow 
            focus-visible:duration-200 dark:focus-visible:ring-white;
   }
 

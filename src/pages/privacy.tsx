@@ -4,7 +4,7 @@ interface Props {
   companyName: string;
 }
 
-const PrivacyPolicy: React.FC<Props> = ({}) => {
+const PrivacyPolicy: React.FC<Props> = () => {
   const companyName = 'Buzzwin';
   return (
     <div className='mx-auto max-w-5xl px-4 sm:px-6 lg:px-8'>
@@ -37,21 +37,21 @@ const PrivacyPolicy: React.FC<Props> = ({}) => {
             your profile
           </li>
         </ul>
-        <p>
-          We also collect information about your use of {companyName},
-          including:
-        </p>
+        <div>
+          We also collect information about your use of {companyName} for
+          example.
+        </div>
         <ul>
-          <li>Your reading history and book ratings</li>
-          <li>Your book reviews and comments</li>
-          <li>Your bookshelves and groups</li>
+          <li>Your watching history and show ratings</li>
+          <li>Your show reviews and comments</li>
+          <li>Your show and groups</li>
           <li>Your interactions with other users on {companyName}</li>
         </ul>
-        <p>
+        <div>
           We may also collect information from third-party sources, such as your
           social media accounts, if you choose to link them to your{' '}
           {companyName} account.
-        </p>
+        </div>
         <div className='pt-2 pb-2 text-xl'>
           2. How We Use Your Personal Information
         </div>
@@ -60,7 +60,7 @@ const PrivacyPolicy: React.FC<Props> = ({}) => {
           <li>Create and maintain your account on {companyName}</li>
           <li>
             Personalize your experience on {companyName}, such as recommending
-            books you may like
+            shows you may like
           </li>
           <li>Communicate with you about your account and our services</li>
           <li>
@@ -99,7 +99,7 @@ const PrivacyPolicy: React.FC<Props> = ({}) => {
             href='mailto:
             '
           >
-            [email protected]
+            link2sources@gmail.com
           </a>
           .
         </p>
@@ -132,7 +132,7 @@ const PrivacyPolicy: React.FC<Props> = ({}) => {
             href='mailto:
             '
           >
-            [email protected]
+            link2sources@gmail.com
           </a>
           .
         </p>
