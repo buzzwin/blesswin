@@ -30,7 +30,7 @@ export const ActivityItem: React.FC<{
   //const { user } = useAuth();
 
   return (
-    <div className='flex items-center gap-4 rounded-lg shadow-lg transition duration-300 ease-in-out hover:inset-0'>
+    <div className='flex items-center gap-4 rounded-lg transition duration-300 ease-in-out hover:inset-0'>
       <div className='flex flex-shrink-0 flex-col'>
         {useAuth().user ? (
           <div>
