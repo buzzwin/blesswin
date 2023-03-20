@@ -42,11 +42,10 @@ export default function Home(): JSX.Element {
           <Error message='Something went wrong' />
         ) : (
           <>
-            <AnimatePresence mode='popLayout'>
-              {data.map((tweet) => (
-                <Tweet {...tweet} key={tweet.id} />
-              ))}
-            </AnimatePresence>
+            {data.map((tweet) => (
+              <Tweet {...tweet} key={tweet.id} />
+            ))}
+
             <LoadMore />
           </>
         )}

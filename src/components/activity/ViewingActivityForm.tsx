@@ -164,6 +164,16 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   const handleCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
     setSearchResults([]);
     setSearchText(' ');
+    setSelectedShow({
+      id: 0,
+      title: '',
+      releaseDate: '',
+      overview: '',
+      poster_path: '',
+      vote_average: 0,
+      name: '',
+      status: ''
+    });
   };
 
   const [loading, setLoading] = useState(false);
