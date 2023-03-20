@@ -117,7 +117,7 @@ const activityData: ViewingActivity[] = [
       'https://image.tmdb.org/t/p/w500/9gk7adHYeDvHkCSEqAvQNLV5Uge.jpg'
   },
   {
-    id: 6,
+    id: 7,
     tmdbId: '',
     rating: '',
     review: '',
@@ -139,9 +139,8 @@ const ActivityFeed: React.FC = () => {
     <div className='float-left rounded-lg bg-gray-800 p-2 text-light-primary shadow-md dark:text-dark-primary'>
       <h2 className='mb-4 text-lg font-bold'>Activity Feed</h2>
       {activityData.map((activity) => (
-        <div className='p-4'>
+        <div className='p-4' key={activity.id}>
           <ActivityItem
-            key={activity.id}
             activity={activity}
             user={{
               id: '',
