@@ -1,10 +1,9 @@
-import { FormEvent, ChangeEvent, useState } from 'react';
+import SpinnerComponent from '@components/common/spinner';
 import axios from 'axios';
 import { debounce } from 'lodash'; // import the debounce function from lodash library
-import SpinnerComponent from '@components/common/spinner';
+import { ChangeEvent, useState } from 'react';
 import SearchResults from './searchresults';
-import { SearchResult } from './types';
-import { ViewingActivity } from './types';
+import { SearchResult, ViewingActivity } from './types';
 
 interface ViewingActivityFormProps {
   onSave: (ViewingActivity: {

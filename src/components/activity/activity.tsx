@@ -1,7 +1,7 @@
-import React from 'react';
 import { ActivityItem } from '@components/activity/ActivityItem';
-import { ViewingActivity } from './types';
 import { Timestamp } from 'firebase/firestore';
+import React from 'react';
+import { ViewingActivity } from './types';
 const randomNumber = Math.floor(Math.random() * 16);
 const activityData: ViewingActivity[] = [
   {
