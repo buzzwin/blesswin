@@ -31,6 +31,7 @@ interface SelectedShow {
   poster_path: string;
   vote_average: number;
   name: string;
+  status: string;
 }
 
 interface TmdbResponse {
@@ -94,7 +95,8 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
       overview: '',
       poster_path: '',
       vote_average: 0,
-      name: ''
+      name: '',
+      status: ''
     });
   };
 
@@ -115,7 +117,8 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     overview: '',
     poster_path: '',
     vote_average: 0,
-    name: ''
+    name: '',
+    status: 'is watching'
   });
 
   // debounce the handleSearch function
@@ -195,11 +198,11 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
             value={searchText}
           />
           {loading && (
-            <p>
+            <div>
               <div>
                 <SpinnerComponent />
               </div>
-            </p>
+            </div>
           )}
           {searchResults && searchResults.length > 0 && (
             <SearchResults results={searchResults} onSelect={handleSelect} />

@@ -49,7 +49,7 @@
   }
 
   .custom-button {
-    @apply hover-animation rounded-full p-3 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply hover-animation rounded-lg p-3 disabled:cursor-not-allowed cursor-pointer disabled:opacity-50;
   }
 
   .custom-underline {

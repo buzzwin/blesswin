@@ -6,6 +6,7 @@ export interface SearchResult {
     poster_path: string;
     vote_average: number;
     name: string;
+    status: string;
   }
 
 

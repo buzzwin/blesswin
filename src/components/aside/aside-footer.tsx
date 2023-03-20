@@ -2,8 +2,8 @@ const footerLinks = [
   ['Terms of Service', 'https://buzzwin.com/tos'],
   ['Privacy Policy', 'https://buzzwin.com/privacy'],
   ['Cookie Policy', 'https://support.buzzwin.com/articles/cookies'],
-  ['Accessibility', 'https://support.buzzwin.com/resources/accessibility'],
-  ['Ads Info', 'https://business.buzzwin.com/ads']
+  ['Accessibility', 'https://support.buzzwin.com/resources/accessibility']
+  // ['Ads Info', 'https://business.buzzwin.com/ads']
 ] as const;
 
 export function AsideFooter(): JSX.Element {

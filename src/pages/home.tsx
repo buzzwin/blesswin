@@ -29,7 +29,7 @@ export default function Home(): JSX.Element {
       <SEO title='Home / Buzzwin' />
       <MainHeader
         useMobileSidebar
-        title='Watcha Watching?'
+        title='What are you watching?'
         className='flex items-center justify-between'
       >
         <UpdateUsername />
