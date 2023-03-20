@@ -1,6 +1,6 @@
 import React from 'react';
 import { ActivityItem } from '@components/activity/ActivityItem';
-import { Activity, ViewingActivity } from './types';
+import { ViewingActivity } from './types';
 import { Timestamp } from 'firebase/firestore';
 const randomNumber = Math.floor(Math.random() * 16);
 const activityData: ViewingActivity[] = [
@@ -10,7 +10,7 @@ const activityData: ViewingActivity[] = [
     rating: '',
     review: '',
     username: 'jdoe',
-    status: 'added to watchlist',
+    status: 'loved',
     title: 'Inception',
     network: 'HBO',
     releaseDate: '2010-07-16',
@@ -26,7 +26,7 @@ const activityData: ViewingActivity[] = [
     rating: '',
     review: '',
     username: 'MikeM',
-    status: 'added to watchlist',
+    status: 'loved',
     title: 'Stranger Things',
     network: 'Netflix',
     releaseDate: '2016-07-15',
@@ -58,7 +58,7 @@ const activityData: ViewingActivity[] = [
     rating: '',
     review: '',
     username: 'jderocks',
-    status: 'added to watchlist',
+    status: 'started watching',
     title: 'Breaking Bad',
     network: 'Netflix',
     releaseDate: '2008-01-20',
@@ -74,7 +74,7 @@ const activityData: ViewingActivity[] = [
     rating: '',
     review: '',
     username: 'oHiCoolGuy',
-    status: 'watched',
+    status: 'finished watching',
     title: 'Game of Thrones',
     network: 'HBO',
     releaseDate: '2011-04-17',
@@ -90,7 +90,7 @@ const activityData: ViewingActivity[] = [
     rating: '',
     review: '',
     username: 'totallyNotABot',
-    status: 'added to watchlist',
+    status: 'watched',
     title: 'The Shawshank Redemption',
     network: 'Amazon Prime Video',
     releaseDate: '1994-09-23',
@@ -106,7 +106,7 @@ const activityData: ViewingActivity[] = [
     rating: '',
     review: '',
     username: 'randomMan',
-    status: 'follows the show',
+    status: 'loved',
     title: 'The Last Kingdom',
     network: 'HBO',
     releaseDate: '1994-09-23',
@@ -136,33 +136,35 @@ const activityData: ViewingActivity[] = [
 
 const ActivityFeed: React.FC = () => {
   return (
-    <div className='rounded-lg bg-gray-800 p-4 text-light-primary shadow-md dark:text-dark-primary'>
+    <div className='float-left rounded-lg bg-gray-800 p-2 text-light-primary shadow-md dark:text-dark-primary'>
       <h2 className='mb-4 text-lg font-bold'>Activity Feed</h2>
       {activityData.map((activity) => (
-        <ActivityItem
-          key={activity.id}
-          activity={activity}
-          user={{
-            id: '',
-            bio: null,
-            name: '',
-            theme: null,
-            accent: null,
-            website: null,
-            location: null,
-            username: '',
-            photoURL: '',
-            verified: false,
-            following: [],
-            followers: [],
-            createdAt: new Timestamp(20000, 0),
-            updatedAt: null,
-            totalTweets: 0,
-            totalPhotos: 0,
-            pinnedTweet: null,
-            coverPhotoURL: null
-          }}
-        />
+        <div className='p-4'>
+          <ActivityItem
+            key={activity.id}
+            activity={activity}
+            user={{
+              id: '',
+              bio: null,
+              name: '',
+              theme: null,
+              accent: null,
+              website: null,
+              location: null,
+              username: '',
+              photoURL: '',
+              verified: false,
+              following: [],
+              followers: [],
+              createdAt: new Timestamp(20000, 0),
+              updatedAt: null,
+              totalTweets: 0,
+              totalPhotos: 0,
+              pinnedTweet: null,
+              coverPhotoURL: null
+            }}
+          />
+        </div>
       ))}
     </div>
   );
