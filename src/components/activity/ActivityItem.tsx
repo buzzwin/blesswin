@@ -30,7 +30,7 @@ export const ActivityItem: React.FC<{
   //const { user } = useAuth();
 
   return (
-    <div className='flex items-center py-4'>
+    <div className='flex items-center gap-4 rounded-lg shadow-lg transition duration-300 ease-in-out hover:-rotate-1'>
       <div className='flex flex-shrink-0 flex-col'>
         {useAuth().user ? (
           <div>
@@ -59,12 +59,12 @@ export const ActivityItem: React.FC<{
       </div>
 
       <div className='ml-3'>
-        <p className='dark:text-white-300 light:text-gray-900 text-sm font-medium'>
+        <p className='dark:text-white-300 light:text-gray-900 text-md font-medium'>
           <span className='nowrap'>
             <span className='light: text-red-600, dark: text-yellow-300'>
               {username}
             </span>{' '}
-            {status} {title} ({network})
+            {status} {title}
           </span>
         </p>
         {/* <p className='text-sm text-gray-500'>
@@ -74,15 +74,17 @@ export const ActivityItem: React.FC<{
         {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
       </div>
       {useAuth().user && (
-        <img
-          className='ml-auto h-16'
-          src={
-            poster_path
-              ? `https://image.tmdb.org/t/p/w500/${poster_path}`
-              : '/movie.png'
-          }
-          alt={title || 'No Image'}
-        />
+        <div className='ml-auto transform transition duration-300 ease-in-out hover:scale-105'>
+          <img
+            className='h-36 rounded-r-xl'
+            src={
+              poster_path
+                ? `https://image.tmdb.org/t/p/w500/${poster_path}`
+                : '/movie.png'
+            }
+            alt={title || 'No Image'}
+          />
+        </div>
       )}
     </div>
   );

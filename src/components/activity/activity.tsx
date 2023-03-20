@@ -155,7 +155,7 @@ const ActivityFeed: React.FC = () => {
             verified: false,
             following: [],
             followers: [],
-            createdAt: new Timestamp(),
+            createdAt: new Timestamp(20000, 0),
             updatedAt: null,
             totalTweets: 0,
             totalPhotos: 0,

@@ -171,6 +171,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               {/* {text && (
                 <p className='break-words whitespace-pre-line'>{text}</p>
               )} */}
+
               {viewingActivity && (
                 <ActivityItem
                   activity={viewingActivity}

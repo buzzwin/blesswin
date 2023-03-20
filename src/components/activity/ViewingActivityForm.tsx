@@ -8,12 +8,18 @@ import { ViewingActivity } from './types';
 
 interface ViewingActivityFormProps {
   onSave: (ViewingActivity: {
+    id: number;
     tmdbId: string;
     title: string;
     status: string;
     rating: string;
     review: string;
     poster_path: string;
+    username: string;
+    network: string;
+    releaseDate: string;
+    time: string;
+    photoURL: string;
   }) => void;
 }
 
@@ -37,17 +43,26 @@ interface AutocompleteState {
   // add other state properties as needed
 }
 
+const defaultActivity: ViewingActivity = {
+  id: 0,
+  tmdbId: '',
+  title: '',
+  status: 'is watching',
+  rating: '',
+  review: '',
+  poster_path: '',
+  username: '',
+  network: '',
+  releaseDate: '',
+  time: '',
+  photoURL: ''
+};
+
 const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   onSave
 }) => {
-  const [viewingActivity, setViewingActivity] = useState<ViewingActivity>({
-    tmdbId: '',
-    title: '',
-    status: '',
-    rating: '',
-    review: '',
-    poster_path: ''
-  });
+  const [viewingActivity, setViewingActivity] =
+    useState<ViewingActivity>(defaultActivity);
 
   const handleInputChange = async (
     e: ChangeEvent<HTMLInputElement>
@@ -71,6 +86,16 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     e.preventDefault();
     console.log('handleSave ViewingActivity: ', viewingActivity);
     onSave(viewingActivity);
+    setSearchResults([]);
+    setSelectedShow({
+      id: 0,
+      title: '',
+      releaseDate: '',
+      overview: '',
+      poster_path: '',
+      vote_average: 0,
+      name: ''
+    });
   };
 
   const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -118,11 +143,12 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   }, 1500); // set the delay time to 500ms
 
   const handleSelect = (searchResult: SearchResult) => {
-    console.log('Selected: ', searchResult);
+    //console.log('Selected: ', searchResult);
     setSelectedShow(searchResult);
     //setSelectedShow(event); // set the selected show
     setSearchResults([]);
     setSearchText(searchResult.title || searchResult.name);
+    console.log('Selected Viewing: ', viewingActivity);
     setViewingActivity((prevState) => ({
       ...prevState,
       title: searchResult.title || searchResult.name,
@@ -148,9 +174,10 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
           name='status'
           value={viewingActivity.status}
           onChange={handleStatusChange}
+          defaultValue='is watching'
         >
-          <option value='just started'>Just started</option>
           <option value='is watching'>Currently watching</option>
+          <option value='just started'>Just started</option>
           <option value='finished'>Finished</option>
           <option value='hates'>Hated</option>
           <option value='loves'>Loved</option>
