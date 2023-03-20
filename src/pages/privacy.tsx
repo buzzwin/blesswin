@@ -4,7 +4,7 @@ interface Props {
   companyName: string;
 }
 
-const PrivacyPolicy: React.FC<Props> = ({}) => {
+const PrivacyPolicy: React.FC<Props> = () => {
   const companyName = 'Buzzwin';
   return (
     <div className='mx-auto max-w-5xl px-4 sm:px-6 lg:px-8'>
@@ -98,9 +98,7 @@ const PrivacyPolicy: React.FC<Props> = ({}) => {
           <a
             href='mailto:
             '
-          >
-            [email protected]
-          </a>
+          ></a>
           .
         </p>
         <p>
@@ -132,7 +130,7 @@ const PrivacyPolicy: React.FC<Props> = ({}) => {
             href='mailto:
             '
           >
-            [email protected]
+            link2sources@gmail.com
           </a>
           .
         </p>
