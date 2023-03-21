@@ -48,7 +48,7 @@ export function SearchBar(): JSX.Element {
         <input
           className='flex-1 bg-transparent outline-none peer placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
           type='text'
-          placeholder='Search Twitter'
+          placeholder='Search Buzzwin'
           ref={inputRef}
           value={inputValue}
           onChange={handleChange}

@@ -1,13 +1,11 @@
-import { Modal } from '@components/modal/modal';
 import { UserAvatar } from '@components/user/user-avatar';
-import { UserTooltip } from '@components/user/user-tooltip';
-import { User } from '@lib/types/user';
-import { Activity, ViewingActivity } from './types';
-import { useModal } from '@lib/hooks/useModal';
-import { UserUsername } from '@components/user/user-username';
 import { UserName } from '@components/user/user-name';
-import { TweetDate } from '@components/tweet/tweet-date';
+import { UserTooltip } from '@components/user/user-tooltip';
+import { UserUsername } from '@components/user/user-username';
 import { useAuth } from '@lib/context/auth-context';
+import { useModal } from '@lib/hooks/useModal';
+import { User } from '@lib/types/user';
+import { ViewingActivity } from './types';
 
 export const ActivityItem: React.FC<{
   activity: ViewingActivity;
