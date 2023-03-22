@@ -15,13 +15,11 @@ export function NumberStats({
 }: NumberStatsProps): JSX.Element {
   return (
     <div className='overflow-hidden'>
-      <AnimatePresence mode='wait' initial={false}>
-        {(alwaysShowStats || !!stats) && (
-          <motion.p className='text-sm' {...getStatsMove(move)} key={stats}>
-            {formatNumber(stats)}
-          </motion.p>
-        )}
-      </AnimatePresence>
+      {(alwaysShowStats || !!stats) && (
+        <motion.p className='text-sm' {...getStatsMove(move)} key={stats}>
+          {formatNumber(stats)}
+        </motion.p>
+      )}
     </div>
   );
 }

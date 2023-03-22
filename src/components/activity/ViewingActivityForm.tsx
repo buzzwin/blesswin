@@ -86,6 +86,9 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   const handleSave = (e: { preventDefault: () => void }) => {
     e.preventDefault();
     console.log('handleSave ViewingActivity: ', viewingActivity);
+    if (viewingActivity.status === null || viewingActivity.status === '') {
+      viewingActivity.status = 'is watching';
+    }
     onSave(viewingActivity);
     setSearchResults([]);
     setSelectedShow({
@@ -187,7 +190,6 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
           name='status'
           value={viewingActivity.status}
           onChange={handleStatusChange}
-          defaultValue='is watching'
         >
           <option value='is watching'>Currently watching</option>
           <option value='just started'>Just started</option>

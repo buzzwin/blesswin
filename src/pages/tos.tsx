@@ -5,14 +5,14 @@ import { MainHeader } from '@components/home/main-header';
 
 const Terms: React.FC = () => {
   const router = useRouter();
-  const handleBack = async () => {
+  const handleBack = async (): Promise<void> => {
     try {
       await router.push('/');
     } catch (error) {
-      console.error(
-        'An error occurred while navigating to the homepage:',
-        error
-      );
+      //console.error(
+      //'An error occurred while navigating to the homepage:',
+      //error
+      //);
     }
   };
   return (

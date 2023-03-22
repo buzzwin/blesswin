@@ -25,6 +25,7 @@ import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
 import type { FilesWithId, ImagesPreview, ImageData } from '@lib/types/file';
 import { ViewingActivity } from '@components/activity/types';
+import { Button } from '@components/ui/button';
 
 type InputProps = {
   modal?: boolean;
@@ -75,6 +76,8 @@ export function Input({
 
   const sendTweet = async (data: ViewingActivity): Promise<void> => {
     console.log('Send Tweet *********', data);
+    console.log('Reply  *********', replyModal);
+    console.log('inputValue  *********', inputValue);
     inputRef.current?.blur();
 
     setLoading(true);
@@ -82,9 +85,10 @@ export function Input({
     const isReplying = reply ?? replyModal;
 
     const userId = user?.id as string;
+    const text = `${user?.name ?? ''} ' ' ${data.status} ${data.title ?? ''}`;
 
     const tweetData: WithFieldValue<Omit<Tweet, 'id'>> = {
-      text: `${user?.name ?? ''} ${data.status} ${data.title ?? ''}`,
+      text: replyModal ? inputValue : text,
       viewingActivity: data,
       parent: isReplying && parent ? parent : null,
       images: await uploadImages(userId, selectedImages),
@@ -185,9 +189,25 @@ export function Input({
     target: { value }
   }: ChangeEvent<HTMLTextAreaElement>): void => setInputValue(value);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
-    e.preventDefault();
-    //void sendTweet();
+  const handleReply = async (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+    console.log('Button clicked', inputValue);
+    const viewingActivity: ViewingActivity = {
+      tmdbId: '',
+      id: 0,
+      username: '',
+      title: '',
+      status: 'is replying',
+      rating: '',
+      review: '',
+      network: '',
+      poster_path: '',
+      releaseDate: '',
+      time: '',
+      photoURL: ''
+    };
+
+    await sendTweet(viewingActivity);
   };
 
   const handleFocus = (): void => setVisited(!loading);
@@ -210,7 +230,6 @@ export function Input({
         'gap-2': replyModal,
         'cursor-not-allowed': disabled
       })}
-      onSubmit={handleSubmit}
     >
       {loading && (
         <motion.i className='h-1 animate-pulse bg-main-accent' {...variants} />
@@ -268,19 +287,26 @@ export function Input({
               />
             )}
           </InputForm>
-          <AnimatePresence initial={false}>
-            {(reply ? reply && visited && !loading : !loading) && (
-              <InputOptions
-                reply={reply}
-                modal={modal}
-                inputLimit={inputLimit}
-                inputLength={inputLength}
-                isValidTweet={isValidTweet}
-                isCharLimitExceeded={isCharLimitExceeded}
-                handleImageUpload={handleImageUpload}
-              />
-            )}
-          </AnimatePresence>
+          {replyModal && (
+            <button
+              className='rounded bg-blue-500 px-4 py-2 font-bold text-white hover:bg-blue-700'
+              onClick={handleReply}
+            >
+              Click me
+            </button>
+          )}
+
+          {(reply ? reply && visited && !loading : !loading) && (
+            <InputOptions
+              reply={reply}
+              modal={modal}
+              inputLimit={inputLimit}
+              inputLength={inputLength}
+              isValidTweet={isValidTweet}
+              isCharLimitExceeded={isCharLimitExceeded}
+              handleImageUpload={handleImageUpload}
+            />
+          )}
         </div>
       </label>
     </form>

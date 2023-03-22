@@ -76,17 +76,18 @@ export function InputForm({
 
   useEffect(() => handleShowHideNav(true), []);
 
-  // const handleKeyboardShortcut = ({ data,
-  //   key,
-  //   ctrlKey
-  // }: KeyboardEvent<HTMLTextAreaElement>): void => {
-  //   if (!modal && key === 'Escape')
-  //     if (isValidTweet) {
-  //       inputRef.current?.blur();
-  //       openModal();
-  //     } else discardTweet();
-  //   else if (ctrlKey && key === 'Enter' && isValidTweet) void sendTweet(data);
-  // };
+  const handleKeyboardShortcut = ({
+    key,
+    ctrlKey
+  }: KeyboardEvent<HTMLTextAreaElement>): void => {
+    if (!modal && key === 'Escape')
+      if (isValidTweet) {
+        inputRef.current?.blur();
+        openModal();
+      } else discardTweet();
+    else if (ctrlKey && key === 'Enter' && isValidTweet)
+      console.log('Input', inputValue);
+  };
 
   const handleShowHideNav = (blur?: boolean) => (): void => {
     const sidebar = document.getElementById('sidebar') as HTMLElement;
@@ -151,24 +152,32 @@ export function InputForm({
           </motion.button>
         )} */}
         <div className='flex items-center gap-3'>
-          <ViewingActivityForm onSave={handleSave} />
+          <div>
+            {replyModal ? (
+              <TextArea
+                id={formId}
+                className='w-full min-w-0 resize-none bg-transparent text-xl outline-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
+                value={inputValue}
+                placeholder={
+                  reply || replyModal
+                    ? 'Send your reply'
+                    : 'What are you watching?'
+                }
+                onBlur={handleShowHideNav(true)}
+                minRows={loading ? 1 : modal && !isUploadingImages ? 3 : 1}
+                maxRows={isUploadingImages ? 5 : 15}
+                onFocus={handleFormFocus}
+                onPaste={handleImageUpload}
+                onKeyUp={handleKeyboardShortcut}
+                onChange={handleChange}
+                ref={inputRef}
+              />
+            ) : (
+              <ViewingActivityForm onSave={handleSave} />
+            )}
+          </div>
 
-          {/* <TextArea
-            id={formId}
-            className='w-full min-w-0 text-xl bg-transparent outline-none resize-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
-            value={inputValue}
-            placeholder={
-              reply || replyModal ? 'Send your reply' : 'What are you watching?'
-            }
-            onBlur={handleShowHideNav(true)}
-            minRows={loading ? 1 : modal && !isUploadingImages ? 3 : 1}
-            maxRows={isUploadingImages ? 5 : 15}
-            onFocus={handleFormFocus}
-            onPaste={handleImageUpload}
-            onKeyUp={handleKeyboardShortcut}
-            onChange={handleChange}
-            ref={inputRef}
-          /> */}
+          {/*  */}
           {reply && !visited && (
             <Button
               className='cursor-pointer bg-main-accent px-4 py-1.5 font-bold text-white opacity-50'

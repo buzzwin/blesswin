@@ -1,9 +1,10 @@
+import { useAuth } from '@lib/context/auth-context';
+import { useModal } from '@lib/hooks/useModal';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserTooltip } from '@components/user/user-tooltip';
 import { UserUsername } from '@components/user/user-username';
-import { useAuth } from '@lib/context/auth-context';
-import { useModal } from '@lib/hooks/useModal';
+import Image from 'next/image';
 import { User } from '@lib/types/user';
 import { ViewingActivity } from './types';
 
@@ -12,9 +13,8 @@ export const ActivityItem: React.FC<{
   user: User;
   modal?: boolean;
 }> = ({ activity, user }) => {
-  const { id, status, title, network, releaseDate, time, poster_path, review } =
-    activity;
-  const { id: ownerId, name, username, verified, photoURL } = user;
+  const { status, title, time, poster_path, review } = activity;
+  const { name, username, verified, photoURL } = user;
   const { modal } = { modal: false };
 
   // Calculate the number of days since the activity was posted
@@ -24,7 +24,7 @@ export const ActivityItem: React.FC<{
   const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
   const randomNumber = Math.floor(Math.random() * 16);
   const imgUrl = `https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}`;
-  const { open, openModal, closeModal } = useModal();
+  //const { open, openModal, closeModal } = useModal();
   //const { user } = useAuth();
 
   return (
@@ -74,15 +74,17 @@ export const ActivityItem: React.FC<{
         </div>
       </div>
       {useAuth().user && (
-        <div className='w-full'>
-          <img
-            className='h-36 rounded-r-xl'
+        <div className='h-full w-full'>
+          <Image
+            className='h-24 rounded-r-xl'
             src={
               poster_path
                 ? `https://image.tmdb.org/t/p/w500/${poster_path}`
                 : '/movie.png'
             }
             alt={title || 'No Image'}
+            width={125}
+            height={187}
           />
         </div>
       )}

@@ -20,6 +20,7 @@ import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
 import { AcademicCapIcon } from '@heroicons/react/24/solid';
 import { ActivityItem } from '@components/activity/ActivityItem';
+import { Button } from '@components/ui/button';
 
 export type TweetProps = Tweet & {
   user: User;
@@ -78,13 +79,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
   const tweetIsRetweeted = userRetweets.includes(profileId ?? '');
 
   return (
-    <motion.article
-      {...(!modal ? { ...variants, layout: 'position' } : {})}
-      animate={{
-        ...variants.animate,
-        ...(parentTweet && { transition: { duration: 0.2 } })
-      }}
-    >
+    <div className='cursor-pointer'>
       <Modal
         className='flex items-start justify-center'
         modalClassName='bg-main-background rounded-2xl max-w-xl w-full my-8 overflow-hidden'
@@ -105,23 +100,22 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           onClick={delayScroll(200)}
         >
           <div className='grid grid-cols-[auto,1fr] gap-x-3 gap-y-1'>
-            <AnimatePresence initial={false}>
-              {modal ? null : pinned ? (
-                <TweetStatus type='pin'>
-                  <p className='text-sm font-bold'>Pinned Buzz</p>
+            {modal ? null : pinned ? (
+              <TweetStatus type='pin'>
+                <p className='text-sm font-bold'>Pinned Buzz</p>
+              </TweetStatus>
+            ) : (
+              tweetIsRetweeted && (
+                <TweetStatus type='tweet'>
+                  <Link href={profileUsername as string}>
+                    <div className='custom-underline truncate text-sm font-bold'>
+                      {userId === profileId ? 'You' : profileName} ReBuzzed
+                    </div>
+                  </Link>
                 </TweetStatus>
-              ) : (
-                tweetIsRetweeted && (
-                  <TweetStatus type='tweet'>
-                    <Link href={profileUsername as string}>
-                      <div className='custom-underline truncate text-sm font-bold'>
-                        {userId === profileId ? 'You' : profileName} ReBuzzed
-                      </div>
-                    </Link>
-                  </TweetStatus>
-                )
-              )}
-            </AnimatePresence>
+              )
+            )}
+
             <div className='flex flex-col items-center gap-2'>
               {/* <UserTooltip avatar modal={modal} {...tweetUserData}> */}
               {/* <UserAvatar src={photoURL} alt={name} username={username} /> */}
@@ -154,25 +148,28 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 </div>
               </div>
               {(reply || modal) && (
-                <p
-                  className={cn(
-                    'text-light-secondary dark:text-dark-secondary',
-                    modal && 'order-1 my-2'
-                  )}
-                >
-                  Replying to{' '}
-                  <Link href={`/user/${parentUsername}`}>
-                    <a className='custom-underline text-main-accent'>
-                      @{parentUsername}
-                    </a>
-                  </Link>
-                </p>
+                <div>
+                  <p
+                    className={cn(
+                      'text-light-secondary dark:text-dark-secondary',
+                      modal && 'order-1 my-2'
+                    )}
+                  >
+                    Replying to{' '}
+                    <Link href={`/user/${parentUsername}`}>
+                      <a className='custom-underline text-main-accent'>
+                        @{parentUsername}
+                      </a>
+                    </Link>
+                  </p>
+                  <p className='whitespace-pre-line break-words'>{text}</p>
+                </div>
               )}
               {/* {text && (
-                <p className='break-words whitespace-pre-line'>{text}</p>
+               
               )} */}
 
-              {viewingActivity && (
+              {viewingActivity && !reply && (
                 <ActivityItem
                   activity={viewingActivity}
                   user={tweetUserData}
@@ -205,6 +202,6 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           </div>
         </div>
       </Link>
-    </motion.article>
+    </div>
   );
 }

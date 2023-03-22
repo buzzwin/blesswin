@@ -15,7 +15,7 @@ import { Error } from '@components/ui/error';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function Home(): JSX.Element {
-  const { isMobile } = useWindow();
+  //const { isMobile } = useWindow();
 
   const { data, loading, LoadMore } = useInfiniteScroll(
     tweetsCollection,

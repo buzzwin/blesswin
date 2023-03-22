@@ -49,8 +49,7 @@ export function UserHeader(): JSX.Element {
     <AnimatePresence mode='popLayout'>
       {loading || statsLoading ? (
         <motion.div
-          className='-mb-1 inner:animate-pulse inner:rounded-lg 
-                     inner:bg-light-secondary dark:inner:bg-dark-secondary'
+          className='-mb-1 inner:animate-pulse inner:rounded-lg inner:bg-light-secondary dark:inner:bg-dark-secondary'
           {...variants}
           key='loading'
         >
@@ -75,8 +74,8 @@ export function UserHeader(): JSX.Element {
               ? `@${user.username}`
               : isInTweetPage
               ? totalTweets
-                ? `${totalTweets} ${`Tweet${isPlural(totalTweets)}`}`
-                : 'No Tweet'
+                ? `${totalTweets} ${`Buzz${isPlural(totalTweets)}`}`
+                : 'No Buzz'
               : currentPage === 'media'
               ? totalPhotos
                 ? `${totalPhotos} Photo${isPlural(totalPhotos)} & GIF${isPlural(

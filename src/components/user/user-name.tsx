@@ -23,7 +23,7 @@ export function UserName({
 
   return (
     <Link href={username ? `/user/${username}` : '#'}>
-      <a
+      <div
         className={cn(
           'flex items-center gap-1 truncate font-bold',
           username ? 'custom-underline' : 'pointer-events-none',
@@ -32,16 +32,7 @@ export function UserName({
         tabIndex={username ? 0 : -1}
       >
         <CustomTag className='truncate'>{name}</CustomTag>
-        {verified && (
-          <i>
-            <HeroIcon
-              className={cn('fill-accent-blue', iconClassName ?? 'h-5 w-5')}
-              iconName='CheckBadgeIcon'
-              solid
-            />
-          </i>
-        )}
-      </a>
+      </div>
     </Link>
   );
 }

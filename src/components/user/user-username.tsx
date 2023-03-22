@@ -14,7 +14,7 @@ export function UserUsername({
 }: UserUsernameProps): JSX.Element {
   return (
     <Link href={`/user/${username}`}>
-      <a
+      <div
         className={cn(
           'truncate text-light-secondary dark:text-dark-secondary',
           className,
@@ -23,7 +23,7 @@ export function UserUsername({
         tabIndex={-1}
       >
         @{username}
-      </a>
+      </div>
     </Link>
   );
 }
