@@ -11,6 +11,7 @@ import { MenuLink } from './menu-link';
 import type { Variants } from 'framer-motion';
 import { ActionModal } from '@components/modal/action-modal';
 import { useAuth } from '@lib/context/auth-context';
+import { useWindow } from '@lib/context/window-context';
 
 export const variants: Variants = {
   initial: { opacity: 0, y: 50 },
@@ -31,6 +32,7 @@ export function MoreSettings(): JSX.Element {
   } = useModal();
 
   const { signOut } = useAuth();
+  const { isMobile } = useWindow();
 
   return (
     <>
@@ -50,13 +52,16 @@ export function MoreSettings(): JSX.Element {
         />
       </Modal>
       <Button
-        className='accent-tab accent-bg-tab flex items-center gap-2 rounded-md p-1.5 font-bold transition
-                         hover:bg-light-primary/10 focus-visible:ring-2 first:focus-visible:ring-[#878a8c] 
-                         dark:hover:bg-dark-primary/10 dark:focus-visible:ring-white'
+        className={cn(
+          `custom-button flex gap-4 text-xl transition group-hover:bg-light-primary/10 group-focus-visible:ring-2
+           group-focus-visible:ring-[#878a8c] dark:group-hover:bg-dark-primary/10 dark:group-focus-visible:ring-white
+           xl:pr-5`,
+          open && 'bg-light-primary/10 dark:bg-dark-primary/10'
+        )}
         onClick={logOutOpenModal}
       >
         <HeroIcon className='h-5 w-5' iconName='ArrowRightOnRectangleIcon' />
-        Log out
+        <span className='hidden lg:inline'>Log out</span>
       </Button>
       <Modal
         modalClassName='max-w-xl bg-main-background w-full p-8 rounded-2xl hover-animation'

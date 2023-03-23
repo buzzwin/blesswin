@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import cn from 'clsx';
-import { manageRetweet, manageLike } from '@lib/firebase/utils';
+import { manageLike } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
 import { TweetShare } from './tweet-share';

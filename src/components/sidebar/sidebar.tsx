@@ -5,10 +5,8 @@ import { useModal } from '@lib/hooks/useModal';
 import { Modal } from '@components/modal/modal';
 import { Input } from '@components/input/input';
 import { CustomIcon } from '@components/ui/custom-icon';
-import { Button } from '@components/ui/button';
 import { SidebarLink } from './sidebar-link';
 import { MoreSettings } from './more-settings';
-import { SidebarProfile } from './sidebar-profile';
 import type { IconName } from '@components/ui/hero-icon';
 
 export type NavLink = {

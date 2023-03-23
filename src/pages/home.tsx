@@ -1,5 +1,5 @@
 import { where, orderBy } from 'firebase/firestore';
-import { useWindow } from '@lib/context/window-context';
+
 import { useInfiniteScroll } from '@lib/hooks/useInfiniteScroll';
 import { tweetsCollection } from '@lib/firebase/collections';
 import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';

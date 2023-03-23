@@ -219,7 +219,6 @@ export function MobileSidebarModal({
                 className='h-5 w-5'
                 iconName='ArrowRightOnRectangleIcon'
               />
-              Log out
             </Button>
           </nav>
         </div>

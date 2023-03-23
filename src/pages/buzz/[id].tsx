@@ -11,7 +11,7 @@ import { MainLayout } from '@components/layout/main-layout';
 import { MainContainer } from '@components/home/main-container';
 import { MainHeader } from '@components/home/main-header';
 import { Tweet } from '@components/tweet/tweet';
-//import { ViewTweet } from '@components/view/view-tweet';
+import { ViewTweet } from '@components/view/view-tweet';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
@@ -46,7 +46,7 @@ export default function TweetId(): JSX.Element {
   const parentId = tweetData?.parent?.id;
 
   const pageTitle = tweetData
-    ? `${tweetData.user.name} on Buzzwin: "${text ?? ''}${
+    ? `${tweetData.user.name} on Twitter: "${text ?? ''}${
         images ? ` (${imagesLength} image${isPlural(imagesLength)})` : ''
       }" / Buzzwin`
     : null;
@@ -75,7 +75,7 @@ export default function TweetId(): JSX.Element {
                 viewTweetRef={viewTweetRef}
               />
             )}
-            <Tweet {...tweetData} />
+            <ViewTweet viewTweetRef={viewTweetRef} {...tweetData} />
             {tweetData &&
               (repliesLoading ? (
                 <Loading className='mt-5' />
