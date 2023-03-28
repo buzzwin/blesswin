@@ -1,16 +1,23 @@
 import { useRouter } from 'next/router';
 import { db } from '@lib/firebase/app';
 import { useEffect, useState } from 'react';
-import { DocumentData, query, where, doc, getDoc } from 'firebase/firestore';
+import {
+  DocumentData,
+  query,
+  where,
+  doc,
+  getDoc,
+  Timestamp
+} from 'firebase/firestore';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import SpinnerComponent from '@components/common/spinner';
 import Image from 'next/image';
+import { ViewingActivity } from '@components/activity/types';
 
 const TweetPage = () => {
   const router = useRouter();
   const {
-    query: { id },
-    back
+    query: { id }
   } = useRouter();
 
   const [data, setData] = useState({} as DocumentData);
@@ -19,29 +26,35 @@ const TweetPage = () => {
   //   useRouter().push(`/`);
   // };
 
-  const fetchData = async () => {
-    if (id === undefined || id == '') return;
-    const idstring = id as string;
-
-    try {
-      const docRef = doc(db, 'tweets', idstring);
-      const docSnap = await getDoc(docRef);
-
-      if (docSnap.exists()) {
-        //console.log('Document data:', docSnap.data());
-        setData(docSnap.data());
-        //console.log(data);
-      } else {
-        // doc.data() will be undefined in this case
-        console.log('No such document!');
-      }
-    } catch (error) {
-      console.error('Error Fetching data:', error);
-    }
-  };
-
   useEffect(() => {
-    fetchData();
+    const fetchData = async () => {
+      if (id === undefined || id == '') return;
+      const idstring = id as string;
+
+      try {
+        const docRef = doc(db, 'tweets', idstring);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          //console.log('Document data:', docSnap.data());
+          setData(docSnap.data());
+          //console.log(data);
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.error('Error Fetching data:', error);
+      }
+    };
+
+    fetchData()
+      .then(() => {
+        //console.log('Data Fetched');
+      })
+      .catch((error) => {
+        console.error('Error Fetching data:', error);
+      });
   }, [id]);
 
   return (
@@ -49,14 +62,18 @@ const TweetPage = () => {
       {data.createdAt ? (
         <div className='rounded-xl bg-white p-6 shadow-md'>
           <div className='mb-4 flex items-center'>
-            <img
-              src={data.photoURL}
+            <Image
+              src={(data.photoURL as string)?.toString() || '/logoTR.png'}
               alt='Profile Picture'
               className='mr-4 h-12 w-12 rounded-full'
+              width={48}
+              height={48}
             />
             <div>
-              <p className='font-medium text-gray-500'>
-                Buzz generated {data.createdAt.toDate().toLocaleString()}
+              <p className='px-4 font-medium text-gray-500'>
+                Buzz generated{' '}
+                {(data.createdAt as Timestamp)?.toDate().toLocaleString() ||
+                  'No Date'}
               </p>
             </div>
           </div>
@@ -64,12 +81,10 @@ const TweetPage = () => {
             <div className='mb-4 text-lg font-medium'>{data.text}</div>
             <Image
               className='h-24 rounded-r-xl'
-              src={
-                data.viewingActivity.poster_path
-                  ? `https://image.tmdb.org/t/p/w500/${data.viewingActivity.poster_path}`
-                  : '/movie.png'
-              }
-              alt={data.title || 'No Image'}
+              src={`https://image.tmdb.org/t/p/w500/${
+                (data.viewingActivity as ViewingActivity)?.poster_path
+              }`}
+              alt={(data.title as string)?.toString() || 'No Image'}
               width={125}
               height={187}
             />
@@ -77,7 +92,9 @@ const TweetPage = () => {
           <div className='mt-4 flex items-center px-4'>
             <button className='mr-4 flex items-center hover:text-red-500'>
               <HeartIcon className='h-5 w-5 text-red-300' />
-              <span className='ml-2 text-sm'>{data.userLikes.length}</span>
+              <span className='ml-2 text-sm'>
+                {(data.userLikes as Array<string>).length}
+              </span>
             </button>
           </div>
           <div className='mt-6 text-sm text-gray-600'>
