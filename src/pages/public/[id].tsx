@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+
 import { DocumentData, doc, getDoc, Timestamp } from 'firebase/firestore';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
@@ -8,61 +8,65 @@ import { SEO } from '@components/common/seo';
 import { db } from '@lib/firebase/app';
 import SpinnerComponent from '@components/common/spinner';
 import { PublicLayout } from '@components/layout/pub_layout';
+import { GetServerSideProps } from 'next/types';
 
-const TweetPage = () => {
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const id = query.id as string;
+  if (id === undefined || id == '') return { props: {} }; // Return empty props object if ID is missing
+
+  const idstring = id;
+
+  try {
+    const docRef = doc(db, 'tweets', idstring);
+    const docSnap = await getDoc(docRef);
+
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      data.createdAt = (data.createdAt as Timestamp).toDate().toISOString();
+      //console.log('Document data:', data);
+      return {
+        props: {
+          data: {
+            ...data
+          }
+        }
+      };
+    } else {
+      console.log('No such document!');
+      return { props: {} }; // Return empty props object if document doesn't exist
+    }
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return { props: {} }; // Return empty props object if there is an error
+  }
+};
+
+interface TweetProps {
+  data: DocumentData;
+}
+
+export const Tweet: React.FC<TweetProps> = ({ data }) => {
   const router = useRouter();
   const {
     query: { id }
   } = useRouter();
 
-  const [data, setData] = useState({} as DocumentData);
+  //const [data, setData] = useState({} as DocumentData);
 
   // const handleJoin = async () => {
   //   useRouter().push(`/`);
   // };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (id === undefined || id == '') return;
-      const idstring = id as string;
-
-      try {
-        const docRef = doc(db, 'tweets', idstring);
-        const docSnap = await getDoc(docRef);
-
-        if (docSnap.exists()) {
-          //console.log('Document data:', docSnap.data());
-          setData(docSnap.data());
-          //console.log(data);
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No such document!');
-        }
-      } catch (error) {
-        console.error('Error Fetching data:', error);
-      }
-    };
-
-    fetchData()
-      .then(() => {
-        //console.log('Data Fetched');
-      })
-      .catch((error) => {
-        console.error('Error Fetching data:', error);
-      });
-  }, [id]);
-
   return (
     <>
       <PublicLayout
-        title={(data.text as string)?.toString() || 'Buzzwin'}
+        title={(data?.text as string)?.toString() || 'Buzzwin'}
         description='Buzzwin is a social media platform to share thoughts on movies, tv shows, and other media.'
         ogImage={`https://image.tmdb.org/t/p/w500/${
-          (data.viewingActivity && (data.viewingActivity as ViewingActivity))
-            ?.poster_path
+          (data?.viewingActivity as ViewingActivity)?.poster_path
         }`}
       >
-        {data.createdAt ? (
+        {data?.createdAt ? (
           <div className='rounded-xl bg-white p-6 shadow-md'>
             <div className='mb-4 flex items-center'>
               <Image
@@ -74,9 +78,7 @@ const TweetPage = () => {
               />
               <div>
                 <p className='px-4 font-medium text-gray-500'>
-                  Buzz generated{' '}
-                  {(data.createdAt as Timestamp)?.toDate().toLocaleString() ||
-                    'No Date'}
+                  Buzz generated {data.createdAt || 'No Date'}
                 </p>
               </div>
             </div>
@@ -115,6 +117,7 @@ const TweetPage = () => {
             <div className='p-16 text-center text-gray-700 dark:text-white'>
               Loading your favorite buzz
             </div>
+
             <SpinnerComponent />
           </div>
         )}
@@ -124,4 +127,4 @@ const TweetPage = () => {
   );
 };
 
-export default TweetPage;
+export default Tweet;
