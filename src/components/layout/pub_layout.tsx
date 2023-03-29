@@ -1,3 +1,4 @@
+import Head from 'next/head';
 import Link from 'next/link';
 import { MainLayout } from '@components/layout/main-layout';
 import { SEO } from '@components/common/seo';
@@ -7,14 +8,30 @@ import { MainContainer } from '@components/home/main-container';
 interface Props {
   children: React.ReactNode;
   title?: string;
+  description?: string;
+  ogImage?: string;
 }
 
 export const PublicLayout: React.FC<Props> = ({
   children,
-  title = 'My Site'
+  title = 'My Site',
+  description = 'A description of my site',
+  ogImage = '/og-image.jpg'
 }) => {
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name='description' content={description} />
+        <meta property='og:title' content={title} />
+        <meta property='og:description' content={description} />
+        <meta property='og:image' content={ogImage} />
+        <meta property='og:image:width' content='1200' />
+        <meta property='og:image:height' content='630' />
+        <meta property='og:type' content='website' />
+        <meta property='og:url' content='https://example.com' />
+      </Head>
+
       <div className='bg-gray-100'>
         <nav className='bg-white shadow'>
           <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
@@ -30,7 +47,10 @@ export const PublicLayout: React.FC<Props> = ({
           </div>
         </nav>
 
-        <main>{children}</main>
+        <div>
+          <MainHeader />
+          <div>{children}</div>
+        </div>
       </div>
     </>
   );
