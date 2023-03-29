@@ -1,13 +1,12 @@
 import { useRouter } from 'next/router';
-
 import { useEffect, useState } from 'react';
 import { DocumentData, doc, getDoc, Timestamp } from 'firebase/firestore';
 import { HeartIcon } from '@heroicons/react/24/solid';
-import SpinnerComponent from '@components/common/spinner';
 import Image from 'next/image';
 import { ViewingActivity } from '@components/activity/types';
 import { SEO } from '@components/common/seo';
 import { db } from '@lib/firebase/app';
+import SpinnerComponent from '@components/common/spinner';
 
 const TweetPage = () => {
   const router = useRouter();
@@ -59,7 +58,9 @@ const TweetPage = () => {
           <SEO
             title='Buzzwin - What are you buzzing about?'
             description={(data.text as string)?.toString() || 'Buzzwin'}
-            image='https://buzzwin.vercel.app/logoTR.png'
+            image={`https://image.tmdb.org/t/p/w500/${
+              (data.viewingActivity as ViewingActivity)?.poster_path
+            }`}
           />
           <div className='mb-4 flex items-center'>
             <Image
