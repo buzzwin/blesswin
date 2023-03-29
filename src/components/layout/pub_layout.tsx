@@ -10,13 +10,15 @@ interface Props {
   title?: string;
   description?: string;
   ogImage?: string;
+  ogUrl?: string;
 }
 
 export const PublicLayout: React.FC<Props> = ({
   children,
-  title = 'My Site',
-  description = 'A description of my site',
-  ogImage = '/og-image.jpg'
+  title,
+  description,
+  ogImage,
+  ogUrl
 }) => {
   return (
     <>
@@ -29,7 +31,7 @@ export const PublicLayout: React.FC<Props> = ({
         <meta property='og:image:width' content='1200' />
         <meta property='og:image:height' content='630' />
         <meta property='og:type' content='website' />
-        <meta property='og:url' content='https://example.com' />
+        <meta property='og:url' content={ogUrl} />
       </Head>
 
       <div className='bg-gray-100'>
@@ -39,7 +41,7 @@ export const PublicLayout: React.FC<Props> = ({
               <div className='flex'>
                 <div className='flex flex-shrink-0 items-center'>
                   <Link href='/'>
-                    <a className='text-2xl font-bold'>My Site</a>
+                    <a className='text-2xl font-bold'>Buzzwin.com</a>
                   </Link>
                 </div>
               </div>
