@@ -56,9 +56,10 @@ const TweetPage = () => {
     <>
       <PublicLayout
         title={(data.text as string)?.toString() || 'Buzzwin'}
-        description='Buzzwin is a social media platform that allows users to share their thoughts and opinions on movies, tv shows, and other media.'
+        description='Buzzwin is a social media platform to share thoughts on movies, tv shows, and other media.'
         ogImage={`https://image.tmdb.org/t/p/w500/${
-          (data.viewingActivity as ViewingActivity)?.poster_path
+          (data.viewingActivity && (data.viewingActivity as ViewingActivity))
+            ?.poster_path
         }`}
       >
         {data.createdAt ? (
