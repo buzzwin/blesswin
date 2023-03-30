@@ -4,9 +4,11 @@ import { CustomIcon } from '@components/ui/custom-icon';
 import { Button } from '@components/ui/button';
 import LogoIcon from '@components/ui/logo';
 import ActivityFeed from '@components/activity/activity';
+import { FacebookIcon } from 'next-share';
 
 export function LoginMain(): JSX.Element {
   const { signInWithGoogle } = useAuth();
+  const { signInWithFacebook } = useAuth();
 
   return (
     <main className='grid grid-cols-1 gap-4 md:grid-cols-12'>
@@ -26,12 +28,22 @@ export function LoginMain(): JSX.Element {
           <div className=' flex max-w-xs flex-col [&_button]:py-2'>
             <div className='grid gap-3 font-bold'>
               <Button
-                className='flex justify-center gap-2 border border-light-line-reply font-bold text-light-primary transition
-                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white
+                className='flex justify-center gap-2 border border-light-line-reply font-bold text-dark-primary transition
+                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-white
                          dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
                 onClick={signInWithGoogle}
               >
-                <CustomIcon iconName='GoogleIcon' /> Sign up with Google
+                <CustomIcon iconName='GoogleIcon' /> Sign In or Sign Up with
+                Google
+              </Button>
+              <Button
+                className='flex justify-center gap-2 border border-light-line-reply font-bold text-dark-primary transition
+                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-white
+                         dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
+                onClick={signInWithFacebook}
+              >
+                <FacebookIcon className='h-7 w-7' />
+                Sign In or Sign Up with Facebook
               </Button>
               {/* <Button
               className='flex cursor-not-allowed justify-center gap-2 border border-light-line-reply font-bold text-light-primary
@@ -79,7 +91,7 @@ export function LoginMain(): JSX.Element {
                 .
               </p>
             </div>
-            <div className='flex flex-col items-center justify-center'>
+            {/* <div className='flex flex-col items-center justify-center'>
               <p className='pt-4 pb-4 font-bold'>Already have an account? </p>
               <Button
                 className='w-1/2 border border-light-line-reply font-bold text-accent-green
@@ -89,7 +101,7 @@ export function LoginMain(): JSX.Element {
               >
                 Sign in
               </Button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

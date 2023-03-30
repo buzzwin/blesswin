@@ -2,6 +2,7 @@ import { useState, useEffect, useContext, createContext, useMemo } from 'react';
 import {
   signInWithPopup,
   GoogleAuthProvider,
+  FacebookAuthProvider,
   onAuthStateChanged,
   signOut as signOutFirebase
 } from 'firebase/auth';
@@ -35,6 +36,7 @@ type AuthContext = {
   userBookmarks: Bookmark[] | null;
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
+  signInWithFacebook: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -174,6 +176,15 @@ export function AuthContextProvider({
     }
   };
 
+  const signInWithFacebook = async (): Promise<void> => {
+    try {
+      const provider = new FacebookAuthProvider();
+      await signInWithPopup(auth, provider);
+    } catch (error) {
+      setError(error as Error);
+    }
+  };
+
   const isAdmin = user ? user.username === 'ccrsxx' : false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
 
@@ -185,7 +196,8 @@ export function AuthContextProvider({
     randomSeed,
     userBookmarks,
     signOut,
-    signInWithGoogle
+    signInWithGoogle,
+    signInWithFacebook
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

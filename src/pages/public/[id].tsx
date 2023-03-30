@@ -9,6 +9,7 @@ import { db } from '@lib/firebase/app';
 import SpinnerComponent from '@components/common/spinner';
 import { PublicLayout } from '@components/layout/pub_layout';
 import { GetServerSideProps } from 'next/types';
+import { formatDate } from '@lib/date';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id as string;
@@ -22,7 +23,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      data.createdAt = (data.createdAt as Timestamp).toDate().toISOString();
+      data.createdAt = formatDate(data.createdAt as Timestamp, 'full');
       //console.log('Document data:', data);
       return {
         props: {
@@ -61,31 +62,23 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
     <>
       <PublicLayout
         title={(data?.text as string)?.toString() || 'Buzzwin'}
-        description='Buzzwin is a social media platform to share thoughts on movies, tv shows, and other media.'
+        description='Checkout this buzz and others at Buzzwin.com a social media platform to share thoughts on movies, tv shows, and other media.'
         ogImage={`https://image.tmdb.org/t/p/w500/${
           (data?.viewingActivity as ViewingActivity)?.poster_path
         }`}
       >
         {data?.createdAt ? (
-          <div className='rounded-xl bg-white p-6 shadow-md'>
-            <div className='mb-4 flex items-center'>
-              <Image
-                src={(data.photoURL as string)?.toString() || '/logoTR.png'}
-                alt='Profile Picture'
-                className='mr-4 h-12 w-12 rounded-full'
-                width={48}
-                height={48}
-              />
-              <div>
-                <p className='px-4 font-medium text-gray-500'>
-                  Buzz generated {data.createdAt || 'No Date'}
-                </p>
-              </div>
+          <div className='relative grid grid-cols-2 gap-4 overflow-hidden rounded-xl bg-white p-6 shadow-md sm:mx-8 md:mx-20'>
+            <div className='absolute top-0 left-0 right-0 col-span-2 h-2 bg-black'></div>
+            <div className='absolute bottom-0 left-0 right-0 col-span-2 h-2 bg-black'></div>
+            <div className='flex items-center'>
+              <p className='bg-gray-200 font-medium text-gray-400'>
+                Buzz generated {data.createdAt || 'No Date'}
+              </p>
             </div>
-            <div className='h-full w-full p-4'>
-              <div className='mb-4 text-lg font-medium'>{data.text}</div>
-              <Image
-                className='h-24 rounded-r-xl'
+            <div className='col-start-2 row-span-4 flex items-center'>
+              <img
+                className='h-48 rounded-r-xl'
                 src={`https://image.tmdb.org/t/p/w500/${
                   (data.viewingActivity as ViewingActivity)?.poster_path
                 }`}
@@ -94,7 +87,13 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
                 height={187}
               />
             </div>
-            <div className='mt-4 flex items-center px-4'>
+            <div className='h-full w-full'>
+              <div className='mb-4 text-lg font-medium'>{data.text}</div>
+            </div>
+            <div className='text-sm'>
+              <p>{(data.viewingActivity as ViewingActivity)?.review}</p>
+            </div>
+            <div className='flex items-center'>
               <button className='mr-4 flex items-center hover:text-red-500'>
                 <HeartIcon className='h-5 w-5 text-red-300' />
                 <span className='ml-2 text-sm'>
@@ -102,15 +101,18 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
                 </span>
               </button>
             </div>
-            <div className='mt-6 text-sm text-gray-600'>
+
+            <div className='text-sm text-gray-600'>
               Interested in what others are watching? Join us now.
             </div>
-            <button
-              className='focus:shadow-outline mt-4 rounded bg-green-400 px-4 py-2 font-bold text-white hover:bg-gray-500 hover:text-white focus:outline-none'
-              onClick={() => router.push('/')}
-            >
-              Sign Up or Sign In
-            </button>
+            <div className='col-span-2'>
+              <button
+                className='focus:shadow-outline mt-4 rounded bg-green-400 px-4 py-2 font-bold text-white hover:bg-gray-500 hover:text-white focus:outline-none'
+                onClick={() => router.push('/')}
+              >
+                Sign Up or Sign In
+              </button>
+            </div>
           </div>
         ) : (
           <div>

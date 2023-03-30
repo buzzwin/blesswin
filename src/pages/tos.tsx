@@ -17,8 +17,12 @@ const Terms: React.FC = () => {
   };
   return (
     <div>
-      <SEO title='People / Buzzwin' />
-      <MainHeader useActionButton title='Home' action={handleBack} />
+      <SEO title='TOS / Buzzwin' />
+      <MainHeader
+        useActionButton
+        title='Terms of Service'
+        action={handleBack}
+      />
       <section>
         <div>
           <p>
