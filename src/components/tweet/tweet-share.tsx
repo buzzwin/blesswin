@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import cn from 'clsx';
-import { Popover } from '@headlessui/react';
+import { Dialog, Popover } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
@@ -11,19 +11,29 @@ import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
 import { variants } from './tweet-actions';
+import { Tweet } from '@lib/types/tweet';
+import { Modal } from '@components/modal/modal';
+import ShareButtons from '@components/share/sharebuttons';
+import { useState } from 'react';
+import { ViewingActivity } from '@components/activity/types';
 
 type TweetShareProps = {
   userId: string;
   tweetId: string;
   viewTweet?: boolean;
+  viewingActivity: ViewingActivity; // Added  this line
+  text: string;
 };
 
 export function TweetShare({
   userId,
   tweetId,
-  viewTweet
+  viewTweet,
+  viewingActivity,
+  text
 }: TweetShareProps): JSX.Element {
   const { userBookmarks } = useAuth();
+  const [showShareModal, setShowShareModal] = useState(false);
 
   const handleBookmark =
     (closeMenu: () => void, ...args: Parameters<typeof manageBookmark>) =>
@@ -53,12 +63,41 @@ export function TweetShare({
     toast.success('Copied to clipboard');
   };
 
+  const handleShare = (closeMenu: () => void) => async (): Promise<void> => {
+    closeMenu();
+    //await navigator.clipboard.writeText(`${siteURL}/public/${tweetId}`);
+    setShowShareModal(true);
+
+    //toast.success('Copied to clipboard');
+  };
+
+  const handleCloseModal = (): void => setShowShareModal(false);
+
+  const handleShareClick = (): void => {
+    setShowShareModal(false);
+    toast.success('Copied to clipboard');
+  };
+
   const tweetIsBookmarked = !!userBookmarks?.some(({ id }) => id === tweetId);
 
   return (
     <Popover className='relative'>
       {({ open, close }): JSX.Element => (
         <>
+          {showShareModal && (
+            <Modal
+              open={showShareModal}
+              closeModal={handleCloseModal}
+              className='fixed top-0 left-0 flex h-full w-full items-center justify-center '
+            >
+              <ShareButtons
+                viewingActivity={viewingActivity}
+                text={text}
+                id={tweetId}
+                shareURL={`https://www.buzzwin.com/public/${tweetId}`}
+              />
+            </Modal>
+          )}
           <Popover.Button
             className={cn(
               `group relative flex items-center gap-1 p-0 outline-none 
@@ -82,6 +121,14 @@ export function TweetShare({
                 {...variants}
                 static
               >
+                <Popover.Button
+                  className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 hover:bg-main-sidebar-background'
+                  as={Button}
+                  onClick={preventBubbling(handleShare(close))}
+                >
+                  <HeroIcon iconName='ShareIcon' />
+                  Share on Social Media
+                </Popover.Button>
                 <Popover.Button
                   className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 hover:bg-main-sidebar-background'
                   as={Button}

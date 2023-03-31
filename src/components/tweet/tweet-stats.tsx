@@ -7,6 +7,7 @@ import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
 import { TweetShare } from './tweet-share';
 import type { Tweet } from '@lib/types/tweet';
+import { ViewingActivity } from '@components/activity/types';
 
 type TweetStatsProps = Pick<
   Tweet,
@@ -17,6 +18,8 @@ type TweetStatsProps = Pick<
   isOwner: boolean;
   tweetId: string;
   viewTweet?: boolean;
+  viewingActivity: ViewingActivity;
+  text: string;
   openModal?: () => void;
 };
 
@@ -28,6 +31,8 @@ export function TweetStats({
   userLikes,
   viewTweet,
   userRetweets,
+  viewingActivity,
+  text,
   userReplies: totalReplies,
   openModal
 }: TweetStatsProps): JSX.Element {
@@ -138,7 +143,13 @@ export function TweetStats({
             tweetId
           )}
         />
-        <TweetShare userId={userId} tweetId={tweetId} viewTweet={viewTweet} />
+        <TweetShare
+          userId={userId}
+          tweetId={tweetId}
+          viewTweet={viewTweet}
+          viewingActivity={viewingActivity}
+          text={text}
+        />
         {/* {isOwner && (
           <TweetOption
             className='hover:text-accent-blue focus-visible:text-accent-blue'

@@ -1,5 +1,22 @@
 import type { SyntheticEvent } from 'react';
 import type { MotionProps } from 'framer-motion';
+import { IncomingMessage } from 'http';
+import { UrlWithParsedQuery } from 'url';
+
+/**
+ * Returns the absolute URL of the current page.
+ *
+ * @param req The incoming request object, if available.
+ * @returns The absolute URL of the current page.
+ */
+export const getAbsoluteURL = (req?: IncomingMessage | undefined): string => {
+  const protocol = req?.headers?.['x-forwarded-proto'] || 'http';
+  const host = req?.headers?.['x-forwarded-host'] || req?.headers?.host || 'localhost:3000';
+
+  // Use the `URL` API to construct the absolute URL.
+  const url = new URL(req?.url || '/', `${protocol}://${host}`);
+  return url.toString();
+};
 
 export function preventBubbling(
   callback?: ((...args: never[]) => unknown) | null,
