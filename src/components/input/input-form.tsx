@@ -181,7 +181,7 @@ export function InputForm({
           {reply && (
             <Button
               className='cursor-pointer bg-main-accent px-4 py-1.5 font-bold text-white opacity-50'
-              onClick={handleSave}
+              onClick={handleFocus}
             >
               Reply
             </Button>

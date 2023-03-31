@@ -11,6 +11,8 @@ import { PublicLayout } from '@components/layout/pub_layout';
 import { GetServerSideProps } from 'next/types';
 import { formatDate } from '@lib/date';
 import { MainHeader } from '@components/home/main-header';
+import Link from 'next/link';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id as string;
@@ -73,7 +75,9 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
       <MainHeader useActionButton title='Whats Buzzin!' action={handleBack} />
       <PublicLayout
         title={(data?.text as string)?.toString() || 'Buzzwin'}
-        description='Checkout this buzz and others at Buzzwin.com a social media platform to share thoughts on movies, tv shows, and other media.'
+        description={
+          (data?.viewingActivity as ViewingActivity)?.review || 'No Review'
+        }
         ogImage={`https://image.tmdb.org/t/p/w500/${
           (data?.viewingActivity as ViewingActivity)?.poster_path
         }`}
@@ -91,13 +95,10 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
               <img
                 className='h-48 rounded-r-xl'
                 //ternary operator to check if poster_path is null
-                src={
-                  data?.viewingActivity?.poster_path
-                    ? `https://image.tmdb.org/t/p/w500/${
-                        (data?.viewingActivity as ViewingActivity)?.poster_path
-                      }`
-                    : `/movie.png`
-                }
+                src={`https://image.tmdb.org/t/p/w500/${
+                  (data?.viewingActivity as ViewingActivity)?.poster_path ||
+                  '/movie.png'
+                }`}
                 alt={(data?.title as string)?.toString() || 'No Image'}
                 width={125}
                 height={187}
@@ -120,9 +121,9 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
 
             <div className='text-lg text-gray-600'>
               Interested in what others are watching?{' '}
-              <a className='text-red-400' href='/'>
+              <Link className='text-red-400' href='/'>
                 Join us now.
-              </a>
+              </Link>
             </div>
             <div className='col-span-2'>
               <button
@@ -136,10 +137,8 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
         ) : (
           <div>
             <div className='p-16 text-center text-gray-700 dark:text-white'>
-              Loading your favorite buzz
+              Nothing to see yet!
             </div>
-
-            <SpinnerComponent />
           </div>
         )}
       </PublicLayout>
