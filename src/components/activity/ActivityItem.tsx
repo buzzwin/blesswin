@@ -59,7 +59,7 @@ export const ActivityItem: React.FC<{
       <div className='w-full'>
         <p className='dark:text-white-300 light:text-gray-900 text-md font-medium'>
           <span className='nowrap'>
-            <span className='light: text-red-600, dark: text-yellow-300'>
+            <span className='text-rose-900 dark:text-green-200'>
               {username}
             </span>{' '}
             {status} {title}

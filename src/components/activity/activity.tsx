@@ -156,7 +156,7 @@ const ActivityFeed: React.FC = () => {
               following: [],
               followers: [],
               createdAt: new Timestamp(20000, 0),
-              updatedAt: null,
+              updatedAt: Timestamp.now(),
               totalTweets: 0,
               totalPhotos: 0,
               pinnedTweet: null,

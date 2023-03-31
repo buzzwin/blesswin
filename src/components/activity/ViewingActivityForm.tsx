@@ -182,24 +182,26 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   const [loading, setLoading] = useState(false);
 
   return (
-    <div className='mx-auto mt-4 w-full sm:max-w-sm lg:max-w-md'>
-      <div className='flex items-center space-x-2'>
+    <div className='mx-auto mt-4 w-full'>
+      <div className='flex items-center'>
+        <span className='px-2'>is </span>
         <select
-          className='focus:shadow-outline w-auto appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+          className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
           id='status'
           name='status'
           value={viewingActivity.status}
           onChange={handleStatusChange}
         >
-          <option value='is watching'>Currently watching</option>
-          <option value='just started'>Just started</option>
-          <option value='finished'>Finished</option>
-          <option value='hates'>Hated</option>
-          <option value='loves'>Loved</option>
+          <option value='is watching'>currently watching</option>
+          <option value='just started'>just started</option>
+          <option value='finished'>finished</option>
+          <option value='hates'>hated</option>
+          <option value='loves'>loved</option>
+          <option value='likes'>liked</option>
+          <option value='intrigued by'>intrigued by</option>
         </select>
       </div>
-
-      <div className='mx-auto w-full max-w-lg'>
+      <div className='mx-auto ml-7 w-full max-w-lg'>
         <div className='mt-8 mb-8'>
           <input
             className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
@@ -231,7 +233,7 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
                 Review
               </label>
               <textarea
-                className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
+                className='focus:shadow-outline w-full appearance-none rounded border px-4 py-2 leading-tight text-gray-700 shadow focus:outline-none'
                 id='review'
                 name='review'
                 value={viewingActivity.review}

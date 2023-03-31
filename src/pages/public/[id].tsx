@@ -10,6 +10,7 @@ import SpinnerComponent from '@components/common/spinner';
 import { PublicLayout } from '@components/layout/pub_layout';
 import { GetServerSideProps } from 'next/types';
 import { formatDate } from '@lib/date';
+import { MainHeader } from '@components/home/main-header';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id as string;
@@ -24,6 +25,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     if (docSnap.exists()) {
       const data = docSnap.data();
       data.createdAt = formatDate(data.createdAt as Timestamp, 'full');
+      data.updatedAt = formatDate(data.updatedAt as Timestamp, 'full');
       //console.log('Document data:', data);
       return {
         props: {
@@ -48,9 +50,16 @@ interface TweetProps {
 
 export const Tweet: React.FC<TweetProps> = ({ data }) => {
   const router = useRouter();
-  const {
-    query: { id }
-  } = useRouter();
+  const handleBack = async (): Promise<void> => {
+    try {
+      await router.push('/');
+    } catch (error) {
+      //console.error(
+      //'An error occurred while navigating to the homepage:',
+      //error
+      //);
+    }
+  };
 
   //const [data, setData] = useState({} as DocumentData);
 
@@ -60,6 +69,8 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
 
   return (
     <>
+      <SEO title='TOS / Buzzwin' />
+      <MainHeader useActionButton title='Whats Buzzin!' action={handleBack} />
       <PublicLayout
         title={(data?.text as string)?.toString() || 'Buzzwin'}
         description='Checkout this buzz and others at Buzzwin.com a social media platform to share thoughts on movies, tv shows, and other media.'
@@ -79,10 +90,15 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
             <div className='col-start-2 row-span-4 flex items-center'>
               <img
                 className='h-48 rounded-r-xl'
-                src={`https://image.tmdb.org/t/p/w500/${
-                  (data.viewingActivity as ViewingActivity)?.poster_path
-                }`}
-                alt={(data.title as string)?.toString() || 'No Image'}
+                //ternary operator to check if poster_path is null
+                src={
+                  data?.viewingActivity?.poster_path
+                    ? `https://image.tmdb.org/t/p/w500/${
+                        (data?.viewingActivity as ViewingActivity)?.poster_path
+                      }`
+                    : `/movie.png`
+                }
+                alt={(data?.title as string)?.toString() || 'No Image'}
                 width={125}
                 height={187}
               />
@@ -102,8 +118,11 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
               </button>
             </div>
 
-            <div className='text-sm text-gray-600'>
-              Interested in what others are watching? Join us now.
+            <div className='text-lg text-gray-600'>
+              Interested in what others are watching?{' '}
+              <a className='text-red-400' href='/'>
+                Join us now.
+              </a>
             </div>
             <div className='col-span-2'>
               <button

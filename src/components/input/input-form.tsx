@@ -153,7 +153,7 @@ export function InputForm({
         )} */}
         <div className='flex items-center gap-3'>
           <div>
-            {replyModal ? (
+            {replyModal || reply ? (
               <TextArea
                 id={formId}
                 className='w-full min-w-0 resize-none bg-transparent text-xl outline-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'

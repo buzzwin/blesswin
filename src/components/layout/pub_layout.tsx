@@ -39,11 +39,7 @@ export const PublicLayout: React.FC<Props> = ({
           <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
             <div className='flex h-16 justify-between'>
               <div className='flex'>
-                <div className='flex flex-shrink-0 items-center'>
-                  <Link href='/'>
-                    <a className='text-2xl font-bold'>Buzzwin.com</a>
-                  </Link>
-                </div>
+                <div className='flex flex-shrink-0 items-center'></div>
               </div>
             </div>
           </div>

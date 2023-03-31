@@ -126,8 +126,11 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
         </p>
       )}
       <div>
-        {text && (
-          <p className='whitespace-pre-line break-words text-2xl'>{text}</p>
+        {text && <p className='whitespace-pre-line break-words pt-4'>{text}</p>}
+        {viewingActivity.review && (
+          <p className='whitespace-pre-line break-words pt-4 text-sm'>
+            {viewingActivity.review}
+          </p>
         )}
         {images && (
           <ImagePreview
