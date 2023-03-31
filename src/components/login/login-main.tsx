@@ -11,9 +11,9 @@ export function LoginMain(): JSX.Element {
   const { signInWithFacebook } = useAuth();
 
   return (
-    <main className='grid grid-cols-1 gap-4 md:grid-cols-12'>
+    <main className='grid grid-cols-1 gap-4 bg-gray-800 md:grid-cols-12'>
       <div className='md:col-span-1'></div>
-      <div className='light:text-gray-700 bg-gray-800 md:col-span-4'>
+      <div className='bg-gray-800 text-gray-300 md:col-span-4'>
         <div className='flex w-full flex-col items-center'>
           <div className='pt-16 pb-2 text-center text-2xl text-gray-400'>
             Tired of trying to find the right movie or show to watch?
@@ -38,7 +38,7 @@ export function LoginMain(): JSX.Element {
               </Button>
               <Button
                 className='flex justify-center gap-2 border border-light-line-reply font-bold text-dark-primary transition
-                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-secondary
+                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-primary
                          dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
                 onClick={signInWithFacebook}
               >
@@ -63,7 +63,7 @@ export function LoginMain(): JSX.Element {
             >
               Sign up with phone or email
             </Button> */}
-              <p className='inner:custom-underline text-center text-xs text-light-secondary inner:text-accent-green dark:text-dark-secondary'>
+              <p className='inner:custom-underline text-center text-xs text-light-secondary inner:text-accent-green dark:text-dark-primary'>
                 By signing up, you agree to the{' '}
                 <a
                   href='https://buzzwin.com/tos'
@@ -106,7 +106,7 @@ export function LoginMain(): JSX.Element {
         </div>
       </div>
 
-      <div className='light:bg-gray-600 col-span-6 mx-auto mt-4 h-2/3 items-center justify-items-center dark:bg-gray-900'>
+      <div className='col-span-6 mx-auto mt-4 h-full items-center justify-items-center '>
         {/* <div className='pt-1 pb-2 text-center text-yellow-100'>
           Find out what others are watching.
         </div>

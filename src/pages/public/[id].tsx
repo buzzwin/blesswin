@@ -71,7 +71,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
 
   return (
     <>
-      <SEO title='TOS / Buzzwin' />
+      <SEO title='Buzzwin- What are you watching?' />
       <MainHeader useActionButton title='Whats Buzzin!' action={handleBack} />
       <PublicLayout
         title={(data?.text as string)?.toString() || 'Buzzwin'}
