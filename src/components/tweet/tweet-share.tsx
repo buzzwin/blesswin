@@ -65,10 +65,10 @@ export function TweetShare({
 
   const handleShare = (closeMenu: () => void) => async (): Promise<void> => {
     closeMenu();
-    //await navigator.clipboard.writeText(`${siteURL}/public/${tweetId}`);
+    await navigator.clipboard.writeText(`${siteURL}/public/${tweetId}`);
     setShowShareModal(true);
 
-    //toast.success('Copied to clipboard');
+    toast.success('Buzz URL Copied to clipboard');
   };
 
   const handleCloseModal = (): void => setShowShareModal(false);
@@ -95,6 +95,7 @@ export function TweetShare({
                 text={text}
                 id={tweetId}
                 shareURL={`https://www.buzzwin.com/public/${tweetId}`}
+                close={handleCloseModal}
               />
             </Modal>
           )}

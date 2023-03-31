@@ -11,10 +11,8 @@ import {
   LinkedinIcon
 } from 'next-share';
 import { useRouter } from 'next/router';
-import { getAbsoluteURL } from 'lib/utils';
-import { Tweet } from '@lib/types/tweet';
+
 import { ViewingActivity } from '@components/activity/types';
-import { HeroIcon } from '@components/ui/hero-icon';
 
 interface ShareButtonsProps {
   viewingActivity: ViewingActivity;

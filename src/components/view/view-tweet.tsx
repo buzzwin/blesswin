@@ -36,6 +36,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
     userRetweets,
     userReplies,
     viewTweetRef,
+    viewingActivity,
     user: tweetUserData
   } = tweet;
 
@@ -147,6 +148,8 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
             userRetweets={userRetweets}
             userReplies={userReplies}
             openModal={openModal}
+            viewingActivity={viewingActivity}
+            text={text || ''}
           />
         </div>
         <Input reply parent={{ id: tweetId, username: username }} />

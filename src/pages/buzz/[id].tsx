@@ -40,7 +40,7 @@ export default function TweetId(): JSX.Element {
     { includeUser: true, allowNull: true }
   );
 
-  const { text, images } = tweetData ?? {};
+  const { text, images, viewingActivity } = tweetData ?? {};
 
   const imagesLength = images?.length ?? 0;
   const parentId = tweetData?.parent?.id;
