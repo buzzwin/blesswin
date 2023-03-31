@@ -155,7 +155,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
             text={text || ''}
           />
         </div>
-        <Input reply parent={{ id: tweetId, username: username }} />
+        {/* <Input reply parent={{ id: tweetId, username: username }} /> */}
       </div>
     </motion.article>
   );

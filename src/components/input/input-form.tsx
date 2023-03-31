@@ -178,10 +178,10 @@ export function InputForm({
           </div>
 
           {/*  */}
-          {reply && !visited && (
+          {reply && (
             <Button
               className='cursor-pointer bg-main-accent px-4 py-1.5 font-bold text-white opacity-50'
-              onClick={handleFocus}
+              onClick={handleSave}
             >
               Reply
             </Button>
