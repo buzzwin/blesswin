@@ -1,10 +1,10 @@
+import { FacebookIcon } from 'next-share';
 import { useAuth } from '@lib/context/auth-context';
 import { NextImage } from '@components/ui/next-image';
 import { CustomIcon } from '@components/ui/custom-icon';
 import { Button } from '@components/ui/button';
 import LogoIcon from '@components/ui/logo';
 import ActivityFeed from '@components/activity/activity';
-import { FacebookIcon } from 'next-share';
 
 export function LoginMain(): JSX.Element {
   const { signInWithGoogle } = useAuth();

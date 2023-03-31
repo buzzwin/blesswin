@@ -1,9 +1,5 @@
 import Head from 'next/head';
-import Link from 'next/link';
-import { MainLayout } from '@components/layout/main-layout';
-import { SEO } from '@components/common/seo';
 import { MainHeader } from '@components/home/main-header';
-import { MainContainer } from '@components/home/main-container';
 
 interface Props {
   children: React.ReactNode;

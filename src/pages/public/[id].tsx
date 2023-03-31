@@ -1,4 +1,6 @@
 import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { isSupported, logEvent } from 'firebase/analytics';
 
 import { DocumentData, doc, getDoc, Timestamp } from 'firebase/firestore';
 import { HeartIcon } from '@heroicons/react/24/solid';
@@ -68,6 +70,29 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
   // const handleJoin = async () => {
   //   useRouter().push(`/`);
   // };
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      isSupported()
+        .then((supported) => {
+          if (supported) {
+            import('firebase/analytics')
+              .then(({ getAnalytics }) => {
+                const analytics = getAnalytics();
+                logEvent(analytics, 'page_view');
+              })
+              .catch((error) => {
+                console.error('Error loading Firebase Analytics:', error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.error(
+            'Error checking for Firebase Analytics support:',
+            error
+          );
+        });
+    }
+  }, []);
 
   return (
     <>

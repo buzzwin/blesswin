@@ -7,10 +7,9 @@ import { UserHomeCover } from '@components/user/user-home-cover';
 import { UserHomeAvatar } from '@components/user/user-home-avatar';
 import { UserDetails } from '@components/user/user-details';
 import { UserNav } from '@components/user/user-nav';
-import { Button } from '@components/ui/button';
+
 import { Loading } from '@components/ui/loading';
-import { HeroIcon } from '@components/ui/hero-icon';
-import { ToolTip } from '@components/ui/tooltip';
+
 import { FollowButton } from '@components/ui/follow-button';
 import { variants } from '@components/user/user-header';
 import { UserEditProfile } from '@components/user/user-edit-profile';
