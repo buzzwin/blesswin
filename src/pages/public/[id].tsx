@@ -119,7 +119,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
             <div className='absolute top-0 left-0 right-0 col-span-2 h-2 bg-black'></div>
             <div className='absolute bottom-0 left-0 right-0 col-span-2 h-2 bg-black'></div>
             <div className='flex items-center'>
-              <p className='bg-gray-200 font-medium text-gray-400'>
+              <p className='font-medium text-green-400 '>
                 Buzz generated {data.createdAt || 'No Date'}
               </p>
             </div>
@@ -142,23 +142,21 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
             <div className='text-sm'>
               <p>{(data.viewingActivity as ViewingActivity)?.review}</p>
             </div>
-            <div className='flex items-center'>
-              {/* <button className='flex items-center mr-4 hover:text-red-500'>
+            {/* <div className='flex items-center'>
+              <button className='flex items-center mr-4 hover:text-red-500'>
                 <HeartIcon className='w-5 h-5 text-red-300' />
                 <span className='ml-2 text-sm'>
                   {(data.userLikes as Array<string>).length}
                 </span>
-              </button> */}
-            </div>
+              </button> 
+            </div> */}
 
-            <div className='p-4 shadow-md'>
-              <div text-lg text-zinc-600>
-                Are you interested in what the world is watching?{' '}
-              </div>
+            <div className='bg-slate-100 p-4 shadow-md'>
+              <div>Are you interested in what the world is watching? </div>
 
               <Link href='/'>
                 <div className='mt-2 flex h-12 w-full font-medium tracking-wide text-green-400 transition duration-200 hover:bg-gray-500 hover:text-white focus:outline-none'>
-                  Join us now!
+                  Join the discussion now!
                 </div>
               </Link>
               <div className='col-span-2'>
