@@ -28,8 +28,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
     if (docSnap.exists()) {
       const data = docSnap.data();
-      data.createdAt = formatDate(data.createdAt as Timestamp, 'full');
-      data.updatedAt = formatDate(data.updatedAt as Timestamp, 'full');
+      // Check if data.updatedAt is not null before formatting it
+      if (data.createdAt !== null) {
+        data.createdAt = formatDate(data.createdAt as Timestamp, 'full');
+      }
+      // Check if data.updatedAt is not null before formatting it
+      if (data.updatedAt !== null) {
+        data.updatedAt = formatDate(data.updatedAt as Timestamp, 'full');
+      }
+
       //console.log('Document data:', data);
       return {
         props: {
@@ -136,27 +143,32 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
               <p>{(data.viewingActivity as ViewingActivity)?.review}</p>
             </div>
             <div className='flex items-center'>
-              <button className='mr-4 flex items-center hover:text-red-500'>
-                <HeartIcon className='h-5 w-5 text-red-300' />
+              {/* <button className='flex items-center mr-4 hover:text-red-500'>
+                <HeartIcon className='w-5 h-5 text-red-300' />
                 <span className='ml-2 text-sm'>
                   {(data.userLikes as Array<string>).length}
                 </span>
-              </button>
+              </button> */}
             </div>
 
-            <div className='text-lg text-gray-600'>
-              Interested in what others are watching?{' '}
-              <Link className='text-red-400' href='/'>
-                Join us now.
+            <div className='p-4 shadow-md'>
+              <div text-lg text-zinc-600>
+                Are you interested in what the world is watching?{' '}
+              </div>
+
+              <Link href='/'>
+                <div className='mt-2 flex h-12 w-full font-medium tracking-wide text-green-400 transition duration-200 hover:bg-gray-500 hover:text-white focus:outline-none'>
+                  Join us now!
+                </div>
               </Link>
-            </div>
-            <div className='col-span-2'>
-              <button
-                className='focus:shadow-outline mt-4 rounded bg-green-400 px-4 py-2 font-bold text-white hover:bg-gray-500 hover:text-white focus:outline-none'
-                onClick={() => router.push('/')}
-              >
-                Sign Up or Sign In
-              </button>
+              <div className='col-span-2'>
+                <button
+                  className='focus:shadow-outline mt-4 rounded bg-green-400 px-4 py-2 font-bold text-white hover:bg-gray-500 hover:text-white focus:outline-none'
+                  onClick={() => router.push('/')}
+                >
+                  Sign Up or Sign In
+                </button>
+              </div>
             </div>
           </div>
         ) : (
