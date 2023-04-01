@@ -29,7 +29,7 @@ export function LoginMain(): JSX.Element {
             <div className='grid gap-3 font-bold'>
               <Button
                 className='flex justify-center gap-2 border border-light-line-reply font-bold text-dark-primary transition
-                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-secondary
+                         hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-primary
                          dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
                 onClick={signInWithGoogle}
               >
