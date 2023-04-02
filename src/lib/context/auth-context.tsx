@@ -4,7 +4,8 @@ import {
   GoogleAuthProvider,
   FacebookAuthProvider,
   onAuthStateChanged,
-  signOut as signOutFirebase
+  signOut as signOutFirebase,
+  signInAnonymously
 } from 'firebase/auth';
 import {
   doc,
@@ -37,6 +38,7 @@ type AuthContext = {
   signOut: () => Promise<void>;
   signInWithGoogle: () => Promise<void>;
   signInWithFacebook: () => Promise<void>;
+  signInAnon: () => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -185,6 +187,15 @@ export function AuthContextProvider({
     }
   };
 
+  const signInAnon = async (): Promise<void> => {
+    console.log('signing in anon');
+    try {
+      await signInAnonymously(auth);
+    } catch (error) {
+      setError(error as Error);
+    }
+  };
+
   const isAdmin = user ? user.username === 'ccrsxx' : false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
 
@@ -197,7 +208,8 @@ export function AuthContextProvider({
     userBookmarks,
     signOut,
     signInWithGoogle,
-    signInWithFacebook
+    signInWithFacebook,
+    signInAnon
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
