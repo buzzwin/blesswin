@@ -15,6 +15,7 @@ import { formatDate } from '@lib/date';
 import { MainHeader } from '@components/home/main-header';
 import Link from 'next/link';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { LoginMain } from '@components/login/login-main';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id as string;
@@ -176,6 +177,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
             </div>
           </div>
         )}
+        <LoginMain></LoginMain>
       </PublicLayout>
     </>
     //<pre>{JSON.stringify(data, null, 2)}</pre>

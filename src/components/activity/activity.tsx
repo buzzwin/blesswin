@@ -136,7 +136,7 @@ const activityData: ViewingActivity[] = [
 
 const ActivityFeed: React.FC = () => {
   return (
-    <div className='float-left rounded-lg bg-gray-700 p-2 text-light-primary shadow-md dark:text-dark-primary'>
+    <div className='float-left rounded-lg bg-gray-500 p-2 text-light-primary shadow-md dark:text-dark-primary'>
       <h2 className='mb-4 text-lg font-bold'>Activity Feed</h2>
       {activityData.map((activity) => (
         <div className='p-4' key={activity.id}>
