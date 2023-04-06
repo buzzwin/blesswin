@@ -29,15 +29,27 @@ export function UserAvatar({
         )}
         tabIndex={username ? 0 : -1}
       >
-        <NextImage
-          useSkeleton
-          imgClassName='rounded-full'
-          width={pictureSize}
-          height={pictureSize}
-          src={src}
-          alt={alt}
-          key={src}
-        />
+        {src ? (
+          <NextImage
+            useSkeleton
+            imgClassName='rounded-full'
+            width={pictureSize}
+            height={pictureSize}
+            src={src}
+            alt={alt}
+            key={src}
+          />
+        ) : (
+          <NextImage
+            useSkeleton
+            imgClassName='rounded-full'
+            width={pictureSize}
+            height={pictureSize}
+            src={'/movie.png'}
+            alt={alt}
+            key={src}
+          />
+        )}
       </div>
     </Link>
   );
