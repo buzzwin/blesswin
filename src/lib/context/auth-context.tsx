@@ -81,12 +81,12 @@ export function AuthContextProvider({
         const userData: WithFieldValue<User> = {
           id: uid,
           bio: null,
-          name: displayName as string,
+          name: (displayName as string) || 'anonymous',
           theme: null,
           accent: null,
           website: null,
           location: null,
-          photoURL: photoURL as string,
+          photoURL: (photoURL as string) || '/movie.png',
           username: randomUsername,
           verified: false,
           following: [],
@@ -196,7 +196,7 @@ export function AuthContextProvider({
     }
   };
 
-  const isAdmin = user ? user.username === 'ccrsxx' : false;
+  const isAdmin = user ? user.username === 'link2sources' : false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
 
   const value: AuthContext = {
