@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Question } from './types';
+
 import questions from './questions.json';
 import { MainHeader } from '@components/home/main-header';
 import router from 'next/router';
@@ -40,6 +40,12 @@ const Quiz: React.FC = () => {
     }
   };
 
+  type Question = {
+    question: string;
+    answers: string[];
+    correctAnswer: string;
+  };
+
   const handleAnswer = (answer: string) => {
     const isCorrect =
       answer.trim() === currentQuestion.correctAnswer.toString().trim();
@@ -78,17 +84,6 @@ const Quiz: React.FC = () => {
         </button> */}
       </div>
     );
-  };
-
-  const handleReturntoStart = async (): Promise<void> => {
-    try {
-      await router.push('/trivia');
-    } catch (error) {
-      //console.error(
-      //'An error occurred while navigating to the homepage:',
-      //error
-      //);
-    }
   };
 
   const renderQuiz = () => {
