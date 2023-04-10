@@ -1,0 +1,43 @@
+[
+    {
+      "question": "Who is the CEO of Waystar Royco in Season 3?",
+      "answers": ["Kendall Roy", "Logan Roy", "Shiv Roy", "Roman Roy"],
+      "correctAnswer": "Logan Roy"
+    },
+    {
+      "question": "What is the name of the cruise company that Waystar Royco acquires in Season 3?",
+      "answers": ["Cruiseliners Inc.", "Roy Cruise Lines", "PGM Cruises", "ATN Cruises"],
+      "correctAnswer": "PGM Cruises"
+    },
+    {
+      "question": "What is the name of the private equity firm that Shiv joins in Season 3?",
+      "answers": ["Argestes", "Vaulter", "Pierce Capital", "Sands Capital"],
+      "correctAnswer": "Argestes"
+    },
+    {
+      "question": "Who becomes the interim CEO of Waystar Royco when Logan steps down in Season 3?",
+      "answers": ["Kendall Roy", "Roman Roy", "Gerri Kellman", "Tom Wamsgans"],
+      "correctAnswer": "Gerri Kellman"
+    },
+    {
+      "question": "What is the name of the activist investor who targets Waystar Royco in Season 3?",
+      "answers": ["Sandy Furness", "Lawrence Yee", "Hugo Baker", "Lucas Mattson"],
+      "correctAnswer": "Lawrence Yee"
+    },
+    {
+      "question": "Who does Tom ask for help when he's called to testify before Congress in Season 3?",
+      "answers": ["Shiv Roy", "Greg Hirsch", "Kendall Roy", "Roman Roy"],
+      "correctAnswer": "Greg Hirsch"
+    },
+    {
+      "question": "What is the name of the Waystar Royco executive who is fired in Season 3 for his involvement in a sexual harassment scandal?",
+      "answers": ["Frank Vernon", "Lawrence Yee", "Karl Muller", "Hugo Baker"],
+      "correctAnswer": "Karl Muller"
+    },
+    {
+      "question": "Who does Logan meet with in Season 3 to discuss a potential merger?",
+      "answers": ["Nan Pierce", "Rhea Jarrell", "Sandy Furness", "Lawrence Yee"],
+      "correctAnswer": "Nan Pierce"
+    }
+  ]
+  

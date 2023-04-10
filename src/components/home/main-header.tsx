@@ -39,14 +39,10 @@ export function MainHeader({
     >
       {useActionButton && (
         <Button
-          className='dark-bg-tab group relative p-2 hover:bg-light-primary/10 active:bg-light-primary/20 
-                     dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+          className='dark-bg-tab group relative p-2 hover:bg-light-primary/10 active:bg-light-primary/20 dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
           onClick={action}
         >
-          <HeroIcon
-            className='h-5 w-5'
-            iconName={iconName ?? 'ArrowLeftIcon'}
-          />
+          <HeroIcon className='h-5 w-5' iconName={iconName ?? 'HomeIcon'} />
           <ToolTip tip={tip ?? 'Back'} />
         </Button>
       )}
