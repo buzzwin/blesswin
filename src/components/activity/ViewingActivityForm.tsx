@@ -184,7 +184,6 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   return (
     <div className='mx-auto mt-4 w-full'>
       <div className='flex items-center'>
-        <span className='px-2'>is </span>
         <select
           className='focus:shadow-outline w-full appearance-none rounded border px-3 py-2 leading-tight text-gray-700 shadow focus:outline-none'
           id='status'
@@ -193,12 +192,13 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
           onChange={handleStatusChange}
         >
           <option value='is watching'>currently watching</option>
-          <option value='just started'>just started</option>
-          <option value='finished'>finished</option>
+          <option value='has just started'>just started</option>
+          <option value='has finished'>finished</option>
           <option value='hates'>hated</option>
           <option value='loves'>loved</option>
           <option value='likes'>liked</option>
-          <option value='intrigued by'>intrigued by</option>
+          <option value='is intrigued by'>intrigued by</option>
+          <option value='has news about'>has news about</option>
         </select>
       </div>
       <div className='mx-auto ml-7 w-full max-w-lg'>
