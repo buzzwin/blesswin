@@ -23,6 +23,9 @@ export function AsideFooter(): JSX.Element {
         ))}
       </nav>
       <p>© 2023 Buzzwin.</p>
+      <div className='mt-4 text-center text-sm text-gray-500'>
+        This site is powered by the TMDB API
+      </div>
     </footer>
   );
 }
