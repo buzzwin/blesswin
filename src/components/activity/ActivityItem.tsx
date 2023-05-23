@@ -28,10 +28,10 @@ export const ActivityItem: React.FC<{
   //const { user } = useAuth();
 
   return (
-    <div className='flex items-center gap-4 rounded-lg transition duration-300 ease-in-out hover:inset-0'>
-      <div className='flex flex-shrink-0 flex-col'>
+    <>
+      <div className='flex items-center justify-between'>
         {useAuth().user ? (
-          <div>
+          <div className='flex w-full flex-grow-0'>
             <div className='mb-2'>
               <UserTooltip avatar modal={modal} {...user}>
                 <UserAvatar src={photoURL} alt={name} username={username} />
@@ -54,40 +54,41 @@ export const ActivityItem: React.FC<{
         ) : (
           <UserAvatar src={imgUrl} alt={name} username={username} />
         )}
+        {useAuth().user && (
+          <div className='h-full w-full'>
+            <Image
+              className='h-24 rounded-r-xl'
+              src={
+                poster_path
+                  ? `https://image.tmdb.org/t/p/w500/${poster_path}`
+                  : '/movie.png'
+              }
+              alt={title || 'No Image'}
+              width={125}
+              height={187}
+            />
+          </div>
+        )}
       </div>
-
-      <div className='w-full'>
-        <p className='dark:text-white-300 light:text-gray-900 text-md font-medium'>
-          <span className='nowrap'>
-            <span className='text-rose-900 dark:text-green-200'>
-              {username}
-            </span>{' '}
-            {status} {title}
-          </span>
-        </p>
-        <div className='ml-3'>
-          {/* <p className='text-sm text-gray-500'>
+      <div className='pt-4'>
+        <div className='w-full'>
+          <p className='dark:text-white-300 light:text-gray-900 text-md font-medium'>
+            <span className='nowrap'>
+              <span className='text-rose-900 dark:text-green-200'>
+                {username}
+              </span>{' '}
+              {status} {title}
+            </span>
+          </p>
+          <div className='ml-3'>
+            {/* <p className='text-sm text-gray-500'>
           Released on {releaseDate} | {diffDays} days ago
         </p> */}
-          <p className='text-sm text-gray-500'>{review}</p>
-          {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
+            <p className='text-sm text-gray-500'>{review}</p>
+            {/* <pre>{JSON.stringify(user, null, 2)}</pre> */}
+          </div>
         </div>
       </div>
-      {useAuth().user && (
-        <div className='h-full w-full'>
-          <Image
-            className='h-24 rounded-r-xl'
-            src={
-              poster_path
-                ? `https://image.tmdb.org/t/p/w500/${poster_path}`
-                : '/movie.png'
-            }
-            alt={title || 'No Image'}
-            width={125}
-            height={187}
-          />
-        </div>
-      )}
-    </div>
+    </>
   );
 };
