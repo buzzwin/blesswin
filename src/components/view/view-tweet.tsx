@@ -18,6 +18,7 @@ import { Input } from '@components/input/input';
 import type { RefObject } from 'react';
 import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
+import Image from 'next/image';
 
 type ViewTweetProps = Tweet & {
   user: User;
@@ -100,7 +101,21 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
                 <UserUsername username={username} />
               </UserTooltip>
             </div>
-            <div className='px-4'>
+
+            <div className='px-10 py-4'>
+              <div className='h-full w-full'>
+                <Image
+                  className='h-24 rounded-r-xl'
+                  src={
+                    viewingActivity.poster_path
+                      ? `https://image.tmdb.org/t/p/w500/${viewingActivity.poster_path}`
+                      : '/movie.png'
+                  }
+                  alt={viewingActivity.title || 'No Image'}
+                  width={125}
+                  height={187}
+                />
+              </div>
               <TweetActions
                 viewTweet
                 isOwner={isOwner}
@@ -115,6 +130,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
           </div>
         </div>
       </div>
+
       {reply && (
         <p className='text-light-secondary dark:text-dark-secondary'>
           Replying to{' '}

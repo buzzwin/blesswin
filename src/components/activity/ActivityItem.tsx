@@ -31,7 +31,7 @@ export const ActivityItem: React.FC<{
     <>
       <div className='flex items-center justify-between'>
         {useAuth().user ? (
-          <div className='flex w-full flex-grow-0'>
+          <div className='flex-0 flex w-full'>
             <div className='mb-2'>
               <UserTooltip avatar modal={modal} {...user}>
                 <UserAvatar src={photoURL} alt={name} username={username} />

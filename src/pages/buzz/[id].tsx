@@ -75,6 +75,7 @@ export default function TweetId(): JSX.Element {
                 viewTweetRef={viewTweetRef}
               />
             )}
+
             <ViewTweet viewTweetRef={viewTweetRef} {...tweetData} />
             {tweetData &&
               (repliesLoading ? (
