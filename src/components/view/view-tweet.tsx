@@ -19,6 +19,7 @@ import type { RefObject } from 'react';
 import type { User } from '@lib/types/user';
 import type { Tweet } from '@lib/types/tweet';
 import Image from 'next/image';
+import JoinConversationButton from '@components/joinconversation';
 
 type ViewTweetProps = Tweet & {
   user: User;
@@ -77,12 +78,14 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
       >
         <TweetReplyModal tweet={tweet} closeModal={closeModal} />
       </Modal>
+
       <div className='flex flex-col gap-2'>
         {reply && (
           <div className='flex w-12 items-center justify-center'>
             <i className='hover-animation h-2 w-0.5 bg-light-line-reply dark:bg-dark-line-reply' />
           </div>
         )}
+
         <div className='grid grid-cols-[auto,1fr] gap-3'>
           <UserTooltip avatar {...tweetUserData}>
             <UserAvatar src={photoURL} alt={name} username={username} />
