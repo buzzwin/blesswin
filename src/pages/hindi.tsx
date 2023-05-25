@@ -84,10 +84,10 @@ const TopHindiShows: NextPage<ShowsProps> = ({ shows }) => {
 TopHindiShows.getInitialProps = async () => {
   try {
     const response = await axios.get(
-      'https://api.themoviedb.org/3/discover/tv?api_key=0af4f0642998fa986fe260078ab69ab6&sort_by=first_air_date.desc&with_original_language=hi&with_networks=213'
+      'https://api.themoviedb.org/3/discover/tv?api_key=&sort_by=first_air_date.desc&with_original_language=hi&with_networks=213'
     );
 
-    const shows: Show[] = response.data.results;
+    const shows: Show[] = (response.data as any).results;
     return { shows };
   } catch (error) {
     console.error(error);
