@@ -1,116 +1,75 @@
-import { useState, KeyboardEvent, ChangeEvent } from 'react';
-import axios from 'axios';
+import { useState } from 'react';
 import { Button } from '@components/ui/button';
 import { CustomIcon } from '@components/ui/custom-icon';
-import LogoIcon from '@components/ui/logo';
 import { FacebookIcon } from 'next-share';
 import { useAuth } from '@lib/context/auth-context';
 
 function JustLogin(): JSX.Element {
-  const { signInWithGoogle } = useAuth();
-  const { signInWithFacebook } = useAuth();
-  const { signInAnon } = useAuth();
+  const { signInWithGoogle, signInWithFacebook, signInAnon } = useAuth();
 
   return (
-    <div className='bg-gray-800 text-gray-300 md:col-span-1'>
-      <div className='flex w-full flex-col items-center'>
-        <div className='pt-6 pb-2 text-center text-2xl text-gray-400'>
-          Tired of trying to find the right movie or show to watch?
-        </div>
-        <div className='text-center text-2xl text-gray-300'>
-          Then you are are in the right place!
-        </div>
-
-        <LogoIcon></LogoIcon>
-
-        <div className='flex max-w-xs flex-col [&_button]:py-2'>
-          <div className='grid gap-3 font-bold'>
-            <Button
-              className='flex justify-center gap-2 border border-light-line-reply font-bold text-dark-primary transition
-                     hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-primary
-                     dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
-              onClick={signInWithGoogle}
-            >
-              <CustomIcon iconName='GoogleIcon' /> Sign In or Sign Up with
-              Google
-            </Button>
-            <Button
-              className='flex justify-center gap-2 border border-light-line-reply font-bold text-dark-primary transition
-                     hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-primary
-                     dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
-              onClick={signInWithFacebook}
-            >
-              <FacebookIcon className='h-7 w-7' />
-              Sign In or Sign Up with Facebook
-            </Button>
-            <p>Not convinced yet ? Use a guest Login feature to explore!</p>
-            <Button
-              onClick={signInAnon}
-              className='flex justify-center gap-2 border border-green-200 font-bold text-dark-primary transition
-              hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0 dark:bg-white dark:text-dark-primary
-              dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
-            >
-              Guest Login
-            </Button>
-            {/* <Button
-          className='flex cursor-not-allowed justify-center gap-2 border border-light-line-reply font-bold text-light-primary
-                     transition hover:bg-[#e6e6e6] focus-visible:bg-[#e6e6e6] active:bg-[#cccccc] dark:border-0
-                     dark:bg-white dark:hover:brightness-90 dark:focus-visible:brightness-90 dark:active:brightness-75'
-        >
-          <CustomIcon iconName='AppleIcon' /> Sign up with Apple
-        </Button>
-        <div className='grid w-full grid-cols-[1fr,auto,1fr] items-center gap-2'>
-          <i className='border-b border-light-border dark:border-dark-border' />
-          <p>or</p>
-          <i className='border-b border-light-border dark:border-dark-border' />
-        </div>
-        <Button
-          className='cursor-not-allowed bg-accent-green text-white transition hover:brightness-90
-                     focus-visible:!ring-accent-green/80 focus-visible:brightness-90 active:brightness-75'
-        >
-          Sign up with phone or email
-        </Button> */}
-            <p className='inner:custom-underline text-center text-xs text-light-secondary inner:text-accent-green dark:text-dark-primary'>
-              By signing up, you agree to the{' '}
-              <a
-                href='https://buzzwin.com/tos'
-                target='_blank'
-                rel='noreferrer'
-              >
-                Terms of Service
-              </a>{' '}
-              and{' '}
-              <a
-                href='https://buzzwin.com/privacy'
-                target='_blank'
-                rel='noreferrer'
-              >
-                Privacy Policy
-              </a>
-              , including{' '}
-              <a
-                href='https://help.buzzwin.com/rules-and-policies/twitter-cookies'
-                target='_blank'
-                rel='noreferrer'
-              >
-                Cookie Use
-              </a>
-              .
-            </p>
-          </div>
-          {/* <div className='flex flex-col items-center justify-center'>
-          <p className='pt-4 pb-4 font-bold'>Already have an account? </p>
-          <Button
-            className='w-1/2 border border-light-line-reply font-bold text-accent-green
-                     hover:bg-accent-yellow/10 focus-visible:bg-accent-green/10 focus-visible:!ring-accent-green/80
-                     active:bg-accent-green/20 dark:border-light-secondary'
-            onClick={signInWithGoogle}
-          >
-            Sign in
-          </Button>
-        </div> */}
-        </div>
+    <div className='mx-auto max-w-md'>
+      <div className='space-y-4 text-center'>
+        <h2 className='text-2xl font-bold text-white md:text-3xl'>
+          Get Started Today
+        </h2>
+        <p className='text-lg text-gray-300'>
+          Join our community of TV and movie enthusiasts
+        </p>
       </div>
+
+      <div className='mt-8 space-y-4'>
+        <Button
+          className='group relative flex w-full items-center justify-center space-x-2 rounded-lg bg-white px-6 py-3 text-base font-medium text-gray-900 transition-all duration-200 hover:bg-gray-100 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-gray-200'
+          onClick={signInWithGoogle}
+        >
+          <CustomIcon iconName='GoogleIcon' className='h-5 w-5' />
+          <span>Continue with Google</span>
+        </Button>
+
+        <Button
+          className='group relative flex w-full items-center justify-center space-x-2 rounded-lg bg-[#1877F2] px-6 py-3 text-base font-medium text-white transition-all duration-200 hover:bg-[#1865F2] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400'
+          onClick={signInWithFacebook}
+        >
+          <FacebookIcon className='h-5 w-5' />
+          <span>Continue with Facebook</span>
+        </Button>
+
+        <div className='relative py-3'>
+          <div className='absolute inset-0 flex items-center'>
+            <div className='w-full border-t border-gray-600'></div>
+          </div>
+          <div className='relative flex justify-center'>
+            <span className='bg-[#1a1f35]/60 px-3 text-sm text-gray-400'>
+              or
+            </span>
+          </div>
+        </div>
+
+        <Button
+          onClick={signInAnon}
+          className='group relative flex w-full items-center justify-center space-x-2 rounded-lg bg-gradient-to-r from-emerald-500 to-teal-500 px-6 py-3 text-base font-medium text-white transition-all duration-200 hover:from-emerald-600 hover:to-teal-600 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-emerald-400'
+        >
+          Try as Guest
+        </Button>
+      </div>
+
+      <p className='mt-6 text-center text-sm text-gray-400'>
+        By signing up, you agree to our{' '}
+        <a
+          href='https://buzzwin.com/tos'
+          className='text-teal-400 hover:text-teal-300'
+        >
+          Terms
+        </a>{' '}
+        and{' '}
+        <a
+          href='https://buzzwin.com/privacy'
+          className='text-teal-400 hover:text-teal-300'
+        >
+          Privacy Policy
+        </a>
+      </p>
     </div>
   );
 }

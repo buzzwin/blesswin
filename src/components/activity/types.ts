@@ -20,6 +20,7 @@ export interface SearchResult {
     review: string;
     network: string;
     poster_path: string | 'https://plchldr.co/i/500x250';
+    backdrop_path?: string;
     releaseDate: string;
     time: string;
     photoURL: string;
