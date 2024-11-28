@@ -79,7 +79,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     setIsUserInfoOpen(false);
   };
 
-  const handleDelete = async (e: React.MouseEvent) => {
+  const handleDelete = async (e: React.MouseEvent): Promise<void> => {
     e.stopPropagation();
     if (window.confirm('Are you sure you want to delete this buzz?')) {
       try {
@@ -95,15 +95,21 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         }
 
         toast.success('Buzz deleted successfully');
-        push('/'); // Redirect to the home page
+
+        try {
+          await push('/');
+        } catch (navigationError) {
+          console.error('Navigation error:', navigationError);
+          // Still consider the operation successful since deletion worked
+        }
       } catch (error) {
         console.error('Error deleting buzz:', error);
         toast.error('Failed to delete buzz');
       } finally {
-        setIsMenuOpen(false); // Ensure this runs regardless of success or failure
+        setIsMenuOpen(false);
       }
     } else {
-      setIsMenuOpen(false); // Handle case where user cancels the action
+      setIsMenuOpen(false);
     }
   };
 
