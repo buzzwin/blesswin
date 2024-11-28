@@ -259,7 +259,7 @@ export function Input({
               'transition-colors duration-200'
             )}
           >
-            Share what you're watching...
+            Share what you are watching ...
           </p>
           <div className='ml-auto flex items-center gap-2 text-gray-400'>
             <HeroIcon
