@@ -5,6 +5,7 @@ import { TMDBResult, TMDBResponse } from './types';
 import axios from 'axios';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@lib/context/auth-context';
+import Image from 'next/image';
 
 const ActivityFeed: React.FC = () => {
   const [activities, setActivities] = useState<ViewingActivity[]>([]);
@@ -162,11 +163,16 @@ const ActivityFeed: React.FC = () => {
             <div className='relative h-full w-full'>
               {/* Backdrop Image */}
               <div className='absolute inset-0'>
-                <img
-                  src={`https://image.tmdb.org/t/p/original${activity.backdrop_path}`}
-                  alt={activity.title}
-                  className='h-full w-full object-cover'
-                />
+                {activity.backdrop_path && (
+                  <Image
+                    src={`https://image.tmdb.org/t/p/original${activity.backdrop_path}`}
+                    alt={activity.title}
+                    className='object-cover'
+                    fill
+                    sizes='100vw'
+                    priority={index === currentIndex}
+                  />
+                )}
                 <div className='absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60'></div>
               </div>
 
@@ -174,20 +180,30 @@ const ActivityFeed: React.FC = () => {
               <div className='absolute bottom-0 left-0 right-0 p-6 md:p-8'>
                 <div className='flex items-end gap-6'>
                   {/* Poster */}
-                  <img
-                    src={`https://image.tmdb.org/t/p/w500${activity.poster_path}`}
-                    alt={activity.title}
-                    className='h-36 w-24 rounded-lg object-cover shadow-2xl ring-1 ring-gray-800 md:h-48 md:w-32 lg:h-64 lg:w-44'
-                  />
+                  {activity.poster_path && (
+                    <div className='relative h-36 w-24 md:h-48 md:w-32 lg:h-64 lg:w-44'>
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w500${activity.poster_path}`}
+                        alt={activity.title}
+                        className='rounded-lg object-cover shadow-2xl ring-1 ring-gray-800'
+                        fill
+                        sizes='(max-width: 768px) 96px, (max-width: 1024px) 128px, 176px'
+                      />
+                    </div>
+                  )}
 
                   {/* Info */}
                   <div className='flex-1 space-y-3'>
                     <div className='flex flex-wrap items-center gap-3'>
-                      <img
-                        src={activity.photoURL}
-                        alt={activity.username}
-                        className='h-6 w-6 rounded-full ring-2 ring-white/20 md:h-8 md:w-8'
-                      />
+                      <div className='relative h-6 w-6 md:h-8 md:w-8'>
+                        <Image
+                          src={activity.photoURL}
+                          alt={activity.username}
+                          className='rounded-full ring-2 ring-white/20'
+                          fill
+                          sizes='(max-width: 768px) 24px, 32px'
+                        />
+                      </div>
                       <span className='text-base font-medium text-gray-300 md:text-lg'>
                         {activity.username}
                       </span>
@@ -206,7 +222,8 @@ const ActivityFeed: React.FC = () => {
                       </span>
                       <span>•</span>
                       <span>
-                        {new Date(activity.releaseDate).getFullYear()}
+                        {activity.releaseDate &&
+                          new Date(activity.releaseDate).getFullYear()}
                       </span>
                     </div>
                   </div>
