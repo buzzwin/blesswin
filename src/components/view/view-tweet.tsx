@@ -1,29 +1,27 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import cn from 'clsx';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
 import { Modal } from '@components/modal/modal';
 import { TweetReplyModal } from '@components/modal/tweet-reply-modal';
 import { ImagePreview } from '@components/input/image-preview';
+import { Input } from '@components/input/input';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserTooltip } from '@components/user/user-tooltip';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
-import { variants } from '@components/tweet/tweet';
-import { TweetActions } from '@components/tweet/tweet-actions';
+import { TweetActions, variants } from '@components/tweet/tweet-actions';
 import { TweetStats } from '@components/tweet/tweet-stats';
 import { TweetDate } from '@components/tweet/tweet-date';
-import { Input } from '@components/input/input';
-import type { RefObject } from 'react';
-import type { User } from '@lib/types/user';
+import { cn } from '@lib/utils';
 import type { Tweet } from '@lib/types/tweet';
+import type { User } from '@lib/types/user';
 import Image from 'next/image';
-import JoinConversationButton from '@components/joinconversation';
 
-type ViewTweetProps = Tweet & {
+export type ViewTweetProps = Tweet & {
   user: User;
-  viewTweetRef?: RefObject<HTMLElement>;
+  profile?: User | null;
+  viewTweetRef?: React.RefObject<HTMLElement>;
 };
 
 export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
@@ -76,7 +74,13 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
         open={open}
         closeModal={closeModal}
       >
-        <TweetReplyModal tweet={tweet} closeModal={closeModal} />
+        <TweetReplyModal
+          tweet={{
+            ...tweet,
+            modal: true
+          }}
+          closeModal={closeModal}
+        />
       </Modal>
 
       <div className='flex flex-col gap-2'>
@@ -110,11 +114,11 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
                 <Image
                   className='h-24 rounded-r-xl'
                   src={
-                    viewingActivity.poster_path
+                    viewingActivity?.poster_path
                       ? `https://image.tmdb.org/t/p/w500/${viewingActivity.poster_path}`
                       : '/movie.png'
                   }
-                  alt={viewingActivity.title || 'No Image'}
+                  alt={viewingActivity?.title || 'No Image'}
                   width={125}
                   height={187}
                 />
@@ -146,7 +150,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
       )}
       <div>
         {text && <p className='whitespace-pre-line break-words pt-4'>{text}</p>}
-        {viewingActivity.review && (
+        {viewingActivity?.review && (
           <p className='whitespace-pre-line break-words pt-4 text-sm'>
             {viewingActivity.review}
           </p>
@@ -174,7 +178,6 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
             text={text || ''}
           />
         </div>
-        {/* <Input reply parent={{ id: tweetId, username: username }} /> */}
       </div>
     </motion.article>
   );

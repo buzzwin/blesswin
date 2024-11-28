@@ -14,13 +14,23 @@ const circleStyles = [
   {
     container: null,
     viewBox: '0 0 20 20',
-    stroke: 'stroke-main-accent',
+    stroke: {
+      base: 'stroke-gray-200 dark:stroke-gray-700',
+      progress: 'stroke-emerald-500 dark:stroke-emerald-400',
+      warning: 'stroke-yellow-500 dark:stroke-yellow-400',
+      error: 'stroke-red-500 dark:stroke-red-400'
+    },
     r: 9
   },
   {
     container: 'scale-150',
     viewBox: '0 0 30 30',
-    stroke: 'stroke-accent-yellow',
+    stroke: {
+      base: 'stroke-gray-200 dark:stroke-gray-700',
+      progress: 'stroke-emerald-500 dark:stroke-emerald-400',
+      warning: 'stroke-yellow-500 dark:stroke-yellow-400',
+      error: 'stroke-red-500 dark:stroke-red-400'
+    },
     r: 14
   }
 ] as const;
@@ -39,17 +49,26 @@ export function ProgressBar({
 
   const remainingCharacters = inputLimit - inputLength;
   const isHittingCharLimit = remainingCharacters <= 0;
+  const isNearCharLimit = remainingCharacters <= 20;
 
   const { container, viewBox, stroke, r } = circleStyles[+isCloseToLimit];
 
   return (
     <button
-      className='group relative cursor-pointer outline-none'
+      className={cn(
+        'group relative flex items-center justify-center',
+        'outline-none focus-visible:ring-2',
+        'rounded-full transition-all duration-200',
+        isHittingCharLimit
+          ? 'focus-visible:ring-red-500'
+          : 'focus-visible:ring-emerald-500'
+      )}
       type='button'
     >
-      <i
+      <div
         className={cn(
-          'flex h-5 w-5 -rotate-90 items-center justify-center transition',
+          'relative flex items-center justify-center',
+          'transition-all duration-200',
           container,
           remainingCharacters <= -10 && 'opacity-0'
         )}
@@ -61,7 +80,7 @@ export function ProgressBar({
           viewBox={viewBox}
         >
           <circle
-            className='stroke-light-border dark:stroke-dark-border'
+            className={stroke.base}
             cx='50%'
             cy='50%'
             fill='none'
@@ -70,8 +89,12 @@ export function ProgressBar({
           />
           <circle
             className={cn(
-              'transition-colors',
-              isHittingCharLimit ? 'stroke-accent-red' : stroke
+              'transition-all duration-200',
+              isHittingCharLimit
+                ? stroke.error
+                : isNearCharLimit
+                ? stroke.warning
+                : stroke.progress
             )}
             cx='50%'
             cy='50%'
@@ -85,15 +108,19 @@ export function ProgressBar({
             }}
           />
         </svg>
-      </i>
+      </div>
       <span
         className={cn(
-          `absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-[45%]
-           scale-50 text-xs opacity-0`,
-          {
-            'scale-100 opacity-100 transition': isCloseToLimit,
-            'text-accent-red': isHittingCharLimit
-          }
+          'absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2',
+          'text-xs font-bold',
+          'transition-all duration-200',
+          'scale-0 opacity-0',
+          isCloseToLimit && 'scale-100 opacity-100',
+          isHittingCharLimit
+            ? 'text-red-500 dark:text-red-400'
+            : isNearCharLimit
+            ? 'text-yellow-500 dark:text-yellow-400'
+            : 'text-emerald-500 dark:text-emerald-400'
         )}
       >
         {remainingCharacters}

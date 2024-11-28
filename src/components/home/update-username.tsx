@@ -13,6 +13,7 @@ import { ToolTip } from '@components/ui/tooltip';
 import { Modal } from '@components/modal/modal';
 import { UsernameModal } from '@components/modal/username-modal';
 import { InputField } from '@components/input/input-field';
+import cn from 'clsx';
 import type { FormEvent, ChangeEvent } from 'react';
 
 export function UpdateUsername(): JSX.Element {
@@ -60,17 +61,12 @@ export function UpdateUsername(): JSX.Element {
     e: FormEvent<HTMLFormElement>
   ): Promise<void> => {
     e.preventDefault();
-
     if (!available) return;
 
     setLoading(true);
-
     await sleep(500);
-
     await updateUsername(user?.id as string, inputValue);
-
     closeModal();
-
     setLoading(false);
 
     setInputValue('');
@@ -93,7 +89,13 @@ export function UpdateUsername(): JSX.Element {
   return (
     <>
       <Modal
-        modalClassName='flex flex-col gap-6 max-w-xl bg-main-background w-full p-8 rounded-2xl h-[576px]'
+        modalClassName={cn(
+          'flex flex-col gap-6 max-w-xl w-full p-8',
+          'bg-white dark:bg-gray-900',
+          'rounded-2xl shadow-xl',
+          'border border-gray-100 dark:border-gray-800',
+          'transform transition-all duration-200'
+        )}
         open={open}
         closeModal={cancelUpdateUsername}
       >
@@ -114,11 +116,28 @@ export function UpdateUsername(): JSX.Element {
         </UsernameModal>
       </Modal>
       <Button
-        className='dark-bg-tab group relative p-2 hover:bg-light-primary/10 active:bg-light-primary/20 dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+        className={cn(
+          'group relative p-2',
+          'transition-all duration-200',
+          'rounded-full',
+          'bg-transparent dark:bg-transparent',
+          'hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10',
+          'active:bg-emerald-500/20 dark:active:bg-emerald-500/20',
+          'focus-visible:ring-2 focus-visible:ring-emerald-500/50',
+          'disabled:opacity-50'
+        )}
         onClick={openModal}
       >
-        <HeroIcon className='h-5 w-5' iconName='UserIcon' />
-        <ToolTip tip='Update UserName' />
+        <HeroIcon
+          className={cn(
+            'h-5 w-5',
+            'text-gray-700 dark:text-gray-200',
+            'transition-colors duration-200',
+            'group-hover:text-emerald-500 dark:group-hover:text-emerald-400'
+          )}
+          iconName='UserIcon'
+        />
+        <ToolTip tip='Update Username' />
       </Button>
     </>
   );

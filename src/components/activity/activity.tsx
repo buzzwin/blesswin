@@ -6,6 +6,7 @@ import axios from 'axios';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@lib/context/auth-context';
 import Image from 'next/image';
+import cn from 'clsx';
 
 const ActivityFeed: React.FC = () => {
   const [activities, setActivities] = useState<ViewingActivity[]>([]);
@@ -139,35 +140,59 @@ const ActivityFeed: React.FC = () => {
 
   if (loading) {
     return (
-      <div className='flex h-[50vh] w-full items-center justify-center bg-gray-800/50 backdrop-blur-sm'>
-        <div className='h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-blue-600'></div>
+      <div
+        className={cn(
+          'flex h-[50vh] w-full items-center justify-center',
+          'bg-gradient-to-b from-gray-900/50 to-gray-900',
+          'dark:from-black/50 dark:to-black',
+          'backdrop-blur-sm'
+        )}
+      >
+        <div
+          className={cn(
+            'h-8 w-8 rounded-full',
+            'border-4 border-emerald-400 dark:border-emerald-500',
+            'border-t-transparent dark:border-t-transparent',
+            'animate-spin'
+          )}
+        ></div>
       </div>
     );
   }
 
   return (
-    <div className='relative h-[50vh] w-full overflow-hidden rounded-xl bg-gray-900 md:h-[60vh] lg:h-[70vh]'>
+    <div
+      className={cn(
+        'relative w-full overflow-hidden rounded-xl',
+        'h-[50vh] md:h-[60vh] lg:h-[70vh]',
+        'bg-gradient-to-b from-gray-900/50 to-gray-900',
+        'dark:from-black/50 dark:to-black',
+        'transition-colors duration-500'
+      )}
+    >
       <div className='relative h-full w-full'>
         {activities.map((activity, index) => (
           <div
             key={activity.id}
-            className={`absolute h-full w-full transform transition-all duration-500 ease-in-out ${
+            className={cn(
+              'absolute h-full w-full transform',
+              'transition-all duration-700 ease-in-out',
               index === currentIndex
                 ? 'opacity-100'
                 : 'pointer-events-none opacity-0'
-            }`}
+            )}
             style={{
               transform: `translateX(${(index - currentIndex) * 100}%)`
             }}
           >
-            <div className='relative h-full w-full'>
+            <div className='group relative h-full w-full'>
               {/* Backdrop Image */}
-              <div className='absolute inset-0'>
+              <div className='absolute inset-0 transition-transform duration-700 group-hover:scale-105'>
                 {activity.backdrop_path && (
                   <Image
                     src={`https://image.tmdb.org/t/p/original${activity.backdrop_path}`}
                     alt={activity.title}
-                    className='object-cover'
+                    className='object-cover transition-all duration-700'
                     style={{
                       width: '100%',
                       height: '100%',
@@ -178,19 +203,44 @@ const ActivityFeed: React.FC = () => {
                     priority={index === currentIndex}
                   />
                 )}
-                <div className='absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/60'></div>
+                <div
+                  className={cn(
+                    'absolute inset-0',
+                    'bg-gradient-to-t from-gray-900 via-gray-900/60 to-transparent',
+                    'dark:from-black dark:via-black/60 dark:to-transparent'
+                  )}
+                ></div>
               </div>
 
               {/* Content */}
-              <div className='absolute bottom-0 left-0 right-0 p-6 md:p-8'>
+              <div
+                className={cn(
+                  'absolute inset-x-0 bottom-0',
+                  'p-6 md:p-8',
+                  'transition-all duration-500',
+                  'translate-y-0 group-hover:translate-y-[-8px]'
+                )}
+              >
                 <div className='flex items-end gap-6'>
                   {/* Poster */}
                   {activity.poster_path && (
-                    <div className='relative h-36 w-24 md:h-48 md:w-32 lg:h-64 lg:w-44'>
+                    <div
+                      className={cn(
+                        'relative shrink-0 overflow-hidden rounded-lg',
+                        'h-36 w-24 md:h-48 md:w-32 lg:h-64 lg:w-44',
+                        'transition-all duration-500',
+                        'shadow-2xl group-hover:shadow-emerald-500/20',
+                        'dark:shadow-black/50 dark:group-hover:shadow-emerald-500/10'
+                      )}
+                    >
                       <Image
                         src={`https://image.tmdb.org/t/p/w500${activity.poster_path}`}
                         alt={activity.title}
-                        className='rounded-lg object-cover shadow-2xl ring-1 ring-gray-800'
+                        className={cn(
+                          'rounded-lg object-cover transition-all duration-700',
+                          'ring-1 ring-white/10 group-hover:ring-emerald-500/50',
+                          'dark:ring-black/20 dark:group-hover:ring-emerald-500/30'
+                        )}
                         style={{
                           width: '100%',
                           height: '100%',
@@ -205,11 +255,19 @@ const ActivityFeed: React.FC = () => {
                   {/* Info */}
                   <div className='flex-1 space-y-3'>
                     <div className='flex flex-wrap items-center gap-3'>
-                      <div className='relative h-6 w-6 md:h-8 md:w-8'>
+                      <div
+                        className={cn(
+                          'relative overflow-hidden rounded-full',
+                          'h-6 w-6 md:h-8 md:w-8',
+                          'transition-transform duration-500 group-hover:scale-105',
+                          'ring-2 ring-white/10 group-hover:ring-emerald-500/50',
+                          'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
+                        )}
+                      >
                         <Image
                           src={activity.photoURL}
                           alt={activity.username}
-                          className='rounded-full ring-2 ring-white/20'
+                          className='rounded-full'
                           style={{
                             width: '100%',
                             height: '100%',
@@ -219,20 +277,60 @@ const ActivityFeed: React.FC = () => {
                           height={32}
                         />
                       </div>
-                      <span className='text-base font-medium text-gray-300 md:text-lg'>
+                      <span
+                        className={cn(
+                          'text-base font-medium md:text-lg',
+                          'text-gray-300 group-hover:text-white',
+                          'dark:text-gray-400 dark:group-hover:text-white',
+                          'transition-colors duration-500'
+                        )}
+                      >
                         {activity.username}
                       </span>
-                      <span className='rounded-full bg-gray-800 px-3 py-1 text-xs text-gray-400 md:text-sm'>
+                      <span
+                        className={cn(
+                          'rounded-full px-3 py-1 text-xs md:text-sm',
+                          'bg-gray-800/50 text-gray-300',
+                          'dark:bg-black/50 dark:text-gray-400',
+                          'group-hover:bg-emerald-900/30 group-hover:text-emerald-200',
+                          'dark:group-hover:bg-emerald-950/50 dark:group-hover:text-emerald-300',
+                          'transition-colors duration-500'
+                        )}
+                      >
                         {activity.status}
                       </span>
                     </div>
 
-                    <h3 className='text-xl font-bold text-white md:text-3xl lg:text-4xl'>
+                    <h3
+                      className={cn(
+                        'text-xl font-bold md:text-3xl lg:text-4xl',
+                        'text-white group-hover:text-emerald-400',
+                        'dark:text-gray-100 dark:group-hover:text-emerald-500',
+                        'transition-all duration-500'
+                      )}
+                    >
                       {activity.title}
                     </h3>
 
-                    <div className='flex flex-wrap items-center gap-3 text-sm text-gray-400 md:gap-4 md:text-base'>
-                      <span className='rounded-full bg-gray-800/50 px-3 py-1 md:px-4'>
+                    <div
+                      className={cn(
+                        'flex flex-wrap items-center gap-3 md:gap-4',
+                        'text-sm md:text-base',
+                        'text-gray-400 group-hover:text-gray-300',
+                        'dark:text-gray-500 dark:group-hover:text-gray-400',
+                        'transition-colors duration-500'
+                      )}
+                    >
+                      <span
+                        className={cn(
+                          'rounded-full px-3 py-1 md:px-4',
+                          'bg-gray-800/50',
+                          'dark:bg-black/50',
+                          'group-hover:bg-emerald-900/30 group-hover:text-emerald-200',
+                          'dark:group-hover:bg-emerald-950/50 dark:group-hover:text-emerald-300',
+                          'transition-colors duration-500'
+                        )}
+                      >
                         {activity.network}
                       </span>
                       <span>•</span>
@@ -249,22 +347,48 @@ const ActivityFeed: React.FC = () => {
         ))}
 
         {/* Navigation Buttons */}
-        <button
-          onClick={prevSlide}
-          disabled={isTransitioning}
-          className='absolute left-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-all hover:bg-black/70 disabled:opacity-50 md:p-3'
-          aria-label='Previous slide'
-        >
-          <ChevronLeftIcon className='h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8' />
-        </button>
-        <button
-          onClick={nextSlide}
-          disabled={isTransitioning}
-          className='absolute right-4 top-1/2 -translate-y-1/2 rounded-full bg-black/50 p-2 text-white backdrop-blur-sm transition-all hover:bg-black/70 disabled:opacity-50 md:p-3'
-          aria-label='Next slide'
-        >
-          <ChevronRightIcon className='h-5 w-5 md:h-6 md:w-6 lg:h-8 lg:w-8' />
-        </button>
+        <div className='absolute inset-y-0 left-0 flex items-center'>
+          <button
+            onClick={prevSlide}
+            disabled={isTransitioning}
+            className={cn(
+              'p-2 md:p-3',
+              'rounded-r-2xl',
+              'text-white',
+              'bg-black/20 dark:bg-black/40',
+              'backdrop-blur-sm',
+              'hover:bg-black/40 dark:hover:bg-black/60',
+              'disabled:opacity-50',
+              'translate-x-0 hover:translate-x-1',
+              'transition-all duration-500',
+              'group'
+            )}
+            aria-label='Previous slide'
+          >
+            <ChevronLeftIcon className='h-5 w-5 transition-transform duration-500 group-hover:scale-110 md:h-6 md:w-6 lg:h-8 lg:w-8' />
+          </button>
+        </div>
+        <div className='absolute inset-y-0 right-0 flex items-center'>
+          <button
+            onClick={nextSlide}
+            disabled={isTransitioning}
+            className={cn(
+              'p-2 md:p-3',
+              'rounded-l-2xl',
+              'text-white',
+              'bg-black/20 dark:bg-black/40',
+              'backdrop-blur-sm',
+              'hover:bg-black/40 dark:hover:bg-black/60',
+              'disabled:opacity-50',
+              '-translate-x-0 hover:-translate-x-1',
+              'transition-all duration-500',
+              'group'
+            )}
+            aria-label='Next slide'
+          >
+            <ChevronRightIcon className='h-5 w-5 transition-transform duration-500 group-hover:scale-110 md:h-6 md:w-6 lg:h-8 lg:w-8' />
+          </button>
+        </div>
 
         {/* Dots */}
         <div className='absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2'>
@@ -279,11 +403,17 @@ const ActivityFeed: React.FC = () => {
                 }
               }}
               disabled={isTransitioning}
-              className={`h-1.5 rounded-full transition-all md:h-2 ${
+              className={cn(
+                'h-1.5 rounded-full md:h-2',
+                'transition-all duration-500',
                 index === currentIndex
-                  ? 'w-6 bg-white'
-                  : 'w-1.5 bg-white/50 hover:bg-white/75 md:w-2'
-              }`}
+                  ? 'w-6 bg-emerald-400 dark:bg-emerald-500'
+                  : cn(
+                      'w-1.5 md:w-2',
+                      'bg-white/30 hover:bg-white/50',
+                      'dark:bg-white/20 dark:hover:bg-white/40'
+                    )
+              )}
               aria-label={`Go to slide ${index + 1}`}
             />
           ))}

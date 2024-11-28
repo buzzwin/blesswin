@@ -7,38 +7,76 @@ type InputAccentRadioProps = {
   type: Accent;
 };
 
-type InputAccentData = Record<Accent, string>;
+type InputAccentData = Record<
+  Accent,
+  {
+    background: string;
+    ring: string;
+    hover: string;
+    active: string;
+  }
+>;
 
 const InputColors: Readonly<InputAccentData> = {
-  yellow:
-    'bg-accent-yellow hover:ring-accent-yellow/10 active:ring-accent-yellow/20',
-  blue: 'bg-accent-blue hover:ring-accent-blue/10 active:ring-accent-blue/20',
-  pink: 'bg-accent-pink hover:ring-accent-pink/10 active:ring-accent-pink/20',
-  purple:
-    'bg-accent-purple hover:ring-accent-purple/10 active:ring-accent-purple/20',
-  orange:
-    'bg-accent-orange hover:ring-accent-orange/10 active:ring-accent-orange/20',
-  green:
-    'bg-accent-green hover:ring-accent-green/10 active:ring-accent-green/20'
+  yellow: {
+    background: 'bg-accent-yellow',
+    ring: 'ring-accent-yellow/30',
+    hover: 'hover:ring-accent-yellow/50',
+    active: 'active:ring-accent-yellow/70'
+  },
+  blue: {
+    background: 'bg-accent-blue',
+    ring: 'ring-accent-blue/30',
+    hover: 'hover:ring-accent-blue/50',
+    active: 'active:ring-accent-blue/70'
+  },
+  pink: {
+    background: 'bg-accent-pink',
+    ring: 'ring-accent-pink/30',
+    hover: 'hover:ring-accent-pink/50',
+    active: 'active:ring-accent-pink/70'
+  },
+  purple: {
+    background: 'bg-accent-purple',
+    ring: 'ring-accent-purple/30',
+    hover: 'hover:ring-accent-purple/50',
+    active: 'active:ring-accent-purple/70'
+  },
+  orange: {
+    background: 'bg-accent-orange',
+    ring: 'ring-accent-orange/30',
+    hover: 'hover:ring-accent-orange/50',
+    active: 'active:ring-accent-orange/70'
+  },
+  green: {
+    background: 'bg-accent-green',
+    ring: 'ring-accent-green/30',
+    hover: 'hover:ring-accent-green/50',
+    active: 'active:ring-accent-green/70'
+  }
 };
 
 export function InputAccentRadio({ type }: InputAccentRadioProps): JSX.Element {
   const { accent, changeAccent } = useTheme();
-
-  const bgColor = InputColors[type];
+  const { background, ring, hover, active } = InputColors[type];
   const isChecked = type === accent;
 
   return (
     <label
       className={cn(
-        `hover-animation flex h-10 w-10 cursor-pointer items-center justify-center
-         rounded-full hover:ring`,
-        bgColor
+        'group relative flex h-12 w-12 cursor-pointer items-center justify-center',
+        'rounded-xl transition-all duration-200',
+        background,
+        'ring-1',
+        ring,
+        hover,
+        active,
+        isChecked && 'ring-2 ring-offset-2 dark:ring-offset-black'
       )}
       htmlFor={type}
     >
       <input
-        className='peer absolute h-0 w-0 opacity-0'
+        className='peer absolute inset-0 cursor-pointer opacity-0'
         id={type}
         type='radio'
         name='accent'
@@ -46,12 +84,16 @@ export function InputAccentRadio({ type }: InputAccentRadioProps): JSX.Element {
         checked={isChecked}
         onChange={changeAccent}
       />
-      <i className='text-white peer-checked:inner:opacity-100'>
-        <HeroIcon
-          className='h-6 w-6 opacity-0 transition-opacity duration-200'
-          iconName='CheckIcon'
-        />
-      </i>
+      <HeroIcon
+        className={cn(
+          'h-6 w-6 text-white',
+          'transition-all duration-200',
+          'scale-75 opacity-0',
+          'group-hover:scale-90 group-hover:opacity-50',
+          isChecked && 'scale-100 opacity-100'
+        )}
+        iconName='CheckIcon'
+      />
     </label>
   );
 }

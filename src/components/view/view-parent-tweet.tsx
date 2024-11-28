@@ -3,6 +3,7 @@ import { doc } from 'firebase/firestore';
 import { useDocument } from '@lib/hooks/useDocument';
 import { tweetsCollection } from '@lib/firebase/collections';
 import { Tweet } from '@components/tweet/tweet';
+import cn from 'clsx';
 import type { RefObject } from 'react';
 
 type ViewParentTweetProps = {
@@ -27,18 +28,38 @@ export function ViewParentTweet({
   if (loading) return null;
   if (!data)
     return (
-      <div className='px-4 pt-3 pb-2'>
-        <p className='rounded-2xl bg-main-sidebar-background px-1 py-3 pl-4 text-light-secondary dark:text-dark-secondary'>
-          This Buzz was deleted.{' '}
-          <a
-            className='custom-underline text-main-accent'
-            href='https://help.buzzwin.com/rules-and-policies/notices-on-twitter'
-            target='_blank'
-            rel='noreferrer'
+      <div className={cn('p-4', 'transition-all duration-200')}>
+        <div
+          className={cn(
+            'rounded-2xl',
+            'p-4',
+            'bg-gray-50 dark:bg-gray-800/50',
+            'border border-gray-100 dark:border-gray-700',
+            'transition-all duration-200'
+          )}
+        >
+          <p
+            className={cn(
+              'text-gray-600 dark:text-gray-400',
+              'transition-colors duration-200'
+            )}
           >
-            Learn more
-          </a>
-        </p>
+            This Buzz was deleted.{' '}
+            <a
+              className={cn(
+                'text-emerald-500 dark:text-emerald-400',
+                'hover:text-emerald-600 dark:hover:text-emerald-500',
+                'underline',
+                'transition-colors duration-200'
+              )}
+              href='https://help.buzzwin.com/rules-and-policies/notices-on-twitter'
+              target='_blank'
+              rel='noreferrer'
+            >
+              Learn more
+            </a>
+          </p>
+        </div>
       </div>
     );
 

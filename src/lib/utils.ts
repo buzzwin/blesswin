@@ -2,8 +2,12 @@ import type { SyntheticEvent } from 'react';
 import type { MotionProps } from 'framer-motion';
 import { IncomingMessage } from 'http';
 import { UrlWithParsedQuery } from 'url';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
-
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}
 
 export function preventBubbling(
   callback?: ((...args: never[]) => unknown) | null,

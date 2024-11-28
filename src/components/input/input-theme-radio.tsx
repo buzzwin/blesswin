@@ -13,32 +13,33 @@ type InputThemeData = Record<
   {
     textColor: string;
     backgroundColor: string;
-    iconBorderColor: string;
-    hoverBackgroundColor: string;
+    ringColor: string;
+    hoverRingColor: string;
+    activeRingColor: string;
   }
 >;
 
 const inputThemeData: Readonly<InputThemeData> = {
   light: {
-    textColor: 'text-black',
+    textColor: 'text-gray-900',
     backgroundColor: 'bg-white',
-    iconBorderColor: 'border-[#B9CAD3]',
-    hoverBackgroundColor:
-      '[&:hover>div]:bg-light-secondary/10 [&:active>div]:bg-light-secondary/20'
+    ringColor: 'ring-gray-200',
+    hoverRingColor: 'hover:ring-gray-300',
+    activeRingColor: 'active:ring-gray-400'
   },
   dim: {
-    textColor: 'text-[#F7F9F9]',
+    textColor: 'text-gray-100',
     backgroundColor: 'bg-[#15202B]',
-    iconBorderColor: 'border-[#5C6E7E]',
-    hoverBackgroundColor:
-      '[&:hover>div]:bg-light-secondary/10 [&:active>div]:bg-light-secondary/20'
+    ringColor: 'ring-gray-700',
+    hoverRingColor: 'hover:ring-gray-600',
+    activeRingColor: 'active:ring-gray-500'
   },
   dark: {
-    textColor: 'text-dark-primary',
+    textColor: 'text-white',
     backgroundColor: 'bg-black',
-    iconBorderColor: 'border-[#3E4144]',
-    hoverBackgroundColor:
-      '[&:hover>div]:bg-dark-primary/10 [&:active>div]:bg-dark-primary/20'
+    ringColor: 'ring-gray-800',
+    hoverRingColor: 'hover:ring-gray-700',
+    activeRingColor: 'active:ring-gray-600'
   }
 };
 
@@ -48,25 +49,43 @@ export function InputThemeRadio({
 }: InputThemeRadioProps): JSX.Element {
   const { theme, changeTheme } = useTheme();
 
-  const { textColor, backgroundColor, iconBorderColor, hoverBackgroundColor } =
-    inputThemeData[type];
+  const {
+    textColor,
+    backgroundColor,
+    ringColor,
+    hoverRingColor,
+    activeRingColor
+  } = inputThemeData[type];
 
-  const isChecked = type == theme;
+  const isChecked = type === theme;
 
   return (
     <label
       className={cn(
-        `flex cursor-pointer items-center gap-2 rounded p-3 font-bold ring-main-accent transition
-         duration-200 [&:has(div>input:checked)]:ring-2`,
-        textColor,
+        'group relative flex cursor-pointer items-center gap-3 rounded-xl p-4',
+        'transition-all duration-200',
         backgroundColor,
-        hoverBackgroundColor
+        textColor,
+        'ring-1',
+        ringColor,
+        hoverRingColor,
+        activeRingColor,
+        isChecked && 'ring-2 ring-emerald-500'
       )}
       htmlFor={type}
     >
-      <div className='hover-animation flex h-10 w-10 items-center justify-center rounded-full'>
+      <div
+        className={cn(
+          'relative flex h-10 w-10 items-center justify-center rounded-full',
+          'transition-all duration-200',
+          'ring-1',
+          ringColor,
+          'group-hover:ring-2',
+          isChecked && 'ring-2 ring-emerald-500'
+        )}
+      >
         <input
-          className='peer absolute h-0 w-0 opacity-0'
+          className='peer absolute inset-0 cursor-pointer opacity-0'
           id={type}
           type='radio'
           name='theme'
@@ -74,22 +93,27 @@ export function InputThemeRadio({
           checked={isChecked}
           onChange={changeTheme}
         />
-        <i
+        <div
           className={cn(
-            `flex h-5 w-5 items-center justify-center rounded-full 
-             border-2 border-[#B9CAD3] text-white transition
-             duration-200 peer-checked:border-transparent
-             peer-checked:bg-main-accent peer-checked:inner:opacity-100`,
-            iconBorderColor
+            'flex h-5 w-5 items-center justify-center rounded-full',
+            'transition-all duration-200',
+            'ring-1',
+            ringColor,
+            isChecked && 'bg-emerald-500 ring-0'
           )}
         >
           <HeroIcon
-            className='h-full w-full p-0.5 opacity-0 transition-opacity duration-200'
+            className={cn(
+              'h-4 w-4 text-white',
+              'transition-all duration-200',
+              'opacity-0',
+              isChecked && 'opacity-100'
+            )}
             iconName='CheckIcon'
           />
-        </i>
+        </div>
       </div>
-      {label}
+      <span className='text-lg font-medium'>{label}</span>
     </label>
   );
 }

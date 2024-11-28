@@ -29,7 +29,6 @@ export function InputField({
   handleKeyboardShortcut
 }: InputFieldProps): JSX.Element {
   const slicedInputValue = inputValue?.slice(0, inputLimit) ?? '';
-
   const inputLength = slicedInputValue.length;
   const isHittingInputLimit = inputLimit && inputLength > inputLimit;
 
@@ -37,17 +36,25 @@ export function InputField({
     <div className='flex flex-col gap-1'>
       <div
         className={cn(
-          'relative rounded ring-1 transition-shadow duration-200',
-          errorMessage
-            ? 'ring-accent-red'
-            : `ring-light-line-reply focus-within:ring-2 
-                 focus-within:!ring-main-accent dark:ring-dark-border`
+          'group relative overflow-hidden rounded-lg transition-all duration-200',
+          'bg-white/5 dark:bg-black/5',
+          'backdrop-blur-lg',
+          'ring-1 ring-white/10 dark:ring-black/10',
+          'hover:ring-white/20 dark:hover:ring-black/20',
+          'focus-within:ring-2 focus-within:ring-emerald-500/50',
+          errorMessage && 'ring-2 ring-red-500/50 dark:ring-red-500/50'
         )}
       >
         {useTextArea ? (
           <textarea
-            className='peer mt-6 w-full resize-none bg-inherit px-3 pb-1
-                       placeholder-transparent outline-none transition'
+            className={cn(
+              'peer w-full resize-none bg-transparent px-4 pt-6 pb-2',
+              'text-base text-gray-900 dark:text-white',
+              'placeholder-transparent',
+              'outline-none',
+              'transition-all duration-200',
+              'disabled:opacity-50'
+            )}
             id={inputId}
             placeholder={inputId}
             onChange={!isHittingInputLimit ? handleChange : undefined}
@@ -57,8 +64,14 @@ export function InputField({
           />
         ) : (
           <input
-            className='peer mt-6 w-full bg-inherit px-3 pb-1
-                       placeholder-transparent outline-none transition'
+            className={cn(
+              'peer w-full bg-transparent px-4 pt-6 pb-2',
+              'text-base text-gray-900 dark:text-white',
+              'placeholder-transparent',
+              'outline-none',
+              'transition-all duration-200',
+              'disabled:opacity-50'
+            )}
             id={inputId}
             type='text'
             placeholder={inputId}
@@ -69,32 +82,48 @@ export function InputField({
         )}
         <label
           className={cn(
-            `group-peer absolute left-3 translate-y-1 bg-main-background text-sm
-             text-light-secondary transition-all peer-placeholder-shown:translate-y-3
-             peer-placeholder-shown:text-lg peer-focus:translate-y-1 peer-focus:text-sm
-             dark:text-dark-secondary`,
+            'absolute left-4 top-2',
+            'text-sm font-medium',
+            'transition-all duration-200',
+            'pointer-events-none',
             errorMessage
-              ? '!text-accent-red peer-focus:text-accent-red'
-              : 'peer-focus:text-main-accent'
+              ? 'text-red-500 dark:text-red-400'
+              : 'text-gray-500 dark:text-gray-400',
+            'peer-placeholder-shown:top-4',
+            'peer-placeholder-shown:text-base',
+            'peer-focus:top-2',
+            'peer-focus:text-sm',
+            'peer-focus:text-emerald-500 dark:peer-focus:text-emerald-400'
           )}
           htmlFor={inputId}
         >
           {label}
         </label>
         {inputLimit && (
-          <span
+          <div
             className={cn(
-              `absolute right-3 top-0 translate-y-1 text-sm text-light-secondary transition-opacity 
-               duration-200 peer-focus:visible peer-focus:opacity-100 dark:text-dark-secondary`,
-              errorMessage ? 'visible opacity-100' : 'invisible opacity-0'
+              'absolute right-2 top-2',
+              'text-sm font-medium',
+              'transition-all duration-200',
+              inputLength > inputLimit * 0.9
+                ? 'text-red-500 dark:text-red-400'
+                : 'text-gray-400 dark:text-gray-500'
             )}
           >
             {inputLength} / {inputLimit}
-          </span>
+          </div>
         )}
       </div>
       {errorMessage && (
-        <p className='text-sm text-accent-red'>{errorMessage}</p>
+        <p
+          className={cn(
+            'text-sm font-medium',
+            'text-red-500 dark:text-red-400',
+            'transition-all duration-200'
+          )}
+        >
+          {errorMessage}
+        </p>
       )}
     </div>
   );

@@ -35,7 +35,6 @@ export function ViewTweetStats({
   isStatsVisible
 }: viewTweetStats): JSX.Element {
   const [statsType, setStatsType] = useState<StatsType | null>(null);
-
   const { open, openModal, closeModal } = useModal();
 
   const { data, loading } = useArrayDocument(
@@ -63,8 +62,15 @@ export function ViewTweetStats({
   return (
     <>
       <Modal
-        modalClassName='relative bg-main-background rounded-2xl max-w-xl w-full 
-                        h-[672px] overflow-hidden rounded-2xl'
+        modalClassName={cn(
+          'relative w-full max-w-xl',
+          'h-[672px] overflow-hidden',
+          'bg-white dark:bg-gray-900',
+          'rounded-2xl',
+          'shadow-xl',
+          'border border-gray-100 dark:border-gray-800',
+          'transition-all duration-200'
+        )}
         open={open}
         closeModal={handleClose}
       >
@@ -79,32 +85,51 @@ export function ViewTweetStats({
       </Modal>
       {isStatsVisible && (
         <div
-          className='flex gap-4 px-1 py-4 text-light-secondary dark:text-dark-secondary
-                     [&>button>div]:font-bold [&>button>div]:text-light-primary 
-                     dark:[&>button>div]:text-dark-primary'
+          className={cn(
+            'flex flex-wrap gap-4 px-4 py-4',
+            'border-b border-gray-100 dark:border-gray-800',
+            'transition-all duration-200'
+          )}
         >
           {allStats.map(
             ([title, type, move, stats], index) =>
               !!stats && (
                 <button
                   className={cn(
-                    `hover-animation mt-0.5 mb-[3px] flex h-4 items-center gap-1 border-b 
-                     border-b-transparent outline-none hover:border-b-light-primary 
-                     focus-visible:border-b-light-primary dark:hover:border-b-dark-primary
-                     dark:focus-visible:border-b-dark-primary`,
-                    index === 0 && 'cursor-not-allowed'
+                    'group flex items-center gap-2',
+                    'transition-all duration-200',
+                    'outline-none',
+                    'border-b-2 border-transparent',
+                    'hover:border-emerald-500 dark:hover:border-emerald-400',
+                    'focus-visible:border-emerald-500 dark:focus-visible:border-emerald-400',
+                    index === 0 && 'cursor-not-allowed opacity-50'
                   )}
                   key={title}
                   onClick={type ? handleOpen(type) : undefined}
                 >
-                  <NumberStats move={move} stats={stats} />
-                  <p>{`${
-                    stats === 1
-                      ? title
-                      : stats > 1 && index === 0
-                      ? `${title.slice(0, -1)}ies`
-                      : `${title}s`
-                  }`}</p>
+                  <div
+                    className={cn(
+                      'font-bold',
+                      'text-gray-900 dark:text-white',
+                      'transition-colors duration-200'
+                    )}
+                  >
+                    <NumberStats move={move} stats={stats} />
+                  </div>
+                  <div
+                    className={cn(
+                      'text-gray-600 dark:text-gray-400',
+                      'transition-colors duration-200'
+                    )}
+                  >
+                    {`${
+                      stats === 1
+                        ? title
+                        : stats > 1 && index === 0
+                        ? `${title.slice(0, -1)}ies`
+                        : `${title}s`
+                    }`}
+                  </div>
                 </button>
               )
           )}
