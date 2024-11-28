@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { ActivityItem } from '@components/activity/ActivityItem';
 import { ViewingActivity } from './types';
-import { Timestamp } from 'firebase/firestore';
+import { TMDBResult, TMDBResponse } from './types';
 import axios from 'axios';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@lib/context/auth-context';
@@ -56,7 +56,7 @@ const ActivityFeed: React.FC = () => {
 
         const results = await Promise.all(
           titles.map(async (title) => {
-            const response = await axios.get(
+            const response = await axios.get<TMDBResponse>(
               `https://api.themoviedb.org/3/search/multi?api_key=0af4f0642998fa986fe260078ab69ab6&query=${encodeURIComponent(
                 title
               )}&page=1`
@@ -66,7 +66,7 @@ const ActivityFeed: React.FC = () => {
         );
 
         const updatedActivities: ViewingActivity[] = results.map(
-          (result, index) => ({
+          (result: TMDBResult, index) => ({
             id: index + 1,
             tmdbId: result.id.toString(),
             rating: '',
@@ -91,7 +91,7 @@ const ActivityFeed: React.FC = () => {
               'loved',
               'hates the show'
             ][index],
-            title: result.title || result.name,
+            title: result.title || result.name || 'Unknown Title',
             network: [
               'HBO',
               'Netflix',
@@ -102,12 +102,12 @@ const ActivityFeed: React.FC = () => {
               'HBO',
               'HBO'
             ][index],
-            releaseDate: result.release_date || result.first_air_date,
+            releaseDate: result.release_date || result.first_air_date || '',
             time: new Date(
               Date.now() - Math.random() * 10000000000
             ).toISOString(),
-            poster_path: result.poster_path,
-            backdrop_path: result.backdrop_path,
+            poster_path: result.poster_path || '',
+            backdrop_path: result.backdrop_path || '',
             photoURL: `https://xsgames.co/randomusers/avatar.php?g=pixel&i=${Math.floor(
               Math.random() * 16
             )}`
@@ -122,7 +122,7 @@ const ActivityFeed: React.FC = () => {
       }
     };
 
-    fetchTMDBData();
+    void fetchTMDBData();
   }, []);
 
   useEffect(() => {

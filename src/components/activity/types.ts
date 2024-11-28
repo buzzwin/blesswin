@@ -35,3 +35,23 @@ export interface SearchResult {
     releaseDate: string;
     time: string;
   }
+
+export interface TMDBResult {
+  id: number;
+  title?: string;
+  name?: string;
+  release_date?: string;
+  first_air_date?: string;
+  poster_path: string | null;
+  backdrop_path: string | null;
+  overview: string;
+  vote_average: number;
+  media_type: 'movie' | 'tv' | 'person';
+}
+
+export interface TMDBResponse {
+  page: number;
+  results: TMDBResult[];
+  total_pages: number;
+  total_results: number;
+}
