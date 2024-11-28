@@ -91,17 +91,20 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         });
 
         if (!result.ok) {
-          throw new Error('Failed to delete buzz');
+          throw new Error(`Failed to delete buzz: ${result.statusText}`);
         }
 
         toast.success('Buzz deleted successfully');
-        push('/');
+        push('/'); // Redirect to the home page
       } catch (error) {
         console.error('Error deleting buzz:', error);
         toast.error('Failed to delete buzz');
+      } finally {
+        setIsMenuOpen(false); // Ensure this runs regardless of success or failure
       }
+    } else {
+      setIsMenuOpen(false); // Handle case where user cancels the action
     }
-    setIsMenuOpen(false);
   };
 
   const handleBookmark = (closeMenu: () => void) => async (): Promise<void> => {
