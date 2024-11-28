@@ -168,8 +168,13 @@ const ActivityFeed: React.FC = () => {
                     src={`https://image.tmdb.org/t/p/original${activity.backdrop_path}`}
                     alt={activity.title}
                     className='object-cover'
-                    fill
-                    sizes='100vw'
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      position: 'absolute'
+                    }}
+                    width={1920}
+                    height={1080}
                     priority={index === currentIndex}
                   />
                 )}
@@ -186,8 +191,13 @@ const ActivityFeed: React.FC = () => {
                         src={`https://image.tmdb.org/t/p/w500${activity.poster_path}`}
                         alt={activity.title}
                         className='rounded-lg object-cover shadow-2xl ring-1 ring-gray-800'
-                        fill
-                        sizes='(max-width: 768px) 96px, (max-width: 1024px) 128px, 176px'
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute'
+                        }}
+                        width={500}
+                        height={750}
                       />
                     </div>
                   )}
@@ -200,8 +210,13 @@ const ActivityFeed: React.FC = () => {
                           src={activity.photoURL}
                           alt={activity.username}
                           className='rounded-full ring-2 ring-white/20'
-                          fill
-                          sizes='(max-width: 768px) 24px, 32px'
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            position: 'absolute'
+                          }}
+                          width={32}
+                          height={32}
                         />
                       </div>
                       <span className='text-base font-medium text-gray-300 md:text-lg'>
