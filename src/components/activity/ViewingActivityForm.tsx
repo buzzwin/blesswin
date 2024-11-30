@@ -22,6 +22,7 @@ interface ViewingActivityFormProps {
     releaseDate: string;
     time: string;
     photoURL: string;
+    mediaType: 'movie' | 'tv';
   }) => void;
 }
 
@@ -52,7 +53,8 @@ const defaultActivity: ViewingActivity = {
   network: '',
   releaseDate: '',
   time: '',
-  photoURL: ''
+  photoURL: '',
+  mediaType: 'movie'
 };
 
 const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({

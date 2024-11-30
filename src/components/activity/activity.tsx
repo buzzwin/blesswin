@@ -9,6 +9,7 @@ import Image from 'next/image';
 import cn from 'clsx';
 
 const ActivityFeed: React.FC = () => {
+  const { user } = useAuth();
   const [activities, setActivities] = useState<ViewingActivity[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -67,54 +68,28 @@ const ActivityFeed: React.FC = () => {
           })
         );
 
-        const updatedActivities: ViewingActivity[] = results.map(
-          (result: TMDBResult, index) => ({
+        const updatedActivities: ViewingActivity[] = results
+          .filter((result) => result.media_type !== 'person')
+          .map((result: TMDBResult, index) => ({
             id: index + 1,
             tmdbId: result.id.toString(),
-            rating: '',
-            review: '',
-            username: [
-              'jdoe',
-              'MikeM',
-              'sarahJoe',
-              'jderocks',
-              'oHiCoolGuy',
-              'totallyNotABot',
-              'randomMan',
-              'randomMan'
-            ][index],
-            status: [
-              'loved',
-              'loved',
-              'watched',
-              'started watching',
-              'finished watching',
-              'watched',
-              'loved',
-              'hates the show'
-            ][index],
-            title: result.title || result.name || 'Unknown Title',
-            network: [
-              'HBO',
-              'Netflix',
-              'Amazon Prime Video',
-              'Netflix',
-              'HBO',
-              'Amazon Prime Video',
-              'HBO',
-              'HBO'
-            ][index],
+            rating: '★★★★★',
+            review: result.overview,
+            username: user?.username || '',
+            status: 'is watching',
+            title: result.title || result.name || '',
+            network: '',
             releaseDate: result.release_date || result.first_air_date || '',
-            time: new Date(
-              Date.now() - Math.random() * 10000000000
-            ).toISOString(),
-            poster_path: result.poster_path || '',
-            backdrop_path: result.backdrop_path || '',
-            photoURL: `https://xsgames.co/randomusers/avatar.php?g=pixel&i=${Math.floor(
-              Math.random() * 16
-            )}`
-          })
-        );
+            time: new Date().toISOString(),
+            poster_path: result.poster_path
+              ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
+              : 'https://plchldr.co/i/500x250',
+            backdrop_path: result.backdrop_path
+              ? `https://image.tmdb.org/t/p/original${result.backdrop_path}`
+              : '',
+            photoURL: user?.photoURL || '',
+            mediaType: result.media_type === 'tv' ? 'tv' : 'movie'
+          }));
 
         setActivities(updatedActivities);
         setLoading(false);

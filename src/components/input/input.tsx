@@ -207,7 +207,8 @@ export function Input({
       poster_path: '',
       releaseDate: '',
       time: '',
-      photoURL: ''
+      photoURL: '',
+      mediaType: 'movie'
     };
 
     await sendTweet(viewingActivity);

@@ -15,15 +15,16 @@ export interface SearchResult {
     id: number;
     username: string;
     title: string;
-    status: string | 'is watching';
+    status: string;
     rating: string;
     review: string;
     network: string;
-    poster_path: string | 'https://plchldr.co/i/500x250';
+    poster_path: string;
     backdrop_path?: string;
     releaseDate: string;
     time: string;
     photoURL: string;
+    mediaType: 'movie' | 'tv';
   }
 
   export interface Activity {

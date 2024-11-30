@@ -12,7 +12,9 @@ import {
   arrayUnion,
   arrayRemove,
   serverTimestamp,
-  getCountFromServer
+  getCountFromServer,
+  addDoc,
+  collection
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './app';
@@ -263,17 +265,37 @@ export function manageLike(
 export async function manageBookmark(
   type: 'bookmark' | 'unbookmark',
   userId: string,
-  tweetId: string
+  mediaId: string,
+  data?: {
+    title: string;
+    mediaType: 'movie' | 'tv';
+    posterPath?: string;
+    watchlistId: string;
+    mediaId: string;
+    tags: string[];
+  }
 ): Promise<void> {
-  const bookmarkRef = doc(userBookmarksCollection(userId), tweetId);
+  const bookmarksRef = collection(db, 'bookmarks');
+  const q = query(
+    bookmarksRef,
+    where('userId', '==', userId),
+    where('mediaId', '==', mediaId)
+  );
 
-  if (type === 'bookmark') {
-    const bookmarkData: WithFieldValue<Bookmark> = {
-      id: tweetId,
-      createdAt: serverTimestamp()
-    };
-    await setDoc(bookmarkRef, bookmarkData);
-  } else await deleteDoc(bookmarkRef);
+  const snapshot = await getDocs(q);
+
+  if (type === 'bookmark' && data) {
+    if (snapshot.empty) {
+      await addDoc(bookmarksRef, {
+        ...data,
+        userId,
+        createdAt: serverTimestamp()
+      });
+    }
+  } else if (type === 'unbookmark' && !snapshot.empty) {
+    const bookmarkDoc = snapshot.docs[0];
+    await deleteDoc(doc(bookmarksRef, bookmarkDoc.id));
+  }
 }
 
 export async function clearAllBookmarks(userId: string): Promise<void> {

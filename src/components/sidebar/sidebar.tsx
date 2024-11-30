@@ -22,39 +22,7 @@ const navLinks: Readonly<NavLink[]> = [
     href: '/home',
     linkName: 'Home',
     iconName: 'HomeIcon'
-  },
-  // {
-  //   href: '/explore',
-  //   linkName: 'Explore',
-  //   iconName: 'HashtagIcon',
-  //   disabled: false,
-  //   canBeHidden: true
-  // },
-  // {
-  //   href: '/notifications',
-  //   linkName: 'Notifications',
-  //   iconName: 'BellIcon',
-  //   disabled: false
-  // },
-  // {
-  //   href: '/messages',
-  //   linkName: 'Messages',
-  //   iconName: 'EnvelopeIcon',
-  //   disabled: false
-  // },
-  {
-    href: '/bookmarks',
-    linkName: 'Watchlist',
-    iconName: 'BookmarkIcon',
-    canBeHidden: true
   }
-  // {
-  //   href: '/lists',
-  //   linkName: 'Lists',
-  //   iconName: 'Bars3BottomLeftIcon',
-  //   disabled: false,
-  //   canBeHidden: true
-  // }
 ];
 
 export function Sidebar(): JSX.Element {
@@ -99,18 +67,6 @@ export function Sidebar(): JSX.Element {
             />
             {!isMobile && <MoreSettings />}
           </nav>
-          {/* <Button
-            className='accent-tab absolute right-4 -translate-y-[72px] bg-green-600 text-lg font-bold text-white
-                       outline-none transition hover:brightness-90 active:brightness-75 xs:static xs:translate-y-0
-                       xs:hover:bg-main-accent/90 xs:active:bg-main-accent/75 xl:w-11/12'
-            onClick={openModal}
-          >
-            <CustomIcon
-              className='block w-6 h-6 xl:hidden'
-              iconName='FeatherIcon'
-            />
-            <p className='hidden xl:block'>Buzz</p>
-          </Button> */}
         </section>
       </div>
     </header>
