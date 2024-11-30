@@ -1,33 +1,36 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@lib/context/auth-context';
+import Image from 'next/image';
 import {
   collection,
   query,
   where,
-  orderBy,
-  addDoc,
   deleteDoc,
   doc,
-  onSnapshot,
-  getDocs
+  onSnapshot
 } from 'firebase/firestore';
+import type { Timestamp } from 'firebase/firestore';
+import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { Bookmark } from '@lib/types/bookmark';
 
-export function Watchlist(): JSX.Element {
+type WatchlistProps = {
+  watchlistId: string;
+};
+
+export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
   const { user } = useAuth();
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!user?.id) return;
+    if (!user?.id || !watchlistId) return;
 
     const bookmarksRef = collection(db, 'bookmarks');
     const q = query(
       bookmarksRef,
       where('userId', '==', user.id),
-      orderBy('createdAt', 'desc')
+      where('watchlistId', '==', watchlistId)
     );
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
@@ -35,28 +38,19 @@ export function Watchlist(): JSX.Element {
         id: doc.id,
         ...doc.data()
       })) as Bookmark[];
+
+      newBookmarks.sort((a, b) => {
+        const timeA = a.createdAt.toMillis();
+        const timeB = b.createdAt.toMillis();
+        return timeB - timeA;
+      });
+
       setBookmarks(newBookmarks);
       setLoading(false);
     });
 
     return () => unsubscribe();
-  }, [user?.id]);
-
-  const addToWatchlist = async (
-    bookmark: Omit<Bookmark, 'id' | 'createdAt' | 'userId'>
-  ) => {
-    if (!user?.id) return;
-
-    try {
-      await addDoc(collection(db, 'bookmarks'), {
-        ...bookmark,
-        userId: user.id,
-        createdAt: Date.now()
-      });
-    } catch (error) {
-      console.error('Error adding bookmark:', error);
-    }
-  };
+  }, [user?.id, watchlistId]);
 
   const removeFromWatchlist = async (bookmarkId: string) => {
     try {
@@ -78,31 +72,55 @@ export function Watchlist(): JSX.Element {
 
   return (
     <div className='space-y-4'>
-      <h2 className='px-4 text-xl font-bold'>My Watchlist</h2>
       {bookmarks.length === 0 ? (
         <p className='py-8 text-center text-gray-500 dark:text-gray-400'>
-          No items in your watchlist yet
+          No items in this watchlist yet
         </p>
       ) : (
-        <div className='divide-y divide-gray-200 dark:divide-gray-800'>
-          {bookmarks.map((bookmark) => (
+        <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+          {bookmarks.map((bookmark: Bookmark) => (
             <div
               key={bookmark.id}
-              className='flex items-start justify-between p-4 hover:bg-gray-50 dark:hover:bg-gray-900'
+              className='relative overflow-hidden rounded-lg bg-white shadow transition-shadow hover:shadow-md dark:bg-gray-800'
             >
-              <div>
-                <h3 className='font-medium'>{bookmark.title}</h3>
+              <div className='relative aspect-[2/3]'>
+                {bookmark.posterPath ? (
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${bookmark.posterPath}`}
+                    alt={bookmark.title}
+                    width={300}
+                    height={500}
+                    className='h-full w-full object-cover'
+                    unoptimized
+                  />
+                ) : (
+                  <div className='flex h-full items-center justify-center bg-gray-100 dark:bg-gray-700'>
+                    <HeroIcon
+                      className='h-12 w-12 text-gray-400'
+                      iconName='PhotoIcon'
+                    />
+                  </div>
+                )}
+                <button
+                  onClick={() => removeFromWatchlist(bookmark.id)}
+                  className='absolute right-2 top-2 rounded-full bg-black/50 p-1.5 text-white hover:bg-black/70'
+                >
+                  <HeroIcon className='h-5 w-5' iconName='TrashIcon' />
+                </button>
+              </div>
+              <div className='p-4'>
+                <h3 className='line-clamp-1 font-medium'>{bookmark.title}</h3>
                 {bookmark.description && (
-                  <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                  <p className='line-clamp-2 mt-1 text-sm text-gray-500 dark:text-gray-400'>
                     {bookmark.description}
                   </p>
                 )}
                 {bookmark.tags && bookmark.tags.length > 0 && (
-                  <div className='mt-2 flex gap-2'>
-                    {bookmark.tags.map((tag) => (
+                  <div className='mt-2 flex flex-wrap gap-2'>
+                    {bookmark.tags.map((tag: string) => (
                       <span
                         key={tag}
-                        className='rounded-full bg-gray-100 px-2 py-1 text-xs dark:bg-gray-800'
+                        className='rounded-full bg-gray-100 px-2 py-1 text-xs dark:bg-gray-700'
                       >
                         {tag}
                       </span>
@@ -110,12 +128,6 @@ export function Watchlist(): JSX.Element {
                   </div>
                 )}
               </div>
-              <button
-                onClick={() => removeFromWatchlist(bookmark.id)}
-                className='text-red-500 hover:text-red-600 dark:hover:text-red-400'
-              >
-                <HeroIcon className='h-5 w-5' iconName='TrashIcon' />
-              </button>
             </div>
           ))}
         </div>

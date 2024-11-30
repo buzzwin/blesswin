@@ -2,14 +2,12 @@ import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 
 export type Bookmark = {
   id: string;
+  userId: string;
+  watchlistId: string;
   title: string;
   description?: string;
-  mediaType: 'movie' | 'tv';
   posterPath?: string;
-  mediaId: string;
-  tags: string[];
-  watchlistId: string;
-  userId: string;
+  tags?: string[];
   createdAt: Timestamp;
 };
 

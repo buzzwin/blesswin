@@ -10,6 +10,7 @@ import { MainHeader } from '@components/home/main-header';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
 import { SEO } from '@components/common/seo';
+import { Watchlist } from '@components/bookmarks/watchlist';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function WatchlistPage(): JSX.Element {
@@ -40,7 +41,7 @@ export default function WatchlistPage(): JSX.Element {
         ) : !watchlist ? (
           <Error message='Watchlist not found' />
         ) : (
-          <div>{/* Watchlist content */}</div>
+          <Watchlist watchlistId={id as string} />
         )}
       </div>
     </div>
