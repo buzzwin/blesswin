@@ -6,7 +6,6 @@ import { useDocument } from '@lib/hooks/useDocument';
 import { tweetsCollection } from '@lib/firebase/collections';
 import { mergeData } from '@lib/merge';
 import { UserLayout, ProtectedLayout } from '@components/layout/common-layout';
-import { MainLayout } from '@components/layout/main-layout';
 import { UserDataLayout } from '@components/layout/user-data-layout';
 import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { StatsEmpty } from '@components/tweet/stats-empty';
@@ -73,12 +72,10 @@ export default function UserTweets(): JSX.Element {
 
 UserTweets.getLayout = (page: ReactElement): ReactNode => (
   <ProtectedLayout>
-    <MainLayout>
-      <UserLayout>
-        <UserDataLayout>
-          <UserHomeLayout>{page}</UserHomeLayout>
-        </UserDataLayout>
-      </UserLayout>
-    </MainLayout>
+    <UserLayout>
+      <UserDataLayout>
+        <UserHomeLayout>{page}</UserHomeLayout>
+      </UserDataLayout>
+    </UserLayout>
   </ProtectedLayout>
 );

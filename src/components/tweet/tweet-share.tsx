@@ -88,7 +88,7 @@ export function TweetShare({
             <Modal
               open={showShareModal}
               closeModal={handleCloseModal}
-              className='fixed top-0 left-0 flex h-full w-full items-center justify-center '
+              className='fixed top-0 left-0 flex h-full w-full items-center justify-center'
             >
               <ShareButtons
                 viewingActivity={viewingActivity}
@@ -117,50 +117,61 @@ export function TweetShare({
           <AnimatePresence>
             {open && (
               <Popover.Panel
-                className='menu-container group absolute right-0 top-11 whitespace-nowrap text-light-primary dark:text-dark-primary'
+                className={cn(
+                  'menu-container absolute right-0',
+                  'whitespace-nowrap text-light-primary dark:text-dark-primary',
+                  'z-[60]',
+                  'fixed',
+                  'bg-main-background shadow-lg',
+                  'ring-1 ring-black/5 dark:ring-white/5',
+                  'top-0 -translate-y-full',
+                  'transform'
+                )}
                 as={motion.div}
                 {...variants}
                 static
               >
-                <Popover.Button
-                  className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 hover:bg-main-sidebar-background'
-                  as={Button}
-                  onClick={preventBubbling(handleShare(close))}
-                >
-                  <HeroIcon iconName='ShareIcon' />
-                  Share on Social Media
-                </Popover.Button>
-                <Popover.Button
-                  className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 hover:bg-main-sidebar-background'
-                  as={Button}
-                  onClick={preventBubbling(handleCopy(close))}
-                >
-                  <HeroIcon iconName='LinkIcon' />
-                  Copy link to Buzz
-                </Popover.Button>
-                {!tweetIsBookmarked ? (
+                <div className='relative py-2'>
                   <Popover.Button
-                    className='accent-tab flex w-full gap-3 rounded-md rounded-t-none p-4 hover:bg-main-sidebar-background'
+                    className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 hover:bg-main-sidebar-background'
                     as={Button}
-                    onClick={preventBubbling(
-                      handleBookmark(close, 'bookmark', userId, tweetId)
-                    )}
+                    onClick={preventBubbling(handleShare(close))}
                   >
-                    <HeroIcon iconName='BookmarkIcon' />
-                    Add to WatchList
+                    <HeroIcon iconName='ShareIcon' />
+                    Share on Social Media
                   </Popover.Button>
-                ) : (
                   <Popover.Button
-                    className='accent-tab flex w-full gap-3 rounded-md rounded-t-none p-4 hover:bg-main-sidebar-background'
+                    className='accent-tab flex w-full gap-3 p-4 hover:bg-main-sidebar-background'
                     as={Button}
-                    onClick={preventBubbling(
-                      handleBookmark(close, 'unbookmark', userId, tweetId)
-                    )}
+                    onClick={preventBubbling(handleCopy(close))}
                   >
-                    <HeroIcon iconName='BookmarkSlashIcon' />
-                    Remove Buzz from Bookmarks
+                    <HeroIcon iconName='LinkIcon' />
+                    Copy link to Buzz
                   </Popover.Button>
-                )}
+                  {/* {!tweetIsBookmarked ? (
+                    <Popover.Button
+                      className='flex w-full gap-3 p-4 rounded-md rounded-t-none accent-tab hover:bg-main-sidebar-background'
+                      as={Button}
+                      onClick={preventBubbling(
+                        handleBookmark(close, 'bookmark', userId, tweetId)
+                      )}
+                    >
+                      <HeroIcon iconName='BookmarkIcon' />
+                      Add to WatchList
+                    </Popover.Button>
+                  ) : (
+                    <Popover.Button
+                      className='flex w-full gap-3 p-4 rounded-md rounded-t-none accent-tab hover:bg-main-sidebar-background'
+                      as={Button}
+                      onClick={preventBubbling(
+                        handleBookmark(close, 'unbookmark', userId, tweetId)
+                      )}
+                    >
+                      <HeroIcon iconName='BookmarkSlashIcon' />
+                      Remove Buzz from Bookmarks
+                    </Popover.Button>
+                  )} */}
+                </div>
               </Popover.Panel>
             )}
           </AnimatePresence>

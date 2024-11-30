@@ -1,7 +1,7 @@
 import { collection } from 'firebase/firestore';
 import { userConverter } from '@lib/types/user';
 import { tweetConverter } from '@lib/types/tweet';
-import { bookmarkConverter } from '@lib/types/bookmark';
+import { bookmarkConverter, watchlistConverter } from '@lib/types/bookmark';
 import { statsConverter } from '@lib/types/stats';
 import { db } from './app';
 import type { CollectionReference } from 'firebase/firestore';
@@ -27,3 +27,5 @@ export function userBookmarksCollection(
 export function userStatsCollection(id: string): CollectionReference<Stats> {
   return collection(db, `users/${id}/stats`).withConverter(statsConverter);
 }
+
+export const watchlistsCollection = collection(db, 'watchlists').withConverter(watchlistConverter);

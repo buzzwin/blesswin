@@ -10,7 +10,13 @@ type WindowContext = WindowSize & {
   isMobile: boolean;
 };
 
-export const WindowContext = createContext<WindowContext | null>(null);
+const defaultContext: WindowContext = {
+  width: 1200, // Default width
+  height: 800, // Default height
+  isMobile: false
+};
+
+export const WindowContext = createContext<WindowContext>(defaultContext);
 
 type WindowContextProviderProps = {
   children: ReactNode;
@@ -20,16 +26,21 @@ export function WindowContextProvider({
   children
 }: WindowContextProviderProps): JSX.Element {
   const [windowSize, setWindowSize] = useState<WindowSize>({
-    width: window.innerWidth,
-    height: window.innerHeight
+    width: defaultContext.width,
+    height: defaultContext.height
   });
 
   useEffect(() => {
-    const handleResize = (): void =>
+    // Only access window on client side
+    const handleResize = (): void => {
       setWindowSize({
         width: window.innerWidth,
         height: window.innerHeight
       });
+    };
+
+    // Set initial size
+    handleResize();
 
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);

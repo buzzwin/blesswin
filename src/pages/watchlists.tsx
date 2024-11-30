@@ -1,11 +1,8 @@
 import { useAuth } from '@lib/context/auth-context';
 import {
-  HomeLayout,
   ProtectedLayout,
   WatchListsLayout
 } from '@components/layout/common-layout';
-import { MainLayout } from '@components/layout/main-layout';
-import { MainContainer } from '@components/home/main-container';
 import { MainHeader } from '@components/home/main-header';
 import { useState } from 'react';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -16,6 +13,7 @@ import { cn } from '@lib/utils';
 import { SEO } from '@components/common/seo';
 import { Watchlists } from '@components/bookmarks/watchlists';
 import { WatchlistsStats } from '@components/bookmarks/watchlists-stats';
+import { WindowContextProvider } from '@lib/context/window-context';
 import type { ReactElement, ReactNode } from 'react';
 
 function CreateWatchlistModal({

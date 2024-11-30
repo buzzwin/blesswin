@@ -111,7 +111,7 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
         value={stats.public}
         className='text-green-600 dark:text-green-400'
       />
-      <StatCard
+      {/* <StatCard
         icon='FilmIcon'
         label='Movies'
         value={stats.movies}
@@ -122,7 +122,7 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
         label='TV Shows'
         value={stats.tvShows}
         className='text-orange-600 dark:text-orange-400'
-      />
+      /> */}
     </div>
   );
 }

@@ -13,11 +13,12 @@ export function MainContainer({
   return (
     <main
       className={cn(
-        'hover-animation flex min-h-screen w-full max-w-xl flex-col',
+        'flex min-h-screen w-full max-w-xl flex-col',
         'dark:bg-dark-background bg-main-background',
-        'border-x-0 border-light-border dark:border-dark-border',
+        'border-x border-light-border dark:border-dark-border',
         'transition-colors duration-200',
-        'pb-96 xs:border-x',
+        'relative',
+        'pb-96',
         className
       )}
     >

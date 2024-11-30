@@ -127,7 +127,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           'p-1',
           'transition-all duration-300',
           !parentTweet && 'hover:scale-[1.01]',
-          'group'
+          'group',
+          'pb-2'
         )}
       >
         {/* Film Border Effect */}
@@ -345,7 +346,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             )}
 
             {/* Content Section */}
-            <div className='space-y-4 px-6 py-4'>
+            <div className='space-y-4 px-6 py-4 pb-24'>
               {/* User Info */}
 
               {/* Review */}
