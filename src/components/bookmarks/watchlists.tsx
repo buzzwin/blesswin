@@ -1,6 +1,7 @@
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
 import { useWatchlists } from '@lib/hooks/useWatchlists';
+import { useWindow } from '@lib/context/window-context';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { cn } from '@lib/utils';
 import Link from 'next/link';
@@ -17,10 +18,21 @@ export function Watchlists({
   loading,
   compact
 }: WatchlistsProps): JSX.Element {
+  const { isMobile, width } = useWindow();
+
+  const getGridCols = () => {
+    if (compact || isMobile) return 'grid-cols-1';
+    if (width < 640) return 'grid-cols-1';
+    if (width < 1024) return 'grid-cols-2';
+    if (width < 1280) return 'grid-cols-3';
+    if (width < 1536) return 'grid-cols-4';
+    return 'grid-cols-5';
+  };
+
   if (loading)
     return (
-      <div className='grid w-full gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-        {Array.from({ length: 8 }).map((_, i) => (
+      <div className={cn('grid w-full gap-4', getGridCols())}>
+        {Array.from({ length: isMobile ? 4 : 8 }).map((_, i) => (
           <div
             key={i}
             className='h-48 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800'
@@ -30,20 +42,18 @@ export function Watchlists({
     );
 
   return (
-    <div
-      className={cn(
-        'grid w-full gap-4',
-        compact
-          ? 'grid-cols-1'
-          : 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5'
-      )}
-    >
+    <div className={cn('grid w-full gap-4', getGridCols())}>
       {watchlists.map((watchlist) => (
         <Link key={watchlist.id} href={`/watchlist/${watchlist.id}`}>
           <a className='block h-full overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md dark:bg-gray-800'>
             <div className='flex h-full flex-col p-4'>
               <div className='mb-2 flex items-center justify-between'>
-                <h3 className='line-clamp-1 text-lg font-medium'>
+                <h3
+                  className={cn(
+                    'line-clamp-1 font-medium',
+                    isMobile ? 'text-base' : 'text-lg'
+                  )}
+                >
                   {watchlist.name}
                 </h3>
                 {watchlist.isPublic && (
@@ -54,7 +64,12 @@ export function Watchlists({
                 )}
               </div>
               {watchlist.description && (
-                <p className='line-clamp-2 mb-3 flex-grow text-sm text-gray-500 dark:text-gray-400'>
+                <p
+                  className={cn(
+                    'line-clamp-2 mb-3 flex-grow text-gray-500 dark:text-gray-400',
+                    isMobile ? 'text-xs' : 'text-sm'
+                  )}
+                >
                   {watchlist.description}
                 </p>
               )}
@@ -63,18 +78,29 @@ export function Watchlists({
                   <div className='flex -space-x-2'>
                     <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
                       <HeroIcon
-                        className='h-4 w-4 text-gray-500 dark:text-gray-400'
+                        className={cn(
+                          'text-gray-500 dark:text-gray-400',
+                          isMobile ? 'h-3 w-3' : 'h-4 w-4'
+                        )}
                         iconName='FilmIcon'
                       />
                     </div>
                     <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
                       <HeroIcon
-                        className='h-4 w-4 text-gray-500 dark:text-gray-400'
+                        className={cn(
+                          'text-gray-500 dark:text-gray-400',
+                          isMobile ? 'h-3 w-3' : 'h-4 w-4'
+                        )}
                         iconName='TvIcon'
                       />
                     </div>
                   </div>
-                  <span className='text-sm text-gray-500 dark:text-gray-400'>
+                  <span
+                    className={cn(
+                      'text-gray-500 dark:text-gray-400',
+                      isMobile ? 'text-xs' : 'text-sm'
+                    )}
+                  >
                     {watchlist.totalItems} items
                   </span>
                 </div>

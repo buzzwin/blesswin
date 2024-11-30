@@ -62,3 +62,13 @@ export function PeopleLayout({ children }: LayoutProps): JSX.Element {
     </>
   );
 }
+export function WatchListsLayout({ children }: LayoutProps): JSX.Element {
+  return (
+    <>
+      {children}
+      <Aside>
+        <Suggestions />
+      </Aside>
+    </>
+  );
+}

@@ -41,7 +41,7 @@ export function Aside({ children }: AsideProps): JSX.Element {
         {children}
 
         {/* Who to follow section */}
-        <section
+        {/* <section
           className={cn(
             'rounded-xl',
             'bg-white dark:bg-gray-800',
@@ -49,14 +49,14 @@ export function Aside({ children }: AsideProps): JSX.Element {
             'overflow-hidden'
           )}
         >
-          <div className='border-b border-gray-100 p-4 dark:border-gray-700'>
+          <div className='p-4 border-b border-gray-100 dark:border-gray-700'>
             <h2 className='font-bold'>Who to follow</h2>
           </div>
           <div className='p-4'>
             {user ? (
               usersLoading ? (
                 <div className='flex justify-center py-8'>
-                  <div className='h-8 w-8 animate-spin rounded-full border-4 border-emerald-500 border-t-transparent' />
+                  <div className='w-8 h-8 border-4 rounded-full animate-spin border-emerald-500 border-t-transparent' />
                 </div>
               ) : suggestedUsers.length > 0 ? (
                 <div className='space-y-4'>
@@ -92,10 +92,10 @@ export function Aside({ children }: AsideProps): JSX.Element {
               )
             ) : (
               <div className='flex flex-col items-center gap-4 py-8 text-center'>
-                <div className='rounded-full bg-gray-100 p-3 dark:bg-gray-700'>
+                <div className='p-3 bg-gray-100 rounded-full dark:bg-gray-700'>
                   <HeroIcon
                     iconName='UserGroupIcon'
-                    className='h-6 w-6 text-gray-500 dark:text-gray-400'
+                    className='w-6 h-6 text-gray-500 dark:text-gray-400'
                   />
                 </div>
                 <div>
@@ -109,7 +109,7 @@ export function Aside({ children }: AsideProps): JSX.Element {
               </div>
             )}
           </div>
-        </section>
+        </section> */}
 
         <AsideFooter />
       </div>

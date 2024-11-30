@@ -22,6 +22,11 @@ const navLinks: Readonly<NavLink[]> = [
     href: '/home',
     linkName: 'Home',
     iconName: 'HomeIcon'
+  },
+  {
+    href: '/watchlists',
+    linkName: 'Watchlists',
+    iconName: 'ListBulletIcon'
   }
 ];
 

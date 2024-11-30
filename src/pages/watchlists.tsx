@@ -1,5 +1,9 @@
 import { useAuth } from '@lib/context/auth-context';
-import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
+import {
+  HomeLayout,
+  ProtectedLayout,
+  WatchListsLayout
+} from '@components/layout/common-layout';
 import { MainLayout } from '@components/layout/main-layout';
 import { MainContainer } from '@components/home/main-container';
 import { MainHeader } from '@components/home/main-header';
@@ -143,47 +147,45 @@ export default function WatchlistsPage(): JSX.Element {
   const { watchlists, loading, createWatchlist } = useWatchlists();
 
   return (
-    <MainLayout>
-      <MainContainer>
-        <SEO title='Watchlists / Buzzwin' />
-        <MainHeader>
-          <div className='flex items-center justify-between px-4'>
-            <div>
-              <h2 className='text-xl font-bold'>My Watchlists</h2>
-              <p className='text-sm text-gray-500 dark:text-gray-400'>
-                Organize your movies and TV shows
-              </p>
-            </div>
-            <span className='px-4'></span>
-            <button
-              onClick={openModal}
-              className='flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600'
-            >
-              <HeroIcon className='h-5 w-5' iconName='PlusIcon' />
-              <span>New Watchlist</span>
-            </button>
+    <div>
+      <SEO title='Watchlists / Buzzwin' />
+      <MainHeader>
+        <div className='flex items-center justify-between px-4'>
+          <div>
+            <h2 className='text-xl font-bold'>My Watchlists</h2>
+            <p className='text-sm text-gray-500 dark:text-gray-400'>
+              Organize your movies and TV shows
+            </p>
           </div>
-        </MainHeader>
-
-        <div className='flex flex-col gap-6 p-4'>
-          <WatchlistsStats userId={user?.id as string} />
-          <div className='min-h-[calc(100vh-13rem)] w-full'>
-            <Watchlists watchlists={watchlists} loading={loading} />
-          </div>
+          <span className='px-4'></span>
+          <button
+            onClick={openModal}
+            className='flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600'
+          >
+            <HeroIcon className='h-5 w-5' iconName='PlusIcon' />
+            <span>New Watchlist</span>
+          </button>
         </div>
+      </MainHeader>
 
-        <CreateWatchlistModal
-          open={open}
-          closeModal={closeModal}
-          createWatchlist={createWatchlist}
-        />
-      </MainContainer>
-    </MainLayout>
+      <div className='flex flex-col gap-6 p-4'>
+        <WatchlistsStats userId={user?.id as string} />
+        <div className='min-h-[calc(100vh-13rem)] w-full'>
+          <Watchlists watchlists={watchlists} loading={loading} />
+        </div>
+      </div>
+
+      <CreateWatchlistModal
+        open={open}
+        closeModal={closeModal}
+        createWatchlist={createWatchlist}
+      />
+    </div>
   );
 }
 
 WatchlistsPage.getLayout = (page: ReactElement): ReactNode => (
   <ProtectedLayout>
-    <HomeLayout>{page}</HomeLayout>
+    <WatchListsLayout>{page}</WatchListsLayout>
   </ProtectedLayout>
 );
