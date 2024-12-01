@@ -12,6 +12,7 @@ import { Error } from '@components/ui/error';
 import { SEO } from '@components/common/seo';
 import { cn } from '@lib/utils';
 import type { ReactElement, ReactNode } from 'react';
+import { TrendingShows } from '@components/trending/trending-shows';
 
 export default function Home(): JSX.Element {
   const { data, loading, LoadMore } = useInfiniteScroll(
@@ -68,6 +69,10 @@ export default function Home(): JSX.Element {
           'min-h-screen'
         )}
       >
+        <div className='mx-auto mb-6 max-w-3xl'>
+          <TrendingShows limit={3} />
+        </div>
+
         <section className={cn('mx-auto max-w-3xl', 'space-y-4')}>
           {loading ? (
             <div
