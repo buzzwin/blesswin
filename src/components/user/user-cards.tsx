@@ -33,6 +33,11 @@ const allNoStatsData: Readonly<NoStatsData> = {
     imageData: { src: '/assets/no-likes.png', alt: 'No likes' },
     description: 'When you like a Buzz, it’ll show up here.'
   },
+  watching: {
+    title: 'Not watching anything yet',
+    imageData: { src: '/assets/no-watching.png', alt: 'Not watching' },
+    description: 'When you watch something, it’ll show up here.'
+  },
   following: {
     title: 'Be in the know',
     description:

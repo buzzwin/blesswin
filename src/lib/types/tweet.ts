@@ -16,6 +16,8 @@ export type Tweet = {
   userRetweets: string[];
   viewingActivity: ViewingActivity;
   photoURL: string;
+  userWatching: string[];
+  totalWatchers: number;
 };
 
 export type TweetWithUser = Tweet & { user: User };

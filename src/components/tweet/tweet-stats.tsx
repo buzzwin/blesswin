@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useMemo } from 'react';
 import cn from 'clsx';
-import { manageLike } from '@lib/firebase/utils';
+import { manageLike, manageWatching } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
 import { TweetShare } from './tweet-share';
@@ -11,7 +11,11 @@ import { ViewingActivity } from '@components/activity/types';
 
 type TweetStatsProps = Pick<
   Tweet,
-  'userLikes' | 'userRetweets' | 'userReplies'
+  | 'userLikes'
+  | 'userRetweets'
+  | 'userReplies'
+  | 'userWatching'
+  | 'totalWatchers'
 > & {
   reply?: boolean;
   userId: string;
@@ -34,25 +38,36 @@ export function TweetStats({
   viewingActivity,
   text,
   userReplies: totalReplies,
-  openModal
+  openModal,
+  userWatching = [],
+  totalWatchers = 0
 }: TweetStatsProps): JSX.Element {
   const totalLikes = userLikes.length;
   const totalTweets = userRetweets.length;
 
-  const [{ currentReplies, currentTweets, currentLikes }, setCurrentStats] =
-    useState({
-      currentReplies: totalReplies,
-      currentLikes: totalLikes,
-      currentTweets: totalTweets
-    });
+  const [
+    { currentReplies, currentTweets, currentLikes, currentWatchers },
+    setCurrentStats
+  ] = useState({
+    currentReplies: totalReplies,
+    currentLikes: totalLikes,
+    currentTweets: totalTweets,
+    currentWatchers: totalWatchers
+  });
 
   useEffect(() => {
     setCurrentStats({
       currentReplies: totalReplies,
       currentLikes: totalLikes,
-      currentTweets: totalTweets
+      currentTweets: totalTweets,
+      currentWatchers: totalWatchers
     });
-  }, [totalReplies, totalLikes, totalTweets]);
+  }, [totalReplies, totalLikes, totalTweets, totalWatchers]);
+
+  const watchingMove = useMemo(
+    () => (totalWatchers > currentWatchers ? -25 : 25),
+    [totalWatchers, currentWatchers]
+  );
 
   const replyMove = useMemo(
     () => (totalReplies > currentReplies ? -25 : 25),
@@ -71,8 +86,14 @@ export function TweetStats({
 
   const tweetIsLiked = userLikes.includes(userId);
   const tweetIsRetweeted = userRetweets.includes(userId);
+  const isWatching = userWatching.includes(userId);
 
-  const isStatsVisible = !!(totalReplies || totalTweets || totalLikes);
+  const isStatsVisible = !!(
+    totalReplies ||
+    totalTweets ||
+    totalLikes ||
+    totalWatchers
+  );
 
   return (
     <>
@@ -82,10 +103,13 @@ export function TweetStats({
           userLikes={userLikes}
           tweetMove={tweetMove}
           replyMove={replyMove}
+          watchingMove={watchingMove}
           userRetweets={userRetweets}
+          userWatching={userWatching}
           currentLikes={currentLikes}
           currentTweets={currentTweets}
           currentReplies={currentReplies}
+          currentWatchers={currentWatchers}
           isStatsVisible={isStatsVisible}
         />
       )}
@@ -95,6 +119,24 @@ export function TweetStats({
           viewTweet ? 'justify-around py-2' : 'max-w-md justify-between'
         )}
       >
+        <TweetOption
+          className={cn(
+            'hover:text-emerald-500 focus-visible:text-emerald-500',
+            isWatching && 'text-emerald-500 [&>i>svg]:[stroke-width:2px]'
+          )}
+          iconClassName='group-hover:bg-emerald-500/10 group-active:bg-emerald-500/20
+                         group-focus-visible:bg-emerald-500/10 group-focus-visible:ring-emerald-500/80'
+          tip={isWatching ? 'Watching' : 'Watch this'}
+          move={watchingMove}
+          stats={totalWatchers}
+          iconName='EyeIcon'
+          viewTweet={viewTweet}
+          onClick={manageWatching(
+            isWatching ? 'unwatch' : 'watch',
+            userId,
+            tweetId
+          )}
+        />
         <TweetOption
           className='hover:text-accent-blue focus-visible:text-accent-blue'
           iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 

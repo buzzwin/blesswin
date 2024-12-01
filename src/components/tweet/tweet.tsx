@@ -52,7 +52,9 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     user: tweetUserData,
     modal,
     pinned,
-    parentTweet
+    parentTweet,
+    userWatching,
+    totalWatchers
   } = tweet;
 
   const { user, userBookmarks } = useAuth();
@@ -408,7 +410,33 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                     viewingActivity={viewingActivity}
                     text={text || ''}
                     openModal={openModal}
+                    userWatching={userWatching}
+                    totalWatchers={totalWatchers}
                   />
+                </div>
+              )}
+
+              {/* Add Watching Badge when applicable */}
+              {userId && userWatching?.includes(userId) && (
+                <div className='absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1'>
+                  <HeroIcon
+                    iconName='EyeIcon'
+                    className='h-4 w-4 text-emerald-500'
+                  />
+                  <span className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+                    Watching this
+                  </span>
+                </div>
+              )}
+
+              {/* Show total watchers prominently */}
+              {totalWatchers > 0 && (
+                <div className='mt-2 flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
+                  <HeroIcon iconName='UsersIcon' className='h-5 w-5' />
+                  <span className='text-sm'>
+                    {totalWatchers} {totalWatchers === 1 ? 'person' : 'people'}{' '}
+                    watching
+                  </span>
                 </div>
               )}
             </div>

@@ -96,6 +96,8 @@ export function Input({
       parent: isReplying && parent ? parent : null,
       images: await uploadImages(userId, selectedImages),
       userLikes: [],
+      userWatching: [],
+      totalWatchers: 0,
       createdBy: userId,
       createdAt: serverTimestamp(),
       updatedAt: null,

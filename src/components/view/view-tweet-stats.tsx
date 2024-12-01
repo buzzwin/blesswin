@@ -9,17 +9,22 @@ import { NumberStats } from '@components/tweet/number-stats';
 import { UserCards } from '@components/user/user-cards';
 import type { Tweet } from '@lib/types/tweet';
 
-type viewTweetStats = Pick<Tweet, 'userRetweets' | 'userLikes'> & {
+type viewTweetStats = Pick<
+  Tweet,
+  'userRetweets' | 'userLikes' | 'userWatching'
+> & {
   likeMove: number;
   tweetMove: number;
   replyMove: number;
+  watchingMove: number;
   currentLikes: number;
   currentTweets: number;
   currentReplies: number;
+  currentWatchers: number;
   isStatsVisible: boolean;
 };
 
-export type StatsType = 'retweets' | 'likes';
+export type StatsType = 'retweets' | 'likes' | 'watching';
 
 type Stats = [string, StatsType | null, number, number];
 
@@ -28,17 +33,26 @@ export function ViewTweetStats({
   userLikes,
   tweetMove,
   replyMove,
+  watchingMove,
   userRetweets,
+  userWatching,
   currentLikes,
   currentTweets,
   currentReplies,
+  currentWatchers,
   isStatsVisible
 }: viewTweetStats): JSX.Element {
   const [statsType, setStatsType] = useState<StatsType | null>(null);
   const { open, openModal, closeModal } = useModal();
 
   const { data, loading } = useArrayDocument(
-    statsType ? (statsType === 'likes' ? userLikes : userRetweets) : [],
+    statsType
+      ? statsType === 'likes'
+        ? userLikes
+        : statsType === 'watching'
+        ? userWatching
+        : userRetweets
+      : [],
     usersCollection,
     { disabled: !statsType }
   );
@@ -54,6 +68,7 @@ export function ViewTweetStats({
   };
 
   const allStats: Readonly<Stats[]> = [
+    ['Watching', 'watching', watchingMove, currentWatchers],
     ['Reply', null, replyMove, currentReplies],
     ['ReBuzz', 'retweets', tweetMove, currentTweets],
     ['Like', 'likes', likeMove, currentLikes]

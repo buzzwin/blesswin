@@ -308,3 +308,20 @@ export async function clearAllBookmarks(userId: string): Promise<void> {
 
   await batch.commit();
 }
+
+export const manageWatching = 
+  (type: 'watch' | 'unwatch', userId: string, tweetId: string) =>
+  async (): Promise<void> => {
+    const tweetRef = doc(tweetsCollection, tweetId);
+
+    try {
+      await updateDoc(tweetRef, {
+        userWatching: type === 'watch' 
+          ? arrayUnion(userId)
+          : arrayRemove(userId),
+        totalWatchers: increment(type === 'watch' ? 1 : -1)
+      });
+    } catch (error) {
+      console.error('Error updating watching status:', error);
+    }
+  };

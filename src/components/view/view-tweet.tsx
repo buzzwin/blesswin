@@ -24,36 +24,34 @@ export type ViewTweetProps = Tweet & {
   viewTweetRef?: React.RefObject<HTMLElement>;
 };
 
-export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
-  const {
-    id: tweetId,
-    text,
-    images,
-    parent,
-    userLikes,
-    createdBy,
-    createdAt,
-    userRetweets,
-    userReplies,
-    viewTweetRef,
-    viewingActivity,
-    user: tweetUserData
-  } = tweet;
+export function ViewTweet({
+  id: tweetId,
+  text,
+  images,
+  parent,
+  userLikes,
+  createdBy,
+  createdAt,
+  updatedAt,
+  userReplies,
+  userRetweets,
+  userWatching = [],
+  totalWatchers = 0,
+  viewingActivity,
+  viewTweetRef,
+  photoURL: tweetPhotoURL,
+  user: tweetUser
+}: ViewTweetProps): JSX.Element {
+  const { user: authUser } = useAuth();
 
-  const { id: ownerId, name, username, verified, photoURL } = tweetUserData;
+  const { id: ownerId, name, username, verified, photoURL } = tweetUser;
 
-  const { user } = useAuth();
-
-  const { open, openModal, closeModal } = useModal();
-
-  const tweetLink = `/buzz/${tweetId}`;
-
-  const userId = user?.id as string;
-
+  const userId = authUser?.id as string;
   const isOwner = userId === createdBy;
-
   const reply = !!parent;
 
+  const { open, openModal, closeModal } = useModal();
+  const tweetLink = `/buzz/${tweetId}`;
   const { id: parentId, username: parentUsername = username } = parent ?? {};
 
   return (
@@ -76,7 +74,21 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
       >
         <TweetReplyModal
           tweet={{
-            ...tweet,
+            id: tweetId,
+            text,
+            images,
+            parent,
+            userLikes,
+            createdBy,
+            createdAt,
+            updatedAt,
+            userReplies,
+            userRetweets,
+            userWatching,
+            totalWatchers,
+            viewingActivity,
+            photoURL: tweetPhotoURL,
+            user: tweetUser,
             modal: true
           }}
           closeModal={closeModal}
@@ -91,12 +103,12 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
         )}
 
         <div className='grid grid-cols-[auto,1fr] gap-3'>
-          <UserTooltip avatar {...tweetUserData}>
+          <UserTooltip avatar {...tweetUser}>
             <UserAvatar src={photoURL} alt={name} username={username} />
           </UserTooltip>
           <div className='flex min-w-0 justify-between'>
             <div className='flex flex-col truncate xs:overflow-visible xs:whitespace-normal'>
-              <UserTooltip {...tweetUserData}>
+              <UserTooltip {...tweetUser}>
                 <UserName
                   className='-mb-1'
                   name={name}
@@ -104,7 +116,7 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
                   verified={verified}
                 />
               </UserTooltip>
-              <UserTooltip {...tweetUserData}>
+              <UserTooltip {...tweetUser}>
                 <UserUsername username={username} />
               </UserTooltip>
             </div>
@@ -173,9 +185,11 @@ export function ViewTweet(tweet: ViewTweetProps): JSX.Element {
             userLikes={userLikes}
             userRetweets={userRetweets}
             userReplies={userReplies}
-            openModal={openModal}
+            userWatching={userWatching}
+            totalWatchers={totalWatchers}
             viewingActivity={viewingActivity}
-            text={text || ''}
+            text={text ?? ''}
+            openModal={openModal}
           />
         </div>
       </div>
