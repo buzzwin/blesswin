@@ -166,7 +166,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             {viewingActivity?.poster_path && (
               <div className='relative'>
                 {/* Background Banner */}
-                <div className='relative h-32 overflow-hidden'>
+                <div className='relative h-16 overflow-hidden'>
                   <div
                     className='absolute inset-0 bg-cover bg-center blur-sm'
                     style={{
@@ -190,7 +190,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 </div>
 
                 {/* Content Layout */}
-                <div className='px-6'>
+                <div className='px-6 pt-4'>
                   {/* Poster and Title Section */}
                   <div className='relative -mt-16 flex gap-4 pb-4'>
                     {/* Poster */}
