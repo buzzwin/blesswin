@@ -1,52 +1,73 @@
-import Link from 'next/link';
-import { UserAvatar } from '@components/user/user-avatar';
-import { FollowButton } from '@components/ui/follow-button';
-import { UserTooltip } from './user-tooltip';
+import { doc } from 'firebase/firestore';
+import { useDocument } from '@lib/hooks/useDocument';
+import { usersCollection } from '@lib/firebase/collections';
+import { Loading } from '@components/ui/loading';
+import { Error } from '@components/ui/error';
+import { UserAvatar } from './user-avatar';
 import { UserName } from './user-name';
-import { UserFollowing } from './user-following';
 import { UserUsername } from './user-username';
+import { UserFollowButton } from './user-follow-button';
 import type { User } from '@lib/types/user';
 
-type UserCardProps = User & {
+type UserCardProps = (
+  | { userId: string; userData?: never }
+  | { userId?: never; userData: User }
+) & {
   modal?: boolean;
   follow?: boolean;
 };
 
-export function UserCard(user: UserCardProps): JSX.Element {
-  const { id, bio, name, modal, follow, username, verified, photoURL } = user;
+export function UserCard({
+  userId,
+  userData,
+  modal,
+  follow
+}: UserCardProps): JSX.Element {
+  const { data: fetchedUserData, loading } = useDocument(
+    doc(usersCollection, userId || ''),
+    {
+      allowNull: true,
+      disabled: !userId
+    }
+  );
+
+  if (userData) {
+    return <UserCardContent user={userData} modal={modal} follow={follow} />;
+  }
+
+  if (loading) return <Loading />;
+  if (!fetchedUserData) return <Error />;
 
   return (
-    <Link href={`/user/${username}`}>
-      <div
-        className='accent-tab hover-animation grid grid-cols-[auto,1fr] gap-3 px-4
-                   py-3 hover:bg-light-primary/5 dark:hover:bg-dark-primary/5'
-      >
-        <UserTooltip avatar {...user} modal={modal}>
-          <UserAvatar src={photoURL} alt={name} username={username} />
-        </UserTooltip>
-        <div className='grid flex-col gap-1 truncate xs:overflow-visible'>
-          <div className='flex items-center justify-between gap-2 truncate xs:overflow-visible'>
-            <div className='flex flex-col justify-center truncate xs:overflow-visible xs:whitespace-normal'>
-              <UserTooltip {...user} modal={modal}>
-                <UserName
-                  className='-mb-1'
-                  name={name}
-                  username={username}
-                  verified={verified}
-                />
-              </UserTooltip>
-              <div className='flex items-center gap-1 text-light-secondary dark:text-dark-secondary'>
-                <UserTooltip {...user} modal={modal}>
-                  <UserUsername username={username} />
-                </UserTooltip>
-              </div>
-            </div>
-            {follow && <UserFollowing userTargetId={id} />}
-            <FollowButton userTargetId={id} userTargetUsername={username} />
-          </div>
-          {follow && bio && <p className='whitespace-normal'>{bio}</p>}
+    <UserCardContent user={fetchedUserData} modal={modal} follow={follow} />
+  );
+}
+
+type UserCardContentProps = {
+  user: User;
+  modal?: boolean;
+  follow?: boolean;
+};
+
+function UserCardContent({
+  user,
+  modal,
+  follow
+}: UserCardContentProps): JSX.Element {
+  return (
+    <div className='flex items-center justify-between gap-3 p-4'>
+      <div className='flex min-w-0 gap-3'>
+        <UserAvatar
+          src={user.photoURL}
+          alt={user.name}
+          username={user.username}
+        />
+        <div className='flex min-w-0 flex-col'>
+          <UserName name={user.name} verified={user.verified} />
+          <UserUsername username={user.username} disableLink={modal} />
         </div>
       </div>
-    </Link>
+      {follow && <UserFollowButton userTargetId={user.id} />}
+    </div>
   );
 }

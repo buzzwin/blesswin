@@ -12,8 +12,9 @@ import { Button } from '@components/ui/button';
 import { ToolTip } from '@components/ui/tooltip';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReactElement, ReactNode } from 'react';
+import { cn } from '@lib/utils';
 
-export default function Bookmarks(): JSX.Element {
+export default function Trends(): JSX.Element {
   const { back } = useRouter();
 
   return (
@@ -21,8 +22,12 @@ export default function Bookmarks(): JSX.Element {
       <SEO title='Trends / Buzzwin' />
       <MainHeader useActionButton title='Trends' action={back}>
         <Button
-          className='dark-bg-tab group relative ml-auto cursor-not-allowed p-2 hover:bg-light-primary/10
-                     active:bg-light-primary/20 dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+          className={cn(
+            'group relative ml-auto p-2',
+            'cursor-not-allowed',
+            'hover:bg-light-primary/10 active:bg-light-primary/20',
+            'dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
+          )}
         >
           <HeroIcon className='h-5 w-5' iconName='Cog8ToothIcon' />
           <ToolTip tip='Settings' />
@@ -33,7 +38,7 @@ export default function Bookmarks(): JSX.Element {
   );
 }
 
-Bookmarks.getLayout = (page: ReactElement): ReactNode => (
+Trends.getLayout = (page: ReactElement): ReactNode => (
   <ProtectedLayout>
     <MainLayout>
       <TrendsLayout>{page}</TrendsLayout>

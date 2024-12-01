@@ -1,10 +1,19 @@
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
 import { collection, query, orderBy, limit, getDocs } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
+import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
-import { cn } from '@lib/utils';
-import Link from 'next/link';
+import type { ImageProps } from 'next/image';
+
+type ViewingActivity = {
+  title: string;
+  tmdbId: string;
+  mediaType: 'movie' | 'tv';
+  poster_path: string;
+};
 
 type TrendingShow = {
   title: string;
@@ -12,6 +21,11 @@ type TrendingShow = {
   mediaType: 'movie' | 'tv';
   posterPath: string;
   watchCount: number;
+};
+
+type FirestoreData = {
+  viewingActivity: ViewingActivity;
+  totalWatchers: number;
 };
 
 export function TrendingShows({
@@ -25,7 +39,7 @@ export function TrendingShows({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchTrendingShows() {
+    async function fetchTrendingShows(): Promise<void> {
       try {
         const tweetsRef = collection(db, 'tweets');
         const q = query(
@@ -37,12 +51,12 @@ export function TrendingShows({
 
         const shows: TrendingShow[] = [];
         querySnapshot.forEach((doc) => {
-          const data = doc.data();
+          const data = doc.data() as FirestoreData;
           if (data.viewingActivity && data.totalWatchers > 0) {
             shows.push({
               title: data.viewingActivity.title,
               mediaId: data.viewingActivity.tmdbId,
-              mediaType: data.viewingActivity.mediaType || 'movie',
+              mediaType: data.viewingActivity.mediaType,
               posterPath: data.viewingActivity.poster_path,
               watchCount: data.totalWatchers
             });
@@ -51,13 +65,14 @@ export function TrendingShows({
 
         setTrending(shows);
       } catch (error) {
+        // Log error but don't expose to user
         console.error('Error fetching trending shows:', error);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchTrendingShows();
+    void fetchTrendingShows();
   }, [showLimit]);
 
   if (loading) return <Loading />;
@@ -112,11 +127,17 @@ export function TrendingShows({
                 {index + 1}
               </span>
               {show.posterPath && (
-                <img
-                  src={`https://image.tmdb.org/t/p/w92${show.posterPath}`}
-                  alt={show.title}
-                  className='h-16 w-12 rounded-md object-cover'
-                />
+                <div className='relative h-16 w-12 overflow-hidden rounded-md'>
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w92${show.posterPath}`}
+                    alt={show.title}
+                    width={48}
+                    height={64}
+                    className='object-cover'
+                    unoptimized
+                    priority={index < 3}
+                  />
+                </div>
               )}
               <div className='min-w-0 flex-1'>
                 <h3

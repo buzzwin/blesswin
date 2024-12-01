@@ -1,63 +1,65 @@
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import {
-  doc,
-  limit,
-  query,
-  where,
-  orderBy,
-  documentId
-} from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { useCollection } from '@lib/hooks/useCollection';
-import { useDocument } from '@lib/hooks/useDocument';
 import { usersCollection } from '@lib/firebase/collections';
 import { UserCard } from '@components/user/user-card';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
-import { variants } from './aside-trends';
+import { cn } from '@lib/utils';
+
+const variants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  transition: { duration: 0.8 }
+};
 
 export function Suggestions(): JSX.Element {
   const { randomSeed } = useAuth();
+  const [randomUsers, setRandomUsers] = useState<string[]>([]);
 
-  const { data: adminData, loading: adminLoading } = useDocument(
-    doc(usersCollection, 'Twt0A27bx9YcG4vu3RTsR7ifJzf2'),
-    { allowNull: true }
+  const { data: users, loading: usersLoading } = useCollection(
+    usersCollection,
+    {
+      includeUser: true,
+      allowNull: true,
+      preserve: true
+    }
   );
 
-  const { data: suggestionsData, loading: suggestionsLoading } = useCollection(
-    query(
-      usersCollection,
-      where(documentId(), '>=', randomSeed),
-      orderBy(documentId()),
-      limit(2)
-    ),
-    { allowNull: true }
-  );
+  useEffect(() => {
+    if (users) {
+      const shuffledUsers = [...users]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 3)
+        .map((user) => user.id);
+      setRandomUsers(shuffledUsers);
+    }
+  }, [users, randomSeed]);
+
+  if (usersLoading) return <Loading />;
+  if (!users) return <Error />;
 
   return (
-    <section className='hover-animation rounded-2xl bg-main-sidebar-background'>
-      {adminLoading || suggestionsLoading ? (
-        <Loading className='flex h-52 items-center justify-center p-4' />
-      ) : suggestionsData ? (
-        <motion.div className='inner:px-4 inner:py-3' {...variants}>
-          <h2 className='text-xl font-bold'>Who to follow</h2>
-          {adminData && <UserCard {...adminData} />}
-          {suggestionsData?.map((userData) => (
-            <UserCard {...userData} key={userData.id} />
+    <section className='sticky top-0 py-4'>
+      <motion.div
+        className={cn(
+          'rounded-2xl bg-white/5 p-4',
+          'hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40',
+          'backdrop-blur-sm hover:backdrop-blur-lg',
+          'border border-white/10 hover:border-emerald-500/20',
+          'shadow-xl hover:shadow-2xl hover:shadow-emerald-500/10',
+          'transition-all duration-500'
+        )}
+        {...variants}
+      >
+        <h2 className='mb-4 text-xl font-bold text-white'>Who to follow</h2>
+        <div className='flex flex-col gap-3'>
+          {randomUsers.map((userId) => (
+            <UserCard key={userId} userId={userId} follow />
           ))}
-          <Link href='/people'>
-            <a
-              className='custom-button accent-tab hover-card block w-full rounded-2xl
-                         rounded-t-none text-center text-main-accent'
-            >
-              Show more
-            </a>
-          </Link>
-        </motion.div>
-      ) : (
-        <Error />
-      )}
+        </div>
+      </motion.div>
     </section>
   );
 }
