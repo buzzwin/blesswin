@@ -23,18 +23,18 @@ export function UserCard({
   modal,
   follow
 }: UserCardProps): JSX.Element {
-  const { data: fetchedUserData, loading } = useDocument(
-    doc(usersCollection, userId || ''),
-    {
-      allowNull: true,
-      disabled: !userId
-    }
-  );
+  const docRef = userId
+    ? doc(usersCollection, userId)
+    : doc(usersCollection, 'placeholder');
 
-  if (userData) {
+  const { data: fetchedUserData, loading } = useDocument(docRef, {
+    allowNull: true,
+    disabled: !userId
+  });
+
+  if (userData)
     return <UserCardContent user={userData} modal={modal} follow={follow} />;
-  }
-
+  if (!userId) return <Error />;
   if (loading) return <Loading />;
   if (!fetchedUserData) return <Error />;
 

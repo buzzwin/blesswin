@@ -15,30 +15,30 @@ const variants = {
 };
 
 export function Suggestions(): JSX.Element {
-  const { randomSeed } = useAuth();
+  const { user } = useAuth();
   const [randomUsers, setRandomUsers] = useState<string[]>([]);
 
   const { data: users, loading: usersLoading } = useCollection(
     usersCollection,
     {
-      includeUser: true,
       allowNull: true,
-      preserve: true
+      disabled: !user
     }
   );
 
   useEffect(() => {
-    if (users) {
-      const shuffledUsers = [...users]
-        .sort(() => 0.5 - Math.random())
-        .slice(0, 3)
-        .map((user) => user.id);
-      setRandomUsers(shuffledUsers);
+    if (users?.length && user?.id) {
+      const filteredUsers = users
+        .filter((u) => u.id !== user.id) // Exclude current user
+        .sort(() => 0.5 - Math.random()) // Randomize
+        .slice(0, 3); // Take first 3
+
+      setRandomUsers(filteredUsers.map((u) => u.id));
     }
-  }, [users, randomSeed]);
+  }, [users, user?.id]);
 
   if (usersLoading) return <Loading />;
-  if (!users) return <Error />;
+  if (!users?.length) return <></>;
 
   return (
     <section className='sticky top-0 py-4'>
