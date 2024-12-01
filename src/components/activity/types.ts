@@ -10,22 +10,22 @@ export interface SearchResult {
   }
 
 
-  export interface ViewingActivity {
-    tmdbId: string;
-    id: number;
-    username: string;
+  export type ViewingActivity = {
+    tmdbId: number;
     title: string;
-    status: string;
-    rating: string;
-    review: string;
-    network: string;
     poster_path: string;
+    mediaType?: 'movie' | 'tv';
+    status: string;
+    review?: string;
+    overview?: string;
+    username?: string;
+    photoURL?: string;
+    network?: string;
+    releaseDate?: string;
     backdrop_path?: string;
-    releaseDate: string;
-    time: string;
-    photoURL: string;
-    mediaType: 'movie' | 'tv';
-  }
+    rating?: string;
+    time?: string;
+  };
 
   export interface Activity {
     id: number;

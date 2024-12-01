@@ -1,32 +1,17 @@
-import { FormEvent, ChangeEvent, useState } from 'react';
+import { type ChangeEvent, useState } from 'react';
 import axios from 'axios';
 import { debounce } from 'lodash';
 import SpinnerComponent from '@components/common/spinner';
 import SearchResults from './searchresults';
-import { SearchResult } from './types';
-import { ViewingActivity } from './types';
-import { cn } from '../../lib/utils';
-import { HeroIcon } from '../../components/ui/hero-icon';
+import type { SearchResult, ViewingActivity, TMDBResult } from './types';
+import { cn } from '@lib/utils';
+import { HeroIcon } from '@components/ui/hero-icon';
 
-interface ViewingActivityFormProps {
-  onSave: (ViewingActivity: {
-    id: number;
-    tmdbId: string;
-    title: string;
-    status: string;
-    rating: string;
-    review: string;
-    poster_path: string;
-    username: string;
-    network: string;
-    releaseDate: string;
-    time: string;
-    photoURL: string;
-    mediaType: 'movie' | 'tv';
-  }) => void;
-}
+type ViewingActivityFormProps = {
+  onSave: (activity: ViewingActivity) => void;
+};
 
-interface SelectedShow {
+type SelectedShow = {
   id: number;
   title: string;
   releaseDate: string;
@@ -35,31 +20,23 @@ interface SelectedShow {
   vote_average: number;
   name: string;
   status: string;
-}
+};
 
-interface TmdbResponse {
-  results: SearchResult[];
-}
+type TmdbResponse = {
+  results: TMDBResult[];
+};
 
 const defaultActivity: ViewingActivity = {
-  id: 0,
-  tmdbId: '',
+  tmdbId: 0,
   title: '',
-  status: 'is watching',
-  rating: '',
-  review: '',
   poster_path: '',
-  username: '',
-  network: '',
-  releaseDate: '',
-  time: '',
-  photoURL: '',
+  status: 'is watching',
   mediaType: 'movie'
 };
 
-const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
+const ViewingActivityForm = ({
   onSave
-}) => {
+}: ViewingActivityFormProps): JSX.Element => {
   const [viewingActivity, setViewingActivity] =
     useState<ViewingActivity>(defaultActivity);
   const [searchText, setSearchText] = useState('');
@@ -82,57 +59,76 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
   ): Promise<void> => {
     const { value } = e.target;
     setSearchText(value);
-    if (value.length > 0 && !isExpanded) {
-      setIsExpanded(true);
-    }
+    if (value.length > 0) setIsExpanded(true);
     await handleSearch(e);
   };
 
-  const handleReviewChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-    const { value } = e.target;
+  const handleReviewChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
     setViewingActivity((prevState) => ({
       ...prevState,
-      review: value
+      review: e.target.value
     }));
   };
 
-  const handleStatusChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    const newStatus = event.target.value;
-    setViewingActivity((prev) => ({ ...prev, status: newStatus }));
+  const handleStatusChange = (event: ChangeEvent<HTMLSelectElement>): void => {
+    setViewingActivity((prev) => ({ ...prev, status: event.target.value }));
   };
 
-  const handleSearch = debounce(async (e: ChangeEvent<HTMLInputElement>) => {
-    setLoading(true);
-    const queryString: string = e.target.value ?? '';
-    if (queryString === '') {
-      setSearchResults([]);
+  const handleSearch = debounce(
+    async (e: ChangeEvent<HTMLInputElement>): Promise<void> => {
+      setLoading(true);
+      const queryString = e.target.value ?? '';
+
+      if (!queryString) {
+        setSearchResults([]);
+        setLoading(false);
+        return;
+      }
+
+      const apiKey = '0af4f0642998fa986fe260078ab69ab6';
+      const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${queryString}&limit=5&sort_by=popularity.desc,release_date.desc&sort_order=desc`;
+
+      try {
+        const { data } = await axios.get<TmdbResponse>(apiUrl);
+        const results = data.results
+          .filter(
+            (result): result is TMDBResult => result.media_type !== 'person'
+          )
+          .map(
+            (result) =>
+              ({
+                id: result.id,
+                title: result.title || result.name || '',
+                releaseDate: result.release_date || result.first_air_date || '',
+                overview: result.overview,
+                poster_path: result.poster_path || '',
+                vote_average: result.vote_average,
+                name: result.name || result.title || '',
+                status: 'is watching'
+              } as SearchResult)
+          );
+
+        setSearchResults(results);
+      } catch (error) {
+        console.error('Search error:', error);
+      }
+
       setLoading(false);
-      return;
-    }
+    },
+    1500
+  );
 
-    const apiKey = '0af4f0642998fa986fe260078ab69ab6';
-    const apiUrl = `https://api.themoviedb.org/3/search/multi?api_key=${apiKey}&query=${queryString}&limit=5&sort_by=popularity.desc,release_date.desc&sort_order=desc`;
-
-    try {
-      const response = await axios.get<TmdbResponse>(apiUrl);
-      setSearchResults(response.data.results);
-    } catch (error) {
-      console.error(error);
-    }
-
-    setLoading(false);
-  }, 1500);
-
-  const handleSelect = (searchResult: SearchResult) => {
+  const handleSelect = (searchResult: SearchResult): void => {
     setSelectedShow(searchResult);
     setSearchResults([]);
     setSearchText(searchResult.title || searchResult.name);
     setViewingActivity((prevState) => ({
       ...prevState,
       title: searchResult.title || searchResult.name,
-      tmdbId: searchResult.id.toString(),
-      rating: searchResult.vote_average.toString(),
-      poster_path: searchResult.poster_path
+      tmdbId: Number(searchResult.id),
+      poster_path: searchResult.poster_path,
+      overview: searchResult.overview,
+      status: prevState.status || 'is watching'
     }));
   };
 
@@ -157,7 +153,11 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
     if (viewingActivity.status === null || viewingActivity.status === '') {
       viewingActivity.status = 'is watching';
     }
-    onSave(viewingActivity);
+    const activityToSave = {
+      ...viewingActivity,
+      tmdbId: Number(viewingActivity.tmdbId)
+    };
+    onSave(activityToSave);
     handleCancel();
   };
 

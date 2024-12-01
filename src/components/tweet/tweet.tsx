@@ -24,6 +24,8 @@ import type { User } from '@lib/types/user';
 import { useState } from 'react';
 import { IconName } from '@components/ui/hero-icon';
 import { BookmarkButton } from '@components/bookmarks/bookmark-button';
+import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
+import { manageBookmark } from '@lib/firebase/utils';
 
 export type TweetProps = Tweet & {
   user: User;
@@ -36,6 +38,7 @@ export type TweetProps = Tweet & {
 export function Tweet(tweet: TweetProps): JSX.Element {
   const [isUserInfoOpen, setIsUserInfoOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isWatchlistModalOpen, setIsWatchlistModalOpen] = useState(false);
 
   const {
     id: tweetId,
@@ -115,6 +118,39 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     }
   };
 
+  const handleAddToWatchlist = async (watchlistId: string): Promise<void> => {
+    if (!viewingActivity || !userId) return;
+
+    const bookmarkData = {
+      title: viewingActivity.title,
+      description: viewingActivity.review || viewingActivity.overview || '',
+      mediaType: viewingActivity.mediaType || 'movie',
+      posterPath: viewingActivity.poster_path || '',
+      watchlistId,
+      mediaId: viewingActivity.tmdbId.toString(),
+      tags: [],
+      userId,
+      createdAt: new Date()
+    };
+
+    try {
+      await manageBookmark(
+        'bookmark',
+        userId,
+        viewingActivity.tmdbId.toString(),
+        bookmarkData
+      );
+      toast.success('Added to watchlist!');
+    } catch (error) {
+      console.error('Error adding to watchlist:', error);
+      toast.error('Failed to add to watchlist');
+    }
+  };
+
+  const handleWatchlistClick = (e: React.MouseEvent) => {
+    setIsWatchlistModalOpen(true);
+  };
+
   const bookmarkIconName: IconName = tweetIsBookmarked
     ? 'BookmarkIcon'
     : 'BookmarkIcon';
@@ -179,16 +215,58 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                   <div className='absolute inset-0 bg-black/40' />
 
                   {/* Watchlist Button */}
-                  <div className='absolute top-4 right-4'>
-                    {viewingActivity && (
-                      <BookmarkButton
-                        title={viewingActivity.title}
-                        mediaId={viewingActivity.tmdbId}
-                        mediaType={viewingActivity.mediaType || 'movie'}
-                        posterPath={viewingActivity.poster_path}
+                  {viewingActivity && (
+                    <>
+                      <AddToWatchlistModal
+                        isOpen={isWatchlistModalOpen}
+                        onClose={() => setIsWatchlistModalOpen(false)}
+                        onAdd={handleAddToWatchlist}
+                        mediaData={{
+                          id: viewingActivity.tmdbId.toString(),
+                          title: viewingActivity.title,
+                          description: viewingActivity.review || '',
+                          mediaType: viewingActivity.mediaType || 'movie',
+                          posterPath: viewingActivity.poster_path
+                        }}
                       />
-                    )}
-                  </div>
+                      <div
+                        className='absolute top-4 right-4 z-50'
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <button
+                          type='button'
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            setIsWatchlistModalOpen(true);
+                          }}
+                          className={cn(
+                            'rounded-lg',
+                            'px-4 py-2',
+                            'bg-white/10 backdrop-blur-sm',
+                            'hover:bg-white/20',
+                            'transition-colors duration-200',
+                            'z-10',
+                            'relative',
+                            'cursor-pointer',
+                            'flex items-center gap-2',
+                            'min-h-[44px]',
+                            'focus:outline-none focus:ring-2 focus:ring-white/50',
+                            'active:scale-95',
+                            'shadow-lg'
+                          )}
+                        >
+                          <HeroIcon
+                            iconName='BookmarkIcon'
+                            className='pointer-events-none h-5 w-5 text-white'
+                          />
+                          <span className='text-sm font-medium text-white'>
+                            Add to Watchlist
+                          </span>
+                        </button>
+                      </div>
+                    </>
+                  )}
                 </div>
 
                 {/* Content Layout */}

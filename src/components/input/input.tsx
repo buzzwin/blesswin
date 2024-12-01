@@ -198,8 +198,7 @@ export function Input({
     event.preventDefault();
     console.log('Button clicked', inputValue);
     const viewingActivity: ViewingActivity = {
-      tmdbId: '',
-      id: 0,
+      tmdbId: 0,
       username: '',
       title: '',
       status: 'is replying',

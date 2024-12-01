@@ -45,13 +45,6 @@ export default function WatchlistPage(): JSX.Element {
               </span>
             )}
           </div>
-          <button
-            onClick={() => setIsShareOpen(true)}
-            className='flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600'
-          >
-            <HeroIcon className='h-5 w-5' iconName='ShareIcon' />
-            Share Watchlist
-          </button>
           {watchlist && (
             <button
               onClick={() => setIsShareOpen(true)}

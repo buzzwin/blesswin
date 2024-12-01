@@ -13,15 +13,18 @@ export const ActivityItem: React.FC<{
   user: User;
   modal?: boolean;
 }> = ({ activity, user }) => {
-  const { status, title, time, poster_path, review } = activity;
+  const { status, title, poster_path, review } = activity;
   const { name, username, verified, photoURL } = user;
   const { modal } = { modal: false };
 
-  // Calculate the number of days since the activity was posted
-  const activityTime = new Date(time).getTime();
-  const currentTime = new Date().getTime();
-  const diffTime = currentTime - activityTime;
-  const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  // Calculate time difference only if time exists
+  const diffDays = activity.time
+    ? Math.floor(
+        (new Date().getTime() - new Date(activity.time).getTime()) /
+          (1000 * 60 * 60 * 24)
+      )
+    : 0;
+
   const randomNumber = Math.floor(Math.random() * 16);
   const imgUrl = `https://xsgames.co/randomusers/avatar.php?g=pixel&i=${randomNumber}`;
   //const { open, openModal, closeModal } = useModal();

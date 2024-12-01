@@ -70,25 +70,14 @@ const ActivityFeed: React.FC = () => {
 
         const updatedActivities: ViewingActivity[] = results
           .filter((result) => result.media_type !== 'person')
-          .map((result: TMDBResult, index) => ({
-            id: index + 1,
-            tmdbId: result.id.toString(),
-            rating: '★★★★★',
-            review: result.overview,
-            username: user?.username || '',
-            status: 'is watching',
+          .map((result: TMDBResult) => ({
+            tmdbId: Number(result.id),
             title: result.title || result.name || '',
-            network: '',
-            releaseDate: result.release_date || result.first_air_date || '',
-            time: new Date().toISOString(),
-            poster_path: result.poster_path
-              ? `https://image.tmdb.org/t/p/w500${result.poster_path}`
-              : 'https://plchldr.co/i/500x250',
-            backdrop_path: result.backdrop_path
-              ? `https://image.tmdb.org/t/p/original${result.backdrop_path}`
-              : '',
-            photoURL: user?.photoURL || '',
-            mediaType: result.media_type === 'tv' ? 'tv' : 'movie'
+            poster_path: result.poster_path || '',
+            mediaType: result.media_type === 'tv' ? 'tv' : 'movie',
+            status: 'is watching',
+            review: result.overview,
+            overview: result.overview
           }));
 
         setActivities(updatedActivities);
@@ -135,6 +124,14 @@ const ActivityFeed: React.FC = () => {
     );
   }
 
+  const handleDotClick = (index: number): void => {
+    if (!isTransitioning) {
+      setIsTransitioning(true);
+      setCurrentIndex(index);
+      setTimeout(() => setIsTransitioning(false), 500);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -148,7 +145,7 @@ const ActivityFeed: React.FC = () => {
       <div className='relative h-full w-full'>
         {activities.map((activity, index) => (
           <div
-            key={activity.id}
+            key={`${activity.tmdbId}-${index}`}
             className={cn(
               'absolute h-full w-full transform',
               'transition-all duration-700 ease-in-out',
@@ -163,21 +160,19 @@ const ActivityFeed: React.FC = () => {
             <div className='group relative h-full w-full'>
               {/* Backdrop Image */}
               <div className='absolute inset-0 transition-transform duration-700 group-hover:scale-105'>
-                {activity.backdrop_path && (
-                  <Image
-                    src={`https://image.tmdb.org/t/p/original${activity.backdrop_path}`}
-                    alt={activity.title}
-                    className='object-cover transition-all duration-700'
-                    style={{
-                      width: '100%',
-                      height: '100%',
-                      position: 'absolute'
-                    }}
-                    width={1920}
-                    height={1080}
-                    priority={index === currentIndex}
-                  />
-                )}
+                <Image
+                  src={`https://image.tmdb.org/t/p/original${activity.poster_path}`}
+                  alt={activity.title}
+                  className='object-cover transition-all duration-700'
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    position: 'absolute'
+                  }}
+                  width={1920}
+                  height={1080}
+                  priority={index === currentIndex}
+                />
                 <div
                   className={cn(
                     'absolute inset-0',
@@ -240,8 +235,8 @@ const ActivityFeed: React.FC = () => {
                         )}
                       >
                         <Image
-                          src={activity.photoURL}
-                          alt={activity.username}
+                          src={activity.photoURL || '/default-avatar.png'}
+                          alt={activity.username || 'User'}
                           className='rounded-full'
                           style={{
                             width: '100%',
@@ -370,13 +365,7 @@ const ActivityFeed: React.FC = () => {
           {activities.map((_, index) => (
             <button
               key={index}
-              onClick={() => {
-                if (!isTransitioning) {
-                  setIsTransitioning(true);
-                  setCurrentIndex(index);
-                  setTimeout(() => setIsTransitioning(false), 500);
-                }
-              }}
+              onClick={() => handleDotClick(index)}
               disabled={isTransitioning}
               className={cn(
                 'h-1.5 rounded-full md:h-2',
