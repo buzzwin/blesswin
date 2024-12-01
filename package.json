@@ -19,6 +19,7 @@
     "clsx": "^1.2.1",
     "firebase": "^9.9.4",
     "framer-motion": "^7.2.1",
+    "html-to-image": "^1.11.11",
     "lodash": "^4.17.21",
     "next": "12.2.4",
     "next-share": "^0.20.0",
