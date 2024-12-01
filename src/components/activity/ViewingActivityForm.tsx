@@ -213,18 +213,6 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
               </div>
             )}
           </div>
-          {!isExpanded && (
-            <p
-              className={cn(
-                'absolute left-0 -bottom-5',
-                'text-xs',
-                'text-gray-500 dark:text-gray-400',
-                'transition-colors duration-200'
-              )}
-            >
-              Try searching for your favorite shows
-            </p>
-          )}
         </div>
 
         {/* Expanded Content */}
@@ -236,6 +224,43 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
               'duration-300'
             )}
           >
+            {/* Action Buttons - Moved to top */}
+            {(selectedShow.title || selectedShow.name) && (
+              <div className='flex items-center justify-between'>
+                <button
+                  type='button'
+                  onClick={handleCancel}
+                  className={cn(
+                    'px-3 py-1.5',
+                    'text-sm font-medium',
+                    'rounded-lg',
+                    'bg-gray-100 dark:bg-gray-800',
+                    'text-gray-700 dark:text-gray-300',
+                    'hover:bg-gray-200 dark:hover:bg-gray-700',
+                    'focus:outline-none focus:ring-2 focus:ring-gray-500/20',
+                    'transition-all duration-200'
+                  )}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSave}
+                  className={cn(
+                    'px-3 py-1.5',
+                    'text-sm font-medium',
+                    'rounded-lg',
+                    'bg-emerald-500 dark:bg-emerald-600',
+                    'text-white',
+                    'hover:bg-emerald-600 dark:hover:bg-emerald-700',
+                    'focus:outline-none focus:ring-2 focus:ring-emerald-500/20',
+                    'transition-all duration-200'
+                  )}
+                >
+                  Save
+                </button>
+              </div>
+            )}
+
             {/* Status Selection */}
             <div className='relative'>
               <select
@@ -383,41 +408,6 @@ const ViewingActivityForm: React.FC<ViewingActivityFormProps> = ({
                       {selectedShow.overview}
                     </p>
                   </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className='flex justify-end gap-3'>
-                  <button
-                    type='button'
-                    onClick={handleCancel}
-                    className={cn(
-                      'px-3 py-1.5',
-                      'text-sm font-medium',
-                      'rounded-lg',
-                      'bg-gray-100 dark:bg-gray-800',
-                      'text-gray-700 dark:text-gray-300',
-                      'hover:bg-gray-200 dark:hover:bg-gray-700',
-                      'focus:outline-none focus:ring-2 focus:ring-gray-500/20',
-                      'transition-all duration-200'
-                    )}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    onClick={handleSave}
-                    className={cn(
-                      'px-3 py-1.5',
-                      'text-sm font-medium',
-                      'rounded-lg',
-                      'bg-emerald-500 dark:bg-emerald-600',
-                      'text-white',
-                      'hover:bg-emerald-600 dark:hover:bg-emerald-700',
-                      'focus:outline-none focus:ring-2 focus:ring-emerald-500/20',
-                      'transition-all duration-200'
-                    )}
-                  >
-                    Save
-                  </button>
                 </div>
               </div>
             )}

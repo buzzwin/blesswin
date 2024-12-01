@@ -5,6 +5,8 @@ import { useWindow } from '@lib/context/window-context';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { cn } from '@lib/utils';
 import Link from 'next/link';
+import { useState } from 'react';
+import { WatchlistShare } from '@components/share/watchlist-share';
 import type { Watchlist } from '@lib/types/bookmark';
 
 type WatchlistsProps = {
@@ -19,6 +21,9 @@ export function Watchlists({
   compact
 }: WatchlistsProps): JSX.Element {
   const { isMobile, width } = useWindow();
+  const [selectedWatchlist, setSelectedWatchlist] = useState<Watchlist | null>(
+    null
+  );
 
   const getGridCols = () => {
     if (compact || isMobile) return 'grid-cols-1';
@@ -44,71 +49,90 @@ export function Watchlists({
   return (
     <div className={cn('grid w-full gap-4', getGridCols())}>
       {watchlists.map((watchlist) => (
-        <Link key={watchlist.id} href={`/watchlist/${watchlist.id}`}>
-          <a className='block h-full overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md dark:bg-gray-800'>
-            <div className='flex h-full flex-col p-4'>
-              <div className='mb-2 flex items-center justify-between'>
-                <h3
+        <div
+          key={watchlist.id}
+          className='block h-full overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md dark:bg-gray-800'
+        >
+          <div className='flex h-full flex-col p-4'>
+            <div className='mb-2 flex items-center justify-between'>
+              <Link href={`/watchlist/${watchlist.id}`}>
+                <a
                   className={cn(
                     'line-clamp-1 font-medium',
                     isMobile ? 'text-base' : 'text-lg'
                   )}
                 >
                   {watchlist.name}
-                </h3>
+                </a>
+              </Link>
+              <div className='flex items-center gap-2'>
                 {watchlist.isPublic && (
-                  <span className='ml-2 inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'>
+                  <span className='inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'>
                     <HeroIcon iconName='GlobeAltIcon' className='h-3 w-3' />
                     Public
                   </span>
                 )}
+                <button
+                  onClick={() => setSelectedWatchlist(watchlist)}
+                  className='rounded-full p-1.5 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+                >
+                  <HeroIcon className='h-5 w-5' iconName='ShareIcon' />
+                </button>
               </div>
-              {watchlist.description && (
-                <p
+            </div>
+            {watchlist.description && (
+              <p
+                className={cn(
+                  'line-clamp-2 mb-3 flex-grow text-gray-500 dark:text-gray-400',
+                  isMobile ? 'text-xs' : 'text-sm'
+                )}
+              >
+                {watchlist.description}
+              </p>
+            )}
+            <div className='mt-auto flex items-center justify-between'>
+              <div className='flex items-center gap-2'>
+                <div className='flex -space-x-2'>
+                  <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
+                    <HeroIcon
+                      className={cn(
+                        'text-gray-500 dark:text-gray-400',
+                        isMobile ? 'h-3 w-3' : 'h-4 w-4'
+                      )}
+                      iconName='FilmIcon'
+                    />
+                  </div>
+                  <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
+                    <HeroIcon
+                      className={cn(
+                        'text-gray-500 dark:text-gray-400',
+                        isMobile ? 'h-3 w-3' : 'h-4 w-4'
+                      )}
+                      iconName='TvIcon'
+                    />
+                  </div>
+                </div>
+                <span
                   className={cn(
-                    'line-clamp-2 mb-3 flex-grow text-gray-500 dark:text-gray-400',
+                    'text-gray-500 dark:text-gray-400',
                     isMobile ? 'text-xs' : 'text-sm'
                   )}
                 >
-                  {watchlist.description}
-                </p>
-              )}
-              <div className='mt-auto flex items-center justify-between'>
-                <div className='flex items-center gap-2'>
-                  <div className='flex -space-x-2'>
-                    <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
-                      <HeroIcon
-                        className={cn(
-                          'text-gray-500 dark:text-gray-400',
-                          isMobile ? 'h-3 w-3' : 'h-4 w-4'
-                        )}
-                        iconName='FilmIcon'
-                      />
-                    </div>
-                    <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
-                      <HeroIcon
-                        className={cn(
-                          'text-gray-500 dark:text-gray-400',
-                          isMobile ? 'h-3 w-3' : 'h-4 w-4'
-                        )}
-                        iconName='TvIcon'
-                      />
-                    </div>
-                  </div>
-                  <span
-                    className={cn(
-                      'text-gray-500 dark:text-gray-400',
-                      isMobile ? 'text-xs' : 'text-sm'
-                    )}
-                  >
-                    {watchlist.totalItems} items
-                  </span>
-                </div>
+                  {watchlist.totalItems} items
+                </span>
               </div>
             </div>
-          </a>
-        </Link>
+          </div>
+        </div>
       ))}
+
+      {selectedWatchlist && (
+        <WatchlistShare
+          watchlist={selectedWatchlist}
+          isOpen={!!selectedWatchlist}
+          onClose={() => setSelectedWatchlist(null)}
+        />
+      )}
     </div>
   );
 }
