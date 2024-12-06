@@ -30,12 +30,17 @@ import { Button } from '@components/ui/button';
 
 type InputProps = {
   modal?: boolean;
-  reply?: boolean;
-  parent?: { id: string; username: string };
-  disabled?: boolean;
-  children?: ReactNode;
   replyModal?: boolean;
+  parent?: {
+    id: string;
+    username: string;
+    viewingActivity?: ViewingActivity;
+  };
+  children?: ReactNode;
   closeModal?: () => void;
+  placeholder?: string;
+  onSubmit?: (data: ViewingActivity) => Promise<void>;
+  selectedTags?: string[];
 };
 
 export const variants: Variants = {
@@ -46,12 +51,13 @@ export const variants: Variants = {
 
 export function Input({
   modal,
-  reply,
-  parent,
-  disabled,
-  children,
   replyModal,
-  closeModal
+  parent,
+  children,
+  closeModal,
+  placeholder,
+  onSubmit,
+  selectedTags = []
 }: InputProps): JSX.Element {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedImages, setSelectedImages] = useState<FilesWithId>([]);
@@ -233,6 +239,69 @@ export function Input({
     discardTweet();
   };
 
+  const handleSubmit = async (): Promise<void> => {
+    if (!inputValue && !selectedImages.length) return;
+
+    setLoading(true);
+
+    try {
+      console.log('Submitting form with:', {
+        inputValue,
+        selectedTags,
+        parent
+      });
+
+      const tweetData = {
+        text: inputValue,
+        images: selectedImages.length ? selectedImages : null,
+        parent: parent ?? null,
+        userLikes: [],
+        createdBy: user?.id as string,
+        createdAt: new Date(),
+        updatedAt: null,
+        userReplies: 0,
+        userRetweets: [],
+        viewingActivity: replyModal
+          ? {
+              ...parent?.viewingActivity,
+              review: inputValue,
+              tags: selectedTags
+            }
+          : null,
+        photoURL: user?.photoURL || '',
+        userWatching: [],
+        totalWatchers: 0
+      };
+
+      console.log('Sending tweet data:', tweetData);
+
+      const response = await fetch('/api/tweets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(tweetData)
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Failed to post review');
+      }
+
+      console.log('Tweet posted successfully');
+      discardTweet();
+      closeModal?.();
+      toast.success('Review posted successfully!');
+    } catch (error) {
+      console.error('Error posting review:', error);
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to post review'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div
       className={cn(
@@ -241,8 +310,8 @@ export function Input({
         isExpanded ? 'bg-white dark:bg-gray-800/50' : 'bg-transparent'
       )}
     >
-      {/* Collapsed View */}
-      {!isExpanded && (
+      {/* Only show the collapsed view if not a reply/review modal */}
+      {!isExpanded && !replyModal && (
         <button
           onClick={() => setIsExpanded(true)}
           className={cn(
@@ -276,9 +345,9 @@ export function Input({
         </button>
       )}
 
-      {/* Expanded Form */}
+      {/* Always show the form for reply/review modal */}
       <AnimatePresence>
-        {isExpanded && (
+        {(isExpanded || replyModal) && (
           <motion.div
             initial='initial'
             animate='animate'
@@ -290,11 +359,13 @@ export function Input({
                 'flex flex-col',
                 'border-b border-gray-100 dark:border-gray-800',
                 {
-                  '-mx-4': reply,
-                  'gap-2': replyModal,
-                  'cursor-not-allowed': disabled
+                  'gap-2': replyModal
                 }
               )}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
             >
               {loading && (
                 <motion.i
@@ -303,36 +374,23 @@ export function Input({
                 />
               )}
               {children}
-              {reply && visited && (
-                <motion.p
-                  className='ml-[75px] -mb-2 mt-2 text-light-secondary dark:text-dark-secondary'
-                  {...fromTop}
-                >
-                  Replying to{' '}
-                  <Link href={`/user/${parent?.username as string}`}>
-                    <a className='custom-underline text-main-accent'>
-                      {parent?.username as string}
-                    </a>
-                  </Link>
-                </motion.p>
-              )}
+
               <div
                 className={cn(
                   'hover-animation grid w-full grid-cols-[auto,1fr] gap-3 px-4 py-3',
-                  reply ? 'pt-3 pb-1' : replyModal ? 'pt-0' : '',
-                  (disabled || loading) && 'pointer-events-none opacity-50'
+                  replyModal && 'pt-0',
+                  loading && 'pointer-events-none opacity-50'
                 )}
               >
                 <UserAvatar src={photoURL} alt={name} username={username} />
                 <div className='flex w-full flex-col gap-4'>
                   <InputForm
                     modal={modal}
-                    reply={reply}
+                    replyModal={replyModal}
                     formId={formId}
                     visited={visited}
                     loading={loading}
                     inputRef={inputRef}
-                    replyModal={replyModal}
                     inputValue={inputValue}
                     isValidTweet={isValidTweet}
                     isUploadingImages={isUploadingImages}
@@ -370,8 +428,10 @@ export function Input({
                       <HeroIcon iconName='XMarkIcon' className='h-4 w-4' />
                       Cancel
                     </button>
-                    {replyModal ? (
+                    {replyModal && (
                       <button
+                        type='submit'
+                        disabled={loading}
                         className={cn(
                           'px-4 py-2',
                           'rounded-xl',
@@ -380,22 +440,25 @@ export function Input({
                           'text-white',
                           'hover:bg-emerald-600 dark:hover:bg-emerald-700',
                           'transition-colors duration-200',
-                          'flex items-center gap-2'
+                          'flex items-center gap-2',
+                          'disabled:cursor-not-allowed disabled:opacity-50'
                         )}
-                        onClick={handleReply}
                       >
-                        <HeroIcon
-                          iconName='PaperAirplaneIcon'
-                          className='h-4 w-4'
-                        />
-                        Share
+                        {loading ? (
+                          <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
+                        ) : (
+                          <HeroIcon
+                            iconName='PaperAirplaneIcon'
+                            className='h-4 w-4'
+                          />
+                        )}
+                        {loading ? 'Posting...' : 'Share Review'}
                       </button>
-                    ) : null}
+                    )}
                   </div>
 
-                  {(reply ? reply && visited && !loading : !loading) && (
+                  {!loading && (
                     <InputOptions
-                      reply={reply}
                       modal={modal}
                       inputLimit={inputLimit}
                       inputLength={inputLength}

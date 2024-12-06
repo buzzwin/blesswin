@@ -7,6 +7,7 @@ import { db } from './app';
 import type { CollectionReference } from 'firebase/firestore';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
+import type { Review } from '@lib/types/review';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -29,3 +30,5 @@ export function userStatsCollection(id: string): CollectionReference<Stats> {
 }
 
 export const watchlistsCollection = collection(db, 'watchlists').withConverter(watchlistConverter);
+
+export const reviewsCollection = collection(db, 'reviews') as CollectionReference<Review>;

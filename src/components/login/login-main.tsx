@@ -3,9 +3,27 @@ import ActivityFeed from '@components/activity/activity';
 import { TrendingShows } from '@components/trending/trending-shows';
 import JustLogin from './justlogin';
 import cn from 'clsx';
+import { useEffect, useState } from 'react';
+import { collection, getCountFromServer } from 'firebase/firestore';
+import { db } from '@lib/firebase/app';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 export function LoginMain(): JSX.Element {
-  const { signInWithGoogle, signInWithFacebook } = useAuth();
+  const [userCount, setUserCount] = useState<number>(0);
+
+  useEffect(() => {
+    const getUserCount = async () => {
+      try {
+        const usersRef = collection(db, 'users');
+        const snapshot = await getCountFromServer(usersRef);
+        setUserCount(snapshot.data().count);
+      } catch (error) {
+        console.error('Error getting user count:', error);
+      }
+    };
+
+    getUserCount();
+  }, []);
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-gray-900 via-[#1a1f35] to-gray-900 dark:from-black dark:via-gray-900 dark:to-black'>
@@ -28,6 +46,14 @@ export function LoginMain(): JSX.Element {
               Join thousands of TV enthusiasts discovering and sharing their
               watching experience.
             </p>
+            {userCount > 0 && (
+              <div className='mt-6 flex items-center justify-center gap-2 text-emerald-400'>
+                <HeroIcon iconName='UsersIcon' className='h-6 w-6' />
+                <span className='text-lg font-medium'>
+                  {userCount.toLocaleString()} users and growing!
+                </span>
+              </div>
+            )}
           </div>
         </div>
       </div>

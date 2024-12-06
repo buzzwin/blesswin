@@ -11,7 +11,7 @@ export interface SearchResult {
 
 
   export type ViewingActivity = {
-    tmdbId: number;
+    tmdbId: string;
     title: string;
     poster_path: string;
     mediaType?: 'movie' | 'tv';
@@ -22,9 +22,6 @@ export interface SearchResult {
     photoURL?: string;
     network?: string;
     releaseDate?: string;
-    backdrop_path?: string;
-    rating?: string;
-    time?: string;
   };
 
   export interface Activity {

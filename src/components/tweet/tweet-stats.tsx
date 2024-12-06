@@ -24,7 +24,7 @@ type TweetStatsProps = Pick<
   viewTweet?: boolean;
   viewingActivity: ViewingActivity;
   text: string;
-  openModal?: () => void;
+  openModal: (data?: ViewingActivity) => void;
 };
 
 export function TweetStats({
@@ -141,12 +141,12 @@ export function TweetStats({
           className='hover:text-accent-blue focus-visible:text-accent-blue'
           iconClassName='group-hover:bg-accent-blue/10 group-active:bg-accent-blue/20 
                          group-focus-visible:bg-accent-blue/10 group-focus-visible:ring-accent-blue/80'
-          tip='Reply'
+          tip='Add Review'
           move={replyMove}
           stats={currentReplies}
           iconName='ChatBubbleOvalLeftIcon'
           viewTweet={viewTweet}
-          onClick={openModal}
+          onClick={() => openModal()}
           disabled={reply}
         />
         {/* <TweetOption

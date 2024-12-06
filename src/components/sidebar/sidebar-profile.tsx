@@ -50,26 +50,26 @@ export function SidebarProfile(): JSX.Element {
             >
               <div className='flex gap-3 truncate'>
                 <UserAvatar src={photoURL} alt={name} size={40} />
-                <div className='hidden truncate text-start leading-5 xl:block'>
+                <div className='hidden leading-5 truncate text-start xl:block'>
                   <UserName name={name} className='start' verified={verified} />
                   <UserUsername username={username} disableLink />
                 </div>
               </div>
               <HeroIcon
-                className='hidden h-6 w-6 xl:block'
+                className='hidden w-6 h-6 xl:block'
                 iconName='EllipsisHorizontalIcon'
               />
             </Menu.Button>
             <AnimatePresence>
               {open && (
                 <Menu.Items
-                  className='menu-container absolute left-0 right-0 -top-36 w-60 xl:w-full'
+                  className='absolute left-0 right-0 menu-container -top-36 w-60 xl:w-full'
                   as={motion.div}
                   {...variants}
                   static
                 >
                   <Menu.Item
-                    className='flex items-center justify-between gap-4 border-b border-light-border px-4 py-3 dark:border-dark-border'
+                    className='flex items-center justify-between gap-4 px-4 py-3 border-b border-light-border dark:border-dark-border'
                     as='div'
                     disabled
                   >
@@ -82,7 +82,7 @@ export function SidebarProfile(): JSX.Element {
                     </div>
                     <i>
                       <HeroIcon
-                        className='h-5 w-5 text-main-accent'
+                        className='w-5 h-5 text-main-accent'
                         iconName='CheckIcon'
                       />
                     </i>
@@ -108,7 +108,7 @@ export function SidebarProfile(): JSX.Element {
                                xl:left-1/2 xl:-translate-x-1/2'
                   >
                     <CustomIcon
-                      className='h-4 w-6 fill-main-background'
+                      className='w-6 h-4 fill-main-background'
                       iconName='TriangleIcon'
                     />
                   </i>

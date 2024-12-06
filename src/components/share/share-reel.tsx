@@ -103,20 +103,20 @@ export function ShareReel({
 
   return (
     <Modal open={isOpen} closeModal={onClose}>
-      <div className='w-full max-w-lg rounded-xl bg-white p-6 dark:bg-gray-900'>
-        <div className='mb-4 flex items-center justify-between'>
+      <div className='w-full max-w-lg p-6 bg-white rounded-xl dark:bg-gray-900'>
+        <div className='flex items-center justify-between mb-4'>
           <h2 className='text-xl font-bold'>Create Instagram Story</h2>
           <button
             onClick={onClose}
-            className='rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800'
+            className='p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800'
           >
-            <HeroIcon className='h-5 w-5' iconName='XMarkIcon' />
+            <HeroIcon className='w-5 h-5' iconName='XMarkIcon' />
           </button>
         </div>
 
         {/* Selection Grid */}
         <div className='mb-4'>
-          <div className='mb-2 flex items-center justify-between'>
+          <div className='flex items-center justify-between mb-2'>
             <h3 className='font-medium'>
               Select Items ({selectedBookmarks.length})
             </h3>
@@ -129,7 +129,7 @@ export function ShareReel({
               {selectedBookmarks.length ? 'Deselect All' : 'Select All'}
             </button>
           </div>
-          <div className='grid max-h-40 grid-cols-4 gap-2 overflow-y-auto rounded-lg bg-gray-50 p-2 dark:bg-gray-800'>
+          <div className='grid grid-cols-4 gap-2 p-2 overflow-y-auto rounded-lg max-h-40 bg-gray-50 dark:bg-gray-800'>
             {bookmarks.map((bookmark) => (
               <button
                 key={bookmark.id}
@@ -151,9 +151,9 @@ export function ShareReel({
                     unoptimized
                   />
                 ) : (
-                  <div className='flex h-full items-center justify-center bg-gray-200 dark:bg-gray-700'>
+                  <div className='flex items-center justify-center h-full bg-gray-200 dark:bg-gray-700'>
                     <HeroIcon
-                      className='h-6 w-6 text-gray-400'
+                      className='w-6 h-6 text-gray-400'
                       iconName='PhotoIcon'
                     />
                   </div>
@@ -178,7 +178,7 @@ export function ShareReel({
 
               {/* Navigation Controls */}
               {selectedBookmarks.length > 1 && (
-                <div className='absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-4 rounded-full bg-black/50 px-4 py-2 text-white'>
+                <div className='absolute flex items-center gap-4 px-4 py-2 text-white -translate-x-1/2 rounded-full bottom-4 left-1/2 bg-black/50'>
                   <button
                     onClick={() =>
                       setCurrentIndex((prev) =>
@@ -187,7 +187,7 @@ export function ShareReel({
                     }
                     className='p-1 hover:text-blue-400'
                   >
-                    <HeroIcon className='h-5 w-5' iconName='ChevronLeftIcon' />
+                    <HeroIcon className='w-5 h-5' iconName='ChevronLeftIcon' />
                   </button>
                   <span className='min-w-[3ch] text-center'>
                     {currentIndex + 1}/{selectedBookmarks.length}
@@ -200,38 +200,38 @@ export function ShareReel({
                     }
                     className='p-1 hover:text-blue-400'
                   >
-                    <HeroIcon className='h-5 w-5' iconName='ChevronRightIcon' />
+                    <HeroIcon className='w-5 h-5' iconName='ChevronRightIcon' />
                   </button>
                 </div>
               )}
             </>
           ) : (
-            <div className='flex h-full items-center justify-center text-gray-400'>
+            <div className='flex items-center justify-center h-full text-gray-400'>
               Select items to preview
             </div>
           )}
         </div>
 
         {/* Actions */}
-        <div className='mt-6 flex justify-end gap-3'>
+        <div className='flex justify-end gap-3 mt-6'>
           <button
             onClick={onClose}
-            className='rounded-lg px-4 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            className='px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
           >
             Cancel
           </button>
           <button
             onClick={downloadStory}
             disabled={loading || !selectedBookmarks.length}
-            className='flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50'
+            className='flex items-center gap-2 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 disabled:opacity-50'
           >
             {loading ? (
               <HeroIcon
-                className='h-5 w-5 animate-spin'
+                className='w-5 h-5 animate-spin'
                 iconName='ArrowPathIcon'
               />
             ) : (
-              <HeroIcon className='h-5 w-5' iconName='ArrowDownTrayIcon' />
+              <HeroIcon className='w-5 h-5' iconName='ArrowDownTrayIcon' />
             )}
             Download Story
           </button>

@@ -5,7 +5,9 @@ import {
   FacebookAuthProvider,
   onAuthStateChanged,
   signOut as signOutFirebase,
-  signInAnonymously
+  signInAnonymously,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword
 } from 'firebase/auth';
 import {
   doc,
@@ -39,6 +41,8 @@ type AuthContext = {
   signInWithGoogle: () => Promise<void>;
   signInWithFacebook: () => Promise<void>;
   signInAnon: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  createUserWithEmail: (email: string, password: string) => Promise<void>;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
@@ -86,7 +90,7 @@ export function AuthContextProvider({
           accent: null,
           website: null,
           location: null,
-          photoURL: (photoURL as string) || '/movie.png',
+          photoURL: photoURL || 'default-avatar',
           username: randomUsername,
           verified: false,
           following: [],
@@ -196,6 +200,30 @@ export function AuthContextProvider({
     }
   };
 
+  const signInWithEmail = async (
+    email: string,
+    password: string
+  ): Promise<void> => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Email sign in error:', error);
+      throw error;
+    }
+  };
+
+  const createUserWithEmail = async (
+    email: string,
+    password: string
+  ): Promise<void> => {
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+    } catch (error) {
+      console.error('Email sign up error:', error);
+      throw error;
+    }
+  };
+
   const isAdmin = user ? user.username === 'link2sources' : false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
 
@@ -209,7 +237,9 @@ export function AuthContextProvider({
     signOut,
     signInWithGoogle,
     signInWithFacebook,
-    signInAnon
+    signInAnon,
+    signInWithEmail,
+    createUserWithEmail
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

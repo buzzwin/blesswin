@@ -14,7 +14,7 @@ type TweetOption = {
   className: string;
   viewTweet?: boolean;
   iconClassName: string;
-  onClick?: (...args: unknown[]) => unknown;
+  onClick?: (data?: ViewingActivity) => void;
 };
 
 export function TweetOption({

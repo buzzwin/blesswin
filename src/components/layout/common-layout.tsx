@@ -5,6 +5,7 @@ import { Aside } from '@components/aside/aside';
 import { Suggestions } from '@components/aside/suggestions';
 import { useRequireAuth } from '@lib/hooks/useRequireAuth';
 import { Placeholder } from '@components/common/placeholder';
+import { Toaster } from 'react-hot-toast';
 
 export type LayoutProps = {
   children: ReactNode;
@@ -28,6 +29,7 @@ function CommonLayout({ children }: LayoutProps): JSX.Element {
           <Suggestions />
         </Aside>
       </MainLayout>
+      <Toaster position='bottom-center' />
     </WindowContextProvider>
   );
 }

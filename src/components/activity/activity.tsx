@@ -7,6 +7,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@lib/context/auth-context';
 import Image from 'next/image';
 import cn from 'clsx';
+import { DefaultAvatar } from '@components/ui/default-avatar';
 
 const ActivityFeed: React.FC = () => {
   const { user } = useAuth();
@@ -68,16 +69,22 @@ const ActivityFeed: React.FC = () => {
           })
         );
 
-        const updatedActivities: ViewingActivity[] = results
-          .filter((result) => result.media_type !== 'person')
-          .map((result: TMDBResult) => ({
-            tmdbId: Number(result.id),
+        const updatedActivities = results
+          .filter(
+            (result): result is TMDBResult => result.media_type !== 'person'
+          )
+          .map((result) => ({
+            tmdbId: result.id.toString(),
             title: result.title || result.name || '',
             poster_path: result.poster_path || '',
-            mediaType: result.media_type === 'tv' ? 'tv' : 'movie',
+            mediaType: result.media_type === 'tv' ? 'tv' : ('movie' as const),
             status: 'is watching',
-            review: result.overview,
-            overview: result.overview
+            review: result.overview || '',
+            overview: result.overview || '',
+            username: 'demo_user',
+            photoURL: 'default-avatar',
+            network: '',
+            releaseDate: result.release_date || result.first_air_date || ''
           }));
 
         setActivities(updatedActivities);
@@ -234,18 +241,30 @@ const ActivityFeed: React.FC = () => {
                           'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
                         )}
                       >
-                        <Image
-                          src={activity.photoURL || '/default-avatar.png'}
-                          alt={activity.username || 'User'}
-                          className='rounded-full'
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            position: 'absolute'
-                          }}
-                          width={32}
-                          height={32}
-                        />
+                        {activity.photoURL === 'default-avatar' ? (
+                          <DefaultAvatar
+                            className={cn(
+                              'relative overflow-hidden rounded-full',
+                              'h-6 w-6 md:h-8 md:w-8',
+                              'transition-transform duration-500 group-hover:scale-105',
+                              'ring-2 ring-white/10 group-hover:ring-emerald-500/50',
+                              'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
+                            )}
+                          />
+                        ) : (
+                          <Image
+                            src={activity.photoURL}
+                            alt={activity.username || 'User'}
+                            className='rounded-full'
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              position: 'absolute'
+                            }}
+                            width={32}
+                            height={32}
+                          />
+                        )}
                       </div>
                       <span
                         className={cn(

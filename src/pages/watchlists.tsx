@@ -68,7 +68,7 @@ function CreateWatchlistModal({
               id='name'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className='mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-emerald-500'
+              className='block w-full px-4 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-emerald-500'
               placeholder='My Favorite Movies'
             />
           </div>
@@ -84,13 +84,13 @@ function CreateWatchlistModal({
               id='description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className='mt-1 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-emerald-500'
+              className='block w-full px-4 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-emerald-500'
               placeholder='A collection of my all-time favorites'
               rows={3}
             />
           </div>
 
-          <div className='flex items-center gap-3 rounded-lg border p-3 dark:border-gray-700'>
+          <div className='flex items-center gap-3 p-3 border rounded-lg dark:border-gray-700'>
             <div className='flex-1'>
               <p className='font-medium text-gray-900 dark:text-white'>
                 Make Watchlist Public
@@ -122,14 +122,14 @@ function CreateWatchlistModal({
         <div className='flex justify-end gap-3'>
           <button
             onClick={closeModal}
-            className='rounded-lg px-4 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            className='px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!name.trim()}
-            className='rounded-lg bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600 disabled:opacity-50'
+            className='px-4 py-2 text-white rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50'
           >
             Create
           </button>
@@ -158,9 +158,9 @@ export default function WatchlistsPage(): JSX.Element {
           <span className='px-4'></span>
           <button
             onClick={openModal}
-            className='flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600'
+            className='flex items-center gap-2 px-4 py-2 text-white rounded-lg bg-emerald-500 hover:bg-emerald-600'
           >
-            <HeroIcon className='h-5 w-5' iconName='PlusIcon' />
+            <HeroIcon className='w-5 h-5' iconName='PlusIcon' />
             <span>New Watchlist</span>
           </button>
         </div>

@@ -13,6 +13,7 @@ import { ToolTip } from '@components/ui/tooltip';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReactElement, ReactNode } from 'react';
 import { cn } from '@lib/utils';
+import { useEffect, useState } from 'react';
 
 export default function Trends(): JSX.Element {
   const { back } = useRouter();
@@ -29,7 +30,7 @@ export default function Trends(): JSX.Element {
             'dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
           )}
         >
-          <HeroIcon className='h-5 w-5' iconName='Cog8ToothIcon' />
+          <HeroIcon className='w-5 h-5' iconName='Cog8ToothIcon' />
           <ToolTip tip='Settings' />
         </Button>
       </MainHeader>
