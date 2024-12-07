@@ -7,7 +7,8 @@ import {
   signOut as signOutFirebase,
   signInAnonymously,
   createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
+  signInWithEmailAndPassword,
+  sendEmailVerification
 } from 'firebase/auth';
 import {
   doc,
@@ -30,6 +31,7 @@ import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 import { DefaultAvatar } from '@components/ui/default-avatar';
+import { toast } from 'react-hot-toast';
 
 type AuthContext = {
   user: User | null;
@@ -44,12 +46,21 @@ type AuthContext = {
   signInAnon: () => Promise<void>;
   signInWithEmail: (email: string, password: string) => Promise<void>;
   createUserWithEmail: (email: string, password: string) => Promise<void>;
+  sendVerificationEmail: () => Promise<void>;
+  isEmailVerified: boolean;
+  userEmail: string | null;
 };
 
 export const AuthContext = createContext<AuthContext | null>(null);
 
 type AuthContextProviderProps = {
   children: ReactNode;
+};
+
+// Add Firebase error type
+type FirebaseError = {
+  code: string;
+  message: string;
 };
 
 export function AuthContextProvider({
@@ -170,7 +181,14 @@ export function AuthContextProvider({
     try {
       const provider = new GoogleAuthProvider();
       await signInWithPopup(auth, provider);
+      toast.success('Successfully signed in with Google!');
     } catch (error) {
+      const firebaseError = error as FirebaseError;
+      if (firebaseError.code === 'auth/popup-closed-by-user') {
+        toast.error('Sign in cancelled');
+      } else {
+        toast.error('Failed to sign in with Google');
+      }
       setError(error as Error);
     }
   };
@@ -178,7 +196,9 @@ export function AuthContextProvider({
   const signOut = async (): Promise<void> => {
     try {
       await signOutFirebase(auth);
+      toast.success('Successfully signed out');
     } catch (error) {
+      toast.error('Failed to sign out');
       setError(error as Error);
     }
   };
@@ -187,16 +207,24 @@ export function AuthContextProvider({
     try {
       const provider = new FacebookAuthProvider();
       await signInWithPopup(auth, provider);
+      toast.success('Successfully signed in with Facebook!');
     } catch (error) {
+      const firebaseError = error as FirebaseError;
+      if (firebaseError.code === 'auth/popup-closed-by-user') {
+        toast.error('Sign in cancelled');
+      } else {
+        toast.error('Failed to sign in with Facebook');
+      }
       setError(error as Error);
     }
   };
 
   const signInAnon = async (): Promise<void> => {
-    console.log('signing in anon');
     try {
       await signInAnonymously(auth);
+      toast.success('Signed in as guest');
     } catch (error) {
+      toast.error('Failed to sign in as guest');
       setError(error as Error);
     }
   };
@@ -207,8 +235,22 @@ export function AuthContextProvider({
   ): Promise<void> => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      toast.success('Successfully signed in!');
     } catch (error) {
-      console.error('Email sign in error:', error);
+      const firebaseError = error as FirebaseError;
+      switch (firebaseError.code) {
+        case 'auth/wrong-password':
+          toast.error('Incorrect password');
+          break;
+        case 'auth/user-not-found':
+          toast.error('No account found with this email');
+          break;
+        case 'auth/too-many-requests':
+          toast.error('Too many attempts. Please try again later');
+          break;
+        default:
+          toast.error('Failed to sign in. Please try again');
+      }
       throw error;
     }
   };
@@ -219,9 +261,34 @@ export function AuthContextProvider({
   ): Promise<void> => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      toast.success('Account created successfully!');
     } catch (error) {
-      console.error('Email sign up error:', error);
+      const firebaseError = error as FirebaseError;
+      switch (firebaseError.code) {
+        case 'auth/email-already-in-use':
+          toast.error('Email already exists. Please try logging in instead');
+          break;
+        case 'auth/weak-password':
+          toast.error('Password is too weak. Please use a stronger password');
+          break;
+        case 'auth/invalid-email':
+          toast.error('Invalid email address');
+          break;
+        default:
+          toast.error('Failed to create account. Please try again');
+      }
       throw error;
+    }
+  };
+
+  const sendVerificationEmail = async (): Promise<void> => {
+    if (auth.currentUser && !auth.currentUser.emailVerified) {
+      try {
+        await sendEmailVerification(auth.currentUser);
+        toast.success('Verification email sent!');
+      } catch (error) {
+        toast.error('Error sending verification email');
+      }
     }
   };
 
@@ -240,7 +307,10 @@ export function AuthContextProvider({
     signInWithFacebook,
     signInAnon,
     signInWithEmail,
-    createUserWithEmail
+    createUserWithEmail,
+    sendVerificationEmail,
+    isEmailVerified: auth.currentUser?.emailVerified ?? false,
+    userEmail: auth.currentUser?.email ?? null
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

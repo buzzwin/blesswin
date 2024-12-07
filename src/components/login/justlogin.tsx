@@ -3,6 +3,7 @@ import cn from 'clsx';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { GoogleIcon } from '@components/ui/google-icon';
+import Link from 'next/link';
 
 export default function JustLogin(): JSX.Element {
   const { signInWithGoogle, signInWithEmail, createUserWithEmail } = useAuth();
@@ -78,6 +79,17 @@ export default function JustLogin(): JSX.Element {
               required
               minLength={6}
             />
+          </div>
+
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center'>
+              {/* existing remember me checkbox */}
+            </div>
+            <Link href='/forgot-password'>
+              <a className='text-sm text-emerald-600 hover:text-emerald-500 dark:text-emerald-400'>
+                Forgot password?
+              </a>
+            </Link>
           </div>
 
           <button
