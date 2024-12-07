@@ -9,7 +9,9 @@ import {
   where, 
   orderBy,
   serverTimestamp,
-  getDoc
+  getDoc,
+  Timestamp,
+  type WithFieldValue
 } from 'firebase/firestore';
 import { reviewsCollection, usersCollection } from '../collections';
 import type { Review, ReviewWithUser } from '@lib/types/review';
@@ -17,32 +19,34 @@ import type { Review, ReviewWithUser } from '@lib/types/review';
 export const createReview = async (
   reviewData: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'likes'>
 ): Promise<ReviewWithUser> => {
-  console.log('Starting review creation with data:', reviewData);
-  
   if (!reviewData.userId) {
-    console.error('No userId provided for review');
     throw new Error('User ID is required to create a review');
   }
 
   try {
-    // Validate required fields
-    if (!reviewData.tmdbId || !reviewData.title || !reviewData.mediaType) {
+    if (!reviewData.tmdbId || !reviewData.title || !reviewData.mediaType) 
       throw new Error('Missing required fields for review');
-    }
 
-    const firestoreData = {
-      ...reviewData,
+    // Destructure to remove id from data
+    const { tmdbId, userId, title, mediaType, rating, review, tags, posterPath, tweetId } = reviewData;
+    
+    const firestoreData: WithFieldValue<Omit<Review, 'id'>> = {
+      tmdbId,
+      userId,
+      title,
+      mediaType,
+      rating,
+      review,
+      tags,
+      posterPath,
+      tweetId,
       createdAt: serverTimestamp(),
       updatedAt: null,
       likes: []
     };
 
-    console.log('Attempting to save review to Firestore:', firestoreData);
+    const reviewRef = await addDoc(reviewsCollection, firestoreData);
 
-    const review = await addDoc(reviewsCollection, firestoreData);
-    console.log('Review saved successfully with ID:', review.id);
-
-    // Get user data
     const userDoc = await getDoc(doc(usersCollection, reviewData.userId));
     
     if (!userDoc.exists()) {
@@ -50,12 +54,11 @@ export const createReview = async (
     }
 
     const userData = userDoc.data();
-    console.log('Retrieved user data:', userData);
 
     const newReview: ReviewWithUser = {
       ...reviewData,
-      id: review.id,
-      createdAt: new Date(),
+      id: reviewRef.id,
+      createdAt: Timestamp.fromDate(new Date()),
       updatedAt: null,
       likes: [],
       user: {
@@ -67,10 +70,8 @@ export const createReview = async (
       }
     };
 
-    console.log('Created review with user data:', newReview);
     return newReview;
   } catch (error) {
-    console.error('Error in createReview:', error);
     if (error instanceof Error) {
       throw new Error(`Failed to create review: ${error.message}`);
     }
@@ -79,57 +80,30 @@ export const createReview = async (
 };
 
 export const getMediaReviews = async (tmdbId: number) => {
-  console.log('Fetching reviews for media:', tmdbId);
-  
   try {
-    // First try with the composite index
     const q = query(
       reviewsCollection,
       where('tmdbId', '==', tmdbId),
       orderBy('createdAt', 'desc')
     );
+    const snapshot = await getDocs(q);
+    const reviews = snapshot.docs.map(doc => {
+      const data = doc.data();
+      return {
+        ...data,
+        id: doc.id,
+        createdAt: data.createdAt?.toDate()
+      };
+    });
 
-    try {
-      const snapshot = await getDocs(q);
-      const reviews = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt?.toDate()
-        };
-      });
-      
-      console.log('Found reviews:', reviews);
-      return reviews;
-    } catch (indexError) {
-      console.warn('Index not ready, falling back to simple query:', indexError);
-      
-      // Fallback to simple query without ordering
-      const simpleQuery = query(
-        reviewsCollection,
-        where('tmdbId', '==', tmdbId)
-      );
-      
-      const snapshot = await getDocs(simpleQuery);
-      const reviews = snapshot.docs.map(doc => {
-        const data = doc.data();
-        return {
-          ...data,
-          id: doc.id,
-          createdAt: data.createdAt?.toDate()
-        };
-      });
-
-      // Sort in memory as fallback
-      reviews.sort((a, b) => b.createdAt - a.createdAt);
-      
-      console.log('Found reviews (fallback):', reviews);
-      return reviews;
-    }
+    reviews.sort((a, b) => 
+      (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0)
+    );
+    
+    console.log('Found reviews (fallback):', reviews);
+    return reviews;
   } catch (error) {
     console.error('Error fetching media reviews:', error);
-    // Return empty array instead of throwing
     return [];
   }
 };

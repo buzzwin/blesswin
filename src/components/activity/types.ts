@@ -18,10 +18,13 @@ export interface SearchResult {
     status: string;
     review?: string;
     overview?: string;
-    username?: string;
-    photoURL?: string;
+    username: string;
+    photoURL: string;
     network?: string;
     releaseDate?: string;
+    tags?: string[];
+    viewingTags?: string[];
+    time?: string;
   };
 
   export interface Activity {

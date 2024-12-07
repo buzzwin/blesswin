@@ -27,10 +27,12 @@ type TmdbResponse = {
 };
 
 const defaultActivity: ViewingActivity = {
-  tmdbId: 0,
+  tmdbId: '0',
   title: '',
   poster_path: '',
   status: 'is watching',
+  username: 'demo_user',
+  photoURL: 'default-avatar',
   mediaType: 'movie'
 };
 
@@ -118,17 +120,17 @@ const ViewingActivityForm = ({
     1500
   );
 
-  const handleSelect = (searchResult: SearchResult): void => {
-    setSelectedShow(searchResult);
-    setSearchResults([]);
-    setSearchText(searchResult.title || searchResult.name);
+  const handleShowSelect = (show: SearchResult) => {
+    setSelectedShow(show);
     setViewingActivity((prevState) => ({
       ...prevState,
-      title: searchResult.title || searchResult.name,
-      tmdbId: Number(searchResult.id),
-      poster_path: searchResult.poster_path,
-      overview: searchResult.overview,
-      status: prevState.status || 'is watching'
+      tmdbId: show.id.toString(),
+      title: show.title || show.name,
+      poster_path: show.poster_path,
+      overview: show.overview,
+      status: 'is watching',
+      username: prevState.username,
+      photoURL: prevState.photoURL
     }));
   };
 
@@ -155,7 +157,7 @@ const ViewingActivityForm = ({
     }
     const activityToSave = {
       ...viewingActivity,
-      tmdbId: Number(viewingActivity.tmdbId)
+      tmdbId: viewingActivity.tmdbId
     };
     onSave(activityToSave);
     handleCancel();
@@ -316,7 +318,7 @@ const ViewingActivityForm = ({
               >
                 <SearchResults
                   results={searchResults}
-                  onSelect={handleSelect}
+                  onSelect={handleShowSelect}
                 />
               </div>
             )}

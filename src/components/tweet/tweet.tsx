@@ -1,39 +1,40 @@
-import Link from 'next/link';
+import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useAuth } from '@lib/context/auth-context';
-import { useModal } from '@lib/hooks/useModal';
-import { Modal } from '@components/modal/modal';
-import { TweetReplyModal } from '@components/modal/tweet-reply-modal';
-import { ImagePreview } from '@components/input/image-preview';
-import { UserAvatar } from '@components/user/user-avatar';
-import { UserTooltip } from '@components/user/user-tooltip';
-import { UserName } from '@components/user/user-name';
-import { UserUsername } from '@components/user/user-username';
-import { TweetActions } from './tweet-actions';
-import { TweetStats } from './tweet-stats';
-import { TweetDate } from './tweet-date';
-import { HeroIcon } from '@components/ui/hero-icon';
-import { Button } from '@components/ui/button';
 import { Popover } from '@headlessui/react';
-import { cn, preventBubbling } from '@lib/utils';
 import { toast } from 'react-hot-toast';
-import { variants } from './tweet-actions';
-import type { Tweet } from '@lib/types/tweet';
-import type { User } from '@lib/types/user';
-import { useState } from 'react';
-import { IconName } from '@components/ui/hero-icon';
-import { BookmarkButton } from '@components/bookmarks/bookmark-button';
-import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
-import { manageBookmark } from '@lib/firebase/utils';
-import { ViewingActivity } from '@components/activity/types';
+import type { ReactNode } from 'react';
+import Image from 'next/image';
+
+// Firebase imports
 import { query, where, orderBy, getDocs } from 'firebase/firestore';
 import { tweetsCollection } from '@lib/firebase/collections';
-import { Loading } from '@components/ui/loading';
-import type { TweetWithUser } from '@lib/types/tweet';
-import { TweetReviews } from './tweet-reviews';
+import { manageBookmark } from '@lib/firebase/utils';
 import { getMediaReviews } from '@lib/firebase/utils/review';
+
+// Context imports
+import { useAuth } from '@lib/context/auth-context';
+import { useModal } from '@lib/hooks/useModal';
+
+// Component imports
+import { Modal } from '@components/modal/modal';
+import { TweetReplyModal } from '@components/modal/tweet-reply-modal';
+import { UserAvatar } from '@components/user/user-avatar';
+import { TweetDate } from './tweet-date';
+import { TweetStats } from './tweet-stats';
+import { TweetReviews } from './tweet-reviews';
+import { Loading } from '@components/ui/loading';
+import { HeroIcon } from '@components/ui/hero-icon';
+import type { IconName } from '@components/ui/hero-icon';
+
+// Utils and types
+import { cn } from '@lib/utils';
+import type { Tweet } from '@lib/types/tweet';
+import type { User } from '@lib/types/user';
+import type { ViewingActivity } from '@components/activity/types';
 import type { ReviewWithUser } from '@lib/types/review';
+import type { TweetWithUser } from '@lib/types/tweet';
+import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
 
 export type TweetProps = Tweet & {
   user: User;
@@ -160,7 +161,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     }
   };
 
-  const handleWatchlistClick = (e: React.MouseEvent) => {
+  const handleWatchlistClick = (e: React.MouseEvent): void => {
     setIsWatchlistModalOpen(true);
   };
 
@@ -169,6 +170,10 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     : 'BookmarkIcon';
   const menuIconName: IconName = 'EllipsisHorizontalIcon';
   const deleteIconName: IconName = 'TrashIcon';
+
+  interface ErrorResponse {
+    message?: string;
+  }
 
   const handleReplyClick = async (
     replyData?: ViewingActivity
@@ -215,8 +220,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
       });
 
       if (!result.ok) {
-        const error = await result.json();
-        throw new Error(error.message || 'Failed to post reply');
+        const error = (await result.json()) as ErrorResponse;
+        throw new Error(error.message ?? 'Failed to post reply');
       }
 
       toast.success('Review posted successfully!');
@@ -253,15 +258,23 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           return {
             ...data,
             id: doc.id,
-            createdAt: data.createdAt?.toDate()
+            createdAt: data.createdAt
           };
         }) as TweetWithUser[];
 
+        const typedReviews = reviewsData.map((review) => ({
+          ...review,
+          createdAt: {
+            ...review.createdAt,
+            toDate: () => new Date(review.createdAt)
+          }
+        })) as unknown as ReviewWithUser[];
+
         console.log('Loaded replies:', replyDocs);
-        console.log('Loaded reviews:', reviewsData);
+        console.log('Loaded reviews:', typedReviews);
 
         setReplies(replyDocs);
-        setReviews(reviewsData as ReviewWithUser[]);
+        setReviews(typedReviews);
       } catch (error) {
         console.error('Error loading replies and reviews:', error);
       } finally {
@@ -274,6 +287,13 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
   const handleReviewAdded = (newReview: ReviewWithUser) => {
     setReviews((prev) => [newReview, ...prev]);
+  };
+
+  const handleError = (error: unknown): void => {
+    console.error('Error:', error);
+    const message =
+      error instanceof Error ? error.message : 'An error occurred';
+    toast.error(message);
   };
 
   return (
@@ -330,7 +350,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 {/* Background Banner */}
                 <div className='relative h-16 overflow-hidden'>
                   <div
-                    className='absolute inset-0 bg-center bg-cover blur-sm'
+                    className='absolute inset-0 bg-cover bg-center blur-sm'
                     style={{
                       backgroundImage: `url(https://image.tmdb.org/t/p/w500${viewingActivity.poster_path})`,
                       transform: 'scale(1.1)'
@@ -354,7 +374,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         }}
                       />
                       <div
-                        className='absolute z-50 top-4 right-4'
+                        className='absolute top-4 right-4 z-50'
                         onClick={(e) => e.stopPropagation()}
                       >
                         <button
@@ -382,7 +402,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         >
                           <HeroIcon
                             iconName='BookmarkIcon'
-                            className='w-5 h-5 text-white pointer-events-none'
+                            className='pointer-events-none h-5 w-5 text-white'
                           />
                           <span className='text-sm font-medium text-white'>
                             Add to Watchlist
@@ -396,7 +416,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 {/* Content Layout */}
                 <div className='px-6 pt-4'>
                   {/* Poster and Title Section */}
-                  <div className='relative flex gap-4 pb-4 -mt-16'>
+                  <div className='relative -mt-16 flex gap-4 pb-4'>
                     {/* Poster */}
                     <div
                       className={cn(
@@ -408,16 +428,18 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         'group-hover:scale-105'
                       )}
                     >
-                      <img
+                      <Image
                         src={`https://image.tmdb.org/t/p/w500${viewingActivity.poster_path}`}
                         alt={viewingActivity.title}
-                        className='object-cover w-full h-full'
+                        width={144}
+                        height={216}
+                        className='h-full w-full object-cover'
                       />
                     </div>
 
                     {/* Title and User Info */}
 
-                    <div className='flex-1 min-w-0 pt-10'>
+                    <div className='min-w-0 flex-1 pt-10'>
                       <div className='flex items-start justify-between'>
                         <div className='space-y-1'>
                           <div className='flex items-center gap-3'>
@@ -445,7 +467,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                                   {name}
                                   {verified && (
                                     <HeroIcon
-                                      className='inline-block w-4 h-4 ml-1 text-emerald-500'
+                                      className='ml-1 inline-block h-4 w-4 text-emerald-500'
                                       iconName='CheckBadgeIcon'
                                     />
                                   )}
@@ -497,7 +519,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                             >
                               <HeroIcon
                                 iconName={menuIconName}
-                                className='w-5 h-5 text-gray-500 dark:text-gray-400'
+                                className='h-5 w-5 text-gray-500 dark:text-gray-400'
                               />
                             </button>
 
@@ -531,7 +553,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                                   >
                                     <HeroIcon
                                       iconName={deleteIconName}
-                                      className='w-5 h-5 text-red-500'
+                                      className='h-5 w-5 text-red-500'
                                     />
                                     <span className='text-red-600 dark:text-red-400'>
                                       Delete Buzz
@@ -550,7 +572,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             )}
 
             {/* Content Section */}
-            <div className='px-6 py-4 pb-24 space-y-4'>
+            <div className='space-y-4 px-6 py-4 pb-24'>
               {/* User Info */}
 
               {/* Review */}
@@ -583,9 +605,11 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         images.length === 3 && i === 0 && 'col-span-2'
                       )}
                     >
-                      <img
+                      <Image
                         src={image.src}
                         alt={image.alt}
+                        width={500}
+                        height={500}
                         className={cn(
                           'h-full w-full object-cover',
                           'transition duration-300',
@@ -599,7 +623,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
               {/* Tweet Stats */}
               {!parentTweet && (
-                <div className='pt-3 border-t border-gray-100 dark:border-gray-800'>
+                <div className='border-t border-gray-100 pt-3 dark:border-gray-800'>
                   <TweetStats
                     reply={!!parent}
                     userId={userId as string}
@@ -623,7 +647,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 <div className='absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1'>
                   <HeroIcon
                     iconName='EyeIcon'
-                    className='w-4 h-4 text-emerald-500'
+                    className='h-4 w-4 text-emerald-500'
                   />
                   <span className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
                     Watching this
@@ -634,7 +658,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               {/* Show total watchers prominently */}
               {totalWatchers > 0 && (
                 <div className='mt-2 flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
-                  <HeroIcon iconName='UsersIcon' className='w-5 h-5' />
+                  <HeroIcon iconName='UsersIcon' className='h-5 w-5' />
                   <span className='text-sm'>
                     {totalWatchers} {totalWatchers === 1 ? 'person' : 'people'}{' '}
                     watching
@@ -655,7 +679,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                 >
                   <HeroIcon
                     iconName={showReplies ? 'ChevronUpIcon' : 'ChevronDownIcon'}
-                    className='w-5 h-5'
+                    className='h-5 w-5'
                   />
                   {showReplies ? 'Hide' : 'Show'} {tweet.userReplies}{' '}
                   {tweet.userReplies === 1 ? 'reply' : 'replies'}
@@ -673,7 +697,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className='pl-4 ml-12 border-l border-gray-200 dark:border-gray-800'
+            className='ml-12 border-l border-gray-200 pl-4 dark:border-gray-800'
           >
             {/* Reviews Section */}
             <div className='mb-6'>
@@ -697,7 +721,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                       alt={reply.user.name}
                       username={reply.user.username}
                     />
-                    <div className='flex-1 min-w-0'>
+                    <div className='min-w-0 flex-1'>
                       <div className='flex items-center gap-2'>
                         <span className='font-medium text-gray-900 dark:text-white'>
                           {reply.user.name}
@@ -720,8 +744,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                       )}
                       {reply.viewingActivity?.tags &&
                         reply.viewingActivity.tags.length > 0 && (
-                          <div className='flex flex-wrap gap-2 mt-2'>
-                            {reply.viewingActivity.tags.map((tag) => (
+                          <div className='mt-2 flex flex-wrap gap-2'>
+                            {reply.viewingActivity.tags.map((tag: string) => (
                               <span
                                 key={tag}
                                 className={cn(

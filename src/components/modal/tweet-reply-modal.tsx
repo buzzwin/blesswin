@@ -1,6 +1,7 @@
 import { Input } from '@components/input/input';
 import type { TweetProps } from '@components/tweet/tweet';
 import { ViewingActivity } from '@components/activity/types';
+import type { ReviewWithUser } from '@lib/types/review';
 import { cn } from '@lib/utils';
 import { useState } from 'react';
 import { createReview } from '@lib/firebase/utils/review';

@@ -4,8 +4,9 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
 import { NumberStats } from './number-stats';
 import type { IconName } from '@components/ui/hero-icon';
+import type { ViewingActivity } from '@components/activity/types';
 
-type TweetOption = {
+type TweetOptionProps = {
   tip: string;
   move?: number;
   stats?: number;
@@ -27,16 +28,17 @@ export function TweetOption({
   viewTweet,
   iconClassName,
   onClick
-}: TweetOption): JSX.Element {
+}: TweetOptionProps): JSX.Element {
   return (
     <button
       className={cn(
-        `group flex items-center gap-1.5 p-0 transition-none
-         disabled:cursor-not-allowed inner:transition inner:duration-200`,
+        'group flex items-center gap-1.5 p-0 transition-none',
+        'disabled:cursor-not-allowed inner:transition inner:duration-200',
         disabled && 'cursor-not-allowed',
         className
       )}
       onClick={preventBubbling(onClick)}
+      disabled={disabled}
     >
       <i
         className={cn(

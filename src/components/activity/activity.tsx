@@ -73,19 +73,24 @@ const ActivityFeed: React.FC = () => {
           .filter(
             (result): result is TMDBResult => result.media_type !== 'person'
           )
-          .map((result) => ({
-            tmdbId: result.id.toString(),
-            title: result.title || result.name || '',
-            poster_path: result.poster_path || '',
-            mediaType: result.media_type === 'tv' ? 'tv' : ('movie' as const),
-            status: 'is watching',
-            review: result.overview || '',
-            overview: result.overview || '',
-            username: 'demo_user',
-            photoURL: 'default-avatar',
-            network: '',
-            releaseDate: result.release_date || result.first_air_date || ''
-          }));
+          .map((result) => {
+            const mediaType =
+              result.media_type === 'tv' ? ('tv' as const) : ('movie' as const);
+
+            return {
+              tmdbId: result.id.toString(),
+              title: result.title || result.name || '',
+              poster_path: result.poster_path || '',
+              mediaType,
+              status: 'is watching',
+              review: result.overview || '',
+              overview: result.overview || '',
+              username: 'demo_user',
+              photoURL: 'default-avatar',
+              network: '',
+              releaseDate: result.release_date || result.first_air_date || ''
+            };
+          });
 
         setActivities(updatedActivities);
         setLoading(false);
@@ -251,7 +256,7 @@ const ActivityFeed: React.FC = () => {
                               'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
                             )}
                           />
-                        ) : (
+                        ) : activity.photoURL ? (
                           <Image
                             src={activity.photoURL}
                             alt={activity.username || 'User'}
@@ -263,6 +268,16 @@ const ActivityFeed: React.FC = () => {
                             }}
                             width={32}
                             height={32}
+                          />
+                        ) : (
+                          <DefaultAvatar
+                            className={cn(
+                              'relative overflow-hidden rounded-full',
+                              'h-6 w-6 md:h-8 md:w-8',
+                              'transition-transform duration-500 group-hover:scale-105',
+                              'ring-2 ring-white/10 group-hover:ring-emerald-500/50',
+                              'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
+                            )}
                           />
                         )}
                       </div>

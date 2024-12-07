@@ -1,32 +1,30 @@
-import Link from 'next/link';
 import { useState, useEffect, useRef, useId } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import cn from 'clsx';
-import { toast } from 'react-hot-toast';
-import { addDoc, getDoc, serverTimestamp } from 'firebase/firestore';
-import { tweetsCollection } from '@lib/firebase/collections';
-import {
-  manageReply,
-  uploadImages,
-  manageTotalTweets,
-  manageTotalPhotos
-} from '@lib/firebase/utils';
-import { useAuth } from '@lib/context/auth-context';
-import { sleep } from '@lib/utils';
-import { getImagesData } from '@lib/validation';
-import { UserAvatar } from '@components/user/user-avatar';
-import { InputForm, fromTop } from './input-form';
+import type { ReactNode, ChangeEvent, ClipboardEvent } from 'react';
+import type { Variants } from 'framer-motion';
+import type { ViewingActivity } from '@components/activity/types';
+
+// Components
+import { InputForm } from './input-form';
 import { ImagePreview } from './image-preview';
 import { InputOptions } from './input-options';
 import { HeroIcon } from '@components/ui/hero-icon';
-import type { ReactNode, FormEvent, ChangeEvent, ClipboardEvent } from 'react';
-import type { WithFieldValue } from 'firebase/firestore';
-import type { Variants } from 'framer-motion';
-import type { User } from '@lib/types/user';
-import type { Tweet } from '@lib/types/tweet';
-import type { FilesWithId, ImagesPreview, ImageData } from '@lib/types/file';
-import { ViewingActivity } from '@components/activity/types';
-import { Button } from '@components/ui/button';
+import { UserAvatar } from '@components/user/user-avatar';
+
+// Utils
+import { cn } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
+import { toast } from 'react-hot-toast';
+import { getImagesData } from '@lib/validation';
+
+// Types
+type FilesWithId = Array<{ id: string; file: File }>;
+type ImagesPreview = Array<{ id: string; src: string; alt: string }>;
+type ImageData = { id: string; src: string; alt: string };
+
+interface ErrorResponse {
+  message?: string;
+}
 
 type InputProps = {
   modal?: boolean;
@@ -38,9 +36,10 @@ type InputProps = {
   };
   children?: ReactNode;
   closeModal?: () => void;
+  selectedTags?: string[];
   placeholder?: string;
   onSubmit?: (data: ViewingActivity) => Promise<void>;
-  selectedTags?: string[];
+  selectedEmoji?: string | null;
 };
 
 export const variants: Variants = {
@@ -55,9 +54,10 @@ export function Input({
   parent,
   children,
   closeModal,
-  placeholder,
+  selectedTags = [],
+  placeholder = 'Share what you are watching...',
   onSubmit,
-  selectedTags = []
+  selectedEmoji
 }: InputProps): JSX.Element {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedImages, setSelectedImages] = useState<FilesWithId>([]);
@@ -66,178 +66,23 @@ export function Input({
   const [loading, setLoading] = useState(false);
   const [visited, setVisited] = useState(false);
 
-  const { user, isAdmin } = useAuth();
-  const { name, username, photoURL } = user as User;
+  const { user } = useAuth();
+  const { name, username, photoURL } = user ?? {};
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputLimit = 280;
 
   const previewCount = imagesPreview.length;
   const isUploadingImages = !!previewCount;
 
-  useEffect(
-    () => {
-      if (modal) inputRef.current?.focus();
-      return cleanImage;
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  );
-
-  const sendTweet = async (data: ViewingActivity): Promise<void> => {
-    console.log('Send Tweet *********', data);
-    console.log('Reply  *********', replyModal);
-    console.log('inputValue  *********', inputValue);
-    inputRef.current?.blur();
-
-    setLoading(true);
-
-    const isReplying = reply ?? replyModal;
-
-    const userId = user?.id as string;
-    const text = `${user?.name ?? ''} ' ' ${data.status} ${data.title ?? ''}`;
-
-    const tweetData: WithFieldValue<Omit<Tweet, 'id'>> = {
-      text: replyModal ? inputValue : text,
-      viewingActivity: data,
-      parent: isReplying && parent ? parent : null,
-      images: await uploadImages(userId, selectedImages),
-      userLikes: [],
-      userWatching: [],
-      totalWatchers: 0,
-      createdBy: userId,
-      createdAt: serverTimestamp(),
-      updatedAt: null,
-      userReplies: 0,
-      userRetweets: [],
-      photoURL: user?.photoURL as string
+  useEffect(() => {
+    if (modal) {
+      inputRef.current?.focus();
+    }
+    return () => {
+      cleanImage();
     };
-
-    await sleep(500);
-
-    const [tweetRef] = await Promise.all([
-      addDoc(tweetsCollection, tweetData),
-      manageTotalTweets('increment', userId),
-      tweetData.images && manageTotalPhotos('increment', userId),
-      isReplying && manageReply('increment', parent?.id as string)
-    ]);
-
-    const { id: tweetId } = await getDoc(tweetRef);
-
-    if (!modal && !replyModal) {
-      discardTweet();
-      setLoading(false);
-    }
-
-    if (closeModal) closeModal();
-
-    toast.success(
-      () => (
-        <span className='flex gap-2'>
-          Your Buzz was sent
-          <Link href={`/buzz/${tweetId}`}>
-            <a className='custom-underline font-bold'>View</a>
-          </Link>
-        </span>
-      ),
-      { duration: 6000 }
-    );
-  };
-
-  const handleImageUpload = (
-    e: ChangeEvent<HTMLInputElement> | ClipboardEvent<HTMLTextAreaElement>
-  ): void => {
-    const isClipboardEvent = 'clipboardData' in e;
-
-    if (isClipboardEvent) {
-      const isPastingText = e.clipboardData.getData('text');
-      if (isPastingText) return;
-    }
-
-    const files = isClipboardEvent ? e.clipboardData.files : e.target.files;
-
-    const imagesData = getImagesData(files, previewCount);
-
-    if (!imagesData) {
-      toast.error('Please choose a GIF or photo up to 4');
-      return;
-    }
-
-    const { imagesPreviewData, selectedImagesData } = imagesData;
-
-    setImagesPreview([...imagesPreview, ...imagesPreviewData]);
-    setSelectedImages([...selectedImages, ...selectedImagesData]);
-
-    inputRef.current?.focus();
-  };
-
-  const removeImage = (targetId: string) => (): void => {
-    setSelectedImages(selectedImages.filter(({ id }) => id !== targetId));
-    setImagesPreview(imagesPreview.filter(({ id }) => id !== targetId));
-
-    const { src } = imagesPreview.find(
-      ({ id }) => id === targetId
-    ) as ImageData;
-
-    URL.revokeObjectURL(src);
-  };
-
-  const cleanImage = (): void => {
-    imagesPreview.forEach(({ src }) => URL.revokeObjectURL(src));
-
-    setSelectedImages([]);
-    setImagesPreview([]);
-  };
-
-  const discardTweet = (): void => {
-    setInputValue('');
-    setVisited(false);
-    cleanImage();
-
-    inputRef.current?.blur();
-  };
-
-  const handleChange = ({
-    target: { value }
-  }: ChangeEvent<HTMLTextAreaElement>): void => setInputValue(value);
-
-  const handleReply = async (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-    console.log('Button clicked', inputValue);
-    const viewingActivity: ViewingActivity = {
-      tmdbId: 0,
-      username: '',
-      title: '',
-      status: 'is replying',
-      rating: '',
-      review: '',
-      network: '',
-      poster_path: '',
-      releaseDate: '',
-      time: '',
-      photoURL: '',
-      mediaType: 'movie'
-    };
-
-    await sendTweet(viewingActivity);
-  };
-
-  const handleFocus = (): void => setVisited(!loading);
-
-  const formId = useId();
-
-  const inputLimit = isAdmin ? 560 : 280;
-
-  const inputLength = inputValue.length;
-  const isValidInput = !!inputValue.trim().length;
-  const isCharLimitExceeded = inputLength > inputLimit;
-
-  const isValidTweet =
-    !isCharLimitExceeded && (isValidInput || isUploadingImages);
-
-  const handleCancel = () => {
-    setIsExpanded(false);
-    discardTweet();
-  };
+  }, [modal]);
 
   const handleSubmit = async (): Promise<void> => {
     if (!inputValue && !selectedImages.length) return;
@@ -245,18 +90,12 @@ export function Input({
     setLoading(true);
 
     try {
-      console.log('Submitting form with:', {
-        inputValue,
-        selectedTags,
-        parent
-      });
-
       const tweetData = {
         text: inputValue,
         images: selectedImages.length ? selectedImages : null,
         parent: parent ?? null,
         userLikes: [],
-        createdBy: user?.id as string,
+        createdBy: user?.id ?? '',
         createdAt: new Date(),
         updatedAt: null,
         userReplies: 0,
@@ -268,12 +107,10 @@ export function Input({
               tags: selectedTags
             }
           : null,
-        photoURL: user?.photoURL || '',
+        photoURL: user?.photoURL ?? '',
         userWatching: [],
         totalWatchers: 0
       };
-
-      console.log('Sending tweet data:', tweetData);
 
       const response = await fetch('/api/tweets', {
         method: 'POST',
@@ -284,22 +121,90 @@ export function Input({
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Failed to post review');
+        const errorData = (await response.json()) as ErrorResponse;
+        throw new Error(errorData.message ?? 'Failed to post review');
       }
 
-      console.log('Tweet posted successfully');
       discardTweet();
       closeModal?.();
       toast.success('Review posted successfully!');
     } catch (error) {
-      console.error('Error posting review:', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to post review'
-      );
+      const message =
+        error instanceof Error ? error.message : 'Failed to post review';
+      toast.error(message);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleImageUpload = (
+    e: ChangeEvent<HTMLInputElement> | ClipboardEvent<HTMLTextAreaElement>
+  ): void => {
+    const isClipboardEvent = 'clipboardData' in e;
+    if (isClipboardEvent && e.clipboardData.getData('text')) return;
+
+    const files = isClipboardEvent ? e.clipboardData.files : e.target.files;
+    const imagesData = getImagesData(files, previewCount);
+    if (!imagesData) {
+      toast.error('Please choose a GIF or photo up to 4');
+      return;
+    }
+
+    const { imagesPreviewData, selectedImagesData } = imagesData;
+    setImagesPreview([...imagesPreview, ...imagesPreviewData]);
+
+    const newSelectedImages = selectedImagesData.map((image) => ({
+      id: image.id,
+      file: image instanceof File ? image : image
+    }));
+
+    setSelectedImages([...selectedImages, ...newSelectedImages]);
+    void inputRef.current?.focus();
+  };
+
+  const removeImage = (targetId: string): (() => void) => {
+    return () => {
+      setSelectedImages(selectedImages.filter(({ id }) => id !== targetId));
+      setImagesPreview(imagesPreview.filter(({ id }) => id !== targetId));
+
+      const foundImage = imagesPreview.find(({ id }) => id === targetId);
+      if (foundImage) {
+        URL.revokeObjectURL(foundImage.src);
+      }
+    };
+  };
+
+  const cleanImage = (): void => {
+    imagesPreview.forEach((image) => URL.revokeObjectURL(image.src));
+    setSelectedImages([]);
+    setImagesPreview([]);
+  };
+
+  const discardTweet = (): void => {
+    setInputValue('');
+    setVisited(false);
+    cleanImage();
+    inputRef.current?.blur();
+  };
+
+  const handleChange = ({
+    target: { value }
+  }: ChangeEvent<HTMLTextAreaElement>): void => setInputValue(value);
+
+  const handleFocus = (): void => setVisited(!loading);
+
+  const formId = useId();
+
+  const inputLength = inputValue.length;
+  const isValidInput = !!inputValue.trim().length;
+  const isCharLimitExceeded = inputLength > inputLimit;
+
+  const isValidTweet =
+    !isCharLimitExceeded && (isValidInput || isUploadingImages);
+
+  const handleCancel = (): void => {
+    setIsExpanded(false);
+    discardTweet();
   };
 
   return (
@@ -322,7 +227,11 @@ export function Input({
             'group'
           )}
         >
-          <UserAvatar src={photoURL} alt={name} username={username} />
+          <UserAvatar
+            src={photoURL ?? '/assets/default-avatar.png'}
+            alt={name ?? 'User'}
+            username={username ?? 'user'}
+          />
           <p
             className={cn(
               'text-gray-500 dark:text-gray-400',
@@ -330,7 +239,7 @@ export function Input({
               'transition-colors duration-200'
             )}
           >
-            Share what you are watching ...
+            {placeholder}
           </p>
           <div className='ml-auto flex items-center gap-2 text-gray-400'>
             <HeroIcon
@@ -364,7 +273,13 @@ export function Input({
               )}
               onSubmit={(e) => {
                 e.preventDefault();
-                handleSubmit();
+                handleSubmit()
+                  .then(() => {
+                    console.log('Form submitted successfully');
+                  })
+                  .catch((err) => {
+                    console.error('Error during form submission:', err);
+                  });
               }}
             >
               {loading && (
@@ -382,7 +297,11 @@ export function Input({
                   loading && 'pointer-events-none opacity-50'
                 )}
               >
-                <UserAvatar src={photoURL} alt={name} username={username} />
+                <UserAvatar
+                  src={photoURL ?? '/assets/default-avatar.png'}
+                  alt={name ?? 'User'}
+                  username={username ?? 'user'}
+                />
                 <div className='flex w-full flex-col gap-4'>
                   <InputForm
                     modal={modal}
@@ -394,7 +313,7 @@ export function Input({
                     inputValue={inputValue}
                     isValidTweet={isValidTweet}
                     isUploadingImages={isUploadingImages}
-                    sendTweet={sendTweet}
+                    sendTweet={handleSubmit}
                     handleFocus={handleFocus}
                     discardTweet={handleCancel}
                     handleChange={handleChange}

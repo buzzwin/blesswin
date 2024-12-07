@@ -22,7 +22,8 @@ export function LoginMain(): JSX.Element {
       }
     };
 
-    getUserCount();
+    // Call the async function
+    void getUserCount();
   }, []);
 
   return (

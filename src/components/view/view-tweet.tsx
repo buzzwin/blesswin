@@ -17,6 +17,8 @@ import { cn } from '@lib/utils';
 import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
 import Image from 'next/image';
+import { useState } from 'react';
+import type { ViewingActivity } from '@components/activity/types';
 
 export type ViewTweetProps = Tweet & {
   user: User;
@@ -53,6 +55,22 @@ export function ViewTweet({
   const { open, openModal, closeModal } = useModal();
   const tweetLink = `/buzz/${tweetId}`;
   const { id: parentId, username: parentUsername = username } = parent ?? {};
+
+  const handleReply = async (data: ViewingActivity): Promise<void> => {
+    try {
+      // Handle the reply logic here
+      await fetch('/api/tweets', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+      closeModal();
+    } catch (error) {
+      console.error('Error posting reply:', error);
+    }
+  };
 
   return (
     <motion.article
@@ -92,6 +110,7 @@ export function ViewTweet({
             modal: true
           }}
           closeModal={closeModal}
+          onReply={handleReply}
         />
       </Modal>
 
