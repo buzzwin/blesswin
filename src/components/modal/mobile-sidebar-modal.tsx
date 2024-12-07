@@ -147,13 +147,10 @@ export function MobileSidebarModal({
         </Link>
         <div className='mb-8 ml-2 -mt-4'>
           <UserAvatar
-            className='absolute -translate-y-1/2 bg-main-background p-1 hover:brightness-100
-                       [&>figure>span]:[transition:200ms]
-                       [&:hover>figure>span]:brightness-75'
+            className='h-[60px] w-[60px]'
             username={username}
             src={photoURL}
             alt={name}
-            size={60}
           />
         </div>
         <div className='flex flex-col gap-4 rounded-xl bg-main-sidebar-background p-4'>

@@ -6,6 +6,7 @@ import SearchResults from './searchresults';
 import type { SearchResult, ViewingActivity, TMDBResult } from './types';
 import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { DefaultAvatar } from '@components/ui/default-avatar';
 
 type ViewingActivityFormProps = {
   onSave: (activity: ViewingActivity) => void;

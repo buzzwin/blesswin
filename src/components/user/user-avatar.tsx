@@ -1,12 +1,11 @@
 import Link from 'next/link';
-import cn from 'clsx';
 import { NextImage } from '@components/ui/next-image';
 import { DefaultAvatar } from '@components/ui/default-avatar';
+import { cn } from '@lib/utils';
 
 type UserAvatarProps = {
   src: string;
   alt: string;
-  size?: number;
   username?: string;
   className?: string;
 };
@@ -14,42 +13,36 @@ type UserAvatarProps = {
 export function UserAvatar({
   src,
   alt,
-  size,
-  username,
+  username = 'user',
   className
 }: UserAvatarProps): JSX.Element {
-  const pictureSize = size ?? 48;
+  if (src === 'default-avatar') {
+    src = '';
+  }
 
   return (
     <Link href={username ? `/user/${username}` : '#'}>
-      <div
+      <a
         className={cn(
-          'flex self-start',
+          'blur-picture flex self-start',
           !username && 'pointer-events-none',
           className
         )}
-        tabIndex={username ? 0 : -1}
       >
         {src ? (
           <NextImage
             useSkeleton
             imgClassName='rounded-full'
-            width={pictureSize}
-            height={pictureSize}
+            width={48}
+            height={48}
             src={src}
             alt={alt}
             key={src}
           />
         ) : (
-          <DefaultAvatar
-            className={cn(
-              'rounded-full',
-              'h-[48px] w-[48px]',
-              size && `w-[${size}px] h-[${size}px]`
-            )}
-          />
+          <DefaultAvatar className={cn('h-12 w-12', 'rounded-full')} />
         )}
-      </div>
+      </a>
     </Link>
   );
 }

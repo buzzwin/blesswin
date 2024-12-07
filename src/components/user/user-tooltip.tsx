@@ -9,6 +9,7 @@ import { UserFollowing } from './user-following';
 import { UserUsername } from './user-username';
 import type { ReactNode } from 'react';
 import type { User } from '@lib/types/user';
+import { useModal } from '@lib/hooks/useModal';
 
 type UserTooltipProps = Pick<
   User,
@@ -44,6 +45,7 @@ export function UserTooltip({
   coverPhotoURL
 }: UserTooltipProps): JSX.Element {
   const { isMobile } = useWindow();
+  const { open, openModal, closeModal } = useModal();
 
   if (isMobile || modal) return <>{children}</>;
 
@@ -90,12 +92,9 @@ export function UserTooltip({
             <div className='flex justify-between'>
               <div className='mb-10'>
                 <UserAvatar
-                  className='absolute -translate-y-1/2 bg-main-background p-1 
-                             hover:brightness-100 [&>figure>span]:[transition:200ms]
-                             [&:hover>figure>span]:brightness-75'
+                  className='h-16 w-16'
                   src={photoURL}
                   alt={name}
-                  size={64}
                   username={username}
                 />
               </div>

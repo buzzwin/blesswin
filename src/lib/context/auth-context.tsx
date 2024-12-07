@@ -29,6 +29,7 @@ import type { WithFieldValue } from 'firebase/firestore';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
+import { DefaultAvatar } from '@components/ui/default-avatar';
 
 type AuthContext = {
   user: User | null;
@@ -90,7 +91,7 @@ export function AuthContextProvider({
           accent: null,
           website: null,
           location: null,
-          photoURL: photoURL || 'default-avatar',
+          photoURL: photoURL || '/logo128.png',
           username: randomUsername,
           verified: false,
           following: [],

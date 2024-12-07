@@ -259,26 +259,13 @@ const ActivityFeed: React.FC = () => {
                         ) : activity.photoURL ? (
                           <Image
                             src={activity.photoURL}
-                            alt={activity.username || 'User'}
+                            alt={activity.username}
                             className='rounded-full'
-                            style={{
-                              width: '100%',
-                              height: '100%',
-                              position: 'absolute'
-                            }}
                             width={32}
                             height={32}
                           />
                         ) : (
-                          <DefaultAvatar
-                            className={cn(
-                              'relative overflow-hidden rounded-full',
-                              'h-6 w-6 md:h-8 md:w-8',
-                              'transition-transform duration-500 group-hover:scale-105',
-                              'ring-2 ring-white/10 group-hover:ring-emerald-500/50',
-                              'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
-                            )}
-                          />
+                          <DefaultAvatar className='h-8 w-8 rounded-full' />
                         )}
                       </div>
                       <span

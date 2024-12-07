@@ -71,6 +71,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
             className='bg-gray-900'
             src='/logo256.png'
             alt='buzzwin'
+            username='buzzwin'
           />
           <div className='flex flex-col gap-2'>
             <div className='flex flex-wrap items-center gap-2'>

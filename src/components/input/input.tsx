@@ -228,7 +228,7 @@ export function Input({
           )}
         >
           <UserAvatar
-            src={photoURL ?? '/assets/default-avatar.png'}
+            src={photoURL || ''}
             alt={name ?? 'User'}
             username={username ?? 'user'}
           />
@@ -298,7 +298,7 @@ export function Input({
                 )}
               >
                 <UserAvatar
-                  src={photoURL ?? '/assets/default-avatar.png'}
+                  src={photoURL || ''}
                   alt={name ?? 'User'}
                   username={username ?? 'user'}
                 />
