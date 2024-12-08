@@ -327,65 +327,6 @@ export function Input({
                       />
                     )}
                   </InputForm>
-
-                  {/* Action Buttons */}
-                  <div className='flex items-center justify-end gap-3 pt-2'>
-                    <button
-                      type='button'
-                      onClick={handleCancel}
-                      className={cn(
-                        'px-4 py-2',
-                        'rounded-xl',
-                        'text-sm font-medium',
-                        'bg-gray-100 dark:bg-gray-800',
-                        'text-gray-700 dark:text-gray-300',
-                        'hover:bg-gray-200 dark:hover:bg-gray-700',
-                        'transition-colors duration-200',
-                        'flex items-center gap-2'
-                      )}
-                    >
-                      <HeroIcon iconName='XMarkIcon' className='h-4 w-4' />
-                      Cancel
-                    </button>
-                    {replyModal && (
-                      <button
-                        type='submit'
-                        disabled={loading}
-                        className={cn(
-                          'px-4 py-2',
-                          'rounded-xl',
-                          'text-sm font-medium',
-                          'bg-emerald-500 dark:bg-emerald-600',
-                          'text-white',
-                          'hover:bg-emerald-600 dark:hover:bg-emerald-700',
-                          'transition-colors duration-200',
-                          'flex items-center gap-2',
-                          'disabled:cursor-not-allowed disabled:opacity-50'
-                        )}
-                      >
-                        {loading ? (
-                          <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
-                        ) : (
-                          <HeroIcon
-                            iconName='PaperAirplaneIcon'
-                            className='h-4 w-4'
-                          />
-                        )}
-                        {loading ? 'Posting...' : 'Share Review'}
-                      </button>
-                    )}
-                  </div>
-
-                  {!loading && (
-                    <InputOptions
-                      modal={modal}
-                      inputLimit={inputLimit}
-                      inputLength={inputLength}
-                      isValidTweet={isValidTweet}
-                      isCharLimitExceeded={isCharLimitExceeded}
-                      handleImageUpload={handleImageUpload}
-                    />
-                  )}
                 </div>
               </div>
             </form>

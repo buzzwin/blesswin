@@ -7,6 +7,7 @@ import { useState } from 'react';
 import { createReview } from '@lib/firebase/utils/review';
 import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 type TweetReplyModalProps = {
   tweet: TweetProps;
@@ -43,6 +44,7 @@ export function TweetReplyModal({
   const { user } = useAuth();
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleTagClick = (tag: string) => {
     setSelectedTags((prev) =>
@@ -51,57 +53,69 @@ export function TweetReplyModal({
   };
 
   const handleSubmit = async (data: ViewingActivity) => {
-    console.log('Starting review submission:', { data, user });
-
-    if (!user?.id) {
-      console.error('No authenticated user found');
-      toast.error('Please sign in to post a review');
-      return;
-    }
+    setLoading(true);
 
     try {
+      if (!user?.id) {
+        toast.error('Please sign in to post a review');
+        return;
+      }
+
+      // Use the review text from the input data
       const reviewData = {
-        tmdbId: Number(data.tmdbId),
+        tmdbId: Number(tweet.viewingActivity.tmdbId),
         userId: user.id,
-        title: data.title,
-        mediaType: data.mediaType || 'movie',
+        title: tweet.viewingActivity.title,
+        mediaType: tweet.viewingActivity.mediaType || 'movie',
         rating: selectedEmoji || '',
-        review: data.review || '',
+        review: data.review || '', // Use the input review text
         tags: selectedTags,
-        posterPath: data.poster_path,
+        posterPath: tweet.viewingActivity.poster_path,
         tweetId: tweet.id
       };
 
-      console.log('Creating review with data:', reviewData);
-      const newReview = await createReview(reviewData);
-      console.log('Review created successfully:', newReview);
+      // First create the review
+      try {
+        const newReview = await createReview(reviewData);
+        onReviewAdded?.(newReview);
+      } catch (error) {
+        console.error('Error creating review:', error);
+        throw new Error('Failed to save review. Please try again.');
+      }
 
-      // Update UI
-      onReviewAdded?.(newReview);
+      // Then create the associated tweet
+      try {
+        const tweetData = {
+          ...tweet.viewingActivity,
+          parent: {
+            id: tweet.id,
+            username: tweet.user.username
+          },
+          review: data.review || '', // Use the input review text
+          tags: selectedTags,
+          rating: selectedEmoji || '😐'
+        };
+        await onReply(tweetData);
+      } catch (error) {
+        console.error('Error creating tweet:', error);
+        throw new Error('Failed to post tweet. Please try again.');
+      }
 
-      // Create associated tweet
-      const tweetData = {
-        ...data,
-        review: data.review || '',
-        tags: selectedTags,
-        rating: selectedEmoji || '😐'
-      };
-
-      await onReply(tweetData);
       closeModal();
       toast.success('Review posted successfully!');
     } catch (error) {
-      console.error('Error posting review:', error);
-      toast.error(
-        error instanceof Error ? error.message : 'Failed to post review'
-      );
+      const message =
+        error instanceof Error ? error.message : 'Failed to post review';
+      toast.error(message);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className='flex flex-col'>
       {/* Header */}
-      <div className='flex items-center justify-between border-b border-gray-100 p-3 dark:border-gray-800'>
+      <div className='p-3'>
         <h2 className='text-lg font-bold text-gray-900 dark:text-white'>
           Review {tweet.viewingActivity?.title}
         </h2>
@@ -181,6 +195,46 @@ export function TweetReplyModal({
           selectedTags={selectedTags}
           selectedEmoji={selectedEmoji}
         />
+
+        {/* Add Share Review Button */}
+        <div className='flex justify-end gap-3 border-t border-gray-100 pt-3 dark:border-gray-800'>
+          <button
+            onClick={closeModal}
+            className={cn(
+              'px-4 py-2',
+              'rounded-xl',
+              'text-sm font-medium',
+              'bg-gray-100 dark:bg-gray-800',
+              'text-gray-700 dark:text-gray-300',
+              'hover:bg-gray-200 dark:hover:bg-gray-700',
+              'transition-colors duration-200'
+            )}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={() => handleSubmit(tweet.viewingActivity)}
+            disabled={loading}
+            className={cn(
+              'px-4 py-2',
+              'rounded-xl',
+              'text-sm font-medium',
+              'bg-emerald-500 dark:bg-emerald-600',
+              'text-white',
+              'hover:bg-emerald-600 dark:hover:bg-emerald-700',
+              'transition-colors duration-200',
+              'flex items-center gap-2',
+              'disabled:cursor-not-allowed disabled:opacity-50'
+            )}
+          >
+            {loading ? (
+              <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
+            ) : (
+              <HeroIcon iconName='PaperAirplaneIcon' className='h-4 w-4' />
+            )}
+            {loading ? 'Posting...' : 'Share Review'}
+          </button>
+        </div>
       </div>
     </div>
   );

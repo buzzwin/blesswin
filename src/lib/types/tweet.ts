@@ -7,7 +7,10 @@ export type Tweet = {
   id: string;
   text: string | null;
   images: ImagesPreview | null;
-  parent: { id: string; username: string } | null;
+  parent: {
+    id: string;
+    username: string;
+  } | null;
   userLikes: string[];
   createdBy: string;
   createdAt: Timestamp;

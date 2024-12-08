@@ -1,0 +1,39 @@
+{
+  "rules_version": "2",
+  "firestore": {
+    "rules": {
+      "databases/{database}/documents": {
+        "tweets/{tweetId}": {
+          ".read": true,
+          ".write": "auth != null",
+          ".validate": "newData.hasChildren(['createdBy', 'createdAt'])"
+        },
+        "reviews/{reviewId}": {
+          ".read": true,
+          ".write": "auth != null && (auth.uid == resource.data.userId || !resource.exists)",
+          ".validate": "newData.hasChildren(['userId', 'tmdbId', 'title', 'review'])",
+          "userId": {
+            ".validate": "newData.isString() && newData.val() == auth.uid"
+          },
+          "tmdbId": {
+            ".validate": "newData.isNumber()"
+          },
+          "title": {
+            ".validate": "newData.isString()"
+          },
+          "review": {
+            ".validate": "newData.isString()"
+          }
+        },
+        "users/{userId}": {
+          ".read": true,
+          ".write": "auth != null && auth.uid == userId"
+        },
+        "watchlists/{watchlistId}": {
+          ".read": "auth != null",
+          ".write": "auth != null && (auth.uid == resource.data.userId || !resource.exists)"
+        }
+      }
+    }
+  }
+}

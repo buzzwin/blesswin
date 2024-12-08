@@ -11,10 +11,12 @@ import {
   serverTimestamp,
   getDoc,
   Timestamp,
-  type WithFieldValue
+  type WithFieldValue,
+  type QueryDocumentSnapshot
 } from 'firebase/firestore';
 import { reviewsCollection, usersCollection } from '../collections';
 import type { Review, ReviewWithUser } from '@lib/types/review';
+import type { User } from '@lib/types/user';
 
 export const createReview = async (
   reviewData: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'likes'>
@@ -24,29 +26,22 @@ export const createReview = async (
   }
 
   try {
-    if (!reviewData.tmdbId || !reviewData.title || !reviewData.mediaType) 
+    // Validate required fields
+    if (!reviewData.tmdbId || !reviewData.title || !reviewData.mediaType) {
       throw new Error('Missing required fields for review');
+    }
 
-    // Destructure to remove id from data
-    const { tmdbId, userId, title, mediaType, rating, review, tags, posterPath, tweetId } = reviewData;
-    
     const firestoreData: WithFieldValue<Omit<Review, 'id'>> = {
-      tmdbId,
-      userId,
-      title,
-      mediaType,
-      rating,
-      review,
-      tags,
-      posterPath,
-      tweetId,
+      ...reviewData,
       createdAt: serverTimestamp(),
       updatedAt: null,
       likes: []
     };
 
+    // Add to reviews collection
     const reviewRef = await addDoc(reviewsCollection, firestoreData);
 
+    // Get user data for response
     const userDoc = await getDoc(doc(usersCollection, reviewData.userId));
     
     if (!userDoc.exists()) {
@@ -55,7 +50,7 @@ export const createReview = async (
 
     const userData = userDoc.data();
 
-    const newReview: ReviewWithUser = {
+    return {
       ...reviewData,
       id: reviewRef.id,
       createdAt: Timestamp.fromDate(new Date()),
@@ -69,17 +64,17 @@ export const createReview = async (
         verified: userData.verified
       }
     };
-
-    return newReview;
   } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(`Failed to create review: ${error.message}`);
-    }
-    throw new Error('Failed to create review');
+    console.error('Error in createReview:', error);
+    throw new Error(
+      error instanceof Error 
+        ? `Failed to create review: ${error.message}`
+        : 'Failed to create review'
+    );
   }
 };
 
-export const getMediaReviews = async (tmdbId: number) => {
+export const getMediaReviews = async (tmdbId: number): Promise<ReviewWithUser[]> => {
   try {
     const q = query(
       reviewsCollection,
@@ -87,20 +82,31 @@ export const getMediaReviews = async (tmdbId: number) => {
       orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(q);
-    const reviews = snapshot.docs.map(doc => {
-      const data = doc.data();
-      return {
-        ...data,
-        id: doc.id,
-        createdAt: data.createdAt?.toDate()
-      };
-    });
-
-    reviews.sort((a, b) => 
-      (b.createdAt?.getTime() ?? 0) - (a.createdAt?.getTime() ?? 0)
-    );
     
-    console.log('Found reviews (fallback):', reviews);
+    // Get user data for each review
+    const reviews = await Promise.all(
+      snapshot.docs.map(async (docSnapshot: QueryDocumentSnapshot<Review>) => {
+        const data = docSnapshot.data();
+        // Get user data
+        const userDocRef = doc(usersCollection, data.userId);
+        const userDocSnap = await getDoc(userDocRef);
+        const userData = userDocSnap.data() as User;
+
+        return {
+          ...data,
+          id: docSnapshot.id,
+          createdAt: data.createdAt,
+          user: {
+            id: userData.id,
+            name: userData.name,
+            username: userData.username,
+            photoURL: userData.photoURL,
+            verified: userData.verified
+          }
+        } as ReviewWithUser;
+      })
+    );
+
     return reviews;
   } catch (error) {
     console.error('Error fetching media reviews:', error);

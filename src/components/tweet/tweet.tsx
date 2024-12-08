@@ -7,8 +7,15 @@ import type { ReactNode } from 'react';
 import Image from 'next/image';
 
 // Firebase imports
-import { query, where, orderBy, getDocs } from 'firebase/firestore';
-import { tweetsCollection } from '@lib/firebase/collections';
+import {
+  query,
+  where,
+  orderBy,
+  getDocs,
+  getDoc,
+  doc
+} from 'firebase/firestore';
+import { tweetsCollection, usersCollection } from '@lib/firebase/collections';
 import { manageBookmark } from '@lib/firebase/utils';
 import { getMediaReviews } from '@lib/firebase/utils/review';
 
@@ -239,9 +246,6 @@ export function Tweet(tweet: TweetProps): JSX.Element {
       setLoadingReplies(true);
       setLoadingReviews(true);
       try {
-        console.log('Loading replies and reviews for tweet:', tweet.id);
-        console.log('Media ID:', tweet.viewingActivity?.tmdbId);
-
         const [repliesSnapshot, reviewsData] = await Promise.all([
           getDocs(
             query(
@@ -253,30 +257,28 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           getMediaReviews(Number(tweet.viewingActivity?.tmdbId))
         ]);
 
-        const replyDocs = repliesSnapshot.docs.map((doc) => {
-          const data = doc.data();
-          return {
-            ...data,
-            id: doc.id,
-            createdAt: data.createdAt
-          };
-        }) as TweetWithUser[];
+        // Map the replies with user data
+        const replyDocs = await Promise.all(
+          repliesSnapshot.docs.map(async (docSnap) => {
+            const data = docSnap.data();
+            const userDocRef = doc(usersCollection, data.createdBy);
+            const userDocSnap = await getDoc(userDocRef);
+            const userData = userDocSnap.data() as User;
 
-        const typedReviews = reviewsData.map((review) => ({
-          ...review,
-          createdAt: {
-            ...review.createdAt,
-            toDate: () => new Date(review.createdAt)
-          }
-        })) as unknown as ReviewWithUser[];
-
-        console.log('Loaded replies:', replyDocs);
-        console.log('Loaded reviews:', typedReviews);
+            return {
+              ...data,
+              id: docSnap.id,
+              createdAt: data.createdAt,
+              user: userData
+            } as TweetWithUser;
+          })
+        );
 
         setReplies(replyDocs);
-        setReviews(typedReviews);
+        setReviews(reviewsData);
       } catch (error) {
         console.error('Error loading replies and reviews:', error);
+        toast.error('Failed to load replies and reviews');
       } finally {
         setLoadingReplies(false);
         setLoadingReviews(false);
