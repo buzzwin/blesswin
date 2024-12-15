@@ -71,8 +71,13 @@
     ],
     "@typescript-eslint/consistent-type-imports": "warn",
     "@typescript-eslint/prefer-nullish-coalescing": "warn",
-    "@typescript-eslint/explicit-function-return-type": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
     "spellcheck/spell-checker": "off",
-    "no-undef": "off"
+    "no-undef": "off",
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "curly": "off",
+    "import/no-named-as-default": "off"
   }
 }

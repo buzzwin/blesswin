@@ -39,6 +39,9 @@ const defaultActivity: ViewingActivity = {
   photoURL: 'default-avatar',
   mediaType: 'movie'
 };
+interface ApiResponse {
+  review: string;
+}
 
 const generateReview = async (movieDetails: {
   title: string;
@@ -58,10 +61,15 @@ const generateReview = async (movieDetails: {
     }
 
     const data = await response.json();
-    return data.review;
+    if (!data || typeof data.review !== 'string') {
+      throw new Error('Invalid response format');
+    } else {
+      return data.review as string;
+    }
   } catch (error) {
-    console.error('Error generating review:', error);
-    throw error;
+    const message =
+      error instanceof Error ? error.message : 'Failed to generate review';
+    throw new Error(message);
   }
 };
 
@@ -232,7 +240,7 @@ const ViewingActivityForm = ({
   };
 
   const handleGenerateReview = async () => {
-    if (!selectedShow.title) {
+    if (!selectedShow?.title) {
       toast.error('Please select a show first');
       return;
     }
@@ -241,7 +249,7 @@ const ViewingActivityForm = ({
     try {
       const review = await generateReview({
         title: selectedShow.title,
-        overview: selectedShow.overview
+        overview: selectedShow.overview || ''
       });
       setViewingActivity((prev) => ({
         ...prev,
@@ -249,7 +257,9 @@ const ViewingActivityForm = ({
       }));
       toast.success('Review generated!');
     } catch (error) {
-      toast.error('Failed to generate review');
+      const message =
+        error instanceof Error ? error.message : 'Failed to generate review';
+      toast.error(message);
     } finally {
       setIsGenerating(false);
     }
