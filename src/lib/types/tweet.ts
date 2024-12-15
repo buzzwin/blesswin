@@ -3,6 +3,14 @@ import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 import type { ImagesPreview } from './file';
 import type { User } from './user';
 
+export type TweetUser = {
+  id: string;
+  name: string;
+  username: string;
+  photoURL: string;
+  verified: boolean;
+};
+
 export type Tweet = {
   id: string;
   text: string | null;
@@ -21,6 +29,7 @@ export type Tweet = {
   photoURL: string;
   userWatching: string[];
   totalWatchers: number;
+  user: TweetUser;
 };
 
 export type TweetWithUser = Tweet & { user: User };

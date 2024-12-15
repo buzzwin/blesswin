@@ -7,6 +7,9 @@ import type { SearchResult, ViewingActivity, TMDBResult } from './types';
 import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { DefaultAvatar } from '@components/ui/default-avatar';
+import { useAuth } from '@lib/context/auth-context';
+import { sendTweet } from '@lib/firebase/utils/tweet';
+import { toast } from 'react-hot-toast';
 
 type ViewingActivityFormProps = {
   onSave: (activity: ViewingActivity) => void;
@@ -56,6 +59,7 @@ const ViewingActivityForm = ({
     name: '',
     status: 'is watching'
   });
+  const { user } = useAuth();
 
   const handleInputChange = async (
     e: ChangeEvent<HTMLInputElement>
@@ -133,6 +137,17 @@ const ViewingActivityForm = ({
       username: prevState.username,
       photoURL: prevState.photoURL
     }));
+
+    setSearchResults([]);
+    setSearchText('');
+    setIsExpanded(true);
+
+    const searchInput = document.querySelector(
+      'input[type="search"]'
+    ) as HTMLInputElement;
+    if (searchInput) {
+      searchInput.value = '';
+    }
   };
 
   const handleCancel = () => {
@@ -151,17 +166,43 @@ const ViewingActivityForm = ({
     });
   };
 
-  const handleSave = (e: { preventDefault: () => void }) => {
+  const handleSave = async (e: { preventDefault: () => void }) => {
     e.preventDefault();
-    if (viewingActivity.status === null || viewingActivity.status === '') {
-      viewingActivity.status = 'is watching';
+
+    try {
+      if (!user?.id) {
+        toast.error('Please sign in to post');
+        return;
+      }
+
+      if (viewingActivity.status === null || viewingActivity.status === '') {
+        viewingActivity.status = 'is watching';
+      }
+
+      const activityToSave = {
+        ...viewingActivity,
+        tmdbId: viewingActivity.tmdbId,
+        username: user.username,
+        photoURL: user.photoURL
+      };
+
+      // Create tweet with the activity
+      const tweetUser = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        photoURL: user.photoURL,
+        verified: user.verified
+      };
+
+      await sendTweet(activityToSave, tweetUser);
+      onSave(activityToSave);
+      handleCancel();
+      toast.success('Review posted successfully!');
+    } catch (error) {
+      console.error('Error saving activity:', error);
+      toast.error('Failed to post review');
     }
-    const activityToSave = {
-      ...viewingActivity,
-      tmdbId: viewingActivity.tmdbId
-    };
-    onSave(activityToSave);
-    handleCancel();
   };
 
   return (
