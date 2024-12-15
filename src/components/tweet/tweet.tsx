@@ -18,6 +18,7 @@ import {
 import { tweetsCollection, usersCollection } from '@lib/firebase/collections';
 import { manageBookmark } from '@lib/firebase/utils';
 import { getMediaReviews } from '@lib/firebase/utils/review';
+import { deleteTweet } from '@lib/firebase/utils/tweet';
 
 // Context imports
 import { useAuth } from '@lib/context/auth-context';
@@ -107,18 +108,15 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
   const handleDelete = async (e: React.MouseEvent): Promise<void> => {
     e.stopPropagation();
+
+    if (!user?.id) {
+      toast.error('You must be signed in to delete');
+      return;
+    }
+
     if (window.confirm('Are you sure you want to delete this buzz?')) {
       try {
-        const result = await fetch(`/api/tweets/${tweetId}`, {
-          method: 'DELETE',
-          headers: {
-            'Content-Type': 'application/json'
-          }
-        });
-
-        if (!result.ok) {
-          throw new Error(`Failed to delete buzz: ${result.statusText}`);
-        }
+        await deleteTweet(tweetId, user.id);
 
         toast.success('Buzz deleted successfully');
 
@@ -126,11 +124,12 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           await push('/');
         } catch (navigationError) {
           console.error('Navigation error:', navigationError);
-          // Still consider the operation successful since deletion worked
         }
       } catch (error) {
         console.error('Error deleting buzz:', error);
-        toast.error('Failed to delete buzz');
+        toast.error(
+          error instanceof Error ? error.message : 'Failed to delete buzz'
+        );
       } finally {
         setIsMenuOpen(false);
       }
