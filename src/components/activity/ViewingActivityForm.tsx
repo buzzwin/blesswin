@@ -40,6 +40,31 @@ const defaultActivity: ViewingActivity = {
   mediaType: 'movie'
 };
 
+const generateReview = async (movieDetails: {
+  title: string;
+  overview: string;
+}): Promise<string> => {
+  try {
+    const response = await fetch('/api/generate-review', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(movieDetails)
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to generate review');
+    }
+
+    const data = await response.json();
+    return data.review;
+  } catch (error) {
+    console.error('Error generating review:', error);
+    throw error;
+  }
+};
+
 const ViewingActivityForm = ({
   onSave
 }: ViewingActivityFormProps): JSX.Element => {
@@ -59,6 +84,7 @@ const ViewingActivityForm = ({
     name: '',
     status: 'is watching'
   });
+  const [isGenerating, setIsGenerating] = useState(false);
   const { user } = useAuth();
 
   const handleInputChange = async (
@@ -202,6 +228,30 @@ const ViewingActivityForm = ({
     } catch (error) {
       console.error('Error saving activity:', error);
       toast.error('Failed to post review');
+    }
+  };
+
+  const handleGenerateReview = async () => {
+    if (!selectedShow.title) {
+      toast.error('Please select a show first');
+      return;
+    }
+
+    setIsGenerating(true);
+    try {
+      const review = await generateReview({
+        title: selectedShow.title,
+        overview: selectedShow.overview
+      });
+      setViewingActivity((prev) => ({
+        ...prev,
+        review
+      }));
+      toast.success('Review generated!');
+    } catch (error) {
+      toast.error('Failed to generate review');
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -405,6 +455,26 @@ const ViewingActivityForm = ({
                     value={viewingActivity.review}
                     onChange={handleReviewChange}
                   />
+                  <button
+                    onClick={handleGenerateReview}
+                    disabled={isGenerating || !selectedShow.title}
+                    className={cn(
+                      'absolute right-2 bottom-2',
+                      'rounded-lg p-2',
+                      'bg-emerald-500 text-white',
+                      'hover:bg-emerald-600',
+                      'disabled:cursor-not-allowed disabled:opacity-50'
+                    )}
+                  >
+                    {isGenerating ? (
+                      <HeroIcon
+                        iconName='ArrowPathIcon'
+                        className='h-5 w-5 animate-spin'
+                      />
+                    ) : (
+                      <HeroIcon iconName='SparklesIcon' className='h-5 w-5' />
+                    )}
+                  </button>
                 </div>
 
                 {/* Selected Show Preview */}

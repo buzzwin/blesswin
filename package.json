@@ -23,6 +23,7 @@
     "lodash": "^4.17.21",
     "next": "12.2.4",
     "next-share": "^0.20.0",
+    "openai": "^4.76.3",
     "react": "18.2.0",
     "react-confetti": "^6.1.0",
     "react-dom": "18.2.0",
