@@ -45,11 +45,16 @@ export function TweetReplyModal({
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [inputValue, setInputValue] = useState('');
 
   const handleTagClick = (tag: string) => {
     setSelectedTags((prev) =>
       prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
     );
+  };
+
+  const handleInputChange = (value: string) => {
+    setInputValue(value);
   };
 
   const handleSubmit = async (data: ViewingActivity) => {
@@ -61,14 +66,14 @@ export function TweetReplyModal({
         return;
       }
 
-      // Use the review text from the input data
+      // Create review with the actual input value
       const reviewData = {
         tmdbId: Number(tweet.viewingActivity.tmdbId),
         userId: user.id,
         title: tweet.viewingActivity.title,
         mediaType: tweet.viewingActivity.mediaType || 'movie',
         rating: selectedEmoji || '',
-        review: data.review || '', // Use the input review text
+        review: inputValue, // Use the stored input value instead of data.review
         tags: selectedTags,
         posterPath: tweet.viewingActivity.poster_path,
         tweetId: tweet.id
@@ -91,7 +96,7 @@ export function TweetReplyModal({
             id: tweet.id,
             username: tweet.user.username
           },
-          review: data.review || '', // Use the input review text
+          review: inputValue, // Use the stored input value
           tags: selectedTags,
           rating: selectedEmoji || '😐'
         };
@@ -194,6 +199,8 @@ export function TweetReplyModal({
           onSubmit={handleSubmit}
           selectedTags={selectedTags}
           selectedEmoji={selectedEmoji}
+          onChange={handleInputChange}
+          value={inputValue}
         />
 
         {/* Add Share Review Button */}

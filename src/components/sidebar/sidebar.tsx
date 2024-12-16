@@ -24,6 +24,11 @@ const navLinks: Readonly<NavLink[]> = [
     iconName: 'HomeIcon'
   },
   {
+    href: '/reviews',
+    linkName: 'Reviews',
+    iconName: 'ChatBubbleBottomCenterTextIcon'
+  },
+  {
     href: '/watchlists',
     linkName: 'Watchlists',
     iconName: 'ListBulletIcon'

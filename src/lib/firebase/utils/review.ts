@@ -12,7 +12,8 @@ import {
   getDoc,
   Timestamp,
   type WithFieldValue,
-  type QueryDocumentSnapshot
+  type QueryDocumentSnapshot,
+  deleteDoc
 } from 'firebase/firestore';
 import { reviewsCollection, usersCollection } from '../collections';
 import type { Review, ReviewWithUser } from '@lib/types/review';
@@ -150,6 +151,28 @@ export const toggleReviewLike = async (
     });
   } catch (error) {
     console.error('Error toggling review like:', error);
+    throw error;
+  }
+};
+
+export const deleteReview = async (reviewId: string, userId: string): Promise<void> => {
+  try {
+    const reviewRef = doc(reviewsCollection, reviewId);
+    const reviewSnap = await getDoc(reviewRef);
+    
+    if (!reviewSnap.exists()) {
+      throw new Error('Review not found');
+    }
+
+    const reviewData = reviewSnap.data();
+    if (reviewData.userId !== userId) {
+      throw new Error('Not authorized to delete this review');
+    }
+
+    await deleteDoc(reviewRef);
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error deleting review:', error);
     throw error;
   }
 }; 

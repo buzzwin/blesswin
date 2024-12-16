@@ -40,6 +40,8 @@ type InputProps = {
   placeholder?: string;
   onSubmit?: (data: ViewingActivity) => Promise<void>;
   selectedEmoji?: string | null;
+  onChange?: (value: string) => void;
+  value?: string;
 };
 
 export const variants: Variants = {
@@ -57,12 +59,13 @@ export function Input({
   selectedTags = [],
   placeholder = 'Share what you are watching...',
   onSubmit,
-  selectedEmoji
+  selectedEmoji,
+  onChange,
+  value = ''
 }: InputProps): JSX.Element {
   const [isExpanded, setIsExpanded] = useState(false);
   const [selectedImages, setSelectedImages] = useState<FilesWithId>([]);
   const [imagesPreview, setImagesPreview] = useState<ImagesPreview>([]);
-  const [inputValue, setInputValue] = useState('');
   const [loading, setLoading] = useState(false);
   const [visited, setVisited] = useState(false);
 
@@ -85,13 +88,13 @@ export function Input({
   }, [modal]);
 
   const handleSubmit = async (): Promise<void> => {
-    if (!inputValue && !selectedImages.length) return;
+    if (!value && !selectedImages.length) return;
 
     setLoading(true);
 
     try {
       const tweetData = {
-        text: inputValue,
+        text: value,
         images: selectedImages.length ? selectedImages : null,
         parent: parent ?? null,
         userLikes: [],
@@ -103,7 +106,7 @@ export function Input({
         viewingActivity: replyModal
           ? {
               ...parent?.viewingActivity,
-              review: inputValue,
+              review: value,
               tags: selectedTags
             }
           : null,
@@ -181,22 +184,21 @@ export function Input({
   };
 
   const discardTweet = (): void => {
-    setInputValue('');
     setVisited(false);
     cleanImage();
     inputRef.current?.blur();
   };
 
-  const handleChange = ({
-    target: { value }
-  }: ChangeEvent<HTMLTextAreaElement>): void => setInputValue(value);
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    onChange?.(e.target.value);
+  };
 
   const handleFocus = (): void => setVisited(!loading);
 
   const formId = useId();
 
-  const inputLength = inputValue.length;
-  const isValidInput = !!inputValue.trim().length;
+  const inputLength = value.length;
+  const isValidInput = !!value.trim().length;
   const isCharLimitExceeded = inputLength > inputLimit;
 
   const isValidTweet =
@@ -306,17 +308,17 @@ export function Input({
                   <InputForm
                     modal={modal}
                     replyModal={replyModal}
+                    reply={false}
                     formId={formId}
                     visited={visited}
                     loading={loading}
                     inputRef={inputRef}
-                    inputValue={inputValue}
+                    inputValue={value}
+                    handleChange={handleChange}
                     isValidTweet={isValidTweet}
                     isUploadingImages={isUploadingImages}
-                    sendTweet={handleSubmit}
+                    handleSubmit={handleSubmit}
                     handleFocus={handleFocus}
-                    discardTweet={handleCancel}
-                    handleChange={handleChange}
                     handleImageUpload={handleImageUpload}
                   >
                     {isUploadingImages && (

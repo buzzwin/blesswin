@@ -1,16 +1,19 @@
 import { UserAvatar } from '@components/user/user-avatar';
 import { TweetDate } from './tweet-date';
 import { cn } from '@lib/utils';
+import { ReviewActions } from '@components/review/review-actions';
 import type { ReviewWithUser } from '@lib/types/review';
 
 type TweetReviewsProps = {
   reviews: ReviewWithUser[];
   loading: boolean;
+  onReviewDeleted?: (reviewId: string) => void;
 };
 
 export function TweetReviews({
   reviews,
-  loading
+  loading,
+  onReviewDeleted
 }: TweetReviewsProps): JSX.Element {
   if (loading) {
     return (
@@ -23,19 +26,24 @@ export function TweetReviews({
   return (
     <div className='space-y-4'>
       {reviews.map((review) => {
-        // Skip rendering if user data is missing
         if (!review.user) return null;
 
         return (
           <div
             key={review.id}
             className={cn(
-              'rounded-xl border border-gray-100 p-4',
+              'relative rounded-xl border border-gray-100 p-4',
               'bg-white/50 backdrop-blur-sm',
               'dark:border-gray-800 dark:bg-gray-900/50'
             )}
           >
-            {/* Review Header */}
+            <ReviewActions
+              reviewId={review.id}
+              userId={review.userId}
+              onDelete={() => onReviewDeleted?.(review.id)}
+            />
+
+            {/* Rest of the review content */}
             <div className='flex items-center gap-3'>
               <UserAvatar
                 src={review.user.photoURL || ''}
@@ -53,17 +61,13 @@ export function TweetReviews({
                   <span className='text-sm text-gray-500 dark:text-gray-400'>
                     ·
                   </span>
-                  <TweetDate
-                    tweetLink={`/reviews/${review.id}`}
-                    createdAt={review.createdAt}
-                  />
+                  <TweetDate createdAt={review.createdAt} viewTweet={false} />
                 </div>
-                <span className='text-2xl'>{review.rating}</span>
+                <span className='p-2 text-2xl'>{review.rating}</span>
               </div>
             </div>
 
-            {/* Review Content */}
-            <div className='mt-3 space-y-3'>
+            <div className='mt-3 space-y-4'>
               <p className='text-gray-600 dark:text-gray-300'>
                 {review.review}
               </p>
