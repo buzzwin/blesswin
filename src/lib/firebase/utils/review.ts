@@ -115,7 +115,7 @@ export const getMediaReviews = async (tmdbId: number): Promise<ReviewWithUser[]>
   }
 };
 
-export const getUserReviews = async (userId: string) => {
+export const getUserReviews = async (userId: string): Promise<ReviewWithUser[]> => {
   try {
     const q = query(
       reviewsCollection,
@@ -123,13 +123,25 @@ export const getUserReviews = async (userId: string) => {
       orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(q);
+    
+    // Get user data for the reviews
+    const userDoc = await getDoc(doc(usersCollection, userId));
+    const userData = userDoc.data() as User;
+
     return snapshot.docs.map(doc => {
       const data = doc.data();
       return {
         ...data,
         id: doc.id,
-        createdAt: data.createdAt?.toDate()
-      };
+        createdAt: data.createdAt, // Keep as Timestamp
+        user: {
+          id: userData.id,
+          name: userData.name,
+          username: userData.username,
+          photoURL: userData.photoURL,
+          verified: userData.verified
+        }
+      } as ReviewWithUser;
     });
   } catch (error) {
     console.error('Error fetching user reviews:', error);

@@ -194,7 +194,7 @@ export function ViewTweet({
           />
         )}
         <div className='inner:hover-animation inner:border-b inner:border-light-border dark:inner:border-dark-border'>
-          <TweetDate viewTweet tweetLink={tweetLink} createdAt={createdAt} />
+          <TweetDate createdAt={createdAt} viewTweet={true} />
           <TweetStats
             viewTweet
             reply={reply}

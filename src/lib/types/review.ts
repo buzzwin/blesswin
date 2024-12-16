@@ -6,14 +6,14 @@ export type Review = {
   userId: string;
   title: string;
   mediaType: 'movie' | 'tv';
-  rating: string; // emoji rating
+  rating: string;
   review: string;
   tags: string[];
   createdAt: Timestamp;
   updatedAt: Timestamp | null;
-  likes: string[]; // array of userIds who liked the review
+  likes: string[];
   posterPath: string;
-  tweetId?: string; // optional reference to a tweet
+  tweetId?: string;
 };
 
 export type ReviewWithUser = Review & {

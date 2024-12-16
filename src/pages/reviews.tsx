@@ -14,7 +14,7 @@ import {
 } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { reviewsCollection, usersCollection } from '@lib/firebase/collections';
-import { TweetReviews } from '@components/tweet/tweet-reviews';
+import { ReviewsList } from '@components/review/reviews-list';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import type { ReactElement, ReactNode } from 'react';
@@ -84,26 +84,11 @@ export default function Reviews(): JSX.Element {
       <SEO title='Reviews / Buzzwin' />
       <MainHeader title='All Reviews' />
       <div className='mt-0.5 px-4'>
-        {loading ? (
-          <Loading className='mt-5' />
-        ) : !reviews.length ? (
-          <StatsEmpty
-            title='No reviews yet'
-            description='Be the first to share your thoughts about a show or movie!'
-          />
-        ) : (
-          <div className='mt-4 space-y-4'>
-            <p className='text-gray-600 dark:text-gray-400'>
-              {reviews.length} {reviews.length === 1 ? 'review' : 'reviews'}{' '}
-              shared
-            </p>
-            <TweetReviews
-              reviews={reviews}
-              loading={false}
-              onReviewDeleted={handleReviewDeleted}
-            />
-          </div>
-        )}
+        <ReviewsList
+          reviews={reviews}
+          loading={loading}
+          onReviewDeleted={handleReviewDeleted}
+        />
       </div>
     </section>
   );

@@ -476,10 +476,9 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                                 <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
                                   <span>@{username}</span>
                                   <span>·</span>
-                                  <TweetDate
-                                    tweetLink={tweetLink}
-                                    createdAt={createdAt}
-                                  />
+                                  <div className='flex items-center gap-2'>
+                                    <TweetDate createdAt={createdAt} />
+                                  </div>
                                 </div>
                               </div>
                             </button>
@@ -733,10 +732,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         <span className='text-sm text-gray-500 dark:text-gray-400'>
                           ·
                         </span>
-                        <TweetDate
-                          tweetLink={`/buzz/${reply.id}`}
-                          createdAt={reply.createdAt}
-                        />
+                        <TweetDate createdAt={reply.createdAt} />
                       </div>
                       {reply.viewingActivity?.review && (
                         <p className='mt-2 text-gray-600 dark:text-gray-300'>
