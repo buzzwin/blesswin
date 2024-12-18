@@ -96,6 +96,12 @@ export function MobileSidebarModal({
 
   const userLink = `/user/${username}`;
 
+  const handleSignOut = async (): Promise<void> => {
+    await signOut();
+    logOutCloseModal();
+    closeModal();
+  };
+
   return (
     <>
       <Modal
@@ -112,12 +118,10 @@ export function MobileSidebarModal({
         closeModal={logOutCloseModal}
       >
         <ActionModal
-          useIcon
-          focusOnMainBtn
           title='Log out of Buzzwin?'
-          description='We would love for you to log back in another time. '
+          description='You can always log back in at any time.'
           mainBtnLabel='Log out'
-          action={signOut}
+          action={handleSignOut}
           closeModal={logOutCloseModal}
         />
       </Modal>
