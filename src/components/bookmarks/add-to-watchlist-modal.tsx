@@ -113,14 +113,25 @@ export function AddToWatchlistModal({
 
     try {
       setSaving(true);
-      const watchlistRef = await addDoc(collection(db, 'watchlists'), {
+
+      // Prepare watchlist data
+      const watchlistData: any = {
         name: newWatchlistName.trim(),
-        description: newWatchlistDesc.trim() || undefined,
         userId: user.id,
         createdAt: serverTimestamp(),
         isPublic,
         totalItems: 0
-      });
+      };
+
+      // Only add description if it's not empty
+      if (newWatchlistDesc.trim()) {
+        watchlistData.description = newWatchlistDesc.trim();
+      }
+
+      const watchlistRef = await addDoc(
+        collection(db, 'watchlists'),
+        watchlistData
+      );
 
       // Ensure all required fields are present and have default values
       const bookmarkData = {

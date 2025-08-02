@@ -49,16 +49,23 @@ export function useWatchlists() {
     if (!user?.id || !name.trim()) return;
 
     try {
-      await addDoc(collection(db, 'watchlists'), {
+      // Prepare watchlist data
+      const watchlistData: any = {
         name: name.trim(),
-        description: description?.trim() || undefined,
         userId: user.id,
         createdAt: serverTimestamp(),
         isPublic,
         totalItems: 0,
         movies: 0,
         tvShows: 0
-      });
+      };
+
+      // Only add description if it's not empty
+      if (description?.trim()) {
+        watchlistData.description = description.trim();
+      }
+
+      await addDoc(collection(db, 'watchlists'), watchlistData);
       toast.success('Watchlist created!');
     } catch (error) {
       console.error('Error creating watchlist:', error);
