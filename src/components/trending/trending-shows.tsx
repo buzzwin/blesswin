@@ -115,7 +115,7 @@ export function TrendingShows({
                     </div>
                   )}
                   <div className='min-w-0 flex-1'>
-                    <h3 className='truncate text-sm font-medium text-gray-900 transition-colors group-hover:text-amber-700 dark:text-white dark:group-hover:text-amber-300'>
+                    <h3 className='text-sm font-medium text-gray-900 transition-colors group-hover:text-amber-700 dark:text-white dark:group-hover:text-amber-300 break-words'>
                       {show.title}
                     </h3>
                     <div className='mt-1 flex items-center gap-1'>

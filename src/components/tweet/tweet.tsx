@@ -500,7 +500,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                             className={cn(
                               'text-xl font-bold',
                               'text-gray-900 dark:text-white',
-                              'line-clamp-2'
+                              'break-words'
                             )}
                           >
                             {viewingActivity.title}

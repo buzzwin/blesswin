@@ -115,10 +115,10 @@ export function MediaSearch({
     }
   };
 
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const query = e.target.value;
     setSearchQuery(query);
-    
+
     if (query.trim()) {
       // Debounce search
       const timeoutId = setTimeout(() => {
@@ -188,7 +188,7 @@ export function MediaSearch({
                   {/* Content */}
                   <div className='min-w-0 flex-1'>
                     <div className='flex items-center gap-2'>
-                      <h3 className='truncate font-medium text-gray-900 dark:text-white'>
+                      <h3 className='break-words font-medium text-gray-900 dark:text-white'>
                         {result.title}
                       </h3>
                       <span className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
