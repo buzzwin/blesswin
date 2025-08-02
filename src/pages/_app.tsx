@@ -4,6 +4,7 @@ import { isSupported, logEvent } from 'firebase/analytics';
 import { AuthContextProvider } from '@lib/context/auth-context';
 import { ThemeContextProvider } from '@lib/context/theme-context';
 import { AppHead } from '@components/common/app-head';
+import { GlobalLayout } from '@components/layout/global-layout';
 import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
 import type { AppProps } from 'next/app';
@@ -51,7 +52,9 @@ export default function App({
       <AppHead />
       <AuthContextProvider>
         <ThemeContextProvider>
-          {getLayout(<Component {...pageProps} />)}
+          <GlobalLayout>
+            {getLayout(<Component {...pageProps} />)}
+          </GlobalLayout>
         </ThemeContextProvider>
       </AuthContextProvider>
     </>

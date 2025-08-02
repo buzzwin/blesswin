@@ -69,7 +69,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <div className='grid grid-cols-[auto,1fr] gap-4'>
           <UserAvatar
             className='bg-gray-900'
-            src='/logo256.png'
+            src='/logo.PNG'
             alt='buzzwin'
             username='buzzwin'
           />

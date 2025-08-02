@@ -26,13 +26,70 @@ export function SwipeInterface({
   const [filter, setFilter] = useState<'all' | 'movie' | 'tv'>('all');
   const { user } = useAuth();
 
-  // Fetch popular movies and shows from TMDB
+  // Fetch AI-recommended content or fallback to popular content
   useEffect(() => {
     const fetchMedia = async (): Promise<void> => {
       try {
         setLoading(true);
 
-        // Fetch popular movies
+        if (user?.id) {
+          // Try to get AI-recommended content first
+          try {
+            const response = await fetch('/api/recommended-content', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ 
+                userId: user.id,
+                count: 30 
+              })
+            });
+
+            if (response.ok) {
+              const data = await response.json() as { content: Array<{
+                tmdbId: string;
+                title: string;
+                mediaType: 'movie' | 'tv';
+                posterPath: string;
+                overview: string;
+                releaseDate: string;
+                voteAverage: number;
+                reason?: string;
+                confidence?: number;
+              }>; source: string };
+              
+              // Convert AI recommendations to MediaCard format
+              const aiMedia = data.content.map((item) => ({
+                id: `${item.mediaType}-${item.tmdbId}`,
+                tmdbId: item.tmdbId,
+                title: item.title,
+                mediaType: item.mediaType,
+                posterPath: item.posterPath,
+                backdropPath: item.posterPath, // Use poster as backdrop fallback
+                overview: item.overview,
+                releaseDate: item.releaseDate,
+                voteAverage: item.voteAverage,
+                genres: [],
+                reason: item.reason,
+                confidence: item.confidence
+              }));
+
+                             setMediaCards(aiMedia as MediaCard[]);
+              
+              if (data.source === 'ai') {
+                toast.success('Showing AI-recommended content based on your preferences!');
+              } else {
+                toast.success('Showing popular content to get you started!');
+              }
+              return;
+            }
+          } catch (aiError) {
+            console.error('AI recommendations failed, falling back to popular content:', aiError);
+          }
+        }
+
+        // Fallback to popular content from TMDB
         const moviesResponse = await fetch(
           `https://api.themoviedb.org/3/movie/popular?api_key=${
             process.env.NEXT_PUBLIC_TMDB_API_KEY ||
@@ -51,7 +108,6 @@ export function SwipeInterface({
           }>;
         };
 
-        // Fetch popular TV shows
         const tvResponse = await fetch(
           `https://api.themoviedb.org/3/tv/popular?api_key=${
             process.env.NEXT_PUBLIC_TMDB_API_KEY ||
@@ -70,63 +126,41 @@ export function SwipeInterface({
           }>;
         };
 
-        // Combine and format the data
         const movies = moviesData.results
           .slice(0, 10)
-          .map(
-            (movie: {
-              id: number;
-              title: string;
-              poster_path: string;
-              backdrop_path: string;
-              overview: string;
-              release_date: string;
-              vote_average: number;
-            }) => ({
-              id: `movie-${movie.id}`,
-              tmdbId: movie.id.toString(),
-              title: movie.title,
-              mediaType: 'movie' as const,
-              posterPath: movie.poster_path,
-              backdropPath: movie.backdrop_path,
-              overview: movie.overview,
-              releaseDate: movie.release_date,
-              voteAverage: movie.vote_average,
-              genres: [] // We'll fetch genres separately if needed
-            })
-          );
+          .map((movie) => ({
+            id: `movie-${movie.id}`,
+            tmdbId: movie.id.toString(),
+            title: movie.title,
+            mediaType: 'movie' as const,
+            posterPath: movie.poster_path,
+            backdropPath: movie.backdrop_path,
+            overview: movie.overview,
+            releaseDate: movie.release_date,
+            voteAverage: movie.vote_average,
+            genres: []
+          }));
 
         const shows = tvData.results
           .slice(0, 10)
-          .map(
-            (show: {
-              id: number;
-              name: string;
-              poster_path: string;
-              backdrop_path: string;
-              overview: string;
-              first_air_date: string;
-              vote_average: number;
-            }) => ({
-              id: `tv-${show.id}`,
-              tmdbId: show.id.toString(),
-              title: show.name,
-              mediaType: 'tv' as const,
-              posterPath: show.poster_path,
-              backdropPath: show.backdrop_path,
-              overview: show.overview,
-              releaseDate: show.first_air_date,
-              voteAverage: show.vote_average,
-              genres: [] // We'll fetch genres separately if needed
-            })
-          );
+          .map((show) => ({
+            id: `tv-${show.id}`,
+            tmdbId: show.id.toString(),
+            title: show.name,
+            mediaType: 'tv' as const,
+            posterPath: show.poster_path,
+            backdropPath: show.backdrop_path,
+            overview: show.overview,
+            releaseDate: show.first_air_date,
+            voteAverage: show.vote_average,
+            genres: []
+          }));
 
         const allMedia = [...movies, ...shows];
-
-        // Shuffle the array for randomness
         const shuffled = allMedia.sort(() => Math.random() - 0.5);
-
         setMediaCards(shuffled);
+        
+        toast.success('Showing popular content! Rate more to get personalized recommendations.');
       } catch (error) {
         console.error('Error fetching media:', error);
         toast.error('Failed to load media');
@@ -136,26 +170,31 @@ export function SwipeInterface({
     };
 
     void fetchMedia();
-  }, []);
+  }, [user?.id]);
 
-  const handleSwipe = (rating: RatingType): void => {
-    if (currentIndex >= mediaCards.length) return;
+  const handleSwipe = (direction: 'left' | 'right' | 'middle'): void => {
+    if (!currentCard) return;
 
-    const currentMedia = mediaCards[currentIndex];
-
-    // Call the callback if provided
-    if (onRatingSubmit) {
-      onRatingSubmit(currentMedia.tmdbId, rating, currentMedia);
+    // Map direction to rating type
+    let rating: RatingType;
+    switch (direction) {
+      case 'left':
+        rating = 'hate';
+        break;
+      case 'right':
+        rating = 'love';
+        break;
+      case 'middle':
+        rating = 'meh';
+        break;
+      default:
+        rating = 'meh';
     }
 
-    // Show toast based on rating
-    const ratingMessages = {
-      love: '❤️ Loved it!',
-      hate: '💔 Hated it!',
-      meh: '😐 Not so much...'
-    };
-
-    toast.success(ratingMessages[rating]);
+    // Call the callback with the rating
+    if (onRatingSubmit) {
+      onRatingSubmit(currentCard.tmdbId, rating, currentCard);
+    }
 
     // Move to next card
     setCurrentIndex((prev) => prev + 1);
@@ -268,7 +307,7 @@ export function SwipeInterface({
         <Button
           variant='outline'
           size='lg'
-          onClick={() => handleSwipe('hate')}
+          onClick={() => handleSwipe('left')}
           className='h-12 w-12 rounded-full p-0'
         >
           <X className='h-6 w-6' />
@@ -277,7 +316,7 @@ export function SwipeInterface({
         <Button
           variant='outline'
           size='lg'
-          onClick={() => handleSwipe('meh')}
+          onClick={() => handleSwipe('middle')}
           className='h-12 w-12 rounded-full p-0'
         >
           <Meh className='h-6 w-6' />
@@ -286,7 +325,7 @@ export function SwipeInterface({
         <Button
           variant='outline'
           size='lg'
-          onClick={() => handleSwipe('love')}
+          onClick={() => handleSwipe('right')}
           className='h-12 w-12 rounded-full p-0'
         >
           <Heart className='h-6 w-6' />

@@ -1,58 +1,96 @@
+import { useEffect, useState } from 'react';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SEO } from '@components/common/seo';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
-import { useAuth } from '@lib/context/auth-context';
-import { useRouter } from 'next/router';
-import { ArrowLeft, Heart, X, Meh, BarChart3 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { getUserRatings, getRatingStats } from '@lib/firebase/utils/rating';
 import { Loading } from '@components/ui/loading';
+import { Heart, X, Meh, Trash2, Film, Tv } from 'lucide-react';
 import Image from 'next/image';
+import {
+  getUserRatings,
+  getRatingStats,
+  deleteRating
+} from '@lib/firebase/utils/rating';
 import type { MediaRating } from '@lib/types/rating';
+import { useAuth } from '@lib/context/auth-context';
+import { getTMDBImageUrl } from '@lib/utils';
+import { FallbackImage } from '@components/ui/fallback-image';
+
+interface RatingStats {
+  love: number;
+  hate: number;
+  meh: number;
+  total: number;
+}
 
 export default function RatingsPage(): JSX.Element {
   const { user } = useAuth();
-  const router = useRouter();
   const [ratings, setRatings] = useState<MediaRating[]>([]);
-  const [stats, setStats] = useState({ love: 0, hate: 0, meh: 0, total: 0 });
+  const [stats, setStats] = useState<RatingStats>({
+    love: 0,
+    hate: 0,
+    meh: 0,
+    total: 0
+  });
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [imageErrors, setImageErrors] = useState<Set<string>>(new Set());
+
+  const fetchRatings = async (): Promise<void> => {
+    if (!user) return;
+
+    try {
+      setLoading(true);
+      setError(null);
+
+      console.log('Fetching ratings for user:', user.id);
+      const userRatings = await getUserRatings(user.id);
+      console.log('Fetched ratings:', userRatings);
+
+      setRatings(userRatings);
+
+      const ratingStats = await getRatingStats(user.id);
+      setStats(ratingStats);
+    } catch (err) {
+      console.error('Error fetching ratings:', err);
+      setError(err instanceof Error ? err.message : 'Failed to fetch ratings');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteRating = async (ratingId: string): Promise<void> => {
+    if (!user) return;
+
+    try {
+      await deleteRating(ratingId, user.id);
+      setRatings((prev) => prev.filter((rating) => rating.id !== ratingId));
+
+      // Update stats
+      const updatedStats = await getRatingStats(user.id);
+      setStats(updatedStats);
+    } catch (err) {
+      console.error('Error deleting rating:', err);
+      setError(err instanceof Error ? err.message : 'Failed to delete rating');
+    }
+  };
+
+  const handleImageError = (imageUrl: string) => {
+    setImageErrors((prev) => new Set(prev).add(imageUrl));
+  };
 
   useEffect(() => {
-    const fetchRatings = async (): Promise<void> => {
-      if (!user?.id) return;
-
-      try {
-        setLoading(true);
-        const [userRatings, userStats] = await Promise.all([
-          getUserRatings(user.id),
-          getRatingStats(user.id)
-        ]);
-
-        setRatings(userRatings);
-        setStats(userStats);
-      } catch (error) {
-        console.error('Error fetching ratings:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     void fetchRatings();
-  }, [user?.id]);
-
-  const handleBackToHome = (): void => {
-    void router.push('/');
-  };
+  }, [user]);
 
   const getRatingIcon = (rating: string) => {
     switch (rating) {
       case 'love':
-        return <Heart className='h-4 w-4 fill-red-500 text-red-500' />;
+        return <Heart className='h-5 w-5 text-red-500' />;
       case 'hate':
-        return <X className='h-4 w-4 text-gray-500' />;
+        return <X className='h-5 w-5 text-gray-500' />;
       case 'meh':
-        return <Meh className='h-4 w-4 text-yellow-500' />;
+        return <Meh className='h-5 w-5 text-yellow-500' />;
       default:
         return null;
     }
@@ -61,28 +99,47 @@ export default function RatingsPage(): JSX.Element {
   const getRatingColor = (rating: string) => {
     switch (rating) {
       case 'love':
-        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-300';
+        return 'border-red-200 bg-red-50 dark:border-red-800/30 dark:bg-red-900/20';
       case 'hate':
-        return 'bg-gray-100 text-gray-800 dark:bg-gray-900/20 dark:text-gray-300';
+        return 'border-gray-200 bg-gray-50 dark:border-gray-800/30 dark:bg-gray-900/20';
       case 'meh':
-        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-300';
+        return 'border-yellow-200 bg-yellow-50 dark:border-yellow-800/30 dark:bg-yellow-900/20';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'border-gray-200 bg-white dark:border-gray-800/30 dark:bg-gray-800';
     }
   };
 
-  if (!user) {
+  if (loading) {
     return (
       <HomeLayout>
-        <div className='min-h-96 flex items-center justify-center'>
-          <Card className='mx-auto max-w-md'>
-            <CardContent className='p-6 text-center'>
-              <p className='mb-4 text-gray-600 dark:text-gray-400'>
-                Please sign in to view your ratings
-              </p>
-              <Button onClick={handleBackToHome}>Back to Home</Button>
-            </CardContent>
-          </Card>
+        <SEO title='My Ratings - Buzzwin' />
+        <div className='flex min-h-screen items-center justify-center'>
+          <div className='text-center'>
+            <Loading className='mx-auto mb-4 h-8 w-8' />
+            <p className='text-gray-600 dark:text-gray-400'>
+              Loading your ratings...
+            </p>
+          </div>
+        </div>
+      </HomeLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <HomeLayout>
+        <SEO title='My Ratings - Buzzwin' />
+        <div className='flex min-h-screen items-center justify-center'>
+          <div className='text-center'>
+            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30'>
+              <X className='h-8 w-8 text-red-600 dark:text-red-400' />
+            </div>
+            <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
+              Error Loading Ratings
+            </h2>
+            <p className='mb-4 text-gray-600 dark:text-gray-400'>{error}</p>
+            <Button onClick={() => void fetchRatings()}>Try Again</Button>
+          </div>
         </div>
       </HomeLayout>
     );
@@ -92,173 +149,179 @@ export default function RatingsPage(): JSX.Element {
     <HomeLayout>
       <SEO title='My Ratings - Buzzwin' />
 
-      <div className='min-h-screen bg-gradient-to-br from-purple-50 to-pink-50 dark:from-gray-900 dark:to-gray-800'>
-        <div className='container mx-auto px-4 py-8'>
-          {/* Header */}
-          <div className='mb-8'>
-            <Button variant='ghost' onClick={handleBackToHome} className='mb-4'>
-              <ArrowLeft className='mr-2 h-4 w-4' />
-              Back to Home
-            </Button>
+      <div className='mx-auto max-w-4xl px-4 py-8'>
+        <div className='mb-8'>
+          <h1 className='mb-2 text-3xl font-bold text-gray-900 dark:text-white'>
+            My Ratings
+          </h1>
+          <p className='text-gray-600 dark:text-gray-400'>
+            Your personalized collection of rated shows and movies
+          </p>
+        </div>
 
-            <div className='text-center'>
-              <h1 className='mb-2 text-4xl font-bold text-gray-900 dark:text-white'>
-                My Ratings
-              </h1>
-              <p className='text-lg text-gray-600 dark:text-gray-300'>
-                Your personal rating history and statistics
-              </p>
-            </div>
-          </div>
-
-          {/* Stats Cards */}
-          <div className='mb-8 grid grid-cols-1 gap-4 md:grid-cols-4'>
-            <Card>
-              <CardContent className='p-4 text-center'>
-                <div className='mb-2 flex items-center justify-center'>
-                  <Heart className='h-6 w-6 fill-red-500 text-red-500' />
-                </div>
-                <div className='text-2xl font-bold text-red-600'>
-                  {stats.love}
-                </div>
-                <div className='text-sm text-gray-600 dark:text-gray-400'>
+        {/* Stats Cards */}
+        <div className='mb-8 grid grid-cols-1 gap-4 sm:grid-cols-4'>
+          <Card className='border-green-200 bg-green-50 dark:border-green-800/30 dark:bg-green-900/20'>
+            <CardContent className='p-4'>
+              <div className='flex items-center gap-2'>
+                <Heart className='h-5 w-5 text-green-600 dark:text-green-400' />
+                <span className='text-sm font-medium text-green-800 dark:text-green-200'>
                   Loved
-                </div>
-              </CardContent>
-            </Card>
+                </span>
+              </div>
+              <p className='mt-1 text-2xl font-bold text-green-900 dark:text-green-100'>
+                {stats.love}
+              </p>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardContent className='p-4 text-center'>
-                <div className='mb-2 flex items-center justify-center'>
-                  <Meh className='h-6 w-6 text-yellow-500' />
-                </div>
-                <div className='text-2xl font-bold text-yellow-600'>
-                  {stats.meh}
-                </div>
-                <div className='text-sm text-gray-600 dark:text-gray-400'>
-                  Not so much
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card>
-              <CardContent className='p-4 text-center'>
-                <div className='mb-2 flex items-center justify-center'>
-                  <X className='h-6 w-6 text-gray-500' />
-                </div>
-                <div className='text-2xl font-bold text-gray-600'>
-                  {stats.hate}
-                </div>
-                <div className='text-sm text-gray-600 dark:text-gray-400'>
+          <Card className='border-red-200 bg-red-50 dark:border-red-800/30 dark:bg-red-900/20'>
+            <CardContent className='p-4'>
+              <div className='flex items-center gap-2'>
+                <X className='h-5 w-5 text-red-600 dark:text-red-400' />
+                <span className='text-sm font-medium text-red-800 dark:text-red-200'>
                   Hated
-                </div>
-              </CardContent>
-            </Card>
+                </span>
+              </div>
+              <p className='mt-1 text-2xl font-bold text-red-900 dark:text-red-100'>
+                {stats.hate}
+              </p>
+            </CardContent>
+          </Card>
 
-            <Card>
-              <CardContent className='p-4 text-center'>
-                <div className='mb-2 flex items-center justify-center'>
-                  <BarChart3 className='h-6 w-6 text-blue-500' />
-                </div>
-                <div className='text-2xl font-bold text-blue-600'>
-                  {stats.total}
-                </div>
-                <div className='text-sm text-gray-600 dark:text-gray-400'>
+          <Card className='border-yellow-200 bg-yellow-50 dark:border-yellow-800/30 dark:bg-yellow-900/20'>
+            <CardContent className='p-4'>
+              <div className='flex items-center gap-2'>
+                <Meh className='h-5 w-5 text-yellow-600 dark:text-yellow-400' />
+                <span className='text-sm font-medium text-yellow-800 dark:text-yellow-200'>
+                  Meh
+                </span>
+              </div>
+              <p className='mt-1 text-2xl font-bold text-yellow-900 dark:text-yellow-100'>
+                {stats.meh}
+              </p>
+            </CardContent>
+          </Card>
+
+          <Card className='border-blue-200 bg-blue-50 dark:border-blue-800/30 dark:bg-blue-900/20'>
+            <CardContent className='p-4'>
+              <div className='flex items-center gap-2'>
+                <Film className='h-5 w-5 text-blue-600 dark:text-blue-400' />
+                <span className='text-sm font-medium text-blue-800 dark:text-blue-200'>
                   Total
-                </div>
-              </CardContent>
-            </Card>
-          </div>
+                </span>
+              </div>
+              <p className='mt-1 text-2xl font-bold text-blue-900 dark:text-blue-100'>
+                {stats.total}
+              </p>
+            </CardContent>
+          </Card>
+        </div>
 
-          {/* Ratings List */}
-          {loading ? (
-            <div className='min-h-96 flex items-center justify-center'>
-              <Loading />
-            </div>
-          ) : ratings.length === 0 ? (
-            <Card className='mx-auto max-w-md'>
-              <CardContent className='p-6 text-center'>
-                <p className='mb-4 text-gray-600 dark:text-gray-400'>
-                  You haven&apos;t rated any shows or movies yet.
-                </p>
-                <Button onClick={() => router.push('/swipe')}>
-                  Start Rating
-                </Button>
-              </CardContent>
-            </Card>
-          ) : (
-            <div className='space-y-4'>
-              <h2 className='mb-4 text-2xl font-bold text-gray-900 dark:text-white'>
-                Recent Ratings
-              </h2>
+        {/* Ratings List */}
+        {ratings.length === 0 ? (
+          <Card>
+            <CardContent className='py-12 text-center'>
+              <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800'>
+                <Film className='h-8 w-8 text-gray-400' />
+              </div>
+              <h3 className='mb-2 text-lg font-medium text-gray-900 dark:text-white'>
+                No Ratings Yet
+              </h3>
+              <p className='text-gray-600 dark:text-gray-400'>
+                Start rating shows and movies to see them here!
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <div className='grid gap-4'>
+            {ratings.map((rating) => {
+              const imageUrl = getTMDBImageUrl(rating.posterPath, 'w154');
+              const hasImageError = imageUrl ? imageErrors.has(imageUrl) : true;
 
-              <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-                {ratings.map((rating) => (
-                  <Card key={rating.id} className='overflow-hidden'>
-                    <div className='relative h-48'>
-                      {rating.posterPath && rating.posterPath !== 'null' ? (
-                        <Image
-                          src={`https://image.tmdb.org/t/p/w500${rating.posterPath}`}
-                          alt={rating.title}
-                          layout='fill'
-                          className='object-cover'
-                          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
-                        />
-                      ) : (
-                        <div className='h-full w-full bg-gradient-to-br from-purple-400 to-pink-400' />
-                      )}
+              return (
+                <Card key={rating.id} className={getRatingColor(rating.rating)}>
+                  <CardContent className='p-4'>
+                    <div className='flex gap-4'>
+                      {/* Poster */}
+                      <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded-lg shadow-md'>
+                        {imageUrl && !hasImageError ? (
+                          <Image
+                            src={imageUrl}
+                            alt={rating.title}
+                            width={56}
+                            height={80}
+                            className='object-cover'
+                            onError={() => handleImageError(imageUrl)}
+                          />
+                        ) : (
+                          <FallbackImage
+                            mediaType={rating.mediaType}
+                            className='h-full w-full'
+                          />
+                        )}
+                      </div>
 
-                      {/* Rating Badge */}
-                      <div className='absolute top-2 right-2'>
-                        <span
-                          className={`rounded-full px-2 py-1 text-xs font-medium ${getRatingColor(
-                            rating.rating
-                          )}`}
-                        >
-                          {getRatingIcon(rating.rating)}
-                        </span>
+                      {/* Content */}
+                      <div className='min-w-0 flex-1'>
+                        <div className='mb-2 flex items-start justify-between'>
+                          <div className='min-w-0 flex-1'>
+                            <h3 className='truncate text-lg font-semibold text-gray-900 dark:text-white'>
+                              {rating.title}
+                            </h3>
+                            <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
+                              <span className='capitalize'>
+                                {rating.mediaType}
+                              </span>
+                              {rating.releaseDate && (
+                                <>
+                                  <span>•</span>
+                                  <span>
+                                    {new Date(rating.releaseDate).getFullYear()}
+                                  </span>
+                                </>
+                              )}
+                              {rating.voteAverage && rating.voteAverage > 0 && (
+                                <>
+                                  <span>•</span>
+                                  <span>
+                                    ⭐ {rating.voteAverage.toFixed(1)}
+                                  </span>
+                                </>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className='flex items-center gap-2'>
+                            {getRatingIcon(rating.rating)}
+                            <Button
+                              variant='ghost'
+                              size='sm'
+                              onClick={() => void handleDeleteRating(rating.id)}
+                              className='text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
+                            >
+                              <Trash2 className='h-4 w-4' />
+                            </Button>
+                          </div>
+                        </div>
+
+                        {rating.overview && (
+                          <p className='line-clamp-2 text-sm text-gray-600 dark:text-gray-400'>
+                            {rating.overview}
+                          </p>
+                        )}
+
+                        <div className='mt-2 text-xs text-gray-500 dark:text-gray-500'>
+                          Rated on {rating.createdAt.toLocaleDateString()}
+                        </div>
                       </div>
                     </div>
-
-                    <CardContent className='p-4'>
-                      <h3 className='mb-1 truncate font-semibold text-gray-900 dark:text-white'>
-                        {rating.title}
-                      </h3>
-
-                      <div className='mb-2 flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
-                        <span className='capitalize'>{rating.mediaType}</span>
-                        {rating.releaseDate && (
-                          <>
-                            <span>•</span>
-                            <span>
-                              {new Date(rating.releaseDate).getFullYear()}
-                            </span>
-                          </>
-                        )}
-                        {rating.voteAverage && rating.voteAverage > 0 && (
-                          <>
-                            <span>•</span>
-                            <span>⭐ {rating.voteAverage.toFixed(1)}</span>
-                          </>
-                        )}
-                      </div>
-
-                      {rating.overview && (
-                        <p className='line-clamp-2 text-sm text-gray-600 dark:text-gray-400'>
-                          {rating.overview}
-                        </p>
-                      )}
-
-                      <div className='mt-2 text-xs text-gray-500 dark:text-gray-500'>
-                        Rated on {rating.createdAt.toLocaleDateString()}
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+                  </CardContent>
+                </Card>
+              );
+            })}
+          </div>
+        )}
       </div>
     </HomeLayout>
   );

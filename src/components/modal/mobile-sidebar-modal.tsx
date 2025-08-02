@@ -10,12 +10,26 @@ import { MobileSidebarLink } from '@components/sidebar/mobile-sidebar-link';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from './modal';
 import { DisplayModal } from './display-modal';
+import { Sparkles, Clock, Star, TrendingUp } from 'lucide-react';
 import type { NavLink } from '@components/sidebar/sidebar';
 import type { User } from '@lib/types/user';
 
 export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
 
-const topNavLinks: Readonly<MobileNavLink[]> = [];
+const topNavLinks: Readonly<MobileNavLink[]> = [
+  {
+    href: '/recommendations',
+    linkName: 'AI Recommendations',
+    iconName: 'SparklesIcon',
+    disabled: false
+  },
+  {
+    href: '/reviews',
+    linkName: 'Recent Reviews',
+    iconName: 'ClockIcon',
+    disabled: false
+  }
+];
 
 const bottomNavLinks: Readonly<MobileNavLink[]> = [
   // {

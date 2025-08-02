@@ -25,6 +25,8 @@ export interface MediaCard {
   voteAverage: number;
   backdropPath?: string;
   genres?: string[];
+  reason?: string;
+  confidence?: number;
 }
 
 export interface SwipeAction {

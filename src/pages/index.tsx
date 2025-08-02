@@ -14,10 +14,12 @@ import { createReview } from '@lib/firebase/utils/review';
 import { sendTweet } from '@lib/firebase/utils/tweet';
 import { SwipeInterface } from '@components/swipe/swipe-interface';
 import { saveRating } from '@lib/firebase/utils/rating';
+import { RecommendationsCard } from '@components/recommendations/recommendations-card';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { LogOut, X, Heart, Meh } from 'lucide-react';
+import { LogOut, X, Heart, Meh, Sparkles } from 'lucide-react';
 import { BookOpen, Filter, TrendingUp, BarChart3 } from 'lucide-react';
+import LogoIcon from '@components/ui/logo';
 import { toast } from 'react-hot-toast';
 import type { ReactElement, ReactNode } from 'react';
 import type { RatingType, MediaCard } from '@lib/types/rating';
@@ -152,13 +154,13 @@ export default function Home(): JSX.Element {
     <div className='dark:to-amber-950/10 min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
       <SEO title='Buzzwin - What will you watch next?' />
 
-      {/* Professional Header */}
-      <header className='sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95'>
+      {/* Professional Header - Desktop Only */}
+      <header className='hidden md:block sticky top-0 z-50 border-b border-gray-200 bg-white/95 backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95'>
         <div className='mx-auto max-w-7xl px-6 py-6'>
           <div className='mb-8 flex items-center justify-between'>
             <div className='flex items-center gap-4'>
-              <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg'>
-                <BookOpen className='h-6 w-6 text-white' />
+              <div className='flex h-16 w-16 items-center justify-center'>
+                <LogoIcon className='h-16 w-16' />
               </div>
               <div>
                 <h1 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
@@ -178,7 +180,7 @@ export default function Home(): JSX.Element {
                   variant='outline'
                   size='sm'
                   onClick={() => router.push('/ratings')}
-                  className='hidden border-blue-300 px-6 py-2 font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20 md:flex'
+                  className='border-blue-300 px-6 py-2 font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
                 >
                   <BarChart3 className='mr-2 h-4 w-4' />
                   My Ratings
@@ -228,6 +230,24 @@ export default function Home(): JSX.Element {
         </div>
       </header>
 
+      {/* Mobile Input Section */}
+      <div className='md:hidden px-4 py-4'>
+        <div className='rounded-2xl border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
+          <ModernInput
+            value={inputValue}
+            onChange={setInputValue}
+            placeholder={
+              user
+                ? 'Share what you are watching...'
+                : 'Sign in to share what you are watching...'
+            }
+            onSignIn={handleSignIn}
+            onMediaSelect={setSelectedMedia}
+            onSubmit={handleSubmitReview}
+          />
+        </div>
+      </div>
+
       {/* Main Content */}
       <main className='flex-1'>
         <div className='mx-auto max-w-7xl px-6 py-12'>
@@ -241,6 +261,19 @@ export default function Home(): JSX.Element {
                 Swipe right to love, left to hate, or tap middle for &quot;not
                 so much&quot;
               </p>
+              {user && (
+                <div className='mb-4'>
+                  <Button
+                    variant='link'
+                    size='sm'
+                    onClick={() => router.push('/recommendations')}
+                    className='text-amber-600 hover:text-amber-700 dark:text-amber-400 dark:hover:text-amber-300'
+                  >
+                    <Sparkles className='mr-2 h-4 w-4' />
+                    Rate Movies and Shows to get AI Recommendations
+                  </Button>
+                </div>
+              )}
 
               {/* Compact Instructions */}
               <div className='mb-6 flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400'>
@@ -372,33 +405,7 @@ export default function Home(): JSX.Element {
               <div className='col-span-3'>
                 <div className='sticky top-24 space-y-6'>
                   {/* My Recommendations */}
-                  <Card className='border-purple-200 bg-white shadow-lg dark:border-purple-800/30 dark:bg-gray-800'>
-                    <CardHeader>
-                      <CardTitle className='text-lg'>
-                        My Recommendations
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className='space-y-3'>
-                      <div className='py-8 text-center'>
-                        <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
-                          <TrendingUp className='h-8 w-8 text-purple-600 dark:text-purple-400' />
-                        </div>
-                        <h4 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
-                          Personalized Recommendations
-                        </h4>
-                        <p className='mb-4 text-xs text-gray-600 dark:text-gray-400'>
-                          Based on your ratings and preferences
-                        </p>
-                        <Button
-                          variant='outline'
-                          size='sm'
-                          className='w-full border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
-                        >
-                          Coming Soon
-                        </Button>
-                      </div>
-                    </CardContent>
-                  </Card>
+                  <RecommendationsCard />
 
                   {/* Quick Stats */}
                   <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>

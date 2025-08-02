@@ -2,6 +2,7 @@ import Link from 'next/link';
 import cn from 'clsx';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { Sparkles, Clock } from 'lucide-react';
 import type { MobileNavLink } from '@components/modal/mobile-sidebar-modal';
 
 type MobileSidebarLinkProps = MobileNavLink & {
@@ -15,6 +16,22 @@ export function MobileSidebarLink({
   iconName,
   disabled
 }: MobileSidebarLinkProps): JSX.Element {
+  const getIcon = () => {
+    switch (iconName) {
+      case 'SparklesIcon':
+        return <Sparkles className={bottom ? 'h-5 w-5' : 'h-7 w-7'} />;
+      case 'ClockIcon':
+        return <Clock className={bottom ? 'h-5 w-5' : 'h-7 w-7'} />;
+      default:
+        return (
+          <HeroIcon
+            className={bottom ? 'h-5 w-5' : 'h-7 w-7'}
+            iconName={iconName}
+          />
+        );
+    }
+  };
+
   return (
     <Link href={href} key={href}>
       <a
@@ -27,10 +44,7 @@ export function MobileSidebarLink({
         )}
         onClick={disabled ? preventBubbling() : undefined}
       >
-        <HeroIcon
-          className={bottom ? 'h-5 w-5' : 'h-7 w-7'}
-          iconName={iconName}
-        />
+        {getIcon()}
         {linkName}
       </a>
     </Link>

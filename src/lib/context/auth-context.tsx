@@ -102,7 +102,7 @@ export function AuthContextProvider({
           accent: null,
           website: null,
           location: null,
-          photoURL: photoURL || '/logo128.png',
+          photoURL: photoURL || '/logo.PNG',
           username: randomUsername,
           verified: false,
           following: [],
