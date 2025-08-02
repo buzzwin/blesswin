@@ -54,5 +54,18 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isOwner(userId);
     }
+
+    // Ratings collection for Tinder-style app
+    match /ratings/{ratingId} {
+      allow read: if true;
+      allow create: if isSignedIn() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.tmdbId is string
+        && request.resource.data.title is string
+        && request.resource.data.mediaType in ['movie', 'tv']
+        && request.resource.data.rating in ['love', 'hate', 'meh'];
+      allow update: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
   }
 }

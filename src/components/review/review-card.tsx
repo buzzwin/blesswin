@@ -15,7 +15,7 @@ export function ReviewCard({ review, onDelete }: ReviewCardProps): JSX.Element {
   return (
     <div
       className={cn(
-        'relative rounded-xl border border-gray-100 p-4',
+        'relative rounded-xl border border-gray-100 p-6',
         'bg-white/50 backdrop-blur-sm',
         'dark:border-gray-800 dark:bg-gray-900/50'
       )}

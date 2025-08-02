@@ -37,7 +37,7 @@ export function ModernTweetCard({
         className
       )}
     >
-      <CardContent className='flex flex-1 flex-col p-4'>
+      <CardContent className='flex flex-1 flex-col p-6'>
         <div className='mb-3 flex items-start gap-3'>
           <div className='flex-shrink-0 rounded-lg bg-amber-100 p-2 dark:bg-amber-900/30'>
             <BookOpen className='h-4 w-4 text-amber-600 dark:text-amber-400' />
@@ -115,7 +115,7 @@ export function ModernTweetList({
   return (
     <div
       className={cn(
-        'grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4',
+        'grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3',
         className
       )}
     >

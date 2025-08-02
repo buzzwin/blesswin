@@ -5,7 +5,7 @@ import { TMDBResult, TMDBResponse } from './types';
 import axios from 'axios';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
 import { useAuth } from '@lib/context/auth-context';
-import Image from 'next/image';
+import NextImage from 'next/image';
 import cn from 'clsx';
 import { DefaultAvatar } from '@components/ui/default-avatar';
 
@@ -172,18 +172,13 @@ const ActivityFeed: React.FC = () => {
             <div className='group relative h-full w-full'>
               {/* Backdrop Image */}
               <div className='absolute inset-0 transition-transform duration-700 group-hover:scale-105'>
-                <Image
+                <NextImage
                   src={`https://image.tmdb.org/t/p/original${activity.poster_path}`}
                   alt={activity.title}
+                  layout='fill'
                   className='object-cover transition-all duration-700'
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    position: 'absolute'
-                  }}
-                  width={1920}
-                  height={1080}
                   priority={index === currentIndex}
+                  sizes='100vw'
                 />
                 <div
                   className={cn(
@@ -215,21 +210,16 @@ const ActivityFeed: React.FC = () => {
                         'dark:shadow-black/50 dark:group-hover:shadow-emerald-500/10'
                       )}
                     >
-                      <Image
+                      <NextImage
                         src={`https://image.tmdb.org/t/p/w500${activity.poster_path}`}
                         alt={activity.title}
+                        layout='fill'
                         className={cn(
                           'rounded-lg object-cover transition-all duration-700',
                           'ring-1 ring-white/10 group-hover:ring-emerald-500/50',
                           'dark:ring-black/20 dark:group-hover:ring-emerald-500/30'
                         )}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          position: 'absolute'
-                        }}
-                        width={500}
-                        height={750}
+                        sizes='(max-width: 768px) 96px, (max-width: 1024px) 128px, 176px'
                       />
                     </div>
                   )}
@@ -257,7 +247,7 @@ const ActivityFeed: React.FC = () => {
                             )}
                           />
                         ) : activity.photoURL ? (
-                          <Image
+                          <NextImage
                             src={activity.photoURL}
                             alt={activity.username}
                             className='rounded-full'
