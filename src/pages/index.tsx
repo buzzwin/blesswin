@@ -61,8 +61,8 @@ export default function Home(): JSX.Element {
         rating: '', // No rating for now
         review: inputValue,
         tags: [], // No tags for now
-        posterPath: selectedMedia.poster_path,
-        tweetId: undefined // Will be set after tweet creation
+        posterPath: selectedMedia.poster_path
+        // tweetId will be added later if needed
       };
 
       // Create the review first

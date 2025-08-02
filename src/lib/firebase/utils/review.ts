@@ -32,8 +32,13 @@ export const createReview = async (
       throw new Error('Missing required fields for review');
     }
 
-    const firestoreData: WithFieldValue<Omit<Review, 'id'>> = {
-      ...reviewData,
+    // Filter out undefined values to prevent Firestore errors
+    const cleanReviewData = Object.fromEntries(
+      Object.entries(reviewData).filter(([_, value]) => value !== undefined)
+    ) as any;
+
+    const firestoreData = {
+      ...cleanReviewData,
       createdAt: serverTimestamp(),
       updatedAt: null,
       likes: []
