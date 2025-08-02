@@ -13,8 +13,15 @@ import type { ReactElement, ReactNode } from 'react';
 
 export default function UserProfile(): JSX.Element {
   const { user } = useUser();
-  const { query } = useRouter();
+  const { query, push } = useRouter();
   const userId = query.id as string;
+
+  // Redirect "home" to the main page
+  useEffect(() => {
+    if (userId === 'home') {
+      void push('/');
+    }
+  }, [userId, push]);
 
   const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
   const [loading, setLoading] = useState(true);

@@ -53,9 +53,9 @@ export function UpdateUsername(): JSX.Element {
   }, [inputValue]);
 
   useEffect(() => {
-    if (!user?.updatedAt) openModal();
+    if (user && !user?.updatedAt) openModal();
     else setAlreadySet(true);
-  }, []);
+  }, [user]);
 
   const changeUsername = async (
     e: FormEvent<HTMLFormElement>
@@ -115,30 +115,32 @@ export function UpdateUsername(): JSX.Element {
           />
         </UsernameModal>
       </Modal>
-      <Button
-        className={cn(
-          'group relative p-2',
-          'transition-all duration-200',
-          'rounded-full',
-          'bg-transparent dark:bg-transparent',
-          'hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10',
-          'active:bg-emerald-500/20 dark:active:bg-emerald-500/20',
-          'focus-visible:ring-2 focus-visible:ring-emerald-500/50',
-          'disabled:opacity-50'
-        )}
-        onClick={openModal}
-      >
-        <HeroIcon
+      {user && (
+        <Button
           className={cn(
-            'h-5 w-5',
-            'text-gray-700 dark:text-gray-200',
-            'transition-colors duration-200',
-            'group-hover:text-emerald-500 dark:group-hover:text-emerald-400'
+            'group relative p-2',
+            'transition-all duration-200',
+            'rounded-full',
+            'bg-transparent dark:bg-transparent',
+            'hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10',
+            'active:bg-emerald-500/20 dark:active:bg-emerald-500/20',
+            'focus-visible:ring-2 focus-visible:ring-emerald-500/50',
+            'disabled:opacity-50'
           )}
-          iconName='UserIcon'
-        />
-        <ToolTip tip='Update Username' />
-      </Button>
+          onClick={openModal}
+        >
+          <HeroIcon
+            className={cn(
+              'h-5 w-5',
+              'text-gray-700 dark:text-gray-200',
+              'transition-colors duration-200',
+              'group-hover:text-emerald-500 dark:group-hover:text-emerald-400'
+            )}
+            iconName='UserIcon'
+          />
+          <ToolTip tip='Update Username' />
+        </Button>
+      )}
     </>
   );
 }

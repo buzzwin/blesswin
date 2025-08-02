@@ -43,6 +43,7 @@ import type { ViewingActivity } from '@components/activity/types';
 import type { ReviewWithUser } from '@lib/types/review';
 import type { TweetWithUser } from '@lib/types/tweet';
 import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
+import { TruncatedText } from '@components/ui/truncated-text';
 
 export type TweetProps = Tweet & {
   user: User;
@@ -577,14 +578,11 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
               {/* Review */}
               {viewingActivity?.review && (
-                <p
-                  className={cn(
-                    'text-gray-600 dark:text-gray-400',
-                    'text-[15px] leading-relaxed'
-                  )}
-                >
-                  {viewingActivity.review}
-                </p>
+                <TruncatedText
+                  text={viewingActivity.review}
+                  maxLength={150}
+                  showSeeMore={true}
+                />
               )}
 
               {/* Additional Images */}

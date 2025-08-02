@@ -1,0 +1,372 @@
+import { useState, useRef } from 'react';
+import type { ChangeEvent } from 'react';
+
+// Components
+import { UserAvatar } from '@components/user/user-avatar';
+import { Button } from '@components/ui/button-shadcn';
+import { Card, CardContent } from '@components/ui/card';
+import { Textarea } from '@components/ui/textarea';
+import { Separator } from '@components/ui/separator';
+import {
+  Plus,
+  Image as ImageIcon,
+  Smile,
+  Send,
+  BookOpen,
+  Search,
+  Sparkles
+} from 'lucide-react';
+import { MediaSearch } from './media-search';
+
+// Utils
+import { cn } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
+import { toast } from 'react-hot-toast';
+
+type ModernInputProps = {
+  placeholder?: string;
+  onChange?: (value: string) => void;
+  value?: string;
+  onSubmit?: () => void;
+  onSignIn?: () => void;
+  onMediaSelect?: (media: any) => void;
+};
+
+export function ModernInput({
+  placeholder = 'Share what you are watching...',
+  onChange,
+  value = '',
+  onSubmit,
+  onSignIn,
+  onMediaSelect
+}: ModernInputProps): JSX.Element {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [showMediaSearch, setShowMediaSearch] = useState(false);
+  const [selectedMedia, setSelectedMedia] = useState<any>(null);
+  const [generatingReview, setGeneratingReview] = useState(false);
+
+  const { user } = useAuth();
+  const { name, username, photoURL } = user ?? {};
+
+  const inputRef = useRef<HTMLTextAreaElement>(null);
+  const inputLimit = 500; // Increased for AI-generated reviews
+
+  const handleSubmit = (): void => {
+    if (!value.trim()) return;
+
+    setLoading(true);
+    try {
+      onSubmit?.();
+      setIsExpanded(false);
+    } catch (error) {
+      console.error('Error submitting:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLTextAreaElement>): void => {
+    onChange?.(e.target.value);
+  };
+
+  const inputLength = value.length;
+  const isValidInput = !!value.trim().length;
+  const isCharLimitExceeded = inputLength > inputLimit;
+
+  const isValidTweet = !isCharLimitExceeded && isValidInput;
+
+  const handleCancel = (): void => {
+    setIsExpanded(false);
+    onChange?.('');
+    setSelectedMedia(null);
+    setShowMediaSearch(false);
+  };
+
+  const handleMediaSelect = (media: any): void => {
+    setSelectedMedia(media);
+    onMediaSelect?.(media);
+  };
+
+  const generateAIReview = async (): Promise<void> => {
+    if (!selectedMedia) return;
+
+    setGeneratingReview(true);
+    try {
+      const response = await fetch('/api/generate-review', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: selectedMedia?.title ? String(selectedMedia.title) : '',
+          overview: selectedMedia?.overview
+            ? String(selectedMedia.overview)
+            : ''
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate review');
+      }
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          (data.message as string) || 'Failed to generate review'
+        );
+      }
+
+      if (data.review && typeof data.review === 'string') {
+        const reviewText = data.review as string;
+        onChange?.(reviewText);
+        toast.success('AI review generated!');
+      } else {
+        throw new Error('No review received from API');
+      }
+    } catch (error) {
+      console.error('Error generating review:', error);
+      const errorMessage =
+        error instanceof Error ? error.message : 'Failed to generate AI review';
+      toast.error(errorMessage);
+    } finally {
+      setGeneratingReview(false);
+    }
+  };
+
+  return (
+    <div className='w-full transition-all duration-300'>
+      {/* Collapsed view - Goodreads Style */}
+      {!isExpanded && (
+        <Card
+          className={cn(
+            'cursor-pointer transition-all duration-200 hover:shadow-md',
+            'border-amber-200 dark:border-amber-800/30',
+            'hover:border-amber-300 dark:hover:border-amber-700',
+            'bg-white dark:bg-gray-800',
+            'dark:hover:bg-amber-950/10 hover:bg-amber-50'
+          )}
+          onClick={() => (user ? setIsExpanded(true) : onSignIn?.())}
+        >
+          <CardContent className='p-4'>
+            <div className='flex items-center gap-4'>
+              <UserAvatar
+                src={photoURL || ''}
+                alt={name ?? 'User'}
+                username={username ?? 'user'}
+              />
+              <p className='flex-1 text-gray-500 dark:text-gray-400'>
+                {placeholder}
+              </p>
+              <div className='flex items-center gap-2'>
+                <BookOpen className='h-5 w-5 text-amber-500' />
+                <Plus className='h-5 w-5 text-amber-500' />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Expanded view - Goodreads Style */}
+      {isExpanded && (
+        <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
+          <CardContent className='p-6'>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+                console.log('Form submitted successfully');
+              }}
+            >
+              {loading && (
+                <div className='mb-4 h-1 animate-pulse rounded-full bg-amber-500' />
+              )}
+
+              <div className='flex gap-4'>
+                <UserAvatar
+                  src={photoURL || ''}
+                  alt={name ?? 'User'}
+                  username={username ?? 'user'}
+                />
+
+                <div className='flex-1 space-y-4'>
+                  {/* Media Search */}
+                  {showMediaSearch ? (
+                    <div className='space-y-3'>
+                      <MediaSearch
+                        onMediaSelect={handleMediaSelect}
+                        onClose={() => setShowMediaSearch(false)}
+                      />
+                      <div className='text-center text-sm text-amber-600 dark:text-amber-400'>
+                        Please search for and select a movie or TV show to
+                        review.
+                      </div>
+                    </div>
+                  ) : !selectedMedia ? (
+                    <div className='text-center text-sm text-amber-600 dark:text-amber-400'>
+                      Please search for and select a movie or TV show to review.
+                    </div>
+                  ) : (
+                    <div className='space-y-4'>
+                      {/* Selected Media Display */}
+                      <div className='flex items-start gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20'>
+                        <img
+                          src={`https://image.tmdb.org/t/p/w154${
+                            selectedMedia?.poster_path
+                              ? String(selectedMedia.poster_path)
+                              : ''
+                          }`}
+                          alt={
+                            selectedMedia?.title
+                              ? String(selectedMedia.title)
+                              : 'Movie poster'
+                          }
+                          className='h-24 w-16 rounded-lg object-cover shadow-md'
+                        />
+                        <div className='flex-1'>
+                          <div className='flex items-start justify-between'>
+                            <div>
+                              <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                                {selectedMedia?.title
+                                  ? String(selectedMedia.title)
+                                  : 'Unknown Title'}
+                              </h3>
+                              <p className='text-sm text-gray-500 dark:text-gray-400'>
+                                {selectedMedia.mediaType === 'movie'
+                                  ? 'Movie'
+                                  : 'TV Show'}
+                              </p>
+                              {selectedMedia.releaseDate && (
+                                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                  {selectedMedia?.releaseDate
+                                    ? new Date(
+                                        String(selectedMedia.releaseDate)
+                                      ).getFullYear()
+                                    : ''}
+                                </p>
+                              )}
+                            </div>
+                            <Button
+                              type='button'
+                              variant='ghost'
+                              size='sm'
+                              onClick={() => setSelectedMedia(null)}
+                              className='text-gray-400 hover:text-gray-600'
+                            >
+                              ×
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Review Textarea */}
+                      <div className='space-y-3'>
+                        <div className='flex items-center justify-between'>
+                          <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                            Write your review
+                          </h4>
+                          <Button
+                            type='button'
+                            variant='outline'
+                            size='sm'
+                            onClick={generateAIReview}
+                            disabled={generatingReview || loading}
+                            className='gap-2 border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                          >
+                            <Sparkles className='h-4 w-4' />
+                            {generatingReview ? 'Generating...' : 'AI Review'}
+                          </Button>
+                        </div>
+                        <Textarea
+                          ref={inputRef}
+                          placeholder={`Share your thoughts about ${
+                            selectedMedia?.title
+                              ? String(selectedMedia.title)
+                              : 'this show'
+                          }...`}
+                          value={value}
+                          onChange={handleChange}
+                          className='min-h-[120px] resize-none border-0 bg-transparent text-gray-900 shadow-none placeholder:text-gray-400 focus-visible:ring-0 dark:text-gray-100 dark:placeholder:text-gray-500'
+                          disabled={loading}
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  <Separator className='bg-amber-200 dark:bg-amber-800/30' />
+
+                  <div className='flex items-center justify-between'>
+                    <div className='flex items-center gap-2'>
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='icon'
+                        disabled={loading}
+                        onClick={() => setShowMediaSearch(!showMediaSearch)}
+                        className={cn(
+                          'text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/20',
+                          showMediaSearch && 'bg-amber-100 dark:bg-amber-900/20'
+                        )}
+                      >
+                        <Search className='h-4 w-4' />
+                      </Button>
+
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='icon'
+                        disabled={loading}
+                        className='text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/20'
+                      >
+                        <ImageIcon className='h-4 w-4' />
+                      </Button>
+
+                      <Button
+                        type='button'
+                        variant='ghost'
+                        size='icon'
+                        disabled={loading}
+                        className='text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/20'
+                      >
+                        <Smile className='h-4 w-4' />
+                      </Button>
+                    </div>
+
+                    <div className='flex items-center gap-2'>
+                      <Button
+                        type='button'
+                        variant='outline'
+                        onClick={handleCancel}
+                        disabled={loading}
+                        className='border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                      >
+                        Cancel
+                      </Button>
+
+                      <Button
+                        type='submit'
+                        disabled={!isValidTweet || loading || !selectedMedia}
+                        className='gap-2 bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700'
+
+                      >
+                        <Send className='h-4 w-4' />
+                        Share Review
+                      </Button>
+                    </div>
+                  </div>
+
+                  {inputLength > 0 && (
+                    <div className='text-right text-sm text-amber-600 dark:text-amber-400'>
+                      {inputLength}/{inputLimit}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </form>
+          </CardContent>
+        </Card>
+      )}
+    </div>
+  );
+}

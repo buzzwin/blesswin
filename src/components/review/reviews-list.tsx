@@ -21,6 +21,9 @@ export function ReviewsList({
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [filterBy, setFilterBy] = useState<FilterOption>('all');
 
+  console.log('ReviewsList received reviews:', reviews);
+  console.log('Current filterBy:', filterBy);
+
   if (loading) {
     return (
       <div className='flex justify-center py-4'>
@@ -31,6 +34,14 @@ export function ReviewsList({
 
   const filteredReviews = reviews.filter((review) => {
     if (filterBy === 'all') return true;
+    console.log(
+      'Filtering review:',
+      review.title,
+      'mediaType:',
+      review.mediaType,
+      'filterBy:',
+      filterBy
+    );
     return review.mediaType === filterBy;
   });
 
@@ -52,7 +63,10 @@ export function ReviewsList({
         {/* Filter Buttons */}
         <div className='flex gap-2'>
           <button
-            onClick={() => setFilterBy('all')}
+            onClick={() => {
+              console.log('All button clicked');
+              setFilterBy('all');
+            }}
             className={cn(
               'rounded-lg px-3 py-1.5 text-sm font-medium',
               filterBy === 'all'
@@ -63,7 +77,10 @@ export function ReviewsList({
             All
           </button>
           <button
-            onClick={() => setFilterBy('movie')}
+            onClick={() => {
+              console.log('Movie button clicked');
+              setFilterBy('movie');
+            }}
             className={cn(
               'rounded-lg px-3 py-1.5 text-sm font-medium',
               filterBy === 'movie'
@@ -74,7 +91,10 @@ export function ReviewsList({
             Movies
           </button>
           <button
-            onClick={() => setFilterBy('tv')}
+            onClick={() => {
+              console.log('TV button clicked');
+              setFilterBy('tv');
+            }}
             className={cn(
               'rounded-lg px-3 py-1.5 text-sm font-medium',
               filterBy === 'tv'
@@ -123,7 +143,7 @@ export function ReviewsList({
           </p>
         </div>
       ) : (
-        <div className='space-y-4'>
+        <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
           {sortedReviews.map((review) => (
             <ReviewCard
               key={review.id}

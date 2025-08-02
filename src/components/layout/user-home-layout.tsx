@@ -46,22 +46,6 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
       <motion.section {...variants} exit={undefined}>
         {loading ? (
           <Loading className='mt-5' />
-        ) : !userData ? (
-          <>
-            <UserHomeCover />
-            <div className='flex flex-col gap-8'>
-              <div className='relative flex flex-col gap-3 px-4 py-3'>
-                <UserHomeAvatar />
-                <p className='text-xl font-bold'>@{id}</p>
-              </div>
-              <div className='p-8 text-center'>
-                <p className='text-3xl font-bold'>This account doesn’t exist</p>
-                <p className='text-light-secondary dark:text-dark-secondary'>
-                  Try searching for another.
-                </p>
-              </div>
-            </div>
-          </>
         ) : (
           <>
             <UserHomeCover coverData={coverData} />
@@ -72,27 +56,21 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                   <UserEditProfile />
                 ) : (
                   <div className='flex gap-2 self-start'>
-                    <UserShare username={userData.username} />
-                    {/* <Button
-                      className='relative p-2 border cursor-not-allowed dark-bg-tab group border-light-line-reply hover:bg-light-primary/10 active:bg-light-primary/20 dark:border-light-secondary dark:hover:bg-dark-primary/10 dark:active:bg-dark-primary/20'
-                    >
-                      <HeroIcon className='w-5 h-5' iconName='EnvelopeIcon' />
-                      <ToolTip tip='Message' />
-                    </Button> */}
+                    <UserShare username={userData?.username || (Array.isArray(id) ? id[0] : id) || ''} />
                     <FollowButton
-                      userTargetId={userData.id}
-                      userTargetUsername={userData.username}
+                      userTargetId={userData?.id || ''}
+                      userTargetUsername={userData?.username || (Array.isArray(id) ? id[0] : id) || ''}
                     />
                     {isAdmin && <UserEditProfile hide />}
                   </div>
                 )}
               </div>
-              <UserDetails {...userData} />
+              {userData && <UserDetails {...userData} />}
             </div>
           </>
         )}
       </motion.section>
-      {userData && (
+      {(userData || !loading) && (
         <>
           <UserNav />
           {children}

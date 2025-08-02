@@ -1,12 +1,7 @@
-import Link from 'next/link';
-import { useAuth } from '@lib/context/auth-context';
-import { useWindow } from '@lib/context/window-context';
 import { useModal } from '@lib/hooks/useModal';
 import { Modal } from '@components/modal/modal';
 import { Input } from '@components/input/input';
-import { CustomIcon } from '@components/ui/custom-icon';
 import { SidebarLink } from './sidebar-link';
-import { MoreSettings } from './more-settings';
 import type { IconName } from '@components/ui/hero-icon';
 
 export type NavLink = {
@@ -17,31 +12,10 @@ export type NavLink = {
   canBeHidden?: boolean;
 };
 
-const navLinks: Readonly<NavLink[]> = [
-  {
-    href: '/home',
-    linkName: 'Home',
-    iconName: 'HomeIcon'
-  },
-  {
-    href: '/reviews',
-    linkName: 'Reviews',
-    iconName: 'ChatBubbleBottomCenterTextIcon'
-  },
-  {
-    href: '/watchlists',
-    linkName: 'Watchlists',
-    iconName: 'ListBulletIcon'
-  }
-];
+const navLinks: Readonly<NavLink[]> = [];
 
 export function Sidebar(): JSX.Element {
-  const { user } = useAuth();
-  const { isMobile } = useWindow();
-
   const { open, openModal, closeModal } = useModal();
-
-  const username = user?.username as string;
 
   return (
     <header
@@ -58,24 +32,10 @@ export function Sidebar(): JSX.Element {
       </Modal>
       <div className='fixed bottom-0 z-10 flex w-full flex-col justify-between border-t border-light-border bg-main-background py-0 dark:border-dark-border xs:top-0 xs:h-full xs:w-auto xs:border-0 xs:bg-transparent xs:px-2 xs:py-3 xs:pt-2 md:px-4 xl:w-72'>
         <section className='flex flex-col justify-center gap-2 xs:items-center xl:items-stretch'>
-          <h1 className='hidden xs:flex'>
-            <Link href='/home'>
-              <a className='custom-button main-tab text-accent-blue transition hover:bg-light-primary/10 focus-visible:bg-accent-blue/10 focus-visible:!ring-accent-blue/80 dark:text-twitter-icon dark:hover:bg-dark-primary/10'>
-                <CustomIcon className='h-7 w-7' iconName='TwitterIcon' />
-              </a>
-            </Link>
-          </h1>
           <nav className='flex items-center justify-around xs:flex-col xs:justify-center xl:block'>
             {navLinks.map(({ ...linkData }) => (
               <SidebarLink {...linkData} key={linkData.href} />
             ))}
-            <SidebarLink
-              href={`/user/${username}`}
-              username={username}
-              linkName='Profile'
-              iconName='UserIcon'
-            />
-            {!isMobile && <MoreSettings />}
           </nav>
         </section>
       </div>

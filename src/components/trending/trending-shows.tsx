@@ -6,6 +6,7 @@ import { db } from '@lib/firebase/app';
 import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
+import { BookOpen, Star } from 'lucide-react';
 import type { ImageProps } from 'next/image';
 
 type ViewingActivity = {
@@ -78,95 +79,58 @@ export function TrendingShows({
   if (loading) return <Loading />;
 
   return (
-    <div
-      className={cn(
-        'rounded-xl shadow-md',
-        variant === 'dark'
-          ? 'bg-white/5 hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40'
-          : 'bg-white dark:bg-gray-900'
-      )}
-    >
-      <h2
-        className={cn(
-          'border-b px-4 py-3 text-xl font-bold',
-          variant === 'dark'
-            ? 'border-white/10 text-white dark:border-gray-800/60'
-            : 'border-gray-100 text-gray-900 dark:border-gray-800 dark:text-white'
-        )}
-      >
-        Trending Now
-      </h2>
-      <div
-        className={cn(
-          'divide-y',
-          variant === 'dark'
-            ? 'divide-white/10 dark:divide-gray-800/60'
-            : 'divide-gray-100 dark:divide-gray-800'
-        )}
-      >
-        {trending.map((show, index) => (
-          <Link
-            key={show.mediaId}
-            href={`/media/${show.mediaType}/${show.mediaId}`}
-          >
-            <div
-              className={cn(
-                'flex items-center gap-3 p-4',
-                'cursor-pointer transition-colors duration-200',
-                variant === 'dark'
-                  ? 'hover:bg-white/5 dark:hover:bg-gray-800/50'
-                  : 'hover:bg-gray-50 dark:hover:bg-gray-800/50'
-              )}
+    <div className='space-y-3'>
+      {trending.length === 0 ? (
+        <div className='py-6 text-center'>
+          <BookOpen className='mx-auto mb-3 h-10 w-10 text-amber-400' />
+          <p className='text-sm text-gray-600 dark:text-gray-400'>
+            No trending shows yet. Start watching and sharing!
+          </p>
+        </div>
+      ) : (
+        <div className='grid grid-cols-1 gap-3 sm:grid-cols-2'>
+          {trending.map((show, index) => (
+            <Link
+              key={show.mediaId}
+              href={`/media/${show.mediaType}/${show.mediaId}`}
             >
-              <span
-                className={cn(
-                  'text-lg font-bold',
-                  variant === 'dark' ? 'text-gray-400/80' : 'text-gray-400'
-                )}
-              >
-                {index + 1}
-              </span>
-              {show.posterPath && (
-                <div className='relative h-16 w-12 overflow-hidden rounded-md'>
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w92${show.posterPath}`}
-                    alt={show.title}
-                    width={48}
-                    height={64}
-                    className='object-cover'
-                    unoptimized
-                    priority={index < 3}
-                  />
+              <div className='group rounded-lg border border-amber-200 bg-white p-3 transition-all duration-200 hover:border-amber-300 hover:shadow-md dark:border-amber-800/30 dark:bg-gray-800 dark:hover:border-amber-700'>
+                <div className='flex items-center gap-3'>
+                  <div className='flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30'>
+                    <span className='text-xs font-bold text-amber-700 dark:text-amber-300'>
+                      {index + 1}
+                    </span>
+                  </div>
+                  {show.posterPath && (
+                    <div className='relative h-12 w-8 flex-shrink-0 overflow-hidden rounded-md shadow-sm'>
+                      <Image
+                        src={`https://image.tmdb.org/t/p/w92${show.posterPath}`}
+                        alt={show.title}
+                        width={32}
+                        height={48}
+                        className='object-cover'
+                        unoptimized
+                        priority={index < 3}
+                      />
+                    </div>
+                  )}
+                  <div className='min-w-0 flex-1'>
+                    <h3 className='truncate text-sm font-medium text-gray-900 transition-colors group-hover:text-amber-700 dark:text-white dark:group-hover:text-amber-300'>
+                      {show.title}
+                    </h3>
+                    <div className='mt-1 flex items-center gap-1'>
+                      <Star className='h-3 w-3 text-amber-500' />
+                      <span className='text-xs font-medium text-amber-600 dark:text-amber-400'>
+                        {show.watchCount}
+                      </span>
+                    </div>
+                  </div>
                 </div>
-              )}
-              <div className='min-w-0 flex-1'>
-                <h3
-                  className={cn(
-                    'truncate font-medium',
-                    variant === 'dark'
-                      ? 'text-white group-hover:text-emerald-400'
-                      : 'text-gray-900 dark:text-white'
-                  )}
-                >
-                  {show.title}
-                </h3>
-                <p
-                  className={cn(
-                    'flex items-center gap-1 text-sm',
-                    variant === 'dark'
-                      ? 'text-gray-400/80'
-                      : 'text-gray-500 dark:text-gray-400'
-                  )}
-                >
-                  <HeroIcon iconName='UsersIcon' className='h-4 w-4' />
-                  {show.watchCount}{' '}
-                  {show.watchCount === 1 ? 'watcher' : 'watchers'}
-                </p>
               </div>
-            </div>
-          </Link>
-        ))}
-      </div>
+            </Link>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

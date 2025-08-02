@@ -61,9 +61,7 @@ export function InputForm({
 }: InputFormProps): JSX.Element {
   const { open, openModal, closeModal } = useModal();
 
-  useEffect(() => {
-    handleShowHideNav(true)();
-  }, []);
+
 
   const handleKeyboardShortcut = ({
     key,
@@ -79,24 +77,7 @@ export function InputForm({
     }
   };
 
-  const handleShowHideNav = (blur?: boolean) => (): void => {
-    const sidebar = document.getElementById('sidebar');
-    if (!sidebar) return;
-
-    if (blur) {
-      setTimeout(() => {
-        sidebar.style.opacity = '';
-      }, 200);
-      return;
-    }
-
-    if (window.innerWidth < 500) {
-      sidebar.style.opacity = '0';
-    }
-  };
-
   const handleFormFocus = (): void => {
-    handleShowHideNav()();
     handleFocus();
   };
 
@@ -131,7 +112,9 @@ export function InputForm({
                     ? 'Send your reply'
                     : 'What are you watching?'
                 }
-                onBlur={handleShowHideNav(true)}
+                onBlur={() => {
+                  // Handle blur event
+                }}
                 minRows={loading ? 1 : modal && !isUploadingImages ? 3 : 1}
                 maxRows={isUploadingImages ? 5 : 15}
                 onFocus={handleFormFocus}

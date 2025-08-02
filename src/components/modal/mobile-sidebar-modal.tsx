@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
 import { Button } from '@components/ui/button';
 import { UserAvatar } from '@components/user/user-avatar';
@@ -10,30 +9,13 @@ import { MainHeader } from '@components/home/main-header';
 import { MobileSidebarLink } from '@components/sidebar/mobile-sidebar-link';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from './modal';
-import { ActionModal } from './action-modal';
 import { DisplayModal } from './display-modal';
 import type { NavLink } from '@components/sidebar/sidebar';
 import type { User } from '@lib/types/user';
 
 export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
 
-const topNavLinks: Readonly<MobileNavLink[]> = [
-  {
-    href: '/watchlists',
-    linkName: 'Watchlists',
-    iconName: 'ListBulletIcon'
-  },
-  {
-    href: '/bookmarks',
-    linkName: 'Bookmarks',
-    iconName: 'BookmarkIcon'
-  },
-  {
-    href: '/people',
-    linkName: 'Fans',
-    iconName: 'UserGroupIcon'
-  }
-];
+const topNavLinks: Readonly<MobileNavLink[]> = [];
 
 const bottomNavLinks: Readonly<MobileNavLink[]> = [
   // {
@@ -75,18 +57,10 @@ export function MobileSidebarModal({
   coverPhotoURL,
   closeModal
 }: MobileSidebarModalProps): JSX.Element {
-  const { signOut } = useAuth();
-
   const {
     open: displayOpen,
     openModal: displayOpenModal,
     closeModal: displayCloseModal
-  } = useModal();
-
-  const {
-    open: logOutOpen,
-    openModal: logOutOpenModal,
-    closeModal: logOutCloseModal
   } = useModal();
 
   const allStats: Readonly<Stats[]> = [
@@ -95,12 +69,6 @@ export function MobileSidebarModal({
   ];
 
   const userLink = `/user/${username}`;
-
-  const handleSignOut = async (): Promise<void> => {
-    await signOut();
-    logOutCloseModal();
-    closeModal();
-  };
 
   return (
     <>
@@ -111,19 +79,6 @@ export function MobileSidebarModal({
         closeModal={displayCloseModal}
       >
         <DisplayModal closeModal={displayCloseModal} />
-      </Modal>
-      <Modal
-        modalClassName='max-w-xs bg-main-background w-full p-8 rounded-2xl'
-        open={logOutOpen}
-        closeModal={logOutCloseModal}
-      >
-        <ActionModal
-          title='Log out of Buzzwin?'
-          description='You can always log back in at any time.'
-          mainBtnLabel='Log out'
-          action={handleSignOut}
-          closeModal={logOutCloseModal}
-        />
       </Modal>
       <MainHeader
         useActionButton
@@ -167,7 +122,7 @@ export function MobileSidebarModal({
             />
             <UserUsername username={username} />
           </div>
-          <div className='text-secondary flex gap-4'>
+          <div className='flex gap-4 text-secondary'>
             {allStats.map(([id, label, stat]) => (
               <Link href={`${userLink}/${id}`} key={id}>
                 <a className='hover-animation flex h-4 items-center gap-1 border-b border-b-transparent outline-none hover:border-b-light-primary focus-visible:border-b-light-primary dark:hover:border-b-dark-primary dark:focus-visible:border-b-dark-primary'>
@@ -181,11 +136,6 @@ export function MobileSidebarModal({
           </div>
           <i className='h-0.5 bg-light-line-reply dark:bg-dark-line-reply' />
           <nav className='flex flex-col'>
-            <MobileSidebarLink
-              href={`/user/${username}`}
-              iconName='UserIcon'
-              linkName='Profile'
-            />
             {topNavLinks.map((linkData) => (
               <MobileSidebarLink {...linkData} key={linkData.href} />
             ))}
@@ -203,18 +153,6 @@ export function MobileSidebarModal({
             >
               <HeroIcon className='h-5 w-5' iconName='PaintBrushIcon' />
               Display
-            </Button>
-            <Button
-              className='accent-tab accent-bg-tab flex items-center gap-2 rounded-md p-1.5 font-bold transition
-                         hover:bg-light-primary/10 focus-visible:ring-2 first:focus-visible:ring-[#878a8c] 
-                         dark:hover:bg-dark-primary/10 dark:focus-visible:ring-white'
-              onClick={logOutOpenModal}
-            >
-              <HeroIcon
-                className='h-5 w-5'
-                iconName='ArrowRightOnRectangleIcon'
-              />
-              Log Out
             </Button>
           </nav>
         </div>

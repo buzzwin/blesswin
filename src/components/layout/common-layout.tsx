@@ -1,8 +1,6 @@
 import { ReactNode } from 'react';
 import { MainLayout } from './main-layout';
 import { WindowContextProvider } from '@lib/context/window-context';
-import { Aside } from '@components/aside/aside';
-import { Suggestions } from '@components/aside/suggestions';
 import { useRequireAuth } from '@lib/hooks/useRequireAuth';
 import { Placeholder } from '@components/common/placeholder';
 import { Toaster } from 'react-hot-toast';
@@ -25,9 +23,6 @@ function CommonLayout({ children }: LayoutProps): JSX.Element {
     <WindowContextProvider>
       <MainLayout>
         {children}
-        <Aside>
-          <Suggestions />
-        </Aside>
       </MainLayout>
       <Toaster position='bottom-center' />
     </WindowContextProvider>
