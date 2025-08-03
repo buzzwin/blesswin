@@ -30,6 +30,7 @@ type ModernInputProps = {
   onSubmit?: () => void;
   onSignIn?: () => void;
   onMediaSelect?: (media: any) => void;
+  compact?: boolean;
 };
 
 export function ModernInput({
@@ -38,7 +39,8 @@ export function ModernInput({
   value = '',
   onSubmit,
   onSignIn,
-  onMediaSelect
+  onMediaSelect,
+  compact = false
 }: ModernInputProps): JSX.Element {
   const [isExpanded, setIsExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -145,24 +147,31 @@ export function ModernInput({
             'border-amber-200 dark:border-amber-800/30',
             'hover:border-amber-300 dark:hover:border-amber-700',
             'bg-white dark:bg-gray-800',
-            'dark:hover:bg-amber-950/10 hover:bg-amber-50'
+            'dark:hover:bg-amber-950/10 hover:bg-amber-50',
+            compact && 'border-0 shadow-none hover:shadow-none'
           )}
           onClick={() => (user ? setIsExpanded(true) : onSignIn?.())}
         >
-          <CardContent className='p-2 md:p-4'>
+          <CardContent className={cn('p-2 md:p-4', compact && 'p-2')}>
             <div className='flex items-center gap-2 md:gap-4'>
               <UserAvatar
                 src={photoURL || ''}
                 alt={name ?? 'User'}
                 username={username ?? 'user'}
+                className={cn(compact && 'h-6 w-6')}
               />
-              <p className='flex-1 text-xs text-gray-500 dark:text-gray-400 md:text-base'>
+              <p className={cn(
+                'flex-1 text-gray-500 dark:text-gray-400',
+                compact ? 'text-xs' : 'text-xs md:text-base'
+              )}>
                 {placeholder}
               </p>
-              <div className='flex items-center gap-1 md:gap-2'>
-                <BookOpen className='h-4 w-4 text-amber-500 md:h-5 md:w-5' />
-                <Plus className='h-4 w-4 text-amber-500 md:h-5 md:w-5' />
-              </div>
+              {!compact && (
+                <div className='flex items-center gap-1 md:gap-2'>
+                  <BookOpen className='h-4 w-4 text-amber-500 md:h-5 md:w-5' />
+                  <Plus className='h-4 w-4 text-amber-500 md:h-5 md:w-5' />
+                </div>
+              )}
             </div>
           </CardContent>
         </Card>

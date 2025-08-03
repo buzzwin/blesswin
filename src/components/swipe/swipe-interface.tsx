@@ -249,37 +249,7 @@ export function SwipeInterface({
   }
 
   return (
-    <div className='mx-auto w-full max-w-md space-y-6'>
-      {/* Filter Buttons */}
-      <div className='flex justify-center gap-2'>
-        <Button
-          variant={filter === 'all' ? 'default' : 'outline'}
-          size='sm'
-          onClick={() => handleFilterChange('all')}
-        >
-          All
-        </Button>
-        <Button
-          variant={filter === 'movie' ? 'default' : 'outline'}
-          size='sm'
-          onClick={() => handleFilterChange('movie')}
-        >
-          Movies
-        </Button>
-        <Button
-          variant={filter === 'tv' ? 'default' : 'outline'}
-          size='sm'
-          onClick={() => handleFilterChange('tv')}
-        >
-          TV Shows
-        </Button>
-      </div>
-
-      {/* Progress Indicator */}
-      <div className='text-center text-sm text-gray-600'>
-        {currentIndex + 1} of {filteredCards.length}
-      </div>
-
+    <div className='mx-auto w-full max-w-md space-y-4'>
       {/* Card Stack */}
       <div className='relative h-96'>
         <AnimatePresence>
@@ -329,14 +299,6 @@ export function SwipeInterface({
           className='h-12 w-12 rounded-full p-0'
         >
           <Heart className='h-6 w-6' />
-        </Button>
-      </div>
-
-      {/* Reset Button */}
-      <div className='text-center'>
-        <Button variant='ghost' onClick={handleReset} size='sm'>
-          <RefreshCw className='mr-2 h-4 w-4' />
-          Reset
         </Button>
       </div>
     </div>
