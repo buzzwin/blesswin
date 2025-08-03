@@ -15,6 +15,7 @@ import { sendTweet } from '@lib/firebase/utils/tweet';
 import { SwipeInterface } from '@components/swipe/swipe-interface';
 import { saveRating } from '@lib/firebase/utils/rating';
 import { RecommendationsCard } from '@components/recommendations/recommendations-card';
+import { MobileRecommendationsCard } from '@components/recommendations/mobile-recommendations-card';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { LogOut, X, Heart, Meh, Sparkles } from 'lucide-react';
@@ -263,6 +264,40 @@ export default function Home(): JSX.Element {
 
             <div className='flex justify-center'>
               <SwipeInterface onRatingSubmit={handleRatingSubmit} />
+            </div>
+
+            {/* Mobile AI Recommendations */}
+            <div className='mt-6'>
+              <MobileRecommendationsCard />
+            </div>
+
+            {/* Mobile Quick Actions */}
+            <div className='mt-4 space-y-3'>
+              <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
+                <CardHeader className='pb-3'>
+                  <CardTitle className='text-base'>Quick Actions</CardTitle>
+                </CardHeader>
+                <CardContent className='space-y-2'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => router.push('/ratings')}
+                    className='w-full border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
+                  >
+                    <BarChart3 className='mr-2 h-4 w-4' />
+                    View My Ratings
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => router.push('/trends')}
+                    className='w-full border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
+                  >
+                    <TrendingUp className='mr-2 h-4 w-4' />
+                    Trending Shows
+                  </Button>
+                </CardContent>
+              </Card>
             </div>
           </div>
 
