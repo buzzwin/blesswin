@@ -16,7 +16,7 @@ import { SwipeInterface } from '@components/swipe/swipe-interface';
 import { saveRating } from '@lib/firebase/utils/rating';
 import { RecommendationsCard } from '@components/recommendations/recommendations-card';
 import { MobileRecommendationsCard } from '@components/recommendations/mobile-recommendations-card';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { LogOut, X, Heart, Meh, Sparkles } from 'lucide-react';
 import { BookOpen, Filter, TrendingUp, BarChart3 } from 'lucide-react';
@@ -28,6 +28,7 @@ import type { RatingType, MediaCard } from '@lib/types/rating';
 export default function Home(): JSX.Element {
   const [inputValue, setInputValue] = useState('');
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const { user, signOut } = useAuth();
   const router = useRouter();
 
@@ -64,6 +65,9 @@ export default function Home(): JSX.Element {
 
       // console.log('Rating saved:', { mediaId, rating, userId: user.id });
       toast.success(`Rated "${title}" as ${rating}!`);
+      
+      // Trigger recommendations refresh to include the new rating
+      setRefreshKey(prev => prev + 1);
     } catch (error) {
       // console.error('Error saving rating:', error);
       toast.error('Failed to save rating');
@@ -268,7 +272,7 @@ export default function Home(): JSX.Element {
 
             {/* Mobile AI Recommendations */}
             <div className='mt-6'>
-              <MobileRecommendationsCard />
+                                <MobileRecommendationsCard refreshKey={refreshKey} />
             </div>
 
             {/* Mobile Quick Actions */}
@@ -405,7 +409,7 @@ export default function Home(): JSX.Element {
               <div className='col-span-3'>
                 <div className='sticky top-24 space-y-4'>
                   {/* My Recommendations */}
-                  <RecommendationsCard />
+                  <RecommendationsCard refreshKey={refreshKey} />
 
                   {/* Quick Stats */}
                   <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>

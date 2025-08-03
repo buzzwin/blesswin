@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { NextImage } from '@components/ui/next-image';
@@ -17,11 +17,22 @@ interface Recommendation {
   year: string;
 }
 
-export function RecommendationsCard(): JSX.Element {
-  const { recommendations, analysis, loading, error, cached, refetch } =
+interface RecommendationsCardProps {
+  refreshKey?: number;
+}
+
+export function RecommendationsCard({ refreshKey }: RecommendationsCardProps): JSX.Element {
+  const { recommendations, analysis, loading, error, refetch } =
     useRecommendations();
   const [selectedRecommendation, setSelectedRecommendation] =
     useState<Recommendation | null>(null);
+
+  // Refresh recommendations when refreshKey changes
+  useEffect(() => {
+    if (refreshKey && refreshKey > 0) {
+      void refetch();
+    }
+  }, [refreshKey, refetch]);
 
   const handleImageError = (imageUrl: string) => {
     // console.error('Failed to load image:', imageUrl);
@@ -170,11 +181,6 @@ export function RecommendationsCard(): JSX.Element {
             <div className='flex items-center gap-2'>
               <Brain className='h-5 w-5 text-purple-600 dark:text-purple-400' />
               <CardTitle className='text-lg'>AI Recommendations</CardTitle>
-              {cached && (
-                <span className='rounded bg-green-100 px-2 py-1 text-xs text-green-800 dark:bg-green-900/30 dark:text-green-300'>
-                  Cached
-                </span>
-              )}
             </div>
             <Button
               variant='ghost'

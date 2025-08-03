@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 
 interface Recommendation {
@@ -32,9 +32,8 @@ export function useRecommendations() {
   const [analysis, setAnalysis] = useState<Analysis | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [cached, setCached] = useState(false);
 
-  const fetchRecommendations = async () => {
+  const fetchRecommendations = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
@@ -57,7 +56,6 @@ export function useRecommendations() {
       
       setRecommendations(data.recommendations);
       setAnalysis(data.analysis);
-      setCached(data.cached);
       
       if (data.error) {
         // console.warn('Recommendations API warning:', data.error);
@@ -69,40 +67,22 @@ export function useRecommendations() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.id]);
 
-  const refreshRecommendations = async () => {
-    // Clear any existing cache by invalidating it
-    if (user?.id) {
-      try {
-        await fetch('/api/recommendations', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            userId: user.id,
-            forceRefresh: true
-          })
-        });
-      } catch (err) {
-        // console.error('Error refreshing recommendations:', err);
-      }
-    }
-    
+  const refreshRecommendations = () => {
+    // Always fetch fresh recommendations (no caching)
     void fetchRecommendations();
   };
 
   useEffect(() => {
     void fetchRecommendations();
-  }, [user?.id]);
+  }, [fetchRecommendations]);
 
   return {
     recommendations,
     analysis,
     loading,
     error,
-    cached,
     refreshRecommendations,
     refetch: fetchRecommendations
   };

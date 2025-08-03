@@ -74,16 +74,8 @@ export default async function handler(
       return;
     }
 
-    // For authenticated users, check cache first
-    const cached = await getCachedRecommendations(userId as string);
-    if (cached) {
-      res.status(200).json({
-        recommendations: cached.recommendations,
-        analysis: cached.analysis,
-        cached: true
-      });
-      return;
-    }
+    // For authenticated users, always generate fresh recommendations
+    // Removed caching to ensure fresh recommendations after each rating
 
     // Fetch user's ratings
     const ratings = await getUserRatings(userId as string);
@@ -125,6 +117,8 @@ export default async function handler(
           {
             role: 'system',
             content: `You are a movie and TV show recommendation expert. Analyze the user's ratings and provide personalized recommendations. 
+            IMPORTANT: Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
+            Avoid suggesting content similar to what they've disliked.
             Return ONLY a valid JSON object with this exact structure:
             {
               "recommendations": [
@@ -149,7 +143,7 @@ export default async function handler(
           },
           {
             role: 'user',
-            content: `Analyze these ratings and provide 5 personalized recommendations:
+            content: `Analyze these ratings and provide 5 personalized recommendations. Consider ALL ratings (likes, dislikes, and meh) to avoid suggesting content similar to what they've disliked:
             ${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}`
           }
         ],
@@ -183,8 +177,7 @@ export default async function handler(
       throw new Error('Invalid response format from OpenAI');
     }
 
-    // Cache the recommendations
-    void cacheRecommendations(userId as string, parsedResponse.recommendations, parsedResponse.analysis);
+    // Removed caching to ensure fresh recommendations after each rating
 
     res.status(200).json({
       recommendations: parsedResponse.recommendations,

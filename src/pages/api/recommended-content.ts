@@ -80,6 +80,7 @@ export default async function handler(
     }
 
     // Generate AI recommendations for users with ratings
+    // Always generate fresh recommendations to include latest ratings
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -92,6 +93,8 @@ export default async function handler(
           {
             role: 'system',
             content: `You are a movie and TV show recommendation expert. Based on the user's ratings, suggest content they might enjoy for the rating/swipe interface.
+            IMPORTANT: Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
+            Avoid suggesting content similar to what they've disliked.
             Return ONLY a valid JSON object with this exact structure:
             {
               "content": [
@@ -111,7 +114,7 @@ export default async function handler(
           },
           {
             role: 'user',
-            content: `Based on these ratings, suggest 10 diverse shows/movies for rating:
+            content: `Based on these ratings, suggest 10 diverse shows/movies for rating. Consider ALL ratings to avoid disliked content:
             ${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}`
           }
         ],

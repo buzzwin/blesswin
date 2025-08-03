@@ -33,7 +33,7 @@ export function SwipeInterface({
         setLoading(true);
 
         if (user?.id) {
-          // Try to get AI-recommended content first
+          // Always try to get fresh AI-recommended content first
           try {
             const response = await fetch('/api/recommended-content', {
               method: 'POST',
@@ -75,13 +75,9 @@ export function SwipeInterface({
                 confidence: item.confidence
               }));
 
-                             setMediaCards(aiMedia as MediaCard[]);
+              setMediaCards(aiMedia as MediaCard[]);
               
-              if (data.source === 'ai') {
-                toast.success('Showing AI-recommended content based on your preferences!');
-              } else {
-                toast.success('Showing popular content to get you started!');
-              }
+              toast.success('Showing AI-recommended content based on your preferences!');
               return;
             }
           } catch (aiError) {
@@ -172,7 +168,7 @@ export function SwipeInterface({
     void fetchMedia();
   }, [user?.id]);
 
-  const handleSwipe = (direction: 'left' | 'right' | 'middle'): void => {
+  const handleSwipe = async (direction: 'left' | 'right' | 'middle'): Promise<void> => {
     if (!currentCard) return;
 
     // Map direction to rating type
@@ -198,6 +194,58 @@ export function SwipeInterface({
 
     // Move to next card
     setCurrentIndex((prev) => prev + 1);
+
+    // Fetch new recommendations after rating to include the latest rating
+    if (user?.id && currentIndex >= mediaCards.length - 3) {
+      try {
+        const response = await fetch('/api/recommended-content', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ 
+            userId: user.id,
+            count: 10 
+          })
+        });
+
+        if (response.ok) {
+          const data = await response.json() as { content: Array<{
+            tmdbId: string;
+            title: string;
+            mediaType: 'movie' | 'tv';
+            posterPath: string;
+            overview: string;
+            releaseDate: string;
+            voteAverage: number;
+            reason?: string;
+            confidence?: number;
+          }>; source: string };
+          
+          // Convert AI recommendations to MediaCard format
+          const newMedia = data.content.map((item) => ({
+            id: `${item.mediaType}-${item.tmdbId}`,
+            tmdbId: item.tmdbId,
+            title: item.title,
+            mediaType: item.mediaType,
+            posterPath: item.posterPath,
+            backdropPath: item.posterPath, // Use poster as backdrop fallback
+            overview: item.overview,
+            releaseDate: item.releaseDate,
+            voteAverage: item.voteAverage,
+            genres: [],
+            reason: item.reason,
+            confidence: item.confidence
+          }));
+
+          // Add new recommendations to the existing cards
+          setMediaCards(prev => [...prev, ...newMedia as MediaCard[]]);
+        }
+      } catch (error) {
+        // console.error('Error fetching new recommendations:', error);
+        // Silently fail - user can continue with existing cards
+      }
+    }
   };
 
   const handleReset = (): void => {
