@@ -1,100 +1,151 @@
-import {
-  doc,
-  setDoc,
-  getDocs,
-  query,
-  where,
-  orderBy,
-  limit,
-  writeBatch,
-  serverTimestamp,
-  collection,
-  addDoc
-} from 'firebase/firestore';
 import { db } from '../app';
-import { clearRecommendationsCache } from './recommendations';
-import type { MediaRating, RatingType } from '@lib/types/rating';
+import { collection, addDoc, query, where, getDocs, orderBy, limit, deleteDoc } from 'firebase/firestore';
+import { invalidateRecommendationsCache } from './recommendations';
 
-// Create a ratings collection reference
-const ratingsCollection = collection(db, 'ratings');
+interface Rating {
+  id: string;
+  userId: string;
+  tmdbId: string;
+  title: string;
+  mediaType: 'movie' | 'tv';
+  rating: 'love' | 'hate' | 'meh';
+  overview?: string;
+  releaseDate?: string;
+  voteAverage?: number;
+  posterPath: string;
+  createdAt: Date;
+}
 
-export async function saveRating(
-  userId: string,
-  tmdbId: string,
-  title: string,
-  mediaType: 'movie' | 'tv',
-  posterPath: string,
-  rating: RatingType,
-  overview?: string,
-  releaseDate?: string,
-  voteAverage?: number
-): Promise<void> {
+export async function saveRating(ratingData: Omit<Rating, 'id' | 'createdAt'>): Promise<void> {
   try {
-    // Use addDoc to auto-generate document ID instead of custom ID
-    const ratingData: Omit<MediaRating, 'id'> = {
-      tmdbId,
-      title,
-      mediaType,
-      posterPath,
-      rating,
-      userId,
-      createdAt: new Date(),
-      overview,
-      releaseDate,
-      voteAverage
-    };
+    // Add the rating to Firestore
+    await addDoc(collection(db, 'ratings'), {
+      ...ratingData,
+      createdAt: new Date()
+    });
 
-    await addDoc(ratingsCollection, ratingData);
-    
-    // Clear recommendations cache when user rates something
-    await clearRecommendationsCache(userId);
+    // Invalidate recommendations cache for the user
+    await invalidateRecommendationsCache(ratingData.userId);
+
+    console.log('Rating saved and cache invalidated');
   } catch (error) {
     console.error('Error saving rating:', error);
-    throw new Error('Failed to save rating');
+    throw error;
   }
 }
 
-export async function getUserRatings(userId: string): Promise<MediaRating[]> {
+export async function getUserRatings(userId: string): Promise<Rating[]> {
   try {
     console.log('Fetching ratings for userId:', userId);
     
     const q = query(
-      ratingsCollection,
-      where('userId', '==', userId)
-      // Temporarily removed orderBy until index is created
-      // orderBy('createdAt', 'desc')
+      collection(db, 'ratings'),
+      where('userId', '==', userId),
+      orderBy('createdAt', 'desc')
     );
     
     const querySnapshot = await getDocs(q);
     console.log('Query snapshot size:', querySnapshot.size);
     
-    const ratings: MediaRating[] = [];
+    const ratings: Rating[] = [];
     
     querySnapshot.forEach((doc) => {
       const data = doc.data();
-      console.log('Document data:', { id: doc.id, ...data });
+      console.log('Document data:', data);
       
-      const ratingData = {
+      ratings.push({
         id: doc.id,
-        ...data,
-        createdAt: new Date()
-      } as MediaRating;
-      
-      ratings.push(ratingData);
+        userId: data.userId,
+        tmdbId: data.tmdbId,
+        title: data.title,
+        mediaType: data.mediaType,
+        rating: data.rating,
+        overview: data.overview,
+        releaseDate: data.releaseDate,
+        voteAverage: data.voteAverage,
+        posterPath: data.posterPath,
+        createdAt: data.createdAt && typeof (data.createdAt as any).toDate === 'function' ? (data.createdAt as any).toDate() : new Date()
+      });
     });
     
-    // Sort ratings by creation date (newest first)
-    ratings.sort((a, b) => {
-      const dateA = a.createdAt instanceof Date ? a.createdAt : new Date(String(a.createdAt));
-      const dateB = b.createdAt instanceof Date ? b.createdAt : new Date(String(b.createdAt));
-      return dateB.getTime() - dateA.getTime();
-    });
-    
-    console.log('Processed ratings:', ratings);
+    console.log('Processed ratings:', ratings.length);
     return ratings;
+    
   } catch (error) {
     console.error('Error fetching user ratings:', error);
-    throw new Error('Failed to fetch ratings');
+    return [];
+  }
+}
+
+export async function getRecentRatings(limitCount = 10): Promise<Rating[]> {
+  try {
+    const q = query(
+      collection(db, 'ratings'),
+      orderBy('createdAt', 'desc'),
+      limit(limitCount)
+    );
+    
+    const querySnapshot = await getDocs(q);
+    const ratings: Rating[] = [];
+    
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      ratings.push({
+        id: doc.id,
+        userId: data.userId,
+        tmdbId: data.tmdbId,
+        title: data.title,
+        mediaType: data.mediaType,
+        rating: data.rating,
+        overview: data.overview,
+        releaseDate: data.releaseDate,
+        voteAverage: data.voteAverage,
+        posterPath: data.posterPath,
+        createdAt: data.createdAt && typeof (data.createdAt as any).toDate === 'function' ? (data.createdAt as any).toDate() : new Date()
+      });
+    });
+    
+    return ratings;
+  } catch (error) {
+    console.error('Error fetching recent ratings:', error);
+    return [];
+  }
+}
+
+// Function to handle anonymous user ratings (store in localStorage or session)
+export function saveAnonymousRating(ratingData: Omit<Rating, 'id' | 'userId' | 'createdAt'>): void {
+  try {
+    // Store in localStorage for anonymous users
+    const anonymousRatings = JSON.parse(localStorage.getItem('anonymousRatings') || '[]');
+    const newRating = {
+      ...ratingData,
+      id: `anon_${Date.now()}`,
+      userId: 'anonymous',
+      createdAt: new Date()
+    };
+    
+    anonymousRatings.push(newRating);
+    localStorage.setItem('anonymousRatings', JSON.stringify(anonymousRatings));
+    
+    // Invalidate anonymous cache
+    void invalidateRecommendationsCache(null);
+    
+    console.log('Anonymous rating saved');
+  } catch (error) {
+    console.error('Error saving anonymous rating:', error);
+  }
+}
+
+export function getAnonymousRatings(): Rating[] {
+  try {
+    const anonymousRatings = JSON.parse(localStorage.getItem('anonymousRatings') || '[]');
+    return anonymousRatings.map((rating: any) => ({
+      ...rating,
+      createdAt: new Date(rating.createdAt as string)
+    }));
+  } catch (error) {
+    console.error('Error getting anonymous ratings:', error);
+    return [];
   }
 }
 
@@ -123,145 +174,23 @@ export async function getRatingStats(userId: string): Promise<{
   }
 }
 
-export async function getPopularRatings(limitCount = 10): Promise<{
-  tmdbId: string;
-  title: string;
-  mediaType: 'movie' | 'tv';
-  posterPath: string;
-  loveCount: number;
-  hateCount: number;
-  mehCount: number;
-  totalRatings: number;
-}[]> {
-  try {
-    const q = query(ratingsCollection, limit(100)); // Get more to aggregate
-    const querySnapshot = await getDocs(q);
-    
-    const ratingMap = new Map<string, {
-      tmdbId: string;
-      title: string;
-      mediaType: 'movie' | 'tv';
-      posterPath: string;
-      loveCount: number;
-      hateCount: number;
-      mehCount: number;
-      totalRatings: number;
-    }>();
-    
-    querySnapshot.forEach((doc) => {
-      const data = doc.data() as {
-        tmdbId: string;
-        title: string;
-        mediaType: 'movie' | 'tv';
-        posterPath: string;
-        rating: RatingType;
-      };
-      const key = data.tmdbId;
-      
-      if (!ratingMap.has(key)) {
-        ratingMap.set(key, {
-          tmdbId: data.tmdbId,
-          title: data.title,
-          mediaType: data.mediaType,
-          posterPath: data.posterPath,
-          loveCount: 0,
-          hateCount: 0,
-          mehCount: 0,
-          totalRatings: 0
-        });
-      }
-      
-      const item = ratingMap.get(key)!;
-      if (data.rating === 'love') {
-        item.loveCount++;
-      } else if (data.rating === 'hate') {
-        item.hateCount++;
-      } else if (data.rating === 'meh') {
-        item.mehCount++;
-      }
-      item.totalRatings++;
-    });
-    
-    // Convert to array and sort by total ratings
-    const popularRatings = Array.from(ratingMap.values())
-      .sort((a, b) => b.totalRatings - a.totalRatings)
-      .slice(0, limitCount);
-    
-    return popularRatings;
-  } catch (error) {
-    console.error('Error fetching popular ratings:', error);
-    return [];
-  }
-}
-
-export async function updateRating(
-  userId: string,
-  tmdbId: string,
-  newRating: RatingType
-): Promise<void> {
-  try {
-    const ratingId = `${userId}-${tmdbId}`;
-    const ratingRef = doc(ratingsCollection, ratingId);
-    
-    await setDoc(ratingRef, {
-      rating: newRating,
-      updatedAt: serverTimestamp()
-    }, { merge: true });
-  } catch (error) {
-    console.error('Error updating rating:', error);
-    throw new Error('Failed to update rating');
-  }
-}
-
 export async function deleteRating(userId: string, tmdbId: string): Promise<void> {
   try {
     const q = query(
-      ratingsCollection,
+      collection(db, 'ratings'),
       where('userId', '==', userId),
       where('tmdbId', '==', tmdbId)
     );
     
     const querySnapshot = await getDocs(q);
-    const batch = writeBatch(db);
     
-    querySnapshot.forEach((doc) => {
-      batch.update(doc.ref, { deleted: true });
-    });
-    
-    await batch.commit();
+    if (!querySnapshot.empty) {
+      const docRef = querySnapshot.docs[0].ref;
+      await deleteDoc(docRef);
+      console.log('Rating deleted successfully');
+    }
   } catch (error) {
     console.error('Error deleting rating:', error);
     throw new Error('Failed to delete rating');
-  }
-}
-
-// Function to fix existing ratings that are missing userId field
-export async function fixExistingRatings(userId: string): Promise<void> {
-  try {
-    // Query for ratings that might be missing userId (using document ID pattern)
-    const q = query(
-      ratingsCollection,
-      where('tmdbId', '!=', '') // Get all ratings with tmdbId
-    );
-    
-    const querySnapshot = await getDocs(q);
-    const batch = writeBatch(db);
-    let updateCount = 0;
-    
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      // Check if this rating belongs to the current user and is missing userId
-      if (doc.id.startsWith(userId) && !data.userId) {
-        batch.update(doc.ref, { userId });
-        updateCount++;
-      }
-    });
-    
-    if (updateCount > 0) {
-      await batch.commit();
-      console.log(`Fixed ${updateCount} ratings for user ${userId}`);
-    }
-  } catch (error) {
-    console.error('Error fixing existing ratings:', error);
   }
 } 

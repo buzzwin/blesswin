@@ -1,6 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import cn from 'clsx';
+import { Sparkles, Clock, User } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { NavLink } from './sidebar';
@@ -19,6 +20,30 @@ export function SidebarLink({
 }: SidebarLinkProps): JSX.Element {
   const { asPath } = useRouter();
   const isActive = username ? asPath.includes(username) : asPath === href;
+
+  const getIcon = () => {
+    switch (iconName) {
+      case 'SparklesIcon':
+        return <Sparkles className='h-7 w-7' />;
+      case 'ClockIcon':
+        return <Clock className='h-7 w-7' />;
+      case 'UserIcon':
+        return <User className='h-7 w-7' />;
+      default:
+        return (
+          <HeroIcon
+            className={cn(
+              'h-7 w-7',
+              isActive &&
+                ['Explore', 'Lists'].includes(linkName) &&
+                'stroke-white'
+            )}
+            iconName={iconName}
+            solid={isActive}
+          />
+        );
+    }
+  };
 
   return (
     <Link href={href}>
@@ -39,16 +64,7 @@ export function SidebarLink({
             isActive && 'font-bold'
           )}
         >
-          <HeroIcon
-            className={cn(
-              'h-7 w-7',
-              isActive &&
-                ['Explore', 'Lists'].includes(linkName) &&
-                'stroke-white'
-            )}
-            iconName={iconName}
-            solid={isActive}
-          />
+          {getIcon()}
           <p className='hidden xl:block'>{linkName}</p>
         </div>
       </a>

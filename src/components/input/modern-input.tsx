@@ -149,19 +149,19 @@ export function ModernInput({
           )}
           onClick={() => (user ? setIsExpanded(true) : onSignIn?.())}
         >
-          <CardContent className='p-4'>
-            <div className='flex items-center gap-4'>
+          <CardContent className='p-2 md:p-4'>
+            <div className='flex items-center gap-2 md:gap-4'>
               <UserAvatar
                 src={photoURL || ''}
                 alt={name ?? 'User'}
                 username={username ?? 'user'}
               />
-              <p className='flex-1 text-gray-500 dark:text-gray-400'>
+              <p className='flex-1 text-xs text-gray-500 dark:text-gray-400 md:text-base'>
                 {placeholder}
               </p>
-              <div className='flex items-center gap-2'>
-                <BookOpen className='h-5 w-5 text-amber-500' />
-                <Plus className='h-5 w-5 text-amber-500' />
+              <div className='flex items-center gap-1 md:gap-2'>
+                <BookOpen className='h-4 w-4 text-amber-500 md:h-5 md:w-5' />
+                <Plus className='h-4 w-4 text-amber-500 md:h-5 md:w-5' />
               </div>
             </div>
           </CardContent>
@@ -171,7 +171,7 @@ export function ModernInput({
       {/* Expanded view - Goodreads Style */}
       {isExpanded && (
         <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
-          <CardContent className='p-6'>
+          <CardContent className='p-3 md:p-6'>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -183,34 +183,34 @@ export function ModernInput({
                 <div className='mb-4 h-1 animate-pulse rounded-full bg-amber-500' />
               )}
 
-              <div className='flex gap-4'>
+              <div className='flex gap-2 md:gap-4'>
                 <UserAvatar
                   src={photoURL || ''}
                   alt={name ?? 'User'}
                   username={username ?? 'user'}
                 />
 
-                <div className='flex-1 space-y-4'>
+                <div className='flex-1 space-y-2 md:space-y-4'>
                   {/* Media Search */}
                   {showMediaSearch ? (
-                    <div className='space-y-3'>
+                    <div className='space-y-2 md:space-y-3'>
                       <MediaSearch
                         onMediaSelect={handleMediaSelect}
                         onClose={() => setShowMediaSearch(false)}
                       />
-                      <div className='text-center text-sm text-amber-600 dark:text-amber-400'>
+                      <div className='text-center text-xs text-amber-600 dark:text-amber-400 md:text-sm'>
                         Please search for and select a movie or TV show to
                         review.
                       </div>
                     </div>
                   ) : !selectedMedia ? (
-                    <div className='text-center text-sm text-amber-600 dark:text-amber-400'>
+                    <div className='text-center text-xs text-amber-600 dark:text-amber-400 md:text-sm'>
                       Please search for and select a movie or TV show to review.
                     </div>
                   ) : (
-                    <div className='space-y-4'>
+                    <div className='space-y-2 md:space-y-4'>
                       {/* Selected Media Display */}
-                      <div className='flex items-start gap-4 rounded-lg border border-amber-200 bg-amber-50 p-4 dark:border-amber-800 dark:bg-amber-900/20'>
+                      <div className='flex items-start gap-2 rounded-lg border border-amber-200 bg-amber-50 p-2 dark:border-amber-800 dark:bg-amber-900/20 md:gap-4 md:p-4'>
                         <img
                           src={`https://image.tmdb.org/t/p/w154${
                             selectedMedia?.poster_path
@@ -222,17 +222,17 @@ export function ModernInput({
                               ? String(selectedMedia.title)
                               : 'Movie poster'
                           }
-                          className='h-24 w-16 rounded-lg object-cover shadow-md'
+                          className='h-16 w-12 rounded-lg object-cover shadow-md md:h-24 md:w-16'
                         />
                         <div className='flex-1'>
                           <div className='flex items-start justify-between'>
                             <div>
-                              <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                              <h3 className='text-sm font-semibold text-gray-900 dark:text-white md:text-lg'>
                                 {selectedMedia?.title
                                   ? String(selectedMedia.title)
                                   : 'Unknown Title'}
                               </h3>
-                              <p className='text-sm text-gray-500 dark:text-gray-400'>
+                              <p className='text-xs text-gray-500 dark:text-gray-400 md:text-sm'>
                                 {selectedMedia.mediaType === 'movie'
                                   ? 'Movie'
                                   : 'TV Show'}
@@ -252,7 +252,7 @@ export function ModernInput({
                               variant='ghost'
                               size='sm'
                               onClick={() => setSelectedMedia(null)}
-                              className='text-gray-400 hover:text-gray-600'
+                              className='p-1 text-gray-400 hover:text-gray-600 md:p-2'
                             >
                               ×
                             </Button>
@@ -261,9 +261,9 @@ export function ModernInput({
                       </div>
 
                       {/* Review Textarea */}
-                      <div className='space-y-3'>
+                      <div className='space-y-2 md:space-y-3'>
                         <div className='flex items-center justify-between'>
-                          <h4 className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                          <h4 className='text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm'>
                             Write your review
                           </h4>
                           <Button
@@ -272,9 +272,9 @@ export function ModernInput({
                             size='sm'
                             onClick={generateAIReview}
                             disabled={generatingReview || loading}
-                            className='gap-2 border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                            className='gap-1 border-amber-300 text-xs text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20 md:gap-2 md:text-sm'
                           >
-                            <Sparkles className='h-4 w-4' />
+                            <Sparkles className='h-3 w-3 md:h-4 md:w-4' />
                             {generatingReview ? 'Generating...' : 'AI Review'}
                           </Button>
                         </div>
@@ -287,7 +287,7 @@ export function ModernInput({
                           }...`}
                           value={value}
                           onChange={handleChange}
-                          className='min-h-[120px] resize-none border-0 bg-transparent text-gray-900 shadow-none placeholder:text-gray-400 focus-visible:ring-0 dark:text-gray-100 dark:placeholder:text-gray-500'
+                          className='min-h-[80px] resize-none border-0 bg-transparent text-sm text-gray-900 shadow-none placeholder:text-gray-400 focus-visible:ring-0 dark:text-gray-100 dark:placeholder:text-gray-500 md:min-h-[120px] md:text-base'
                           disabled={loading}
                         />
                       </div>
@@ -297,7 +297,7 @@ export function ModernInput({
                   <Separator className='bg-amber-200 dark:bg-amber-800/30' />
 
                   <div className='flex items-center justify-between'>
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-1 md:gap-2'>
                       <Button
                         type='button'
                         variant='ghost'
@@ -309,7 +309,7 @@ export function ModernInput({
                           showMediaSearch && 'bg-amber-100 dark:bg-amber-900/20'
                         )}
                       >
-                        <Search className='h-4 w-4' />
+                        <Search className='h-3 w-3 md:h-4 md:w-4' />
                       </Button>
 
                       <Button
@@ -319,7 +319,7 @@ export function ModernInput({
                         disabled={loading}
                         className='text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/20'
                       >
-                        <ImageIcon className='h-4 w-4' />
+                        <ImageIcon className='h-3 w-3 md:h-4 md:w-4' />
                       </Button>
 
                       <Button
@@ -329,17 +329,17 @@ export function ModernInput({
                         disabled={loading}
                         className='text-amber-600 hover:bg-amber-100 dark:text-amber-400 dark:hover:bg-amber-900/20'
                       >
-                        <Smile className='h-4 w-4' />
+                        <Smile className='h-3 w-3 md:h-4 md:w-4' />
                       </Button>
                     </div>
 
-                    <div className='flex items-center gap-2'>
+                    <div className='flex items-center gap-1 md:gap-2'>
                       <Button
                         type='button'
                         variant='outline'
                         onClick={handleCancel}
                         disabled={loading}
-                        className='border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                        className='border-amber-300 px-2 text-xs text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20 md:px-4 md:text-sm'
                       >
                         Cancel
                       </Button>
@@ -347,17 +347,16 @@ export function ModernInput({
                       <Button
                         type='submit'
                         disabled={!isValidTweet || loading || !selectedMedia}
-                        className='gap-2 bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700'
-
+                        className='gap-1 bg-amber-600 px-2 text-xs text-white hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700 md:gap-2 md:px-4 md:text-sm'
                       >
-                        <Send className='h-4 w-4' />
+                        <Send className='h-3 w-3 md:h-4 md:w-4' />
                         Share Review
                       </Button>
                     </div>
                   </div>
 
                   {inputLength > 0 && (
-                    <div className='text-right text-sm text-amber-600 dark:text-amber-400'>
+                    <div className='text-right text-xs text-amber-600 dark:text-amber-400 md:text-sm'>
                       {inputLength}/{inputLimit}
                     </div>
                   )}

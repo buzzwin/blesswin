@@ -3,24 +3,21 @@ import { useModal } from '@lib/hooks/useModal';
 import { Button } from '@components/ui/button';
 import { Modal } from '@components/modal/modal';
 import { MobileSidebarModal } from '@components/modal/mobile-sidebar-modal';
-import { UserAvatar } from '@components/user/user-avatar';
+import { HeroIcon } from '@components/ui/hero-icon';
 import type { Variants } from 'framer-motion';
-import type { User } from '@lib/types/user';
 
 const variant: Variants = {
-  initial: { x: '-100%', opacity: 0.8 },
+  initial: { x: '100%', opacity: 0.8 },
   animate: {
-    x: -8,
+    x: 0,
     opacity: 1,
-    transition: { type: 'spring', duration: 0.8 }
+    transition: { type: 'spring', duration: 0.6 }
   },
-  exit: { x: '-100%', opacity: 0.8, transition: { duration: 0.4 } }
+  exit: { x: '100%', opacity: 0.8, transition: { duration: 0.3 } }
 };
 
 export function MobileSidebar(): JSX.Element {
   const { user } = useAuth();
-  const { photoURL, name, username } = user as User;
-
   const { open, openModal, closeModal } = useModal();
 
   return (
@@ -28,19 +25,25 @@ export function MobileSidebar(): JSX.Element {
       <Modal
         className='p-0'
         modalAnimation={variant}
-        modalClassName='pb-4 pl-2 min-h-screen w-72 bg-main-background'
+        modalClassName='pb-4 pr-2 min-h-screen w-72 bg-main-background right-0'
         open={open}
         closeModal={closeModal}
       >
-        <MobileSidebarModal {...(user as User)} closeModal={closeModal} />
-      </Modal>
-      <Button className='accent-tab p-0 xs:hidden' onClick={openModal}>
-        <UserAvatar
-          src={photoURL}
-          alt={name}
-          className='h-[30px] w-[30px]'
-          username={username}
+        <MobileSidebarModal
+          {...(user ?? {
+            name: 'Guest',
+            username: 'guest',
+            verified: false,
+            photoURL: '',
+            following: [],
+            followers: [],
+            coverPhotoURL: ''
+          })}
+          closeModal={closeModal}
         />
+      </Modal>
+      <Button className='accent-tab p-0 md:hidden' onClick={openModal}>
+        <HeroIcon className='h-6 w-6' iconName='Bars3Icon' />
       </Button>
     </>
   );

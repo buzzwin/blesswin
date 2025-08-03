@@ -12,25 +12,29 @@ interface Recommendation {
   year: string;
 }
 
-interface RecommendationsData {
+interface Analysis {
+  preferredGenres: string[];
+  preferredYears: string[];
+  ratingPattern: string;
+  suggestions: string[];
+}
+
+interface RecommendationsResponse {
   recommendations: Recommendation[];
-  analysis: {
-    preferredGenres: string[];
-    preferredYears: string[];
-    ratingPattern: string;
-    suggestions: string[];
-  };
+  analysis: Analysis;
+  cached: boolean;
+  error?: string;
 }
 
 export function useRecommendations() {
   const { user } = useAuth();
-  const [recommendations, setRecommendations] = useState<RecommendationsData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [analysis, setAnalysis] = useState<Analysis | null>(null);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [cached, setCached] = useState(false);
 
-  const fetchRecommendations = async (): Promise<void> => {
-    if (!user?.id) return;
-
+  const fetchRecommendations = async () => {
     try {
       setLoading(true);
       setError(null);
@@ -40,15 +44,25 @@ export function useRecommendations() {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ userId: user.id })
+        body: JSON.stringify({
+          userId: user?.id ?? null
+        })
       });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
+        throw new Error('Failed to fetch recommendations');
       }
 
-      const data = await response.json();
-      setRecommendations(data as RecommendationsData);
+      const data: RecommendationsResponse = await response.json();
+      
+      setRecommendations(data.recommendations);
+      setAnalysis(data.analysis);
+      setCached(data.cached);
+      
+      if (data.error) {
+        console.warn('Recommendations API warning:', data.error);
+      }
+
     } catch (err) {
       console.error('Error fetching recommendations:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch recommendations');
@@ -57,16 +71,39 @@ export function useRecommendations() {
     }
   };
 
-  useEffect(() => {
+  const refreshRecommendations = async () => {
+    // Clear any existing cache by invalidating it
     if (user?.id) {
-      void fetchRecommendations();
+      try {
+        await fetch('/api/recommendations', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: user.id,
+            forceRefresh: true
+          })
+        });
+      } catch (err) {
+        console.error('Error refreshing recommendations:', err);
+      }
     }
+    
+    void fetchRecommendations();
+  };
+
+  useEffect(() => {
+    fetchRecommendations();
   }, [user?.id]);
 
   return {
     recommendations,
+    analysis,
     loading,
     error,
+    cached,
+    refreshRecommendations,
     refetch: fetchRecommendations
   };
 } 

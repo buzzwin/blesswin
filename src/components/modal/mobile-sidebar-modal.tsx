@@ -1,5 +1,7 @@
-import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { LogOut } from 'lucide-react';
 import { useModal } from '@lib/hooks/useModal';
+import { useAuth } from '@lib/context/auth-context';
 import { Button } from '@components/ui/button';
 import { UserAvatar } from '@components/user/user-avatar';
 import { NextImage } from '@components/ui/next-image';
@@ -10,13 +12,12 @@ import { MobileSidebarLink } from '@components/sidebar/mobile-sidebar-link';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from './modal';
 import { DisplayModal } from './display-modal';
-import { Sparkles, Clock, Star, TrendingUp } from 'lucide-react';
 import type { NavLink } from '@components/sidebar/sidebar';
 import type { User } from '@lib/types/user';
 
 export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
 
-const topNavLinks: Readonly<MobileNavLink[]> = [
+const getTopNavLinks = (username: string): Readonly<MobileNavLink[]> => [
   {
     href: '/recommendations',
     linkName: 'AI Recommendations',
@@ -27,6 +28,12 @@ const topNavLinks: Readonly<MobileNavLink[]> = [
     href: '/reviews',
     linkName: 'Recent Reviews',
     iconName: 'ClockIcon',
+    disabled: false
+  },
+  {
+    href: `/user/${username}`,
+    linkName: 'Profile',
+    iconName: 'UserIcon',
     disabled: false
   }
 ];
@@ -71,18 +78,31 @@ export function MobileSidebarModal({
   coverPhotoURL,
   closeModal
 }: MobileSidebarModalProps): JSX.Element {
+  const { signOut } = useAuth();
+  const router = useRouter();
+
   const {
     open: displayOpen,
     openModal: displayOpenModal,
     closeModal: displayCloseModal
   } = useModal();
 
+  const topNavLinks = getTopNavLinks(username);
+
+  const handleLogout = async (): Promise<void> => {
+    try {
+      await signOut();
+      closeModal();
+      void router.push('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   const allStats: Readonly<Stats[]> = [
     ['following', 'Following', following.length],
     ['followers', 'Followers', followers.length]
   ];
-
-  const userLink = `/user/${username}`;
 
   return (
     <>
@@ -96,29 +116,27 @@ export function MobileSidebarModal({
       </Modal>
       <MainHeader
         useActionButton
-        className='flex flex-row-reverse items-center justify-between'
+        className='mb-4 flex flex-row-reverse items-center justify-between'
         iconName='XMarkIcon'
-        title='Account info'
+        title='Menu'
         tip='Close'
         action={closeModal}
       />
-      <section className='mt-0.5 flex flex-col gap-2 px-4'>
-        <Link href={userLink}>
-          <a className='blur-picture relative h-20 rounded-md'>
-            {coverPhotoURL ? (
-              <NextImage
-                useSkeleton
-                imgClassName='rounded-md'
-                src={coverPhotoURL}
-                alt={name}
-                layout='fill'
-              />
-            ) : (
-              <div className='h-full rounded-md bg-light-line-reply dark:bg-dark-line-reply' />
-            )}
-          </a>
-        </Link>
-        <div className='mb-8 ml-2 -mt-4'>
+      <section className='flex flex-col gap-4 px-4'>
+        <div className='blur-picture relative h-20 rounded-md'>
+          {coverPhotoURL ? (
+            <NextImage
+              useSkeleton
+              imgClassName='rounded-md'
+              src={coverPhotoURL}
+              alt={name}
+              layout='fill'
+            />
+          ) : (
+            <div className='h-full rounded-md bg-light-line-reply dark:bg-dark-line-reply' />
+          )}
+        </div>
+        <div className='mb-6 ml-2 -mt-4'>
           <UserAvatar
             className='h-[60px] w-[60px]'
             username={username}
@@ -126,7 +144,7 @@ export function MobileSidebarModal({
             alt={name}
           />
         </div>
-        <div className='flex flex-col gap-4 rounded-xl bg-main-sidebar-background p-4'>
+        <div className='mb-4 flex flex-col gap-4 rounded-xl bg-main-sidebar-background p-4'>
           <div className='flex flex-col'>
             <UserName
               name={name}
@@ -138,24 +156,22 @@ export function MobileSidebarModal({
           </div>
           <div className='flex gap-4 text-secondary'>
             {allStats.map(([id, label, stat]) => (
-              <Link href={`${userLink}/${id}`} key={id}>
-                <a className='hover-animation flex h-4 items-center gap-1 border-b border-b-transparent outline-none hover:border-b-light-primary focus-visible:border-b-light-primary dark:hover:border-b-dark-primary dark:focus-visible:border-b-dark-primary'>
-                  <p className='font-bold'>{stat}</p>
-                  <p className='text-light-secondary dark:text-dark-secondary'>
-                    {label}
-                  </p>
-                </a>
-              </Link>
+              <div key={id} className='flex h-4 items-center gap-1'>
+                <p className='font-bold'>{stat}</p>
+                <p className='text-light-secondary dark:text-dark-secondary'>
+                  {label}
+                </p>
+              </div>
             ))}
           </div>
           <i className='h-0.5 bg-light-line-reply dark:bg-dark-line-reply' />
-          <nav className='flex flex-col'>
+          <nav className='flex flex-col gap-1'>
             {topNavLinks.map((linkData) => (
               <MobileSidebarLink {...linkData} key={linkData.href} />
             ))}
           </nav>
           <i className='h-0.5 bg-light-line-reply dark:bg-dark-line-reply' />
-          <nav className='flex flex-col'>
+          <nav className='flex flex-col gap-1'>
             {bottomNavLinks.map((linkData) => (
               <MobileSidebarLink bottom {...linkData} key={linkData.href} />
             ))}
@@ -167,6 +183,15 @@ export function MobileSidebarModal({
             >
               <HeroIcon className='h-5 w-5' iconName='PaintBrushIcon' />
               Display
+            </Button>
+            <Button
+              className='accent-tab accent-bg-tab flex items-center gap-2 rounded-md p-1.5 font-bold text-red-600
+                         transition hover:bg-light-primary/10 hover:text-red-700 
+                         focus-visible:ring-2 first:focus-visible:ring-[#878a8c] dark:hover:bg-dark-primary/10 dark:focus-visible:ring-white'
+              onClick={handleLogout}
+            >
+              <LogOut className='h-5 w-5' />
+              Sign Out
             </Button>
           </nav>
         </div>

@@ -1,5 +1,4 @@
-import { db } from '../app';
-import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { adminDb } from '../admin';
 
 interface Recommendation {
   tmdbId: string;
@@ -56,11 +55,11 @@ export async function getCachedRecommendations(userId: string | null): Promise<C
       return null;
     }
 
-    // For authenticated users, use Firestore
-    const docRef = doc(db, 'recommendations', userId);
-    const docSnap = await getDoc(docRef);
+    // For authenticated users, use Firestore (admin SDK for server-side)
+    const docRef = adminDb.collection('recommendations').doc(userId);
+    const docSnap = await docRef.get();
 
-    if (!docSnap.exists()) {
+    if (!docSnap.exists) {
       return null;
     }
 
@@ -69,7 +68,7 @@ export async function getCachedRecommendations(userId: string | null): Promise<C
 
     if (new Date() >= expiresAt) {
       // Cache expired, delete it
-      await deleteDoc(docRef);
+      await docRef.delete();
       return null;
     }
 
@@ -117,9 +116,9 @@ export async function cacheRecommendations(
       return;
     }
 
-    // For authenticated users, use Firestore
-    const docRef = doc(db, 'recommendations', userId);
-    await setDoc(docRef, cachedData);
+    // For authenticated users, use Firestore (admin SDK for server-side)
+    const docRef = adminDb.collection('recommendations').doc(userId);
+    await docRef.set(cachedData);
     console.log('Cached recommendations in Firestore');
 
   } catch (error) {
@@ -136,9 +135,9 @@ export async function invalidateRecommendationsCache(userId: string | null): Pro
       return;
     }
 
-    // For authenticated users, delete from Firestore
-    const docRef = doc(db, 'recommendations', userId);
-    await deleteDoc(docRef);
+    // For authenticated users, delete from Firestore (admin SDK for server-side)
+    const docRef = adminDb.collection('recommendations').doc(userId);
+    await docRef.delete();
     console.log('Invalidated recommendations cache');
 
   } catch (error) {

@@ -33,9 +33,9 @@ export default function SwipePage(): JSX.Element {
       const releaseDate = mediaData?.releaseDate || '';
       const voteAverage = mediaData?.voteAverage || 0;
 
-      await saveRating(
-        user.id,
-        mediaId,
+      await saveRating({
+        userId: user.id,
+        tmdbId: mediaId,
         title,
         mediaType,
         posterPath,
@@ -43,7 +43,7 @@ export default function SwipePage(): JSX.Element {
         overview,
         releaseDate,
         voteAverage
-      );
+      });
 
       console.log('Rating saved:', { mediaId, rating, userId: user.id });
     } catch (error) {

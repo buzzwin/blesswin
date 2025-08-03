@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import cn from 'clsx';
+import { FallbackImage } from './fallback-image';
 import type { ReactNode } from 'react';
 import type { ImageProps } from 'next/image';
 
@@ -12,6 +13,7 @@ type NextImageProps = {
   imgClassName?: string;
   previewCount?: number;
   blurClassName?: string;
+  mediaType?: 'movie' | 'tv';
 } & ImageProps;
 
 /**
@@ -30,11 +32,27 @@ export function NextImage({
   imgClassName,
   previewCount,
   blurClassName,
+  mediaType = 'movie',
   ...rest
 }: NextImageProps): JSX.Element {
   const [loading, setLoading] = useState(!!useSkeleton);
+  const [error, setError] = useState(false);
 
   const handleLoad = (): void => setLoading(false);
+  const handleError = (): void => {
+    setError(true);
+    setLoading(false);
+  };
+
+  // If there's an error, show fallback
+  if (error) {
+    return (
+      <figure style={{ width }} className={className}>
+        <FallbackImage mediaType={mediaType} className={imgClassName} />
+        {children}
+      </figure>
+    );
+  }
 
   return (
     <figure style={{ width }} className={className}>
@@ -53,6 +71,7 @@ export function NextImage({
         height={height}
         alt={alt}
         onLoadingComplete={handleLoad}
+        onError={handleError}
         layout='responsive'
         {...rest}
       />

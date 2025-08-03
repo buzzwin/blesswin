@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUserRatings } from '@lib/firebase/utils/rating';
-import { getCachedRecommendations, cacheRecommendations } from '@lib/firebase/utils/recommendations';
+import { getCachedRecommendations, cacheRecommendations, getGlobalRecommendations } from '@lib/firebase/utils/admin-recommendations';
 
 interface Recommendation {
   tmdbId: string;
@@ -33,57 +33,86 @@ export default async function handler(
   }
 
   try {
-    const { userId, forceRefresh = false } = req.body;
+    const { userId } = req.body;
 
-    if (!userId || typeof userId !== 'string') {
-      res.status(400).json({ error: 'User ID is required' });
-      return;
-    }
-
-    // Check cache first (unless force refresh is requested)
-    if (!forceRefresh) {
-      const cachedRecommendations = await getCachedRecommendations(userId);
-      if (cachedRecommendations) {
-        console.log('Returning cached recommendations for user:', userId);
+    // Handle anonymous users
+    if (!userId) {
+      console.log('Anonymous user requesting recommendations');
+      
+      // Check cache first
+      const cached = await getCachedRecommendations(null);
+      if (cached) {
         res.status(200).json({
-          recommendations: cachedRecommendations.recommendations,
-          analysis: cachedRecommendations.analysis,
-          cached: true,
-          createdAt: cachedRecommendations.createdAt,
-          expiresAt: cachedRecommendations.expiresAt
+          recommendations: cached.recommendations,
+          analysis: cached.analysis,
+          cached: true
         });
         return;
       }
-    }
 
-    // Fetch user's ratings
-    const ratings = await getUserRatings(userId);
+      // For anonymous users, return global recommendations
+      const globalRecommendations = await getGlobalRecommendations();
+      
+      // Cache the global recommendations
+      cacheRecommendations(null, globalRecommendations, {
+        preferredGenres: ['Action', 'Drama', 'Comedy'],
+        preferredYears: ['1990-2010'],
+        ratingPattern: 'Mixed preferences',
+        suggestions: ['Try different genres to discover your taste']
+      });
 
-    if (ratings.length === 0) {
       res.status(200).json({
-        recommendations: [],
+        recommendations: globalRecommendations,
         analysis: {
-          preferredGenres: [],
-          preferredYears: [],
-          ratingPattern: 'No ratings yet',
-          suggestions: ['Start rating shows and movies to get personalized recommendations!']
+          preferredGenres: ['Action', 'Drama', 'Comedy'],
+          preferredYears: ['1990-2010'],
+          ratingPattern: 'Mixed preferences',
+          suggestions: ['Try different genres to discover your taste']
         },
         cached: false
       });
       return;
     }
 
-    // Prepare data for OpenAI
-    const ratingData = ratings.map(rating => ({
-      title: rating.title,
-      rating: rating.rating,
-      mediaType: rating.mediaType,
-      overview: rating.overview ?? '',
-      releaseDate: rating.releaseDate ?? '',
-      voteAverage: rating.voteAverage ?? 0
-    }));
+    // For authenticated users, check cache first
+    const cached = await getCachedRecommendations(userId as string);
+    if (cached) {
+      res.status(200).json({
+        recommendations: cached.recommendations,
+        analysis: cached.analysis,
+        cached: true
+      });
+      return;
+    }
 
-    // Call OpenAI API
+    // Fetch user's ratings
+    const ratings = await getUserRatings(userId as string);
+    
+    if (ratings.length === 0) {
+      // User has no ratings, return global recommendations
+      const globalRecommendations = await getGlobalRecommendations();
+      
+      cacheRecommendations(userId as string, globalRecommendations, {
+        preferredGenres: ['Action', 'Drama', 'Comedy'],
+        preferredYears: ['1990-2010'],
+        ratingPattern: 'No ratings yet',
+        suggestions: ['Start rating shows and movies to get personalized recommendations']
+      });
+
+      res.status(200).json({
+        recommendations: globalRecommendations,
+        analysis: {
+          preferredGenres: ['Action', 'Drama', 'Comedy'],
+          preferredYears: ['1990-2010'],
+          ratingPattern: 'No ratings yet',
+          suggestions: ['Start rating shows and movies to get personalized recommendations']
+        },
+        cached: false
+      });
+      return;
+    }
+
+    // Generate AI recommendations
     const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -91,110 +120,97 @@ export default async function handler(
         'Authorization': `Bearer ${process.env.OPENAI_KEY}`
       },
       body: JSON.stringify({
-        model: 'gpt-4',
+        model: 'gpt-3.5-turbo',
         messages: [
           {
             role: 'system',
-            content: `You are a movie and TV show recommendation expert. Analyze the user's ratings and provide personalized recommendations.
-
-IMPORTANT: You must respond with ONLY a valid JSON object. No additional text, explanations, or formatting outside the JSON.
-
-The user has rated the following content:
-${JSON.stringify(ratingData, null, 2)}
-
-Analyze their preferences and return a JSON object with this EXACT structure:
-{
-  "recommendations": [
-    {
-      "tmdbId": "string (must be a valid TMDB ID)",
-      "title": "string (exact movie/show title)",
-      "mediaType": "movie" or "tv",
-      "posterPath": "string (TMDB poster path starting with /)",
-      "reason": "string (brief explanation)",
-      "confidence": number (between 0.1 and 1.0),
-      "genre": "string (comma-separated genres)",
-      "year": "string (4-digit year)"
-    }
-  ],
-  "analysis": {
-    "preferredGenres": ["string array of genres"],
-    "preferredYears": ["string array of year ranges"],
-    "ratingPattern": "string (brief analysis)",
-    "suggestions": ["string array of suggestions"]
-  }
-}
-
-Rules:
-- Provide exactly 5-8 recommendations
-- Use only valid TMDB IDs
-- Ensure all fields are properly formatted
-- No text outside the JSON object`
+            content: `You are a movie and TV show recommendation expert. Analyze the user's ratings and provide personalized recommendations. 
+            Return ONLY a valid JSON object with this exact structure:
+            {
+              "recommendations": [
+                {
+                  "tmdbId": "string (TMDB ID)",
+                  "title": "string (title)",
+                  "mediaType": "movie" or "tv",
+                  "posterPath": "string (poster path)",
+                  "reason": "string (why this is recommended)",
+                  "confidence": number (0-1),
+                  "genre": "string (primary genre)",
+                  "year": "string (release year)"
+                }
+              ],
+              "analysis": {
+                "preferredGenres": ["array of preferred genres"],
+                "preferredYears": ["array of preferred years"],
+                "ratingPattern": "string (description of rating pattern)",
+                "suggestions": ["array of suggestions"]
+              }
+            }`
+          },
+          {
+            role: 'user',
+            content: `Analyze these ratings and provide 5 personalized recommendations:
+            ${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}`
           }
         ],
-        temperature: 0.3,
-        max_tokens: 2000
+        max_tokens: 1000,
+        temperature: 0.7
       })
     });
 
     if (!openAIResponse.ok) {
-      throw new Error(`OpenAI API error: ${openAIResponse.statusText}`);
+      throw new Error(`OpenAI API error: ${openAIResponse.status}`);
     }
 
     const openAIData = await openAIResponse.json();
-    const content = openAIData.choices?.[0]?.message?.content;
+    const content = openAIData.choices[0]?.message?.content;
 
     if (!content || typeof content !== 'string') {
       throw new Error('No content received from OpenAI');
     }
 
-    // Clean the content to extract only JSON
-    let jsonContent = content.trim();
-    
-    // Remove any text before the first {
-    const firstBraceIndex = jsonContent.indexOf('{');
-    if (firstBraceIndex > 0) {
-      jsonContent = jsonContent.substring(firstBraceIndex);
-    }
-    
-    // Remove any text after the last }
-    const lastBraceIndex = jsonContent.lastIndexOf('}');
-    if (lastBraceIndex !== -1 && lastBraceIndex < jsonContent.length - 1) {
-      jsonContent = jsonContent.substring(0, lastBraceIndex + 1);
-    }
-
-    // Parse the JSON response
-    let recommendations: OpenAIResponse;
+    // Parse the response
+    let parsedResponse: OpenAIResponse;
     try {
-      recommendations = JSON.parse(jsonContent);
-    } catch (error) {
+      parsedResponse = JSON.parse(content);
+    } catch (parseError) {
       console.error('Failed to parse OpenAI response:', content);
-      console.error('Cleaned content:', jsonContent);
       throw new Error('Invalid response format from OpenAI');
     }
 
     // Validate the response structure
-    if (!recommendations.recommendations || !Array.isArray(recommendations.recommendations)) {
-      throw new Error('Invalid recommendations structure');
-    }
-
-    if (!recommendations.analysis || typeof recommendations.analysis !== 'object') {
-      throw new Error('Invalid analysis structure');
+    if (!parsedResponse.recommendations || !Array.isArray(parsedResponse.recommendations)) {
+      throw new Error('Invalid response format from OpenAI');
     }
 
     // Cache the recommendations
-    await cacheRecommendations(userId, recommendations.recommendations, recommendations.analysis);
+          cacheRecommendations(userId as string, parsedResponse.recommendations, parsedResponse.analysis);
 
     res.status(200).json({
-      ...recommendations,
-      cached: false,
-      createdAt: new Date(),
-      expiresAt: new Date(Date.now() + (3 * 24 * 60 * 60 * 1000)) // 3 days from now
+      recommendations: parsedResponse.recommendations,
+      analysis: parsedResponse.analysis,
+      cached: false
     });
+
   } catch (error) {
     console.error('Error generating recommendations:', error);
-    res.status(500).json({ 
-      error: 'Failed to generate recommendations',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    
+    // Fallback to global recommendations on error
+    try {
+      const globalRecommendations = await getGlobalRecommendations();
+      res.status(200).json({
+        recommendations: globalRecommendations,
+        analysis: {
+          preferredGenres: ['Action', 'Drama', 'Comedy'],
+          preferredYears: ['1990-2010'],
+          ratingPattern: 'Fallback recommendations',
+          suggestions: ['Try rating some content to get personalized recommendations']
+        },
+        cached: false,
+        error: 'Using fallback recommendations due to API error'
+      });
+    } catch (fallbackError) {
+      res.status(500).json({ error: 'Failed to generate recommendations' });
+    }
   }
 } 

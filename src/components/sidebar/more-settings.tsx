@@ -3,15 +3,15 @@ import { Menu } from '@headlessui/react';
 import cn from 'clsx';
 import { useModal } from '@lib/hooks/useModal';
 import { preventBubbling } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
+import { useWindow } from '@lib/context/window-context';
 import { Modal } from '@components/modal/modal';
 import { DisplayModal } from '@components/modal/display-modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
+import { ActionModal } from '@components/modal/action-modal';
 import { MenuLink } from './menu-link';
 import type { Variants } from 'framer-motion';
-import { ActionModal } from '@components/modal/action-modal';
-import { useAuth } from '@lib/context/auth-context';
-import { useWindow } from '@lib/context/window-context';
 
 export const variants: Variants = {
   initial: { opacity: 0, y: 50 },
