@@ -8,8 +8,8 @@ import { ReviewsList } from '@components/review/reviews-list';
 import { useUser } from '@lib/context/user-context';
 import { useEffect, useState } from 'react';
 import { ReviewWithUser } from '@lib/types/review';
-import { getUserReviews } from '@lib/firebase/utils/review';
 import type { ReactElement, ReactNode } from 'react';
+import { getUserReviews } from '@lib/firebase/utils/review';
 
 export default function UserProfile(): JSX.Element {
   const { user } = useUser();
@@ -34,7 +34,7 @@ export default function UserProfile(): JSX.Element {
         const userReviews = await getUserReviews(userId);
         setReviews(userReviews);
       } catch (error) {
-        console.error('Error loading user reviews:', error);
+        // console.error('Error loading user reviews:', error);
       } finally {
         setLoading(false);
       }

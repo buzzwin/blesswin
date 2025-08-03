@@ -7,7 +7,7 @@ const LogoIcon = (props: any) => (
     alt='Buzzwin Logo'
     width={425}
     height={425}
-    className={props.className || ''}
+    className={props.className ?? ''}
     priority
   />
 );

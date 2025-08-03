@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { getUserReviews } from '@lib/firebase/utils/review';
-import { TweetReviews } from '@components/tweet/tweet-reviews';
 import type { ReviewWithUser } from '@lib/types/review';
+import { TweetReviews } from '@components/tweet/tweet-reviews';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 
@@ -19,7 +19,7 @@ export function UserReviews({ userId }: UserReviewsProps): JSX.Element {
         const userReviews = await getUserReviews(userId);
         setReviews(userReviews);
       } catch (error) {
-        console.error('Error loading reviews:', error);
+        // console.error('Error loading reviews:', error);
       } finally {
         setLoading(false);
       }

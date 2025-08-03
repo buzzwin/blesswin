@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { ReviewCard } from '@components/review/review-card';
 import { HeroIcon } from '@components/ui/hero-icon';
-import { cn } from '@lib/utils';
 import type { ReviewWithUser } from '@lib/types/review';
+import { cn } from '@lib/utils';
 
 type ReviewsListProps = {
   reviews: ReviewWithUser[];
@@ -21,8 +21,8 @@ export function ReviewsList({
   const [sortBy, setSortBy] = useState<SortOption>('latest');
   const [filterBy, setFilterBy] = useState<FilterOption>('all');
 
-  console.log('ReviewsList received reviews:', reviews);
-  console.log('Current filterBy:', filterBy);
+  // console.log('ReviewsList received reviews:', reviews);
+  // console.log('Current filterBy:', filterBy);
 
   if (loading) {
     return (
@@ -34,14 +34,14 @@ export function ReviewsList({
 
   const filteredReviews = reviews.filter((review) => {
     if (filterBy === 'all') return true;
-    console.log(
-      'Filtering review:',
-      review.title,
-      'mediaType:',
-      review.mediaType,
-      'filterBy:',
-      filterBy
-    );
+    // console.log(
+    //   'Filtering review:',
+    //   review.title,
+    //   'mediaType:',
+    //   review.mediaType,
+    //   'filterBy:',
+    //   filterBy
+    // );
     return review.mediaType === filterBy;
   });
 
@@ -50,7 +50,7 @@ export function ReviewsList({
       case 'oldest':
         return a.createdAt.seconds - b.createdAt.seconds;
       case 'rating':
-        return (b.rating?.length || 0) - (a.rating?.length || 0);
+        return (b.rating?.length ?? 0) - (a.rating?.length ?? 0);
       default: // latest
         return b.createdAt.seconds - a.createdAt.seconds;
     }
@@ -64,7 +64,7 @@ export function ReviewsList({
         <div className='flex gap-2'>
           <button
             onClick={() => {
-              console.log('All button clicked');
+              // console.log('All button clicked');
               setFilterBy('all');
             }}
             className={cn(
@@ -78,7 +78,7 @@ export function ReviewsList({
           </button>
           <button
             onClick={() => {
-              console.log('Movie button clicked');
+              // console.log('Movie button clicked');
               setFilterBy('movie');
             }}
             className={cn(
@@ -92,7 +92,7 @@ export function ReviewsList({
           </button>
           <button
             onClick={() => {
-              console.log('TV button clicked');
+              // console.log('TV button clicked');
               setFilterBy('tv');
             }}
             className={cn(

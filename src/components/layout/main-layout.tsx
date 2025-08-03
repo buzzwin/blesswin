@@ -1,8 +1,8 @@
 import { SWRConfig } from 'swr';
 import { Toaster } from 'react-hot-toast';
-import { fetchJSON } from '@lib/fetch';
 import type { DefaultToastOptions } from 'react-hot-toast';
-import type { LayoutProps } from './common-layout';
+import { fetchJSON } from '@lib/fetch';
+import type { ReactNode } from 'react';
 
 const toastOptions: DefaultToastOptions = {
   style: {
@@ -13,7 +13,7 @@ const toastOptions: DefaultToastOptions = {
   success: { duration: 4000 }
 };
 
-export function MainLayout({ children }: LayoutProps): JSX.Element {
+export function MainLayout({ children }: { children: ReactNode }): JSX.Element {
   return (
     <div className='flex w-full justify-center'>
       <SWRConfig value={{ fetcher: fetchJSON }}>{children}</SWRConfig>

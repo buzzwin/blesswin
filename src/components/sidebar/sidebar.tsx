@@ -8,8 +8,8 @@ import { Button } from '@components/ui/button';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
-import { SidebarLink } from './sidebar-link';
 import type { IconName } from '@components/ui/hero-icon';
+import { SidebarLink } from './sidebar-link';
 
 export type NavLink = {
   href: string;
@@ -52,7 +52,7 @@ export function Sidebar(): JSX.Element {
       await signOut();
       void router.push('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      // console.error('Logout error:', error);
     }
   };
 
@@ -94,13 +94,13 @@ export function Sidebar(): JSX.Element {
               <div className='flex gap-4 text-sm text-secondary'>
                 <div className='flex items-center gap-1'>
                   <span className='font-bold'>
-                    {user.following?.length || 0}
+                    {user.following?.length ?? 0}
                   </span>
                   <span>Following</span>
                 </div>
                 <div className='flex items-center gap-1'>
                   <span className='font-bold'>
-                    {user.followers?.length || 0}
+                    {user.followers?.length ?? 0}
                   </span>
                   <span>Followers</span>
                 </div>

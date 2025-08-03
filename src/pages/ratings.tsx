@@ -6,12 +6,12 @@ import { Button } from '@components/ui/button-shadcn';
 import { Loading } from '@components/ui/loading';
 import { Heart, X, Meh, Trash2, Film, Tv } from 'lucide-react';
 import Image from 'next/image';
+import type { MediaRating } from '@lib/types/rating';
 import {
   getUserRatings,
   getRatingStats,
   deleteRating
 } from '@lib/firebase/utils/rating';
-import type { MediaRating } from '@lib/types/rating';
 import { useAuth } from '@lib/context/auth-context';
 import { getTMDBImageUrl } from '@lib/utils';
 import { FallbackImage } from '@components/ui/fallback-image';
@@ -43,16 +43,16 @@ export default function RatingsPage(): JSX.Element {
       setLoading(true);
       setError(null);
 
-      console.log('Fetching ratings for user:', user.id);
+      // console.log('Fetching ratings for user:', user.id);
       const userRatings = await getUserRatings(user.id);
-      console.log('Fetched ratings:', userRatings);
+      // console.log('Fetched ratings:', userRatings);
 
       setRatings(userRatings);
 
       const ratingStats = await getRatingStats(user.id);
       setStats(ratingStats);
     } catch (err) {
-      console.error('Error fetching ratings:', err);
+      // console.error('Error fetching ratings:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch ratings');
     } finally {
       setLoading(false);
@@ -70,7 +70,7 @@ export default function RatingsPage(): JSX.Element {
       const updatedStats = await getRatingStats(user.id);
       setStats(updatedStats);
     } catch (err) {
-      console.error('Error deleting rating:', err);
+      // console.error('Error deleting rating:', err);
       setError(err instanceof Error ? err.message : 'Failed to delete rating');
     }
   };

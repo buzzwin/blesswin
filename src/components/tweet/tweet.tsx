@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Popover } from '@headlessui/react';
-import { toast } from 'react-hot-toast';
 import type { ReactNode } from 'react';
+import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 
 // Firebase imports
@@ -32,12 +32,12 @@ import { TweetDate } from './tweet-date';
 import { TweetStats } from './tweet-stats';
 import { TweetReviews } from './tweet-reviews';
 import { Loading } from '@components/ui/loading';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { IconName } from '@components/ui/hero-icon';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 // Utils and types
-import { cn } from '@lib/utils';
 import type { Tweet } from '@lib/types/tweet';
+import { cn } from '@lib/utils';
 import type { User } from '@lib/types/user';
 import type { ViewingActivity } from '@components/activity/types';
 import type { ReviewWithUser } from '@lib/types/review';
@@ -124,10 +124,10 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         try {
           await push('/');
         } catch (navigationError) {
-          console.error('Navigation error:', navigationError);
+          // console.error('Navigation error:', navigationError);
         }
       } catch (error) {
-        console.error('Error deleting buzz:', error);
+        // console.error('Error deleting buzz:', error);
         toast.error(
           error instanceof Error ? error.message : 'Failed to delete buzz'
         );
@@ -144,9 +144,9 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
     const bookmarkData = {
       title: viewingActivity.title,
-      description: viewingActivity.review || viewingActivity.overview || '',
-      mediaType: viewingActivity.mediaType || 'movie',
-      posterPath: viewingActivity.poster_path || '',
+      description: viewingActivity.review ?? viewingActivity.overview ?? '',
+      mediaType: viewingActivity.mediaType ?? 'movie',
+      posterPath: viewingActivity.poster_path ?? '',
       watchlistId,
       mediaId: viewingActivity.tmdbId.toString(),
       tags: [],
@@ -163,7 +163,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
       );
       toast.success('Added to watchlist!');
     } catch (error) {
-      console.error('Error adding to watchlist:', error);
+      // console.error('Error adding to watchlist:', error);
       toast.error('Failed to add to watchlist');
     }
   };
@@ -197,7 +197,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
     try {
       const tweetData = {
-        text: replyData.review || '',
+        text: replyData.review ?? '',
         images: null,
         parent: {
           id: tweetId,
@@ -213,7 +213,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
           ...replyData,
           tmdbId: replyData.tmdbId
         },
-        photoURL: user.photoURL || '',
+        photoURL: user.photoURL ?? '',
         userWatching: [],
         totalWatchers: 0
       };
@@ -234,7 +234,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
       toast.success('Review posted successfully!');
       closeModal();
     } catch (error) {
-      console.error('Error posting reply:', error);
+      // console.error('Error posting reply:', error);
       toast.error(
         error instanceof Error ? error.message : 'Failed to post reply'
       );
@@ -277,7 +277,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         setReplies(replyDocs);
         setReviews(reviewsData);
       } catch (error) {
-        console.error('Error loading replies and reviews:', error);
+        // console.error('Error loading replies and reviews:', error);
         toast.error('Failed to load replies and reviews');
       } finally {
         setLoadingReplies(false);
@@ -292,7 +292,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
   };
 
   const handleError = (error: unknown): void => {
-    console.error('Error:', error);
+    // console.error('Error:', error);
     const message =
       error instanceof Error ? error.message : 'An error occurred';
     toast.error(message);
@@ -370,8 +370,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         mediaData={{
                           id: viewingActivity.tmdbId.toString(),
                           title: viewingActivity.title,
-                          description: viewingActivity.review || '',
-                          mediaType: viewingActivity.mediaType || 'movie',
+                          description: viewingActivity.review ?? '',
+                          mediaType: viewingActivity.mediaType ?? 'movie',
                           posterPath: viewingActivity.poster_path
                         }}
                       />
@@ -632,7 +632,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                     userReplies={userReplies}
                     viewTweet={false}
                     viewingActivity={viewingActivity}
-                    text={text || ''}
+                    text={text ?? ''}
                     openModal={handleReplyClick}
                     userWatching={userWatching}
                     totalWatchers={totalWatchers}

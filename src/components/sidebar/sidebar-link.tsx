@@ -3,8 +3,8 @@ import Link from 'next/link';
 import cn from 'clsx';
 import { Sparkles, Clock, User } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { NavLink } from './sidebar';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 type SidebarLinkProps = NavLink & {
   username?: string;

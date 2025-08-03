@@ -13,8 +13,8 @@ import { cn } from '@lib/utils';
 import { SEO } from '@components/common/seo';
 import { Watchlists } from '@components/bookmarks/watchlists';
 import { WatchlistsStats } from '@components/bookmarks/watchlists-stats';
-import { WindowContextProvider } from '@lib/context/window-context';
 import type { ReactElement, ReactNode } from 'react';
+import { WindowContextProvider } from '@lib/context/window-context';
 
 function CreateWatchlistModal({
   open,

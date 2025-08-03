@@ -5,8 +5,8 @@ import cn from 'clsx';
 import { manageLike, manageWatching } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
-import { TweetShare } from './tweet-share';
 import type { Tweet } from '@lib/types/tweet';
+import { TweetShare } from './tweet-share';
 import { ViewingActivity } from '@components/activity/types';
 
 type TweetStatsProps = Pick<
@@ -89,9 +89,9 @@ export function TweetStats({
   const isWatching = userWatching.includes(userId);
 
   const isStatsVisible = !!(
-    totalReplies ||
-    totalTweets ||
-    totalLikes ||
+    totalReplies ??
+    totalTweets ??
+    totalLikes ??
     totalWatchers
   );
 

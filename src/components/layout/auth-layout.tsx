@@ -3,9 +3,9 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@lib/context/auth-context';
 import { sleep } from '@lib/utils';
 import { Placeholder } from '@components/common/placeholder';
-import type { LayoutProps } from './common-layout';
+import type { ReactNode } from 'react';
 
-export function AuthLayout({ children }: LayoutProps): JSX.Element {
+export function AuthLayout({ children }: { children: ReactNode }): JSX.Element {
   const [pending, setPending] = useState(true);
 
   const { user, loading } = useAuth();
@@ -28,7 +28,7 @@ export function AuthLayout({ children }: LayoutProps): JSX.Element {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user, loading]);
 
-  if (loading || pending) return <Placeholder />;
+  if (loading ?? pending) return <Placeholder />;
 
   return <>{children}</>;
 }

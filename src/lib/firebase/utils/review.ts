@@ -15,8 +15,8 @@ import {
   type QueryDocumentSnapshot,
   deleteDoc
 } from 'firebase/firestore';
-import { reviewsCollection, usersCollection } from '../collections';
 import type { Review, ReviewWithUser } from '@lib/types/review';
+import { reviewsCollection, usersCollection } from '../collections';
 import type { User } from '@lib/types/user';
 
 export const createReview = async (
@@ -32,20 +32,16 @@ export const createReview = async (
       throw new Error('Missing required fields for review');
     }
 
-    // Filter out undefined values to prevent Firestore errors
-    const cleanReviewData = Object.fromEntries(
-      Object.entries(reviewData).filter(([_, value]) => value !== undefined)
-    ) as any;
-
+    // Create firestore data with all required fields
     const firestoreData = {
-      ...cleanReviewData,
+      ...reviewData,
       createdAt: serverTimestamp(),
       updatedAt: null,
       likes: []
-    };
+    } as const;
 
     // Add to reviews collection
-    const reviewRef = await addDoc(reviewsCollection, firestoreData);
+    const reviewRef = await addDoc(reviewsCollection, firestoreData as any);
 
     // Get user data for response
     const userDoc = await getDoc(doc(usersCollection, reviewData.userId));
@@ -71,7 +67,7 @@ export const createReview = async (
       }
     };
   } catch (error) {
-    console.error('Error in createReview:', error);
+    // console.error('Error in createReview:', error);
     throw new Error(
       error instanceof Error 
         ? `Failed to create review: ${error.message}`
@@ -115,7 +111,7 @@ export const getMediaReviews = async (tmdbId: number): Promise<ReviewWithUser[]>
 
     return reviews;
   } catch (error) {
-    console.error('Error fetching media reviews:', error);
+    // console.error('Error fetching media reviews:', error);
     return [];
   }
 };
@@ -149,7 +145,7 @@ export const getUserReviews = async (userId: string): Promise<ReviewWithUser[]> 
       } as ReviewWithUser;
     });
   } catch (error) {
-    console.error('Error fetching user reviews:', error);
+    // console.error('Error fetching user reviews:', error);
     return [];
   }
 };
@@ -167,8 +163,8 @@ export const toggleReviewLike = async (
         : arrayUnion(userId)
     });
   } catch (error) {
-    console.error('Error toggling review like:', error);
-    throw error;
+    // console.error('Error toggling review like:', error);
+    throw new Error(error instanceof Error ? error.message : 'Failed to toggle review like');
   }
 };
 
@@ -189,7 +185,7 @@ export const deleteReview = async (reviewId: string, userId: string): Promise<vo
     await deleteDoc(reviewRef);
   } catch (error) {
     // eslint-disable-next-line no-console
-    console.error('Error deleting review:', error);
-    throw error;
+    // console.error('Error deleting review:', error);
+    throw new Error(error instanceof Error ? error.message : 'Failed to delete review');
   }
 }; 

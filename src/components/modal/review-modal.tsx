@@ -3,8 +3,8 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { Modal } from '@components/modal/modal';
 import { HeroIcon } from '@components/ui/hero-icon';
-import { cn } from '@lib/utils';
 import type { ReviewWithUser } from '@lib/types/review';
+import { cn } from '@lib/utils';
 import type { ViewingActivity } from '@components/activity/types';
 import { createReview } from '@lib/firebase/utils/review';
 
@@ -64,8 +64,8 @@ export function ReviewModal({
         tmdbId: Number(viewingActivity.tmdbId),
         userId: user.id,
         title: viewingActivity.title,
-        mediaType: viewingActivity.mediaType || 'movie',
-        rating: selectedEmoji || '',
+        mediaType: viewingActivity.mediaType ?? 'movie',
+        rating: selectedEmoji ?? '',
         review: reviewText,
         tags: selectedTags,
         posterPath: viewingActivity.poster_path
@@ -184,7 +184,7 @@ export function ReviewModal({
           </button>
           <button
             onClick={handleSubmit}
-            disabled={loading || !reviewText.trim()}
+            disabled={loading ?? !reviewText.trim()}
             className={cn(
               'flex items-center gap-2',
               'px-4 py-2',

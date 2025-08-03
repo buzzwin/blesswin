@@ -5,8 +5,8 @@ import { AuthContextProvider } from '@lib/context/auth-context';
 import { ThemeContextProvider } from '@lib/context/theme-context';
 import { AppHead } from '@components/common/app-head';
 import { GlobalLayout } from '@components/layout/global-layout';
-import { ReactElement, ReactNode, useEffect } from 'react';
 import type { NextPage } from 'next';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 
 type NextPageWithLayout = NextPage & {
@@ -34,15 +34,15 @@ export default function App({
                 logEvent(analytics, 'page_view');
               })
               .catch((error) => {
-                console.error('Error loading Firebase Analytics:', error);
+                // console.error('Error loading Firebase Analytics:', error);
               });
           }
         })
         .catch((error) => {
-          console.error(
-            'Error checking for Firebase Analytics support:',
-            error
-          );
+          // console.error(
+          //   'Error checking for Firebase Analytics support:',
+          //   error
+          // );
         });
     }
   }, []);

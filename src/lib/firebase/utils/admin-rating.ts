@@ -1,4 +1,13 @@
+import type { Timestamp } from 'firebase/firestore';
 import { adminDb } from '../admin';
+
+// Helper function to safely convert Firestore timestamp to Date
+function safeTimestampToDate(timestamp: Timestamp | null | undefined): Date {
+  if (timestamp && typeof timestamp.toDate === 'function') {
+    return timestamp.toDate();
+  }
+  return new Date();
+}
 
 interface Rating {
   id: string;
@@ -15,43 +24,38 @@ interface Rating {
 }
 
 export async function getUserRatings(userId: string): Promise<Rating[]> {
-  try {
-    console.log('Fetching ratings for userId:', userId);
-    
-    const querySnapshot = await adminDb
-      .collection('ratings')
-      .where('userId', '==', userId)
-      .get();
+  // console.log('Fetching ratings for userId:', userId);
+  
+  const querySnapshot = await adminDb
+    .collection('ratings')
+    .where('userId', '==', userId)
+    .get();
 
-    console.log('Query snapshot size:', querySnapshot.size);
+  // console.log('Query snapshot size:', querySnapshot.size);
+  
+  const ratings: Rating[] = [];
+  
+  querySnapshot.forEach((doc) => {
+    const data = doc.data();
+    // console.log('Document data:', data);
     
-    const ratings: Rating[] = [];
-    
-    querySnapshot.forEach((doc) => {
-      const data = doc.data();
-      console.log('Document data:', data);
-      
-      ratings.push({
-        id: doc.id,
-        userId: data.userId,
-        tmdbId: data.tmdbId,
-        title: data.title,
-        mediaType: data.mediaType,
-        rating: data.rating,
-        overview: data.overview,
-        releaseDate: data.releaseDate,
-        voteAverage: data.voteAverage,
-        posterPath: data.posterPath,
-        createdAt: (data.createdAt as any)?.toDate?.() ?? new Date()
-      });
+    ratings.push({
+      id: doc.id,
+      userId: data.userId as string,
+      tmdbId: data.tmdbId as string,
+      title: data.title as string,
+      mediaType: data.mediaType as 'movie' | 'tv',
+      rating: data.rating as 'love' | 'hate' | 'meh',
+      overview: data.overview as string | undefined,
+      releaseDate: data.releaseDate as string | undefined,
+      voteAverage: data.voteAverage as number | undefined,
+      posterPath: data.posterPath as string | undefined,
+      createdAt: safeTimestampToDate(data.createdAt as Timestamp)
     });
+  });
 
-    console.log('Processed ratings:', ratings);
-    return ratings;
-  } catch (error) {
-    console.error('Error fetching user ratings:', error);
-    return [];
-  }
+  // console.log('Processed ratings:', ratings);
+  return ratings;
 }
 
 export async function saveUserRating(rating: Omit<Rating, 'id' | 'createdAt'>): Promise<void> {
@@ -62,7 +66,7 @@ export async function saveUserRating(rating: Omit<Rating, 'id' | 'createdAt'>): 
       createdAt: new Date()
     });
   } catch (error) {
-    console.error('Error saving user rating:', error);
-    throw error;
+    // console.error('Error saving user rating:', error);
+    throw new Error(error instanceof Error ? error.message : 'Failed to save rating');
   }
 } 

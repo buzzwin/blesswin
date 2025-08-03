@@ -23,8 +23,8 @@ import {
   userStatsCollection,
   userBookmarksCollection
 } from '@lib/firebase/collections';
-import { getRandomId, getRandomInt } from '@lib/random';
 import type { ReactNode } from 'react';
+import { getRandomId, getRandomInt } from '@lib/random';
 import type { User as AuthUser } from 'firebase/auth';
 import type { WithFieldValue } from 'firebase/firestore';
 import type { User } from '@lib/types/user';
@@ -97,12 +97,12 @@ export function AuthContextProvider({
         const userData: WithFieldValue<User> = {
           id: uid,
           bio: null,
-          name: (displayName as string) || 'anonymous',
+          name: (displayName as string) ?? 'anonymous',
           theme: null,
           accent: null,
           website: null,
           location: null,
-          photoURL: photoURL || '/logo.PNG',
+          photoURL: photoURL ?? '/logo.PNG',
           username: randomUsername,
           verified: false,
           following: [],

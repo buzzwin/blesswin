@@ -9,7 +9,7 @@ const Terms: React.FC = () => {
     try {
       await router.push('/');
     } catch (error) {
-      //console.error(
+      //// console.error(
       //'An error occurred while navigating to the homepage:',
       //error
       //);

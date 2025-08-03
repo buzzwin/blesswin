@@ -6,8 +6,8 @@ import { Button } from '@components/ui/button-shadcn';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Heart, X, Meh, RefreshCw, Filter } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
-import { toast } from 'react-hot-toast';
 import type { MediaCard, RatingType } from '@lib/types/rating';
+import { toast } from 'react-hot-toast';
 
 interface SwipeInterfaceProps {
   onRatingSubmit?: (
@@ -85,14 +85,14 @@ export function SwipeInterface({
               return;
             }
           } catch (aiError) {
-            console.error('AI recommendations failed, falling back to popular content:', aiError);
+            // console.error('AI recommendations failed, falling back to popular content:', aiError);
           }
         }
 
         // Fallback to popular content from TMDB
         const moviesResponse = await fetch(
           `https://api.themoviedb.org/3/movie/popular?api_key=${
-            process.env.NEXT_PUBLIC_TMDB_API_KEY ||
+            process.env.NEXT_PUBLIC_TMDB_API_KEY ??
             '0af4f0642998fa986fe260078ab69ab6'
           }&language=en-US&page=1`
         );
@@ -110,7 +110,7 @@ export function SwipeInterface({
 
         const tvResponse = await fetch(
           `https://api.themoviedb.org/3/tv/popular?api_key=${
-            process.env.NEXT_PUBLIC_TMDB_API_KEY ||
+            process.env.NEXT_PUBLIC_TMDB_API_KEY ??
             '0af4f0642998fa986fe260078ab69ab6'
           }&language=en-US&page=1`
         );
@@ -162,7 +162,7 @@ export function SwipeInterface({
         
         toast.success('Showing popular content! Rate more to get personalized recommendations.');
       } catch (error) {
-        console.error('Error fetching media:', error);
+        // console.error('Error fetching media:', error);
         toast.error('Failed to load media');
       } finally {
         setLoading(false);

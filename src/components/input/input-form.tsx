@@ -102,13 +102,13 @@ export function InputForm({
       <div className='flex flex-col gap-6'>
         <div className='flex items-center gap-3'>
           <div>
-            {replyModal || reply ? (
+            {replyModal ?? reply ? (
               <TextArea
                 id={formId}
                 className='w-full min-w-0 resize-none bg-transparent text-xl outline-none placeholder:text-light-secondary dark:placeholder:text-dark-secondary'
                 value={inputValue}
                 placeholder={
-                  reply || replyModal
+                  reply ?? replyModal
                     ? 'Send your reply'
                     : 'What are you watching?'
                 }

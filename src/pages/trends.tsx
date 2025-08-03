@@ -10,8 +10,8 @@ import { MainContainer } from '@components/home/main-container';
 import { AsideTrends } from '@components/aside/aside-trends';
 import { Button } from '@components/ui/button';
 import { ToolTip } from '@components/ui/tooltip';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReactElement, ReactNode } from 'react';
+import { HeroIcon } from '@components/ui/hero-icon';
 import { cn } from '@lib/utils';
 import { useEffect, useState } from 'react';
 

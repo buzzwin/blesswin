@@ -6,8 +6,8 @@ import { db } from '@lib/firebase/app';
 import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
-import { BookOpen, Star } from 'lucide-react';
 import type { ImageProps } from 'next/image';
+import { BookOpen, Star } from 'lucide-react';
 
 type ViewingActivity = {
   title: string;
@@ -67,7 +67,7 @@ export function TrendingShows({
         setTrending(shows);
       } catch (error) {
         // Log error but don't expose to user
-        console.error('Error fetching trending shows:', error);
+        // console.error('Error fetching trending shows:', error);
       } finally {
         setLoading(false);
       }

@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react';
 import type { ChangeEvent } from 'react';
+import { useState, useRef } from 'react';
 
 // Components
 import { UserAvatar } from '@components/user/user-avatar';
@@ -62,7 +62,7 @@ export function ModernInput({
       onSubmit?.();
       setIsExpanded(false);
     } catch (error) {
-      console.error('Error submitting:', error);
+      // console.error('Error submitting:', error);
     } finally {
       setLoading(false);
     }
@@ -116,7 +116,7 @@ export function ModernInput({
 
       if (!response.ok) {
         throw new Error(
-          (data.message as string) || 'Failed to generate review'
+          (data.message as string) ?? 'Failed to generate review'
         );
       }
 
@@ -128,7 +128,7 @@ export function ModernInput({
         throw new Error('No review received from API');
       }
     } catch (error) {
-      console.error('Error generating review:', error);
+      // console.error('Error generating review:', error);
       const errorMessage =
         error instanceof Error ? error.message : 'Failed to generate AI review';
       toast.error(errorMessage);
@@ -155,7 +155,7 @@ export function ModernInput({
           <CardContent className={cn('p-2 md:p-4', compact && 'p-2')}>
             <div className='flex items-center gap-2 md:gap-4'>
               <UserAvatar
-                src={photoURL || ''}
+                src={photoURL ?? ''}
                 alt={name ?? 'User'}
                 username={username ?? 'user'}
                 className={cn(compact && 'h-6 w-6')}
@@ -185,7 +185,7 @@ export function ModernInput({
               onSubmit={(e) => {
                 e.preventDefault();
                 handleSubmit();
-                console.log('Form submitted successfully');
+                // console.log('Form submitted successfully');
               }}
             >
               {loading && (
@@ -194,7 +194,7 @@ export function ModernInput({
 
               <div className='flex gap-2 md:gap-4'>
                 <UserAvatar
-                  src={photoURL || ''}
+                  src={photoURL ?? ''}
                   alt={name ?? 'User'}
                   username={username ?? 'user'}
                 />
@@ -280,7 +280,7 @@ export function ModernInput({
                             variant='outline'
                             size='sm'
                             onClick={generateAIReview}
-                            disabled={generatingReview || loading}
+                            disabled={generatingReview ?? loading}
                             className='gap-1 border-amber-300 text-xs text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20 md:gap-2 md:text-sm'
                           >
                             <Sparkles className='h-3 w-3 md:h-4 md:w-4' />

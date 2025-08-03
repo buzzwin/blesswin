@@ -2,8 +2,8 @@ import Link from 'next/link';
 import cn from 'clsx';
 import { Sparkles, Clock, User } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { MobileNavLink } from '@components/modal/mobile-sidebar-modal';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 type MobileSidebarLinkProps = MobileNavLink & {
   bottom?: boolean;

@@ -6,8 +6,8 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import { cn } from '@lib/utils';
 import Link from 'next/link';
 import { useState } from 'react';
-import { WatchlistShare } from '@components/share/watchlist-share';
 import type { Watchlist } from '@lib/types/bookmark';
+import { WatchlistShare } from '@components/share/watchlist-share';
 
 type WatchlistsProps = {
   watchlists: Watchlist[];
@@ -26,7 +26,7 @@ export function Watchlists({
   );
 
   const getGridCols = () => {
-    if (compact || isMobile) return 'grid-cols-1';
+    if (compact ?? isMobile) return 'grid-cols-1';
     if (width < 640) return 'grid-cols-1';
     if (width < 1024) return 'grid-cols-2';
     if (width < 1280) return 'grid-cols-3';

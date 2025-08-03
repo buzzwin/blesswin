@@ -35,7 +35,7 @@ export default function Search() {
 
     const response: MyAxiosResponse = await axios.get(apiUrl);
     const results: SearchResults[] = response.data.results;
-    console.log('results', results);
+    // console.log('results', results);
     setSearchResults(results);
   };
 
@@ -64,13 +64,13 @@ export default function Search() {
               {result.poster_path && (
                 <img
                   src={`https://image.tmdb.org/t/p/w500${result.poster_path}`}
-                  alt={result.title || result.name}
+                  alt={result.title ?? result.name}
                   className='h-48 w-full object-cover'
                 />
               )}
               <div className='p-4'>
                 <h2 className='mb-2 text-lg font-bold'>
-                  {result.title || result.name}
+                  {result.title ?? result.name}
                 </h2>
                 {result.overview && (
                   <p className='mb-2 text-base text-gray-700'>

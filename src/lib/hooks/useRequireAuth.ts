@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useAuth } from '@lib/context/auth-context';
 import type { User } from '@lib/types/user';
+import { useAuth } from '@lib/context/auth-context';
 
 export function useRequireAuth(redirectUrl?: string): User | null {
   const { user, loading, isEmailVerified } = useAuth();

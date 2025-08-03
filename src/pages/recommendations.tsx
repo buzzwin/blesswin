@@ -79,7 +79,7 @@ export default function Recommendations(): JSX.Element {
         toast.success('Generated fresh AI recommendations!');
       }
     } catch (error) {
-      console.error('Error fetching recommendations:', error);
+      // console.error('Error fetching recommendations:', error);
       toast.error('Failed to load recommendations');
     } finally {
       setLoading(false);

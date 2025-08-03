@@ -12,8 +12,8 @@ import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { Tweet } from '@components/tweet/tweet';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
-import { TweetWithParent } from '@components/tweet/tweet-with-parent';
 import type { ReactElement, ReactNode } from 'react';
+import { TweetWithParent } from '@components/tweet/tweet-with-parent';
 
 export default function UserWithReplies(): JSX.Element {
   const { user } = useUser();

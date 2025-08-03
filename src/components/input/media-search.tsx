@@ -80,7 +80,7 @@ export function MediaSearch({
         {
           params: {
             api_key:
-              process.env.NEXT_PUBLIC_TMDB_API_KEY ||
+              process.env.NEXT_PUBLIC_TMDB_API_KEY ??
               '0af4f0642998fa986fe260078ab69ab6',
             query,
             language: 'en-US',
@@ -96,10 +96,10 @@ export function MediaSearch({
         )
         .map((result) => ({
           id: result.id,
-          title: result.title || result.name || '',
-          releaseDate: result.release_date || result.first_air_date || '',
+          title: result.title ?? result.name ?? '',
+          releaseDate: result.release_date ?? result.first_air_date ?? '',
           overview: result.overview,
-          poster_path: result.poster_path || '',
+          poster_path: result.poster_path ?? '',
           vote_average: result.vote_average,
           mediaType: result.media_type as 'movie' | 'tv'
         }))
@@ -108,7 +108,7 @@ export function MediaSearch({
       setSearchResults(mappedResults);
       setShowResults(true);
     } catch (error) {
-      console.error('Error searching TMDB:', error);
+      // console.error('Error searching TMDB:', error);
       setSearchResults([]);
     } finally {
       setLoading(false);

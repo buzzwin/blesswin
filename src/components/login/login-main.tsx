@@ -18,7 +18,7 @@ export function LoginMain(): JSX.Element {
         const snapshot = await getCountFromServer(usersRef);
         setUserCount(snapshot.data().count);
       } catch (error) {
-        console.error('Error getting user count:', error);
+        // console.error('Error getting user count:', error);
       }
     };
 

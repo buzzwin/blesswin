@@ -8,8 +8,8 @@ import { Modal } from '@components/modal/modal';
 import { NextImage } from '@components/ui/next-image';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
-import { ToolTip } from '@components/ui/tooltip';
 import type { MotionProps } from 'framer-motion';
+import { ToolTip } from '@components/ui/tooltip';
 import type { ImagesPreview, ImageData } from '@lib/types/file';
 
 type ImagePreviewProps = {

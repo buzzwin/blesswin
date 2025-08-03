@@ -36,7 +36,7 @@ export function useFollowUser(targetUserId: string) {
         });
       }
     } catch (error) {
-      console.error('Error toggling follow:', error);
+      // console.error('Error toggling follow:', error);
     }
   };
 

@@ -25,17 +25,17 @@ export default async function handler(
 
   // Check if OpenAI key is available
   if (!process.env.OPENAI_KEY) {
-    console.error('OpenAI API key is missing');
+    // console.error('OpenAI API key is missing');
     return res.status(500).json({ message: 'OpenAI API key not configured' });
   }
 
   try {
     const { title, overview } = req.body as { title: string; overview: string };
 
-    console.log('Received request:', { title, overview: overview?.substring(0, 100) + '...' });
+    // console.log('Received request:', { title, overview: overview?.substring(0, 100) + '...' });
 
     if (!title || !overview) {
-      console.error('Missing required fields:', { title: !!title, overview: !!overview });
+      // console.error('Missing required fields:', { title: !!title, overview: !!overview });
       return res.status(400).json({ message: 'Missing required fields' });
     }
 
@@ -63,7 +63,7 @@ export default async function handler(
 
     res.status(200).json({ review });
   } catch (error) {
-    console.error('OpenAI API Error:', error);
+    // console.error('OpenAI API Error:', error);
     
     // Provide more specific error messages
     let errorMessage = 'Failed to generate review';

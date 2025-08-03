@@ -2,10 +2,10 @@ import { motion } from 'framer-motion';
 import { useUser } from '@lib/context/user-context';
 import { Loading } from '@components/ui/loading';
 import { UserNav } from '@components/user/user-nav';
+import type { ReactNode } from 'react';
 import { variants } from '@components/user/user-header';
-import type { LayoutProps } from './common-layout';
 
-export function UserFollowLayout({ children }: LayoutProps): JSX.Element {
+export function UserFollowLayout({ children }: { children: ReactNode }): JSX.Element {
   const { user: userData, loading } = useUser();
 
   return (

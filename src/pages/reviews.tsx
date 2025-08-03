@@ -16,8 +16,8 @@ import { db } from '@lib/firebase/app';
 import { reviewsCollection, usersCollection } from '@lib/firebase/collections';
 import { ReviewsList } from '@components/review/reviews-list';
 import { Loading } from '@components/ui/loading';
-import { StatsEmpty } from '@components/tweet/stats-empty';
 import type { ReactElement, ReactNode } from 'react';
+import { StatsEmpty } from '@components/tweet/stats-empty';
 import { User } from '@lib/types/user';
 
 export default function Reviews(): JSX.Element {
@@ -64,7 +64,7 @@ export default function Reviews(): JSX.Element {
         setReviews(reviewsWithUser);
       } catch (error) {
         // eslint-disable-next-line no-console
-        console.error('Error loading reviews:', error);
+        // console.error('Error loading reviews:', error);
       } finally {
         setLoading(false);
       }

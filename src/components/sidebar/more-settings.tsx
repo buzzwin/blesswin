@@ -10,8 +10,8 @@ import { DisplayModal } from '@components/modal/display-modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
 import { ActionModal } from '@components/modal/action-modal';
-import { MenuLink } from './menu-link';
 import type { Variants } from 'framer-motion';
+import { MenuLink } from './menu-link';
 
 export const variants: Variants = {
   initial: { opacity: 0, y: 50 },

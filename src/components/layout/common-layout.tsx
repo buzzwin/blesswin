@@ -1,27 +1,27 @@
-import { ReactNode } from 'react';
-import { MainLayout } from './main-layout';
+import type { ReactNode } from 'react';
 import { WindowContextProvider } from '@lib/context/window-context';
 import { useRequireAuth } from '@lib/hooks/useRequireAuth';
 import { Placeholder } from '@components/common/placeholder';
 import { Toaster } from 'react-hot-toast';
+import { MainLayout } from './main-layout';
 
-export type LayoutProps = {
+interface CommonLayoutProps {
   children: ReactNode;
-};
-
-export function ProtectedLayout({ children }: LayoutProps): JSX.Element {
-  const user = useRequireAuth();
-
-  if (!user) return <Placeholder />;
-
-  return <>{children}</>;
+  requireAuth?: boolean;
+  redirectUrl?: string;
 }
 
-// Common layout wrapper to avoid repetition
-function CommonLayout({ children }: LayoutProps): JSX.Element {
+export function CommonLayout({
+  children,
+  requireAuth = false,
+  redirectUrl
+}: CommonLayoutProps): JSX.Element {
+  const user = useRequireAuth(requireAuth ? redirectUrl : undefined);
+
   return (
     <WindowContextProvider>
       <MainLayout>
+        <Placeholder />
         {children}
       </MainLayout>
       <Toaster position='bottom-center' />
@@ -29,26 +29,54 @@ function CommonLayout({ children }: LayoutProps): JSX.Element {
   );
 }
 
-export function HomeLayout({ children }: LayoutProps): JSX.Element {
+export function ProtectedLayout({
+  children
+}: {
+  children: ReactNode;
+}): JSX.Element {
+  const user = useRequireAuth();
+
+  if (!user) return <Placeholder />;
+
+  return <>{children}</>;
+}
+
+export function HomeLayout({ children }: { children: ReactNode }): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }
 
-export function UserLayout({ children }: LayoutProps): JSX.Element {
+export function UserLayout({ children }: { children: ReactNode }): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }
 
-export function TrendsLayout({ children }: LayoutProps): JSX.Element {
+export function TrendsLayout({
+  children
+}: {
+  children: ReactNode;
+}): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }
 
-export function PeopleLayout({ children }: LayoutProps): JSX.Element {
+export function PeopleLayout({
+  children
+}: {
+  children: ReactNode;
+}): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }
 
-export function WatchListsLayout({ children }: LayoutProps): JSX.Element {
+export function WatchListsLayout({
+  children
+}: {
+  children: ReactNode;
+}): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }
 
-export function BookmarksLayout({ children }: LayoutProps): JSX.Element {
+export function BookmarksLayout({
+  children
+}: {
+  children: ReactNode;
+}): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }

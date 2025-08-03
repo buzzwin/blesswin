@@ -5,8 +5,8 @@ import { useDocument } from '@lib/hooks/useDocument';
 import { useUser } from '@lib/context/user-context';
 import { isPlural } from '@lib/utils';
 import { userStatsCollection } from '@lib/firebase/collections';
-import { UserName } from './user-name';
 import type { Variants } from 'framer-motion';
+import { UserName } from './user-name';
 
 export const variants: Variants = {
   initial: { opacity: 0 },
@@ -47,7 +47,7 @@ export function UserHeader(): JSX.Element {
 
   return (
     <AnimatePresence mode='popLayout'>
-      {loading || statsLoading ? (
+      {loading ?? statsLoading ? (
         <motion.div
           className='-mb-1 inner:animate-pulse inner:rounded-lg inner:bg-light-secondary dark:inner:bg-dark-secondary'
           {...variants}

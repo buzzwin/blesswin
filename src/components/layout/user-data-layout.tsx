@@ -5,10 +5,10 @@ import { useCollection } from '@lib/hooks/useCollection';
 import { usersCollection } from '@lib/firebase/collections';
 import { SEO } from '@components/common/seo';
 import { MainHeader } from '@components/home/main-header';
+import type { ReactNode } from 'react';
 import { UserHeader } from '@components/user/user-header';
-import type { LayoutProps } from './common-layout';
 
-export function UserDataLayout({ children }: LayoutProps): JSX.Element {
+export function UserDataLayout({ children }: { children: ReactNode }): JSX.Element {
   const {
     query: { id },
     back

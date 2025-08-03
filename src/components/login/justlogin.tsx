@@ -25,7 +25,7 @@ export default function JustLogin(): JSX.Element {
         toast.success('Signed in successfully!');
       }
     } catch (error) {
-      console.error('Auth error:', error);
+      // console.error('Auth error:', error);
       toast.error(
         error instanceof Error ? error.message : 'Authentication failed'
       );

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useId } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import type { ReactNode, ChangeEvent, ClipboardEvent } from 'react';
+import { AnimatePresence, motion } from 'framer-motion';
 import type { Variants } from 'framer-motion';
 import type { ViewingActivity } from '@components/activity/types';
 
@@ -230,7 +230,7 @@ export function Input({
           )}
         >
           <UserAvatar
-            src={photoURL || ''}
+            src={photoURL ?? ''}
             alt={name ?? 'User'}
             username={username ?? 'user'}
           />
@@ -258,7 +258,7 @@ export function Input({
 
       {/* Always show the form for reply/review modal */}
       <AnimatePresence>
-        {(isExpanded || replyModal) && (
+        {(isExpanded ?? replyModal) && (
           <motion.div
             initial='initial'
             animate='animate'
@@ -277,10 +277,10 @@ export function Input({
                 e.preventDefault();
                 handleSubmit()
                   .then(() => {
-                    console.log('Form submitted successfully');
+                    // console.log('Form submitted successfully');
                   })
                   .catch((err) => {
-                    console.error('Error during form submission:', err);
+                    // console.error('Error during form submission:', err);
                   });
               }}
             >
@@ -300,7 +300,7 @@ export function Input({
                 )}
               >
                 <UserAvatar
-                  src={photoURL || ''}
+                  src={photoURL ?? ''}
                   alt={name ?? 'User'}
                   username={username ?? 'user'}
                 />

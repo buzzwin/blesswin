@@ -30,7 +30,7 @@ export function FollowButton({
     closeModal();
   };
 
-  const userIsFollowed = !!following?.includes(userTargetId ?? '');
+  const userIsFollowed = !!following?.includes(userTargetId || '');
 
   return (
     <>

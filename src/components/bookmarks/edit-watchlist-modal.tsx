@@ -4,8 +4,8 @@ import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
-import { toast } from 'react-hot-toast';
 import type { Watchlist } from '@lib/types/bookmark';
+import { toast } from 'react-hot-toast';
 
 type EditWatchlistModalProps = {
   watchlist: Watchlist;
@@ -19,7 +19,7 @@ export function EditWatchlistModal({
   onClose
 }: EditWatchlistModalProps): JSX.Element {
   const [name, setName] = useState(watchlist.name);
-  const [description, setDescription] = useState(watchlist.description || '');
+  const [description, setDescription] = useState(watchlist.description ?? '');
   const [isPublic, setIsPublic] = useState(watchlist.isPublic);
   const [loading, setLoading] = useState(false);
 
@@ -27,7 +27,7 @@ export function EditWatchlistModal({
   useEffect(() => {
     if (isOpen) {
       setName(watchlist.name);
-      setDescription(watchlist.description || '');
+      setDescription(watchlist.description ?? '');
       setIsPublic(watchlist.isPublic);
     }
   }, [isOpen, watchlist]);
@@ -40,14 +40,14 @@ export function EditWatchlistModal({
       const watchlistRef = doc(db, 'watchlists', watchlist.id);
       await updateDoc(watchlistRef, {
         name: name.trim(),
-        description: description.trim() || null,
+        description: description.trim() ?? null,
         isPublic
       });
 
       toast.success('Watchlist updated successfully');
       onClose();
     } catch (error) {
-      console.error('Error updating watchlist:', error);
+      // console.error('Error updating watchlist:', error);
       toast.error('Failed to update watchlist');
     } finally {
       setLoading(false);
@@ -140,7 +140,7 @@ export function EditWatchlistModal({
           </button>
           <button
             onClick={handleSubmit}
-            disabled={!name.trim() || loading}
+                            disabled={!name.trim() || loading}
             className='flex items-center gap-2 rounded-lg bg-emerald-500 px-4 py-2 text-white hover:bg-emerald-600 disabled:opacity-50'
           >
             {loading && (

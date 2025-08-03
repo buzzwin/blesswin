@@ -139,19 +139,19 @@ const ViewingActivityForm = ({
             (result) =>
               ({
                 id: result.id,
-                title: result.title || result.name || '',
-                releaseDate: result.release_date || result.first_air_date || '',
+                title: result.title ?? result.name ?? '',
+                releaseDate: result.release_date ?? result.first_air_date ?? '',
                 overview: result.overview,
-                poster_path: result.poster_path || '',
+                poster_path: result.poster_path ?? '',
                 vote_average: result.vote_average,
-                name: result.name || result.title || '',
+                name: result.name ?? result.title ?? '',
                 status: 'is watching'
               } as SearchResult)
           );
 
         setSearchResults(results);
       } catch (error) {
-        console.error('Search error:', error);
+        // console.error('Search error:', error);
       }
 
       setLoading(false);
@@ -164,7 +164,7 @@ const ViewingActivityForm = ({
     setViewingActivity((prevState) => ({
       ...prevState,
       tmdbId: show.id.toString(),
-      title: show.title || show.name,
+      title: show.title ?? show.name,
       poster_path: show.poster_path,
       overview: show.overview,
       status: 'is watching',
@@ -234,7 +234,7 @@ const ViewingActivityForm = ({
       handleCancel();
       toast.success('Review posted successfully!');
     } catch (error) {
-      console.error('Error saving activity:', error);
+      // console.error('Error saving activity:', error);
       toast.error('Failed to post review');
     }
   };
@@ -249,7 +249,7 @@ const ViewingActivityForm = ({
     try {
       const review = await generateReview({
         title: selectedShow.title,
-        overview: selectedShow.overview || ''
+        overview: selectedShow.overview ?? ''
       });
       setViewingActivity((prev) => ({
         ...prev,
@@ -329,7 +329,7 @@ const ViewingActivityForm = ({
             )}
           >
             {/* Action Buttons - Moved to top */}
-            {(selectedShow.title || selectedShow.name) && (
+            {(selectedShow.title ?? selectedShow.name) && (
               <div className='flex items-center justify-between'>
                 <button
                   type='button'
@@ -426,7 +426,7 @@ const ViewingActivityForm = ({
             )}
 
             {/* Selected Show Details */}
-            {(selectedShow.title || selectedShow.name) && (
+            {(selectedShow.title ?? selectedShow.name) && (
               <div className='space-y-4'>
                 {/* Review Textarea */}
                 <div className='relative'>
@@ -467,7 +467,7 @@ const ViewingActivityForm = ({
                   />
                   <button
                     onClick={handleGenerateReview}
-                    disabled={isGenerating || !selectedShow.title}
+                    disabled={isGenerating ?? !selectedShow.title}
                     className={cn(
                       'absolute right-2 bottom-2',
                       'rounded-lg p-2',
@@ -508,7 +508,7 @@ const ViewingActivityForm = ({
                     >
                       <img
                         src={`https://image.tmdb.org/t/p/w500${selectedShow.poster_path}`}
-                        alt={selectedShow.title || selectedShow.name}
+                        alt={selectedShow.title ?? selectedShow.name}
                         className='h-full w-full object-cover'
                       />
                     </div>
@@ -520,7 +520,7 @@ const ViewingActivityForm = ({
                         'text-gray-900 dark:text-gray-100'
                       )}
                     >
-                      {selectedShow.title || selectedShow.name}
+                      {selectedShow.title ?? selectedShow.name}
                     </h3>
                     <p
                       className={cn(

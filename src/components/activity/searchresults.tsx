@@ -29,7 +29,7 @@ const SearchResults: React.FC<SearchResultProps> = ({ results, onSelect }) => {
                 ? `https://image.tmdb.org/t/p/w500/${result.poster_path}`
                 : '/movie.png'
             }
-            alt={result.title || result.name || ''}
+            alt={result.title ?? result.name ?? ''}
           />
 
           <div className='px-6 py-4 text-gray-300'>

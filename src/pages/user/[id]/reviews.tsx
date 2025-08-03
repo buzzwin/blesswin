@@ -5,8 +5,8 @@ import { SEO } from '@components/common/seo';
 import { UserDataLayout } from '@components/layout/user-data-layout';
 import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { UserReviews } from '@components/user/user-reviews';
-import { useUser } from '@lib/context/user-context';
 import type { ReactElement, ReactNode } from 'react';
+import { useUser } from '@lib/context/user-context';
 
 export default function UserReviewsPage(): JSX.Element {
   const { user } = useUser();

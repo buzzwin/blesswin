@@ -4,8 +4,8 @@ import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
 import { variants } from './input';
-import { ProgressBar } from './progress-bar';
 import type { ChangeEvent, ClipboardEvent } from 'react';
+import { ProgressBar } from './progress-bar';
 import type { IconName } from '@components/ui/hero-icon';
 
 type Options = {

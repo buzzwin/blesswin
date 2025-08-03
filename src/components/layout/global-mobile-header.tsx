@@ -1,13 +1,11 @@
 import { useAuth } from '@lib/context/auth-context';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { Button } from '@components/ui/button-shadcn';
 import { MobileSidebar } from '@components/sidebar/mobile-sidebar';
 import LogoIcon from '@components/ui/logo';
-import { LogOut } from 'lucide-react';
 
 export function GlobalMobileHeader(): JSX.Element {
-  const { user, signOut } = useAuth();
+  const { signOut } = useAuth();
   const router = useRouter();
 
   const handleLogout = async (): Promise<void> => {
@@ -15,7 +13,7 @@ export function GlobalMobileHeader(): JSX.Element {
       await signOut();
       void router.push('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      // console.error('Logout error:', error);
     }
   };
 

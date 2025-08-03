@@ -60,11 +60,11 @@ export function useRecommendations() {
       setCached(data.cached);
       
       if (data.error) {
-        console.warn('Recommendations API warning:', data.error);
+        // console.warn('Recommendations API warning:', data.error);
       }
 
     } catch (err) {
-      console.error('Error fetching recommendations:', err);
+      // console.error('Error fetching recommendations:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch recommendations');
     } finally {
       setLoading(false);
@@ -86,7 +86,7 @@ export function useRecommendations() {
           })
         });
       } catch (err) {
-        console.error('Error refreshing recommendations:', err);
+        // console.error('Error refreshing recommendations:', err);
       }
     }
     
@@ -94,7 +94,7 @@ export function useRecommendations() {
   };
 
   useEffect(() => {
-    fetchRecommendations();
+    void fetchRecommendations();
   }, [user?.id]);
 
   return {

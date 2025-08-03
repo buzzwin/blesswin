@@ -13,10 +13,10 @@ import { Loading } from '@components/ui/loading';
 import { FollowButton } from '@components/ui/follow-button';
 import { variants } from '@components/user/user-header';
 import { UserEditProfile } from '@components/user/user-edit-profile';
+import type { ReactNode } from 'react';
 import { UserShare } from '@components/user/user-share';
-import type { LayoutProps } from './common-layout';
 
-export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
+export function UserHomeLayout({ children }: { children: ReactNode }): JSX.Element {
   const { user, isAdmin } = useAuth();
   const { user: userData, loading } = useUser();
 
@@ -56,10 +56,10 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
                   <UserEditProfile />
                 ) : (
                   <div className='flex gap-2 self-start'>
-                    <UserShare username={userData?.username || (Array.isArray(id) ? id[0] : id) || ''} />
+                    <UserShare username={userData?.username ?? (Array.isArray(id) ? id[0] : id) ?? ''} />
                     <FollowButton
-                      userTargetId={userData?.id || ''}
-                      userTargetUsername={userData?.username || (Array.isArray(id) ? id[0] : id) || ''}
+                      userTargetId={userData?.id ?? ''}
+                      userTargetUsername={userData?.username ?? (Array.isArray(id) ? id[0] : id) ?? ''}
                     />
                     {isAdmin && <UserEditProfile hide />}
                   </div>
@@ -70,7 +70,7 @@ export function UserHomeLayout({ children }: LayoutProps): JSX.Element {
           </>
         )}
       </motion.section>
-      {(userData || !loading) && (
+      {(userData ?? !loading) && (
         <>
           <UserNav />
           {children}

@@ -11,8 +11,8 @@ import { MainHeader } from '@components/home/main-header';
 import { MobileSidebarLink } from '@components/sidebar/mobile-sidebar-link';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from './modal';
-import { DisplayModal } from './display-modal';
 import type { NavLink } from '@components/sidebar/sidebar';
+import { DisplayModal } from './display-modal';
 import type { User } from '@lib/types/user';
 
 export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
@@ -95,7 +95,7 @@ export function MobileSidebarModal({
       closeModal();
       void router.push('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      // console.error('Logout error:', error);
     }
   };
 

@@ -3,8 +3,8 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import { Loading } from '@components/ui/loading';
 import { variants } from '@components/user/user-header';
-import { UserCard } from './user-card';
 import type { User } from '@lib/types/user';
+import { UserCard } from './user-card';
 import type { StatsType } from '@components/view/view-tweet-stats';
 import type { StatsEmptyProps } from '@components/tweet/stats-empty';
 

@@ -6,8 +6,8 @@ import { Error } from '@components/ui/error';
 import { UserAvatar } from './user-avatar';
 import { UserName } from './user-name';
 import { UserUsername } from './user-username';
-import { UserFollowButton } from './user-follow-button';
 import type { User } from '@lib/types/user';
+import { UserFollowButton } from './user-follow-button';
 
 type UserCardProps = (
   | { userId: string; userData?: never }

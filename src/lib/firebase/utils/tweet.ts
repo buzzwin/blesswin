@@ -1,6 +1,6 @@
 import { addDoc, serverTimestamp, type WithFieldValue, doc, getDoc, deleteDoc } from 'firebase/firestore';
-import { tweetsCollection } from '../collections';
 import type { ViewingActivity } from '@components/activity/types';
+import { tweetsCollection } from '../collections';
 import type { Tweet, TweetUser } from '@lib/types/tweet';
 
 export const sendTweet = async (
@@ -12,9 +12,9 @@ export const sendTweet = async (
     type NewTweet = Omit<Tweet, 'id'>;
     
     const tweetData: WithFieldValue<NewTweet> = {
-      text: viewingActivity.review || null,
+      text: viewingActivity.review ?? null,
       images: null,
-      parent: parentTweet || null,
+      parent: parentTweet ?? null,
       userLikes: [],
       createdBy: userData.id,
       userReplies: 0,
@@ -31,8 +31,8 @@ export const sendTweet = async (
     const docRef = await addDoc(tweetsCollection, tweetData);
     return docRef.id;
   } catch (error) {
-    console.error('Error sending tweet:', error);
-    throw error;
+    // console.error('Error sending tweet:', error);
+    throw new Error(error instanceof Error ? error.message : 'Failed to send tweet');
   }
 };
 
@@ -52,7 +52,7 @@ export const deleteTweet = async (tweetId: string, userId: string): Promise<void
 
     await deleteDoc(tweetRef);
   } catch (error) {
-    console.error('Error deleting tweet:', error);
-    throw error;
+    // console.error('Error deleting tweet:', error);
+    throw new Error(error instanceof Error ? error.message : 'Failed to delete tweet');
   }
 };

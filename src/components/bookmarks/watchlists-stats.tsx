@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { cn } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { IconName } from '@components/ui/hero-icon';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 type WatchlistStats = {
   total: number;
@@ -71,8 +71,8 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
         snapshot.forEach((doc) => {
           const data = doc.data();
           if (data.isPublic) publicLists++;
-          movies += data.movies || 0;
-          tvShows += data.tvShows || 0;
+          movies += data.movies ?? 0;
+          tvShows += data.tvShows ?? 0;
         });
 
         setStats({
@@ -82,7 +82,7 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
           tvShows
         });
       } catch (error) {
-        console.error('Error fetching watchlist stats:', error);
+        // console.error('Error fetching watchlist stats:', error);
       } finally {
         setLoading(false);
       }

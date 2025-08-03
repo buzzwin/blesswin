@@ -44,7 +44,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         data.updatedAt = formatDate(data.updatedAt as Timestamp, 'full');
       }
 
-      //console.log('Document data:', data);
+      //// console.log('Document data:', data);
       return {
         props: {
           data: {
@@ -53,11 +53,11 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
         }
       };
     } else {
-      console.log('No such document!');
+      // console.log('No such document!');
       return { props: {} }; // Return empty props object if document doesn't exist
     }
   } catch (error) {
-    console.error('Error fetching data:', error);
+    // console.error('Error fetching data:', error);
     return { props: {} }; // Return empty props object if there is an error
   }
 };
@@ -74,7 +74,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
     try {
       await router.push('/');
     } catch (error) {
-      //console.error(
+      //// console.error(
       //'An error occurred while navigating to the homepage:',
       //error
       //);
@@ -97,15 +97,15 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
                 logEvent(analytics, 'page_view');
               })
               .catch((error) => {
-                console.error('Error loading Firebase Analytics:', error);
+                // console.error('Error loading Firebase Analytics:', error);
               });
           }
         })
         .catch((error) => {
-          console.error(
-            'Error checking for Firebase Analytics support:',
-            error
-          );
+          // console.error(
+          //   'Error checking for Firebase Analytics support:',
+          //   error
+          // );
         });
     }
   }, []);
@@ -115,9 +115,9 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
       <SEO title='Buzzwin- What are you watching?' />
       <MainHeader useActionButton title='Whats Buzzin!' action={handleBack} />
       <PublicLayout
-        title={(data?.text as string)?.toString() || 'Buzzwin'}
+        title={(data?.text as string)?.toString() ?? 'Buzzwin'}
         description={
-          (data?.viewingActivity as ViewingActivity)?.review || 'No Review'
+          (data?.viewingActivity as ViewingActivity)?.review ?? 'No Review'
         }
         ogImage={`https://image.tmdb.org/t/p/w500/${
           (data?.viewingActivity as ViewingActivity)?.poster_path
@@ -129,13 +129,13 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
               <div>
                 <div className='grid grid-cols-1 sm:grid-cols-2'>
                   <div className='flex items-center justify-center'>
-                    <img
+                    <Image
                       className='h-56 w-auto rounded-r-xl'
                       src={`https://image.tmdb.org/t/p/w500/${
                         (data?.viewingActivity as ViewingActivity)
-                          ?.poster_path || '/movie.png'
+                          ?.poster_path ?? '/movie.png'
                       }`}
-                      alt={(data?.title as string)?.toString() || 'No Image'}
+                      alt={(data?.title as string)?.toString() ?? 'No Image'}
                       width={125}
                       height={187}
                     />
@@ -144,7 +144,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
                   <div>
                     <div className='pl-0 sm:pl-4'>
                       <p className='font-semibold text-emerald-500 dark:text-emerald-400'>
-                        Buzz generated {data.createdAt || 'No Date'}
+                        Buzz generated {data.createdAt ?? 'No Date'}
                       </p>
                       <div className='mb-4 text-xl font-medium text-gray-900 dark:text-gray-100'>
                         {data.text}

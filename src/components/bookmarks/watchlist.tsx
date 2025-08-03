@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import type { Timestamp } from 'firebase/firestore';
 import {
   collection,
   query,
@@ -8,11 +9,10 @@ import {
   doc,
   onSnapshot
 } from 'firebase/firestore';
-import type { Timestamp } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { Bookmark } from '@lib/types/bookmark';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 type WatchlistProps = {
   watchlistId: string;
@@ -56,7 +56,7 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
     try {
       await deleteDoc(doc(db, 'bookmarks', bookmarkId));
     } catch (error) {
-      console.error('Error removing bookmark:', error);
+      // console.error('Error removing bookmark:', error);
     }
   };
 

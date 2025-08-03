@@ -22,8 +22,8 @@ import { ActionModal } from '@components/modal/action-modal';
 import { Button } from '@components/ui/button';
 import { ToolTip } from '@components/ui/tooltip';
 import { HeroIcon } from '@components/ui/hero-icon';
-import { CustomIcon } from '@components/ui/custom-icon';
 import type { Variants } from 'framer-motion';
+import { CustomIcon } from '@components/ui/custom-icon';
 import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
 
@@ -214,7 +214,7 @@ export function TweetActions({
                   {...variants}
                   static
                 >
-                  {(isAdmin || isOwner) && (
+                  {(isAdmin ?? isOwner) && (
                     <Popover.Button
                       className='accent-tab flex w-full gap-3 rounded-md rounded-b-none p-4 text-accent-red hover:bg-main-sidebar-background'
                       as={Button}

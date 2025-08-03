@@ -1,7 +1,7 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import { X, Heart, Meh, Sparkles } from 'lucide-react';
 import type { MediaCard } from '@lib/types/rating';
+import { X, Heart, Meh, Sparkles } from 'lucide-react';
 import { getTMDBImageUrl } from '@lib/utils';
 import { FallbackImage } from '@components/ui/fallback-image';
 

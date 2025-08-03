@@ -20,8 +20,8 @@ import { useRouter } from 'next/router';
 import { LogOut, X, Heart, Meh, Sparkles } from 'lucide-react';
 import { BookOpen, Filter, TrendingUp, BarChart3 } from 'lucide-react';
 import LogoIcon from '@components/ui/logo';
-import { toast } from 'react-hot-toast';
 import type { ReactElement, ReactNode } from 'react';
+import { toast } from 'react-hot-toast';
 import type { RatingType, MediaCard } from '@lib/types/rating';
 
 export default function Home(): JSX.Element {
@@ -42,12 +42,12 @@ export default function Home(): JSX.Element {
 
     try {
       // Use the media data if available, otherwise use defaults
-      const title = mediaData?.title || 'Unknown Title';
-      const mediaType = mediaData?.mediaType || 'movie';
-      const posterPath = mediaData?.posterPath || '';
-      const overview = mediaData?.overview || '';
-      const releaseDate = mediaData?.releaseDate || '';
-      const voteAverage = mediaData?.voteAverage || 0;
+      const title = mediaData?.title ?? 'Unknown Title';
+      const mediaType = mediaData?.mediaType ?? 'movie';
+      const posterPath = mediaData?.posterPath ?? '';
+      const overview = mediaData?.overview ?? '';
+      const releaseDate = mediaData?.releaseDate ?? '';
+      const voteAverage = mediaData?.voteAverage ?? 0;
 
       await saveRating({
         userId: user.id,
@@ -61,10 +61,10 @@ export default function Home(): JSX.Element {
         voteAverage
       });
 
-      console.log('Rating saved:', { mediaId, rating, userId: user.id });
+      // console.log('Rating saved:', { mediaId, rating, userId: user.id });
       toast.success(`Rated "${title}" as ${rating}!`);
     } catch (error) {
-      console.error('Error saving rating:', error);
+      // console.error('Error saving rating:', error);
       toast.error('Failed to save rating');
     }
   };
@@ -85,7 +85,7 @@ export default function Home(): JSX.Element {
       await signOut();
       void router.push('/');
     } catch (error) {
-      console.error('Logout error:', error);
+      // console.error('Logout error:', error);
     }
   };
 
@@ -123,16 +123,16 @@ export default function Home(): JSX.Element {
         review: inputValue,
         tags: [],
         status: 'watching',
-        username: user.username || '',
-        photoURL: user.photoURL || ''
+        username: user.username ?? '',
+        photoURL: user.photoURL ?? ''
       };
 
       const userData = {
         id: user.id,
-        name: user.name || '',
-        username: user.username || '',
-        photoURL: user.photoURL || '',
-        verified: user.verified || false
+        name: user.name ?? '',
+        username: user.username ?? '',
+        photoURL: user.photoURL ?? '',
+        verified: user.verified ?? false
       };
 
       await sendTweet(viewingActivity, userData);
@@ -143,7 +143,7 @@ export default function Home(): JSX.Element {
 
       toast.success('Review posted successfully!');
     } catch (error) {
-      console.error('Error submitting review:', error);
+      // console.error('Error submitting review:', error);
       const message =
         error instanceof Error ? error.message : 'Failed to post review';
       toast.error(message);
@@ -294,11 +294,11 @@ export default function Home(): JSX.Element {
                                 <span className='text-xs font-medium'>
                                   {tweet.user?.username
                                     ?.charAt(0)
-                                    ?.toUpperCase() || 'U'}
+                                    ?.toUpperCase() ?? 'U'}
                                 </span>
                               </div>
                               <span className='truncate text-xs font-medium text-gray-900 dark:text-white'>
-                                {tweet.user?.username || 'Anonymous'}
+                                {tweet.user?.username ?? 'Anonymous'}
                               </span>
                             </div>
 
@@ -310,7 +310,7 @@ export default function Home(): JSX.Element {
                             )}
 
                             <p className='line-clamp-2 mb-2 text-xs text-gray-600 dark:text-gray-300'>
-                              {tweet.text || 'No content'}
+                              {tweet.text ?? 'No content'}
                             </p>
                             <div className='text-xs text-gray-500 dark:text-gray-400'>
                               {tweet.createdAt
@@ -383,7 +383,7 @@ export default function Home(): JSX.Element {
                           Total Reviews
                         </span>
                         <span className='font-semibold'>
-                          {data?.length || 0}
+                          {data?.length ?? 0}
                         </span>
                       </div>
                       <div className='flex justify-between'>

@@ -10,8 +10,8 @@ import {
   onSnapshot
 } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
-import { toast } from 'react-hot-toast';
 import type { Watchlist } from '@lib/types/bookmark';
+import { toast } from 'react-hot-toast';
 
 export function useWatchlists() {
   const { user } = useAuth();
@@ -50,7 +50,7 @@ export function useWatchlists() {
 
     try {
       // Prepare watchlist data
-      const watchlistData: any = {
+      const watchlistData: Record<string, unknown> = {
         name: name.trim(),
         userId: user.id,
         createdAt: serverTimestamp(),
@@ -68,7 +68,7 @@ export function useWatchlists() {
       await addDoc(collection(db, 'watchlists'), watchlistData);
       toast.success('Watchlist created!');
     } catch (error) {
-      console.error('Error creating watchlist:', error);
+      // console.error('Error creating watchlist:', error);
       toast.error('Failed to create watchlist');
     }
   };

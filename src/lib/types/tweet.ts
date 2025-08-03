@@ -1,5 +1,5 @@
-import { ViewingActivity } from '@components/activity/types';
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
+import { ViewingActivity } from '@components/activity/types';
 import type { ImagesPreview } from './file';
 import type { User } from './user';
 

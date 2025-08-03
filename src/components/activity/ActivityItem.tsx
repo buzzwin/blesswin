@@ -66,7 +66,7 @@ export const ActivityItem: React.FC<{
                   ? `https://image.tmdb.org/t/p/w500/${poster_path}`
                   : '/movie.png'
               }
-              alt={title || 'No Image'}
+              alt={title ?? 'No Image'}
               width={125}
               height={187}
             />

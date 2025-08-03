@@ -37,7 +37,7 @@ export default async function handler(
 
     // Handle anonymous users
     if (!userId) {
-      console.log('Anonymous user requesting recommendations');
+      // console.log('Anonymous user requesting recommendations');
       
       // Check cache first
       const cached = await getCachedRecommendations(null);
@@ -51,10 +51,10 @@ export default async function handler(
       }
 
       // For anonymous users, return global recommendations
-      const globalRecommendations = await getGlobalRecommendations();
+      const globalRecommendations = getGlobalRecommendations();
       
       // Cache the global recommendations
-      cacheRecommendations(null, globalRecommendations, {
+      void cacheRecommendations(null, globalRecommendations, {
         preferredGenres: ['Action', 'Drama', 'Comedy'],
         preferredYears: ['1990-2010'],
         ratingPattern: 'Mixed preferences',
@@ -90,9 +90,9 @@ export default async function handler(
     
     if (ratings.length === 0) {
       // User has no ratings, return global recommendations
-      const globalRecommendations = await getGlobalRecommendations();
+      const globalRecommendations = getGlobalRecommendations();
       
-      cacheRecommendations(userId as string, globalRecommendations, {
+      void cacheRecommendations(userId as string, globalRecommendations, {
         preferredGenres: ['Action', 'Drama', 'Comedy'],
         preferredYears: ['1990-2010'],
         ratingPattern: 'No ratings yet',
@@ -174,7 +174,7 @@ export default async function handler(
     try {
       parsedResponse = JSON.parse(content);
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response:', content);
+      // console.error('Failed to parse OpenAI response:', content);
       throw new Error('Invalid response format from OpenAI');
     }
 
@@ -184,7 +184,7 @@ export default async function handler(
     }
 
     // Cache the recommendations
-          cacheRecommendations(userId as string, parsedResponse.recommendations, parsedResponse.analysis);
+    void cacheRecommendations(userId as string, parsedResponse.recommendations, parsedResponse.analysis);
 
     res.status(200).json({
       recommendations: parsedResponse.recommendations,
@@ -193,11 +193,11 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('Error generating recommendations:', error);
+    // console.error('Error generating recommendations:', error);
     
     // Fallback to global recommendations on error
     try {
-      const globalRecommendations = await getGlobalRecommendations();
+      const globalRecommendations = getGlobalRecommendations();
       res.status(200).json({
         recommendations: globalRecommendations,
         analysis: {

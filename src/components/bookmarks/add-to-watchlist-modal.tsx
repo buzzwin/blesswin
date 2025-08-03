@@ -16,8 +16,8 @@ import { db } from '@lib/firebase/app';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from '@components/modal/modal';
 import { manageBookmark } from '@lib/firebase/utils';
-import { cn } from '@lib/utils';
 import type { Watchlist } from '@lib/types/bookmark';
+import { cn } from '@lib/utils';
 import { toast } from 'react-hot-toast';
 
 type AddToWatchlistModalProps = {
@@ -88,14 +88,14 @@ export function AddToWatchlistModal({
           setWatchlists(newWatchlists);
           setError(null);
         } catch (err) {
-          console.error('Error processing watchlists:', err);
+          // console.error('Error processing watchlists:', err);
           setError('Error loading watchlists');
         } finally {
           setLoading(false);
         }
       },
       (error) => {
-        console.error('Error fetching watchlists:', error);
+        // console.error('Error fetching watchlists:', error);
         setError('Failed to load watchlists');
         setLoading(false);
       }
@@ -136,9 +136,9 @@ export function AddToWatchlistModal({
       // Ensure all required fields are present and have default values
       const bookmarkData = {
         title: mediaData.title,
-        description: mediaData.description || '',
-        mediaType: mediaData.mediaType || 'movie', // Provide default value
-        posterPath: mediaData.posterPath || '',
+        description: mediaData.description ?? '',
+        mediaType: mediaData.mediaType ?? 'movie', // Provide default value
+        posterPath: mediaData.posterPath ?? '',
         watchlistId: watchlistRef.id,
         mediaId: mediaData.id,
         tags: [],
@@ -156,7 +156,7 @@ export function AddToWatchlistModal({
       toast.success('Added to new watchlist!');
       onClose();
     } catch (error) {
-      console.error('Error creating watchlist:', error);
+      // console.error('Error creating watchlist:', error);
       toast.error('Failed to create watchlist');
     } finally {
       setSaving(false);
@@ -172,7 +172,7 @@ export function AddToWatchlistModal({
       toast.success('Added to watchlist!');
       onClose();
     } catch (error) {
-      console.error('Error adding to watchlist:', error);
+      // console.error('Error adding to watchlist:', error);
       toast.error('Failed to add to watchlist');
     } finally {
       setSaving(false);

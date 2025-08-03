@@ -15,7 +15,7 @@ export function NumberStats({
 }: NumberStatsProps): JSX.Element {
   return (
     <div className='overflow-hidden'>
-      {(alwaysShowStats || !!stats) && (
+      {(alwaysShowStats ?? !!stats) && (
         <motion.p className='text-sm' {...getStatsMove(move)} key={stats}>
           {formatNumber(stats)}
         </motion.p>

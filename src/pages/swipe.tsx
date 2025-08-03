@@ -7,8 +7,8 @@ import { useAuth } from '@lib/context/auth-context';
 import { useRouter } from 'next/router';
 import { ArrowLeft, Heart, X, Meh } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import { saveRating } from '@lib/firebase/utils/rating';
 import type { RatingType, MediaCard } from '@lib/types/rating';
+import { saveRating } from '@lib/firebase/utils/rating';
 
 export default function SwipePage(): JSX.Element {
   const { user } = useAuth();
@@ -26,12 +26,12 @@ export default function SwipePage(): JSX.Element {
 
     try {
       // Use the media data if available, otherwise use defaults
-      const title = mediaData?.title || 'Unknown Title';
-      const mediaType = mediaData?.mediaType || 'movie';
-      const posterPath = mediaData?.posterPath || '';
-      const overview = mediaData?.overview || '';
-      const releaseDate = mediaData?.releaseDate || '';
-      const voteAverage = mediaData?.voteAverage || 0;
+      const title = mediaData?.title ?? 'Unknown Title';
+      const mediaType = mediaData?.mediaType ?? 'movie';
+      const posterPath = mediaData?.posterPath ?? '';
+      const overview = mediaData?.overview ?? '';
+      const releaseDate = mediaData?.releaseDate ?? '';
+      const voteAverage = mediaData?.voteAverage ?? 0;
 
       await saveRating({
         userId: user.id,
@@ -45,9 +45,9 @@ export default function SwipePage(): JSX.Element {
         voteAverage
       });
 
-      console.log('Rating saved:', { mediaId, rating, userId: user.id });
+      // console.log('Rating saved:', { mediaId, rating, userId: user.id });
     } catch (error) {
-      console.error('Error saving rating:', error);
+      // console.error('Error saving rating:', error);
       toast.error('Failed to save rating');
     }
   };

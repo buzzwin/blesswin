@@ -18,13 +18,13 @@ import {
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './app';
+import type { WithFieldValue, Query } from 'firebase/firestore';
 import {
   usersCollection,
   tweetsCollection,
   userStatsCollection,
   userBookmarksCollection
 } from './collections';
-import type { WithFieldValue, Query } from 'firebase/firestore';
 import type { EditableUserData } from '@lib/types/user';
 import type { FilesWithId, ImagesPreview } from '@lib/types/file';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -322,6 +322,6 @@ export const manageWatching =
         totalWatchers: increment(type === 'watch' ? 1 : -1)
       });
     } catch (error) {
-      console.error('Error updating watching status:', error);
+      // console.error('Error updating watching status:', error);
     }
   };

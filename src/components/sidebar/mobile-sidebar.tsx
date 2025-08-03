@@ -3,8 +3,8 @@ import { useModal } from '@lib/hooks/useModal';
 import { Button } from '@components/ui/button';
 import { Modal } from '@components/modal/modal';
 import { MobileSidebarModal } from '@components/modal/mobile-sidebar-modal';
-import { HeroIcon } from '@components/ui/hero-icon';
 import type { Variants } from 'framer-motion';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 const variant: Variants = {
   initial: { x: '100%', opacity: 0.8 },

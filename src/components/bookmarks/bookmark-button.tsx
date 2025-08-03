@@ -13,8 +13,8 @@ import {
 import { db } from '@lib/firebase/app';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { AddToWatchlistModal } from './add-to-watchlist-modal';
-import { manageBookmark } from '@lib/firebase/utils';
 import type { Bookmark } from '@lib/types/bookmark';
+import { manageBookmark } from '@lib/firebase/utils';
 
 type BookmarkButtonProps = {
   title: string;
@@ -35,19 +35,14 @@ export function BookmarkButton({
   const addToWatchlist = async (watchlistId: string): Promise<void> => {
     if (!user?.id) return;
 
-    try {
-      await manageBookmark('bookmark', user.id, mediaId, {
-        title,
-        mediaType,
-        posterPath,
-        watchlistId,
-        mediaId,
-        tags: []
-      });
-    } catch (error) {
-      console.error('Error adding to watchlist:', error);
-      throw error;
-    }
+    await manageBookmark('bookmark', user.id, mediaId, {
+      title,
+      mediaType,
+      posterPath,
+      watchlistId,
+      mediaId,
+      tags: []
+    });
   };
 
   return (

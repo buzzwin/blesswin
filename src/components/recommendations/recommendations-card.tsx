@@ -24,7 +24,7 @@ export function RecommendationsCard(): JSX.Element {
     useState<Recommendation | null>(null);
 
   const handleImageError = (imageUrl: string) => {
-    console.error('Failed to load image:', imageUrl);
+    // console.error('Failed to load image:', imageUrl);
   };
 
   if (loading) {
@@ -102,7 +102,7 @@ export function RecommendationsCard(): JSX.Element {
             AI-Powered Recommendations
           </h4>
           <p className='mb-4 text-xs text-gray-600 dark:text-gray-400'>
-            {analysis?.suggestions?.[0] ||
+            {analysis?.suggestions?.[0] ??
               'Start rating shows and movies to get AI-powered recommendations!'}
           </p>
           <Link href='/swipe'>

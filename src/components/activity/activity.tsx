@@ -79,23 +79,23 @@ const ActivityFeed: React.FC = () => {
 
             return {
               tmdbId: result.id.toString(),
-              title: result.title || result.name || '',
-              poster_path: result.poster_path || '',
+              title: result.title ?? result.name ?? '',
+              poster_path: result.poster_path ?? '',
               mediaType,
               status: 'is watching',
-              review: result.overview || '',
-              overview: result.overview || '',
+              review: result.overview ?? '',
+              overview: result.overview ?? '',
               username: 'demo_user',
               photoURL: 'default-avatar',
               network: '',
-              releaseDate: result.release_date || result.first_air_date || ''
+              releaseDate: result.release_date ?? result.first_air_date ?? ''
             };
           });
 
         setActivities(updatedActivities);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching TMDB data:', error);
+        // console.error('Error fetching TMDB data:', error);
         setLoading(false);
       }
     };

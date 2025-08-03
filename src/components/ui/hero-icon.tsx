@@ -17,7 +17,7 @@ export const HeroIcon = forwardRef<SVGSVGElement, HeroIconProps>(
     const Icon = solid ? SolidIcons[iconName] : OutlineIcons[iconName];
 
     if (!Icon) {
-      console.error(`Icon ${iconName} not found`);
+      // console.error(`Icon ${iconName} not found`);
       return null;
     }
 

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Modal } from '@components/modal/modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { toast } from 'react-hot-toast';
+import type { Watchlist } from '@lib/types/bookmark';
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -14,7 +15,6 @@ import {
   TelegramShareButton,
   TelegramIcon
 } from 'next-share';
-import type { Watchlist } from '@lib/types/bookmark';
 
 type WatchlistShareProps = {
   watchlist: Watchlist;
@@ -40,7 +40,7 @@ export function WatchlistShare({
       toast.success('Link copied to clipboard');
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
-      console.error('Failed to copy:', error);
+      // console.error('Failed to copy:', error);
       toast.error('Failed to copy link');
     }
   };

@@ -28,7 +28,7 @@ export default async function handler(
 
     // Handle anonymous users
     if (!userId) {
-      console.log('Anonymous user requesting recommended content');
+      // console.log('Anonymous user requesting recommended content');
       
       // Return global recommendations for anonymous users
       const globalRecommendations = getGlobalRecommendations();
@@ -136,7 +136,7 @@ export default async function handler(
     try {
       parsedResponse = JSON.parse(content);
     } catch (parseError) {
-      console.error('Failed to parse OpenAI response:', content);
+      // console.error('Failed to parse OpenAI response:', content);
       throw new Error('Invalid response format from OpenAI');
     }
 
@@ -151,7 +151,7 @@ export default async function handler(
     });
 
   } catch (error) {
-    console.error('Error generating recommended content:', error);
+    // console.error('Error generating recommended content:', error);
     
     // Fallback to global recommendations on error
     try {

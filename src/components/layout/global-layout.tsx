@@ -1,5 +1,5 @@
-import { GlobalMobileHeader } from './global-mobile-header';
 import type { ReactNode } from 'react';
+import { GlobalMobileHeader } from './global-mobile-header';
 
 interface GlobalLayoutProps {
   children: ReactNode;

@@ -1,7 +1,7 @@
-import { Input } from '@components/input/input';
 import type { TweetProps } from '@components/tweet/tweet';
-import { ViewingActivity } from '@components/activity/types';
+import { Input } from '@components/input/input';
 import type { ReviewWithUser } from '@lib/types/review';
+import { ViewingActivity } from '@components/activity/types';
 import { cn } from '@lib/utils';
 import { useState } from 'react';
 import { createReview } from '@lib/firebase/utils/review';
@@ -71,8 +71,8 @@ export function TweetReplyModal({
         tmdbId: Number(tweet.viewingActivity.tmdbId),
         userId: user.id,
         title: tweet.viewingActivity.title,
-        mediaType: tweet.viewingActivity.mediaType || 'movie',
-        rating: selectedEmoji || '',
+        mediaType: tweet.viewingActivity.mediaType ?? 'movie',
+        rating: selectedEmoji ?? '',
         review: inputValue, // Use the stored input value instead of data.review
         tags: selectedTags,
         posterPath: tweet.viewingActivity.poster_path,
@@ -84,7 +84,7 @@ export function TweetReplyModal({
         const newReview = await createReview(reviewData);
         onReviewAdded?.(newReview);
       } catch (error) {
-        console.error('Error creating review:', error);
+        // console.error('Error creating review:', error);
         throw new Error('Failed to save review. Please try again.');
       }
 
@@ -98,11 +98,11 @@ export function TweetReplyModal({
           },
           review: inputValue, // Use the stored input value
           tags: selectedTags,
-          rating: selectedEmoji || '😐'
+          rating: selectedEmoji ?? '😐'
         };
         await onReply(tweetData);
       } catch (error) {
-        console.error('Error creating tweet:', error);
+        // console.error('Error creating tweet:', error);
         throw new Error('Failed to post tweet. Please try again.');
       }
 

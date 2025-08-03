@@ -1,7 +1,7 @@
 import { forwardRef } from 'react';
 import cn from 'clsx';
-import { Loading } from './loading';
 import type { ComponentPropsWithRef } from 'react';
+import { Loading } from './loading';
 
 type ButtonProps = ComponentPropsWithRef<'button'> & {
   loading?: boolean;
@@ -11,7 +11,7 @@ type ButtonProps = ComponentPropsWithRef<'button'> & {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ className, loading, disabled, children, ...rest }, ref) => {
     // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-    const isDisabled = loading || disabled;
+    const isDisabled = loading ?? disabled;
 
     return (
       <button

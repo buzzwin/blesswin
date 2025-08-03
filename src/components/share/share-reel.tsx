@@ -3,8 +3,8 @@ import Image from 'next/image';
 import { toPng } from 'html-to-image';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from '@components/modal/modal';
-import { cn } from '@lib/utils';
 import type { Bookmark } from '@lib/types/bookmark';
+import { cn } from '@lib/utils';
 
 type ShareReelProps = {
   bookmarks: Bookmark[];
@@ -95,7 +95,7 @@ export function ShareReel({
         document.body.removeChild(cloneNode);
       }
     } catch (error) {
-      console.error('Error generating image:', error);
+      // console.error('Error generating image:', error);
     } finally {
       setLoading(false);
     }
@@ -222,7 +222,7 @@ export function ShareReel({
           </button>
           <button
             onClick={downloadStory}
-            disabled={loading || !selectedBookmarks.length}
+            disabled={loading ?? !selectedBookmarks.length}
             className='flex items-center gap-2 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 disabled:opacity-50'
           >
             {loading ? (

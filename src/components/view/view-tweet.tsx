@@ -13,12 +13,12 @@ import { UserUsername } from '@components/user/user-username';
 import { TweetActions, variants } from '@components/tweet/tweet-actions';
 import { TweetStats } from '@components/tweet/tweet-stats';
 import { TweetDate } from '@components/tweet/tweet-date';
-import { cn } from '@lib/utils';
 import type { Tweet } from '@lib/types/tweet';
+import { cn } from '@lib/utils';
 import type { User } from '@lib/types/user';
 import Image from 'next/image';
-import { useState } from 'react';
 import type { ViewingActivity } from '@components/activity/types';
+import { useState } from 'react';
 
 export type ViewTweetProps = Tweet & {
   user: User;
@@ -68,7 +68,7 @@ export function ViewTweet({
       });
       closeModal();
     } catch (error) {
-      console.error('Error posting reply:', error);
+      // console.error('Error posting reply:', error);
     }
   };
 
@@ -149,7 +149,7 @@ export function ViewTweet({
                       ? `https://image.tmdb.org/t/p/w500/${viewingActivity.poster_path}`
                       : '/movie.png'
                   }
-                  alt={viewingActivity?.title || 'No Image'}
+                  alt={viewingActivity?.title ?? 'No Image'}
                   width={125}
                   height={187}
                 />

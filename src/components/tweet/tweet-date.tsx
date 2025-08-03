@@ -1,7 +1,7 @@
 import cn from 'clsx';
 import { formatDate } from '@lib/date';
-import { ToolTip } from '@components/ui/tooltip';
 import type { Timestamp } from 'firebase/firestore';
+import { ToolTip } from '@components/ui/tooltip';
 
 type TweetDateProps = {
   createdAt: Timestamp;

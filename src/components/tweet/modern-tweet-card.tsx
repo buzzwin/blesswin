@@ -5,6 +5,7 @@ import { Tweet } from '@components/tweet/tweet';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
 import { cn } from '@lib/utils';
+import type { Tweet as TweetType, TweetWithUser } from '@lib/types/tweet';
 import {
   Heart,
   MessageCircle,
@@ -13,7 +14,6 @@ import {
   Star,
   BookOpen
 } from 'lucide-react';
-import type { Tweet as TweetType, TweetWithUser } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
 
 type ModernTweetCardProps = {
@@ -79,7 +79,7 @@ export function ModernTweetList({
     );
   }
 
-  if (error || !tweets) {
+  if (error ?? !tweets) {
     return (
       <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-gray-800'>
         <CardContent className='flex min-h-[200px] items-center justify-center p-6'>

@@ -1,8 +1,9 @@
 import { UserAvatar } from '@components/user/user-avatar';
 import { TweetDate } from '@components/tweet/tweet-date';
 import { ReviewActions } from '@components/review/review-actions';
-import { cn } from '@lib/utils';
 import type { ReviewWithUser } from '@lib/types/review';
+import { cn } from '@lib/utils';
+import Image from 'next/image';
 
 type ReviewCardProps = {
   review: ReviewWithUser;
@@ -29,7 +30,7 @@ export function ReviewCard({ review, onDelete }: ReviewCardProps): JSX.Element {
       {/* User Info and Date */}
       <div className='flex items-center gap-3'>
         <UserAvatar
-          src={review.user.photoURL || ''}
+          src={review.user.photoURL ?? ''}
           alt={review.user.name}
           username={review.user.username}
         />
@@ -72,9 +73,11 @@ export function ReviewCard({ review, onDelete }: ReviewCardProps): JSX.Element {
       {/* Movie/Show Info */}
       {review.posterPath && (
         <div className='mt-4 flex items-center gap-3'>
-          <img
+          <Image
             src={`https://image.tmdb.org/t/p/w92${review.posterPath}`}
             alt={review.title}
+            width={48}
+            height={64}
             className='h-16 w-12 rounded-md object-cover'
           />
           <div>

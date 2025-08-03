@@ -44,7 +44,7 @@ export async function getCachedRecommendations(userId: string | null): Promise<C
       const cached = anonymousCache.get(cacheKey);
       
       if (cached && new Date() < cached.expiresAt) {
-        console.log('Using anonymous cache');
+        // console.log('Using anonymous cache');
         return cached;
       }
       
@@ -73,11 +73,11 @@ export async function getCachedRecommendations(userId: string | null): Promise<C
       return null;
     }
 
-    console.log('Using cached recommendations');
+    // console.log('Using cached recommendations');
     return data;
 
   } catch (error) {
-    console.error('Error getting cached recommendations:', error);
+    // console.error('Error getting cached recommendations:', error);
     return null;
   }
 }
@@ -113,17 +113,17 @@ export async function cacheRecommendations(
     // For anonymous users, use in-memory cache
     if (!userId) {
       anonymousCache.set('anonymous_recommendations', cachedData);
-      console.log('Cached anonymous recommendations in memory');
+      // console.log('Cached anonymous recommendations in memory');
       return;
     }
 
     // For authenticated users, use Firestore
     const docRef = doc(db, 'recommendations', userId);
     await setDoc(docRef, cachedData);
-    console.log('Cached recommendations in Firestore');
+    // console.log('Cached recommendations in Firestore');
 
   } catch (error) {
-    console.error('Error caching recommendations:', error);
+    // console.error('Error caching recommendations:', error);
   }
 }
 
@@ -132,17 +132,17 @@ export async function invalidateRecommendationsCache(userId: string | null): Pro
     // For anonymous users, clear in-memory cache
     if (!userId) {
       anonymousCache.clear();
-      console.log('Cleared anonymous cache');
+      // console.log('Cleared anonymous cache');
       return;
     }
 
     // For authenticated users, delete from Firestore
     const docRef = doc(db, 'recommendations', userId);
     await deleteDoc(docRef);
-    console.log('Invalidated recommendations cache');
+    // console.log('Invalidated recommendations cache');
 
   } catch (error) {
-    console.error('Error invalidating recommendations cache:', error);
+    // console.error('Error invalidating recommendations cache:', error);
   }
 }
 

@@ -6,8 +6,8 @@ import { NextImage } from '@components/ui/next-image';
 import { UserAvatar } from './user-avatar';
 import { UserName } from './user-name';
 import { UserFollowing } from './user-following';
-import { UserUsername } from './user-username';
 import type { ReactNode } from 'react';
+import { UserUsername } from './user-username';
 import type { User } from '@lib/types/user';
 import { useModal } from '@lib/hooks/useModal';
 
@@ -47,7 +47,7 @@ export function UserTooltip({
   const { isMobile } = useWindow();
   const { open, openModal, closeModal } = useModal();
 
-  if (isMobile || modal) return <>{children}</>;
+  if (isMobile ?? modal) return <>{children}</>;
 
   const userLink = `/user/${username}`;
 
