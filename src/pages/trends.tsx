@@ -5,8 +5,10 @@ import { Loading } from '@components/ui/loading';
 import { UpdateUsername } from '@components/home/update-username';
 import { useAuth } from '@lib/context/auth-context';
 import { useGeminiTrends } from '@lib/hooks/useGeminiTrends';
+import { useRecentReviews } from '@lib/hooks/useRecentReviews';
 import { TrendingShows } from '@components/trending/trending-shows';
 import { TrendingNetworks } from '@components/trending/trending-networks';
+import { RecentReviews } from '@components/review/recent-reviews';
 import { BarChart3, TrendingUp, LogOut, RefreshCw } from 'lucide-react';
 import LogoIcon from '@components/ui/logo';
 import type { ReactElement, ReactNode } from 'react';
@@ -20,6 +22,9 @@ export default function Trends(): JSX.Element {
 
   const { trendingShows, trendingNetworks, loading, error, refreshTrends } =
     useGeminiTrends();
+  
+  const { reviews: recentReviews, loading: reviewsLoading, error: reviewsError } =
+    useRecentReviews(6);
 
   const handleSignIn = (): void => {
     void router.push('/login');
@@ -214,13 +219,23 @@ export default function Trends(): JSX.Element {
           </p>
         </div>
 
-        <div className='grid grid-cols-1 gap-8 lg:grid-cols-2'>
+        <div className='space-y-8'>
           {/* Trending Shows */}
           <div className='space-y-4'>
             <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>
               Trending TV Shows
             </h3>
             <TrendingShows trendingData={trendingShows} variant='dark' />
+          </div>
+
+          {/* Recent Reviews */}
+          <div className='space-y-4'>
+            <RecentReviews
+              reviews={recentReviews}
+              loading={reviewsLoading}
+              error={reviewsError}
+              variant='dark'
+            />
           </div>
 
           {/* Trending Networks */}
