@@ -63,7 +63,6 @@ export function ReviewActions({
       <button
         onClick={() => setIsDeleteModalOpen(true)}
         className={cn(
-          'absolute right-4 top-4',
           'rounded-full p-2',
           'text-gray-500 hover:text-red-600',
           'hover:bg-red-50 dark:hover:bg-red-500/10',

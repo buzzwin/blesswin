@@ -5,6 +5,7 @@ import { ViewingActivity } from '@components/activity/types';
 import { cn } from '@lib/utils';
 import { useState } from 'react';
 import { createReview } from '@lib/firebase/utils/review';
+import { createRating } from '@lib/firebase/utils/review';
 import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -66,13 +67,25 @@ export function TweetReplyModal({
         return;
       }
 
+      const emojiToRating = {
+        '😍': 'love',
+        '😊': 'love',
+        '😐': 'meh',
+        '😕': 'hate',
+        '😢': 'hate'
+      } as const;
+
+      const ratingType = selectedEmoji
+        ? emojiToRating[selectedEmoji as keyof typeof emojiToRating]
+        : 'love';
+
       // Create review with the actual input value
       const reviewData = {
         tmdbId: Number(tweet.viewingActivity.tmdbId),
         userId: user.id,
         title: tweet.viewingActivity.title,
         mediaType: tweet.viewingActivity.mediaType ?? 'movie',
-        rating: selectedEmoji ?? '',
+        rating: ratingType,
         review: inputValue, // Use the stored input value instead of data.review
         tags: selectedTags,
         posterPath: tweet.viewingActivity.poster_path,
@@ -86,6 +99,24 @@ export function TweetReplyModal({
       } catch (error) {
         // console.error('Error creating review:', error);
         throw new Error('Failed to save review. Please try again.');
+      }
+
+      // Also save a rating based on the emoji selection
+      try {
+        await createRating({
+          tmdbId: Number(tweet.viewingActivity.tmdbId),
+          userId: user.id,
+          title: tweet.viewingActivity.title,
+          mediaType: tweet.viewingActivity.mediaType ?? 'movie',
+          posterPath: tweet.viewingActivity.poster_path,
+          rating: ratingType,
+          overview: tweet.viewingActivity.overview,
+          releaseDate: tweet.viewingActivity.releaseDate,
+          voteAverage: 0 // Default value if not available
+        });
+      } catch (ratingError) {
+        // console.error('Error saving rating:', ratingError);
+        // Don't fail the review if rating fails
       }
 
       // Then create the associated tweet

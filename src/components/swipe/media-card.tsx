@@ -1,6 +1,6 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import type { MediaCard } from '@lib/types/rating';
+import type { MediaCard } from '@lib/types/review';
 import { X, Heart, Meh, Sparkles } from 'lucide-react';
 import { getTMDBImageUrl } from '@lib/utils';
 import { FallbackImage } from '@components/ui/fallback-image';
@@ -153,15 +153,13 @@ export function SwipeableMediaCard({
         {/* AI Recommendation Info */}
         {media.reason && media.confidence && (
           <div className='mt-3 rounded-lg bg-gradient-to-r from-amber-500/20 to-orange-500/20 p-3 backdrop-blur-sm'>
-            <div className='flex items-center gap-2 mb-1'>
+            <div className='mb-1 flex items-center gap-2'>
               <Sparkles className='h-4 w-4 text-amber-400' />
               <span className='text-xs font-semibold text-amber-300'>
                 AI Recommendation ({Math.round(media.confidence * 100)}% match)
               </span>
             </div>
-            <p className='text-xs text-gray-200 line-clamp-2'>
-              {media.reason}
-            </p>
+            <p className='line-clamp-2 text-xs text-gray-200'>{media.reason}</p>
           </div>
         )}
       </div>

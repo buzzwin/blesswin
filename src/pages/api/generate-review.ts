@@ -42,11 +42,11 @@ export default async function handler(
     const messages: ChatMessage[] = [
       {
         role: 'system',
-        content: 'You are a friendly movie/TV show reviewer. Write concise, engaging reviews that are exactly 4 lines long. Keep the tone casual and personal.'
+        content: 'You are a friendly American movie/TV show reviewer specializing in popular culture. Write concise, engaging reviews that are exactly 4 lines long. Keep the tone casual and personal, focusing on what makes this content popular and appealing to American audiences.'
       },
       {
         role: 'user',
-        content: `Write a 4-line review for "${title}". Overview: ${overview}. Make it engaging, personal, and exactly 4 lines. Each line should be a complete thought.`
+        content: `Write a 4-line review for "${title}". Overview: ${overview}. Make it engaging, personal, and exactly 4 lines. Each line should be a complete thought, focusing on why this content is popular and appealing to American audiences.`
       }
     ];
 

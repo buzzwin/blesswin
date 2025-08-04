@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import cn from 'clsx';
-import { Sparkles, Clock, User } from 'lucide-react';
+import { Sparkles, Clock, User, Star } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
 import type { NavLink } from './sidebar';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -25,6 +25,8 @@ export function SidebarLink({
     switch (iconName) {
       case 'SparklesIcon':
         return <Sparkles className='h-7 w-7' />;
+      case 'StarIcon':
+        return <Star className='h-7 w-7' />;
       case 'ClockIcon':
         return <Clock className='h-7 w-7' />;
       case 'UserIcon':

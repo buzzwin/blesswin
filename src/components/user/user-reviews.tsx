@@ -28,6 +28,12 @@ export function UserReviews({ userId }: UserReviewsProps): JSX.Element {
     void loadReviews();
   }, [userId]);
 
+  const handleReviewDeleted = (reviewId: string) => {
+    setReviews((prevReviews) =>
+      prevReviews.filter((review) => review.id !== reviewId)
+    );
+  };
+
   if (loading) {
     return <Loading className='mt-5' />;
   }
@@ -43,7 +49,11 @@ export function UserReviews({ userId }: UserReviewsProps): JSX.Element {
 
   return (
     <div className='mt-4 space-y-4'>
-      <TweetReviews reviews={reviews} loading={false} />
+      <TweetReviews 
+        reviews={reviews} 
+        loading={false} 
+        onReviewDeleted={handleReviewDeleted}
+      />
     </div>
   );
 }

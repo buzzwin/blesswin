@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getUserRatings } from '@lib/firebase/utils/rating';
+import { getUserRatings } from '@lib/firebase/utils/review';
 import { getGlobalRecommendations } from '@lib/firebase/utils/admin-recommendations';
 
 interface RecommendedContent {
@@ -28,28 +28,7 @@ export default async function handler(
 
     // Handle anonymous users
     if (!userId) {
-      // console.log('Anonymous user requesting recommended content');
-      
-      // Return global recommendations for anonymous users
-      const globalRecommendations = getGlobalRecommendations();
-      
-      // Convert to recommended content format
-      const recommendedContent: RecommendedContent[] = globalRecommendations.map(rec => ({
-        tmdbId: rec.tmdbId,
-        title: rec.title,
-        mediaType: rec.mediaType,
-        posterPath: rec.posterPath,
-        overview: 'Popular content with great reviews',
-        releaseDate: rec.year,
-        voteAverage: 8.0,
-        reason: rec.reason,
-        confidence: rec.confidence
-      }));
-
-      res.status(200).json({
-        content: recommendedContent,
-        cached: false
-      });
+      res.status(401).json({ error: 'Authentication required' });
       return;
     }
 
@@ -57,23 +36,9 @@ export default async function handler(
     const ratings = await getUserRatings(userId as string);
     
     if (ratings.length === 0) {
-      // User has no ratings, return global recommendations
-      const globalRecommendations = getGlobalRecommendations();
-      
-      const recommendedContent: RecommendedContent[] = globalRecommendations.map(rec => ({
-        tmdbId: rec.tmdbId,
-        title: rec.title,
-        mediaType: rec.mediaType,
-        posterPath: rec.posterPath,
-        overview: 'Popular content with great reviews',
-        releaseDate: rec.year,
-        voteAverage: 8.0,
-        reason: rec.reason,
-        confidence: rec.confidence
-      }));
-
+      // User has no ratings, return empty content
       res.status(200).json({
-        content: recommendedContent,
+        content: [],
         cached: false
       });
       return;
@@ -92,9 +57,15 @@ export default async function handler(
         messages: [
           {
             role: 'system',
-            content: `You are a movie and TV show recommendation expert. Based on the user's ratings, suggest content they might enjoy for the rating/swipe interface.
+            content: `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest the MOST POPULAR and well-known content they might enjoy.
             IMPORTANT: Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
             Avoid suggesting content similar to what they've disliked.
+            Focus on popular American content from CURRENT YEAR and recent years that are widely known and accessible.
+            Prioritize shows and movies that are:
+            - Highly rated and critically acclaimed
+            - Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
+            - Well-known and culturally significant
+            - Currently trending or recently released
             Return ONLY a valid JSON object with this exact structure:
             {
               "content": [
@@ -156,29 +127,7 @@ export default async function handler(
   } catch (error) {
     // console.error('Error generating recommended content:', error);
     
-    // Fallback to global recommendations on error
-    try {
-      const globalRecommendations = getGlobalRecommendations();
-      
-      const fallbackContent: RecommendedContent[] = globalRecommendations.map(rec => ({
-        tmdbId: rec.tmdbId,
-        title: rec.title,
-        mediaType: rec.mediaType,
-        posterPath: rec.posterPath,
-        overview: 'Popular content with great reviews',
-        releaseDate: rec.year,
-        voteAverage: 8.0,
-        reason: rec.reason,
-        confidence: rec.confidence
-      }));
-
-      res.status(200).json({
-        content: fallbackContent,
-        cached: false,
-        error: 'Using fallback content due to API error'
-      });
-    } catch (fallbackError) {
-      res.status(500).json({ error: 'Failed to generate recommended content' });
-    }
+    // Return empty content on error
+    res.status(500).json({ error: 'Failed to generate recommended content' });
   }
 } 

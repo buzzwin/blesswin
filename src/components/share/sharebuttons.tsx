@@ -1,17 +1,9 @@
 import {
   FacebookShareButton,
   FacebookIcon,
-  PinterestShareButton,
-  PinterestIcon,
-  RedditShareButton,
-  RedditIcon,
   WhatsappShareButton,
-  WhatsappIcon,
-  LinkedinShareButton,
-  LinkedinIcon
+  WhatsappIcon
 } from 'next-share';
-import { useRouter } from 'next/router';
-
 import { ViewingActivity } from '@components/activity/types';
 
 interface ShareButtonsProps {
@@ -25,13 +17,8 @@ interface ShareButtonsProps {
 const ShareButtons = ({
   viewingActivity,
   text,
-  id,
-  shareURL,
-  close
+  shareURL
 }: ShareButtonsProps) => {
-  const router = useRouter();
-  const encodedShareURL = encodeURIComponent(shareURL);
-  const encodedQuote = encodeURIComponent(text);
   return (
     <>
       {viewingActivity && (

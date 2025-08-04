@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import cn from 'clsx';
-import { Sparkles, Clock, User } from 'lucide-react';
+import { Sparkles, Clock, User, Star } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
 import type { MobileNavLink } from '@components/modal/mobile-sidebar-modal';
 import { HeroIcon } from '@components/ui/hero-icon';
@@ -20,6 +20,8 @@ export function MobileSidebarLink({
     switch (iconName) {
       case 'SparklesIcon':
         return <Sparkles className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
+      case 'StarIcon':
+        return <Star className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
       case 'ClockIcon':
         return <Clock className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
       case 'UserIcon':

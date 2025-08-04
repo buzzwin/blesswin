@@ -3,6 +3,8 @@ import { SEO } from '@components/common/seo';
 import { ModernInput } from '@components/input/modern-input';
 import { UpdateUsername } from '@components/home/update-username';
 import { ModernTweetList } from '@components/tweet/modern-tweet-card';
+import { Tweet } from '@components/tweet/tweet';
+import { UserAvatar } from '@components/user/user-avatar';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { useInfiniteScroll } from '@lib/hooks/useInfiniteScroll';
@@ -10,10 +12,10 @@ import { tweetsCollection } from '@lib/firebase/collections';
 import { where, orderBy } from 'firebase/firestore';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
-import { createReview } from '@lib/firebase/utils/review';
+import { createReview, createRating } from '@lib/firebase/utils/review';
 import { sendTweet } from '@lib/firebase/utils/tweet';
+import { manageLike } from '@lib/firebase/utils';
 import { SwipeInterface } from '@components/swipe/swipe-interface';
-import { saveRating } from '@lib/firebase/utils/rating';
 import { RecommendationsCard } from '@components/recommendations/recommendations-card';
 import { MobileRecommendationsCard } from '@components/recommendations/mobile-recommendations-card';
 import { useState, useCallback } from 'react';
@@ -23,7 +25,7 @@ import { BookOpen, Filter, TrendingUp, BarChart3 } from 'lucide-react';
 import LogoIcon from '@components/ui/logo';
 import type { ReactElement, ReactNode } from 'react';
 import { toast } from 'react-hot-toast';
-import type { RatingType, MediaCard } from '@lib/types/rating';
+import type { RatingType, MediaCard } from '@lib/types/review';
 
 export default function Home(): JSX.Element {
   const [inputValue, setInputValue] = useState('');
@@ -51,9 +53,9 @@ export default function Home(): JSX.Element {
       const releaseDate = mediaData?.releaseDate ?? '';
       const voteAverage = mediaData?.voteAverage ?? 0;
 
-      await saveRating({
+      await createRating({
+        tmdbId: Number(mediaId),
         userId: user.id,
-        tmdbId: mediaId,
         title,
         mediaType,
         posterPath,
@@ -65,9 +67,9 @@ export default function Home(): JSX.Element {
 
       // console.log('Rating saved:', { mediaId, rating, userId: user.id });
       toast.success(`Rated "${title}" as ${rating}!`);
-      
+
       // Trigger recommendations refresh to include the new rating
-      setRefreshKey(prev => prev + 1);
+      setRefreshKey((prev) => prev + 1);
     } catch (error) {
       // console.error('Error saving rating:', error);
       toast.error('Failed to save rating');
@@ -107,7 +109,7 @@ export default function Home(): JSX.Element {
         userId: user.id,
         title: selectedMedia.title,
         mediaType: selectedMedia.mediaType,
-        rating: '', // No rating for now
+        rating: 'love' as RatingType, // Default rating for reviews
         review: inputValue,
         tags: [], // No tags for now
         posterPath: selectedMedia.poster_path
@@ -116,6 +118,24 @@ export default function Home(): JSX.Element {
 
       // Create the review first
       const newReview = await createReview(reviewData);
+
+      // Also save a rating (default to 'love' for reviews)
+      try {
+        await createRating({
+          tmdbId: Number(selectedMedia.id),
+          userId: user.id,
+          title: selectedMedia.title,
+          mediaType: selectedMedia.mediaType,
+          posterPath: selectedMedia.poster_path,
+          rating: 'love' as RatingType, // Default rating for reviews
+          overview: selectedMedia.overview,
+          releaseDate: selectedMedia.releaseDate,
+          voteAverage: selectedMedia.vote_average
+        });
+      } catch (ratingError) {
+        // console.error('Error saving rating:', ratingError);
+        // Don't fail the review if rating fails
+      }
 
       // Create the tweet with viewing activity
       const viewingActivity = {
@@ -164,33 +184,48 @@ export default function Home(): JSX.Element {
         <div className='mx-auto max-w-7xl px-6 py-3'>
           <div className='mb-4 flex items-center justify-between'>
             <div className='flex items-center gap-4'>
-              <div className='flex h-16 w-16 items-center justify-center'>
-                <LogoIcon className='h-16 w-16' />
-              </div>
-              <div>
-                <h1 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
-                  Buzzwin
-                </h1>
-                <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>
-                  What will you watch next?
-                </p>
-              </div>
+              <button
+                onClick={() => router.push('/')}
+                className='flex items-center gap-4 transition-opacity hover:opacity-80'
+              >
+                <div className='flex h-16 w-16 items-center justify-center'>
+                  <LogoIcon className='h-16 w-16' />
+                </div>
+                <div>
+                  <h1 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
+                    Buzzwin
+                  </h1>
+                  <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+                    What will you watch next?
+                  </p>
+                </div>
+              </button>
             </div>
+
+            {/* Quick Actions - Integrated in Header */}
+            <div className='flex items-center gap-3'>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => router.push('/ratings')}
+                className='border-blue-300 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
+              >
+                <BarChart3 className='mr-2 h-4 w-4' />
+                My Ratings
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => router.push('/trends')}
+                className='border-purple-300 px-4 py-2 text-sm font-medium text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
+              >
+                <TrendingUp className='mr-2 h-4 w-4' />
+                Trending
+              </Button>
+            </div>
+
             <div className='flex items-center gap-4'>
               <UpdateUsername />
-
-              {/* Ratings History Link - Only show on desktop */}
-              {user && (
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={() => router.push('/ratings')}
-                  className='border-blue-300 px-6 py-2 font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
-                >
-                  <BarChart3 className='mr-2 h-4 w-4' />
-                  My Ratings
-                </Button>
-              )}
 
               {!user ? (
                 <Button
@@ -258,11 +293,13 @@ export default function Home(): JSX.Element {
           <div className='md:hidden'>
             <div className='mb-1 text-center'>
               <h2 className='mb-1 text-lg font-bold text-gray-900 dark:text-white'>
-                Rate Shows & Movies
+                {user ? 'Rate Shows & Movies' : 'Trending Shows & Movies'}
               </h2>
               <p className='mb-1 text-xs text-gray-600 dark:text-gray-300'>
-                Swipe right to love, left to hate, or tap middle for
-                &quot;meh&quot;
+                {user 
+                  ? 'Swipe right to love, left to hate, or tap middle for "meh"'
+                  : 'Discover what\'s trending right now. Sign in to rate and get personalized recommendations!'
+                }
               </p>
             </div>
 
@@ -270,39 +307,12 @@ export default function Home(): JSX.Element {
               <SwipeInterface onRatingSubmit={handleRatingSubmit} />
             </div>
 
-            {/* Mobile AI Recommendations */}
-            <div className='mt-6'>
-                                <MobileRecommendationsCard refreshKey={refreshKey} />
-            </div>
-
-            {/* Mobile Quick Actions */}
-            <div className='mt-4 space-y-3'>
-              <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
-                <CardHeader className='pb-3'>
-                  <CardTitle className='text-base'>Quick Actions</CardTitle>
-                </CardHeader>
-                <CardContent className='space-y-2'>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => router.push('/ratings')}
-                    className='w-full border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
-                  >
-                    <BarChart3 className='mr-2 h-4 w-4' />
-                    View My Ratings
-                  </Button>
-                  <Button
-                    variant='outline'
-                    size='sm'
-                    onClick={() => router.push('/trends')}
-                    className='w-full border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
-                  >
-                    <TrendingUp className='mr-2 h-4 w-4' />
-                    Trending Shows
-                  </Button>
-                </CardContent>
-              </Card>
-            </div>
+            {/* Mobile AI Recommendations - Only for logged-in users */}
+            {user && (
+              <div className='mt-6'>
+                <MobileRecommendationsCard refreshKey={refreshKey} />
+              </div>
+            )}
           </div>
 
           {/* Desktop Layout - Three Column */}
@@ -328,35 +338,146 @@ export default function Home(): JSX.Element {
                           className='border-amber-200 bg-white shadow-sm dark:border-amber-800/30 dark:bg-gray-800'
                         >
                           <CardContent className='p-3'>
+                            {/* User Info */}
                             <div className='mb-2 flex items-center gap-2'>
-                              <div className='flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700'>
-                                <span className='text-xs font-medium'>
-                                  {tweet.user?.username
-                                    ?.charAt(0)
-                                    ?.toUpperCase() ?? 'U'}
-                                </span>
-                              </div>
+                              <UserAvatar
+                                src={tweet.user?.photoURL ?? ''}
+                                alt={tweet.user?.name ?? ''}
+                                username={tweet.user?.username ?? ''}
+                                className='h-6 w-6'
+                              />
                               <span className='truncate text-xs font-medium text-gray-900 dark:text-white'>
                                 {tweet.user?.username ?? 'Anonymous'}
                               </span>
                             </div>
 
-                            {/* Show Title - Bold and Prominent */}
+                            {/* Media Title */}
                             {tweet.viewingActivity?.title && (
                               <h4 className='line-clamp-1 mb-2 text-sm font-bold text-gray-900 dark:text-white'>
                                 {tweet.viewingActivity.title}
                               </h4>
                             )}
 
-                            <p className='line-clamp-2 mb-2 text-xs text-gray-600 dark:text-gray-300'>
-                              {tweet.text ?? 'No content'}
+                            {/* Review Text */}
+                            <p className='line-clamp-3 mb-2 text-xs text-gray-600 dark:text-gray-300'>
+                              {tweet.text ??
+                                tweet.viewingActivity?.review ??
+                                'No content'}
                             </p>
+
+                            {/* Date */}
                             <div className='text-xs text-gray-500 dark:text-gray-400'>
                               {tweet.createdAt
                                 ? new Date(
                                     tweet.createdAt.toDate()
                                   ).toLocaleDateString()
                                 : 'Unknown date'}
+                            </div>
+
+                            {/* Action Buttons - Compact */}
+                            <div className='mt-2 flex items-center justify-between'>
+                              <div className='flex items-center gap-3'>
+                                {/* Like Button */}
+                                <button
+                                  onClick={async () => {
+                                    if (!user?.id) {
+                                      toast.error(
+                                        'Please sign in to like reviews'
+                                      );
+                                      return;
+                                    }
+                                    const isLiked = tweet.userLikes?.includes(
+                                      user.id
+                                    );
+                                    try {
+                                      await manageLike(
+                                        isLiked ? 'unlike' : 'like',
+                                        user.id,
+                                        tweet.id
+                                      )();
+                                      toast.success(
+                                        isLiked ? 'Unliked' : 'Liked!'
+                                      );
+                                    } catch (error) {
+                                      toast.error('Failed to update like');
+                                    }
+                                  }}
+                                  className={cn(
+                                    'flex items-center gap-1 text-xs transition-colors',
+                                    tweet.userLikes?.includes(user?.id ?? '')
+                                      ? 'text-red-500 dark:text-red-400'
+                                      : 'text-gray-500 hover:text-red-500 dark:text-gray-400 dark:hover:text-red-400'
+                                  )}
+                                >
+                                  <Heart
+                                    className={cn(
+                                      'h-3 w-3',
+                                      tweet.userLikes?.includes(
+                                        user?.id ?? ''
+                                      ) && 'fill-current'
+                                    )}
+                                  />
+                                  <span>{tweet.userLikes?.length ?? 0}</span>
+                                </button>
+
+                                {/* Reply Button */}
+                                <button
+                                  onClick={() => {
+                                    if (!user?.id) {
+                                      toast.error('Please sign in to reply');
+                                      return;
+                                    }
+                                    void router.push(`/buzz/${tweet.id}`);
+                                  }}
+                                  className='flex items-center gap-1 text-xs text-gray-500 transition-colors hover:text-blue-500 dark:text-gray-400 dark:hover:text-blue-400'
+                                >
+                                  <svg
+                                    className='h-3 w-3'
+                                    fill='none'
+                                    stroke='currentColor'
+                                    viewBox='0 0 24 24'
+                                  >
+                                    <path
+                                      strokeLinecap='round'
+                                      strokeLinejoin='round'
+                                      strokeWidth={2}
+                                      d='M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z'
+                                    />
+                                  </svg>
+                                  <span>{tweet.userReplies ?? 0}</span>
+                                </button>
+                              </div>
+
+                              {/* Share Button */}
+                              <button
+                                onClick={() => {
+                                  void (async () => {
+                                    try {
+                                      await navigator.clipboard.writeText(
+                                        `https://www.buzzwin.com/public/${tweet.id}`
+                                      );
+                                      toast.success('Link copied to clipboard!');
+                                    } catch (error) {
+                                      toast.error('Failed to copy link');
+                                    }
+                                  })();
+                                }}
+                                className='text-xs text-gray-500 transition-colors hover:text-green-500 dark:text-gray-400 dark:hover:text-green-400'
+                              >
+                                <svg
+                                  className='h-3 w-3'
+                                  fill='none'
+                                  stroke='currentColor'
+                                  viewBox='0 0 24 24'
+                                >
+                                  <path
+                                    strokeLinecap='round'
+                                    strokeLinejoin='round'
+                                    strokeWidth={2}
+                                    d='M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z'
+                                  />
+                                </svg>
+                              </button>
                             </div>
                           </CardContent>
                         </Card>
@@ -379,24 +500,32 @@ export default function Home(): JSX.Element {
                 <div className='sticky top-24'>
                   <div className='mb-4 text-center'>
                     <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-                      Rate Shows & Movies
+                      {user ? 'Rate Shows & Movies' : 'Trending Shows & Movies'}
                     </h2>
 
                     {/* Compact Instructions */}
-                    <div className='mb-4 flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400'>
-                      <div className='flex items-center gap-1'>
-                        <X className='h-3 w-3 text-red-500' />
-                        <span>Swipe left to hate</span>
+                    {user ? (
+                      <div className='mb-4 flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400'>
+                        <div className='flex items-center gap-1'>
+                          <X className='h-3 w-3 text-red-500' />
+                          <span>Swipe left to hate</span>
+                        </div>
+                        <div className='flex items-center gap-1'>
+                          <Meh className='h-3 w-3 text-yellow-500' />
+                          <span>Tap middle for meh</span>
+                        </div>
+                        <div className='flex items-center gap-1'>
+                          <Heart className='h-3 w-3 text-green-500' />
+                          <span>Swipe right to love</span>
+                        </div>
                       </div>
-                      <div className='flex items-center gap-1'>
-                        <Meh className='h-3 w-3 text-yellow-500' />
-                        <span>Tap middle for meh</span>
+                    ) : (
+                      <div className='mb-4 text-center'>
+                        <p className='text-sm text-gray-600 dark:text-gray-400'>
+                          Discover what&apos;s trending right now. Sign in to rate and get personalized recommendations!
+                        </p>
                       </div>
-                      <div className='flex items-center gap-1'>
-                        <Heart className='h-3 w-3 text-green-500' />
-                        <span>Swipe right to love</span>
-                      </div>
-                    </div>
+                    )}
                   </div>
 
                   <div className='flex justify-center'>
@@ -408,8 +537,28 @@ export default function Home(): JSX.Element {
               {/* Right Pane - Recommendations */}
               <div className='col-span-3'>
                 <div className='sticky top-24 space-y-4'>
-                  {/* My Recommendations */}
-                  <RecommendationsCard refreshKey={refreshKey} />
+                  {/* My Recommendations - Only for logged-in users */}
+                  {user && <RecommendationsCard refreshKey={refreshKey} />}
+
+                  {/* Sign In Card for non-logged-in users */}
+                  {!user && (
+                    <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
+                      <CardHeader>
+                        <CardTitle className='text-lg'>Get Personalized Recommendations</CardTitle>
+                      </CardHeader>
+                      <CardContent className='space-y-3'>
+                        <p className='text-sm text-gray-600 dark:text-gray-400'>
+                          Sign in to rate shows and get AI-powered recommendations tailored just for you!
+                        </p>
+                        <Button 
+                          onClick={handleSignIn}
+                          className='w-full border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                        >
+                          Sign In
+                        </Button>
+                      </CardContent>
+                    </Card>
+                  )}
 
                   {/* Quick Stats */}
                   <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
@@ -431,33 +580,6 @@ export default function Home(): JSX.Element {
                         </span>
                         <span className='font-semibold'>1.2k</span>
                       </div>
-                    </CardContent>
-                  </Card>
-
-                  {/* Quick Actions */}
-                  <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
-                    <CardHeader>
-                      <CardTitle className='text-lg'>Quick Actions</CardTitle>
-                    </CardHeader>
-                    <CardContent className='space-y-3'>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        onClick={() => router.push('/ratings')}
-                        className='w-full border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
-                      >
-                        <BarChart3 className='mr-2 h-4 w-4' />
-                        View My Ratings
-                      </Button>
-                      <Button
-                        variant='outline'
-                        size='sm'
-                        onClick={() => router.push('/trends')}
-                        className='w-full border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
-                      >
-                        <TrendingUp className='mr-2 h-4 w-4' />
-                        Trending Shows
-                      </Button>
                     </CardContent>
                   </Card>
                 </div>

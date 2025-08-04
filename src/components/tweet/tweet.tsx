@@ -291,6 +291,10 @@ export function Tweet(tweet: TweetProps): JSX.Element {
     setReviews((prev) => [newReview, ...prev]);
   };
 
+  const handleReviewDeleted = (reviewId: string) => {
+    setReviews((prev) => prev.filter((review) => review.id !== reviewId));
+  };
+
   const handleError = (error: unknown): void => {
     // console.error('Error:', error);
     const message =
@@ -702,7 +706,11 @@ export function Tweet(tweet: TweetProps): JSX.Element {
               <h3 className='mb-4 font-medium text-gray-900 dark:text-white'>
                 Reviews ({reviews.length})
               </h3>
-              <TweetReviews reviews={reviews} loading={loadingReviews} />
+              <TweetReviews
+                reviews={reviews}
+                loading={loadingReviews}
+                onReviewDeleted={handleReviewDeleted}
+              />
             </div>
 
             {/* Replies Section */}

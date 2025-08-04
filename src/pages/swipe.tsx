@@ -7,8 +7,8 @@ import { useAuth } from '@lib/context/auth-context';
 import { useRouter } from 'next/router';
 import { ArrowLeft, Heart, X, Meh } from 'lucide-react';
 import { toast } from 'react-hot-toast';
-import type { RatingType, MediaCard } from '@lib/types/rating';
-import { saveRating } from '@lib/firebase/utils/rating';
+import type { RatingType, MediaCard } from '@lib/types/review';
+import { createRating } from '@lib/firebase/utils/review';
 
 export default function SwipePage(): JSX.Element {
   const { user } = useAuth();
@@ -33,9 +33,9 @@ export default function SwipePage(): JSX.Element {
       const releaseDate = mediaData?.releaseDate ?? '';
       const voteAverage = mediaData?.voteAverage ?? 0;
 
-      await saveRating({
+      await createRating({
+        tmdbId: Number(mediaId),
         userId: user.id,
-        tmdbId: mediaId,
         title,
         mediaType,
         posterPath,

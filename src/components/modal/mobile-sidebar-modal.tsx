@@ -25,6 +25,12 @@ const getTopNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
+    href: '/ratings',
+    linkName: 'Ratings & Reviews',
+    iconName: 'StarIcon',
+    disabled: false
+  },
+  {
     href: '/reviews',
     linkName: 'Recent Reviews',
     iconName: 'ClockIcon',

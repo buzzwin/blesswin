@@ -1,17 +1,22 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
+import {
+  createReview,
+  createRating,
+  updateReview
+} from '@lib/firebase/utils/review';
 import { Modal } from '@components/modal/modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReviewWithUser } from '@lib/types/review';
 import { cn } from '@lib/utils';
 import type { ViewingActivity } from '@components/activity/types';
-import { createReview } from '@lib/firebase/utils/review';
 
 type ReviewModalProps = {
   isOpen: boolean;
   onClose: () => void;
   viewingActivity: ViewingActivity;
+  existingReview?: ReviewWithUser | null;
   onReviewAdded?: (review: ReviewWithUser) => void;
 };
 
@@ -38,6 +43,7 @@ export function ReviewModal({
   isOpen,
   onClose,
   viewingActivity,
+  existingReview,
   onReviewAdded
 }: ReviewModalProps): JSX.Element {
   const { user } = useAuth();
@@ -45,6 +51,24 @@ export function ReviewModal({
   const [selectedEmoji, setSelectedEmoji] = useState<string | null>(null);
   const [reviewText, setReviewText] = useState('');
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (existingReview) {
+      // Convert rating to emoji
+      const ratingToEmoji = {
+        love: '😍',
+        hate: '😢',
+        meh: '😐'
+      };
+      setSelectedEmoji(ratingToEmoji[existingReview.rating] || '😐');
+      setSelectedTags(existingReview.tags || []);
+      setReviewText(existingReview.review || '');
+    } else {
+      setSelectedEmoji(null);
+      setSelectedTags([]);
+      setReviewText('');
+    }
+  }, [existingReview]);
 
   const handleTagClick = (tag: string) => {
     setSelectedTags((prev) =>
@@ -60,21 +84,68 @@ export function ReviewModal({
 
     setLoading(true);
     try {
-      const reviewData = {
-        tmdbId: Number(viewingActivity.tmdbId),
-        userId: user.id,
-        title: viewingActivity.title,
-        mediaType: viewingActivity.mediaType ?? 'movie',
-        rating: selectedEmoji ?? '',
-        review: reviewText,
-        tags: selectedTags,
-        posterPath: viewingActivity.poster_path
-      };
+      const emojiToRating = {
+        '😍': 'love',
+        '😊': 'love',
+        '😐': 'meh',
+        '😕': 'hate',
+        '😢': 'hate'
+      } as const;
 
-      const newReview = await createReview(reviewData);
+      const ratingType = selectedEmoji
+        ? emojiToRating[selectedEmoji as keyof typeof emojiToRating]
+        : 'love';
+
+      let newReview;
+
+      if (existingReview) {
+        // Update existing review
+        newReview = await updateReview(existingReview.id, user.id, {
+          review: reviewText,
+          rating: ratingType,
+          tags: selectedTags
+        });
+      } else {
+        // Create new review
+        const reviewData = {
+          tmdbId: Number(viewingActivity.tmdbId),
+          userId: user.id,
+          title: viewingActivity.title,
+          mediaType: viewingActivity.mediaType ?? 'movie',
+          rating: ratingType,
+          review: reviewText,
+          tags: selectedTags,
+          posterPath: viewingActivity.poster_path
+        };
+
+        newReview = await createReview(reviewData);
+
+        // Also save a rating based on the emoji selection
+        try {
+          await createRating({
+            tmdbId: Number(viewingActivity.tmdbId),
+            userId: user.id,
+            title: viewingActivity.title,
+            mediaType: viewingActivity.mediaType ?? 'movie',
+            posterPath: viewingActivity.poster_path,
+            rating: ratingType,
+            overview: viewingActivity.overview,
+            releaseDate: viewingActivity.releaseDate,
+            voteAverage: 0 // Default value if not available
+          });
+        } catch (ratingError) {
+          // console.error('Error saving rating:', ratingError);
+          // Don't fail the review if rating fails
+        }
+      }
+
       onReviewAdded?.(newReview);
       onClose();
-      toast.success('Review posted successfully!');
+      toast.success(
+        existingReview
+          ? 'Review updated successfully!'
+          : 'Review posted successfully!'
+      );
     } catch (error) {
       toast.error('Failed to post review');
     } finally {

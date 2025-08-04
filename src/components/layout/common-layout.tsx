@@ -16,14 +16,12 @@ export function CommonLayout({
   requireAuth = false,
   redirectUrl
 }: CommonLayoutProps): JSX.Element {
-  const user = useRequireAuth(requireAuth ? redirectUrl : undefined);
+  // Always call useRequireAuth but only use the result if required
+  useRequireAuth(requireAuth ? redirectUrl : undefined);
 
   return (
     <WindowContextProvider>
-      <MainLayout>
-        <Placeholder />
-        {children}
-      </MainLayout>
+      <MainLayout>{children}</MainLayout>
       <Toaster position='bottom-center' />
     </WindowContextProvider>
   );

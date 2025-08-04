@@ -27,6 +27,12 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     disabled: false
   },
   {
+    href: '/ratings',
+    linkName: 'Ratings & Reviews',
+    iconName: 'StarIcon',
+    disabled: false
+  },
+  {
     href: '/reviews',
     linkName: 'Recent Reviews',
     iconName: 'ClockIcon',

@@ -1,17 +1,14 @@
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { Menu } from '@headlessui/react';
 import cn from 'clsx';
 import { useModal } from '@lib/hooks/useModal';
-import { preventBubbling } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
-import { useWindow } from '@lib/context/window-context';
 import { Modal } from '@components/modal/modal';
 import { DisplayModal } from '@components/modal/display-modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
 import { ActionModal } from '@components/modal/action-modal';
 import type { Variants } from 'framer-motion';
-import { MenuLink } from './menu-link';
 
 export const variants: Variants = {
   initial: { opacity: 0, y: 50 },
@@ -32,7 +29,6 @@ export function MoreSettings(): JSX.Element {
   } = useModal();
 
   const { signOut } = useAuth();
-  const { isMobile } = useWindow();
 
   return (
     <>
@@ -98,7 +94,7 @@ export function MoreSettings(): JSX.Element {
                 static
               >
                 <Menu.Item>
-                  {({ active }): JSX.Element => (
+                  {(): JSX.Element => (
                     <div></div>
                     // <MenuLink
                     //   className={cn(
@@ -114,7 +110,7 @@ export function MoreSettings(): JSX.Element {
                   )}
                 </Menu.Item>
                 <Menu.Item>
-                  {({ active }): JSX.Element => (
+                  {(): JSX.Element => (
                     <div></div>
                     //<MenuLink
                     //   className={cn(

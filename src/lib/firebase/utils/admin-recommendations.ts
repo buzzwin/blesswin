@@ -154,37 +154,6 @@ export function getGlobalRecommendations(): Recommendation[] {
     return cached.recommendations;
   }
 
-  // If no cache, return popular content (this could be enhanced)
-  return [
-    {
-      tmdbId: '550',
-      title: 'Fight Club',
-      mediaType: 'movie',
-      posterPath: '/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg',
-      reason: 'Popular thriller with great reviews',
-      confidence: 0.9,
-      genre: 'Thriller',
-      year: '1999'
-    },
-    {
-      tmdbId: '13',
-      title: 'Forrest Gump',
-      mediaType: 'movie',
-      posterPath: '/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg',
-      reason: 'Classic drama with universal appeal',
-      confidence: 0.85,
-      genre: 'Drama',
-      year: '1994'
-    },
-    {
-      tmdbId: '1399',
-      title: 'Game of Thrones',
-      mediaType: 'tv',
-      posterPath: '/u3bZgnGQ9T01sWNhyveQz0wH0Hl.jpg',
-      reason: 'Epic fantasy series with complex characters',
-      confidence: 0.8,
-      genre: 'Fantasy',
-      year: '2011'
-    }
-  ];
+  // If no cache, return empty array
+  return [];
 } 

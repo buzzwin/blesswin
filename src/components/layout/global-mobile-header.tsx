@@ -3,6 +3,8 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { MobileSidebar } from '@components/sidebar/mobile-sidebar';
 import LogoIcon from '@components/ui/logo';
+import { Button } from '@components/ui/button-shadcn';
+import { BarChart3, TrendingUp } from 'lucide-react';
 
 export function GlobalMobileHeader(): JSX.Element {
   const { signOut } = useAuth();
@@ -34,8 +36,29 @@ export function GlobalMobileHeader(): JSX.Element {
           </a>
         </Link>
 
-        {/* Right side - Mobile menu only */}
-        <div className='flex items-center gap-1'>
+        {/* Right side - Quick Actions and Mobile menu */}
+        <div className='flex items-center gap-2'>
+          {/* Quick Actions - Compact for mobile */}
+          <div className='flex items-center gap-1'>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => router.push('/ratings')}
+              className='border-blue-300 px-2 py-1 text-xs font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
+            >
+              <BarChart3 className='mr-1 h-3 w-3' />
+              Ratings
+            </Button>
+            <Button
+              variant='outline'
+              size='sm'
+              onClick={() => router.push('/trends')}
+              className='border-purple-300 px-2 py-1 text-xs font-medium text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
+            >
+              <TrendingUp className='mr-1 h-3 w-3' />
+              Trends
+            </Button>
+          </div>
           <MobileSidebar />
         </div>
       </div>

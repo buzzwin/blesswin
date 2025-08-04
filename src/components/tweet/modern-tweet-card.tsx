@@ -1,19 +1,10 @@
 import { Card, CardContent } from '@components/ui/card';
-import { Separator } from '@components/ui/separator';
-import { Button } from '@components/ui/button-shadcn';
 import { Tweet } from '@components/tweet/tweet';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
 import { cn } from '@lib/utils';
-import type { Tweet as TweetType, TweetWithUser } from '@lib/types/tweet';
-import {
-  Heart,
-  MessageCircle,
-  Share2,
-  Eye,
-  Star,
-  BookOpen
-} from 'lucide-react';
+import type { Tweet as TweetType } from '@lib/types/tweet';
+import { BookOpen } from 'lucide-react';
 import type { User } from '@lib/types/user';
 
 type ModernTweetCardProps = {

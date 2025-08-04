@@ -53,8 +53,12 @@ export function UpdateUsername(): JSX.Element {
   }, [inputValue]);
 
   useEffect(() => {
-    if (user && !user?.updatedAt) openModal();
-    else setAlreadySet(true);
+    if (user && !user?.updatedAt) {
+      // Don't automatically open modal - let user choose when to update username
+      setAlreadySet(false);
+    } else {
+      setAlreadySet(true);
+    }
   }, [user]);
 
   const changeUsername = async (

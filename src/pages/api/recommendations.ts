@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getUserRatings } from '@lib/firebase/utils/rating';
+import { getUserRatings } from '@lib/firebase/utils/review';
 import { getCachedRecommendations, cacheRecommendations, getGlobalRecommendations } from '@lib/firebase/utils/admin-recommendations';
 
 interface Recommendation {
@@ -37,40 +37,7 @@ export default async function handler(
 
     // Handle anonymous users
     if (!userId) {
-      // console.log('Anonymous user requesting recommendations');
-      
-      // Check cache first
-      const cached = await getCachedRecommendations(null);
-      if (cached) {
-        res.status(200).json({
-          recommendations: cached.recommendations,
-          analysis: cached.analysis,
-          cached: true
-        });
-        return;
-      }
-
-      // For anonymous users, return global recommendations
-      const globalRecommendations = getGlobalRecommendations();
-      
-      // Cache the global recommendations
-      void cacheRecommendations(null, globalRecommendations, {
-        preferredGenres: ['Action', 'Drama', 'Comedy'],
-        preferredYears: ['1990-2010'],
-        ratingPattern: 'Mixed preferences',
-        suggestions: ['Try different genres to discover your taste']
-      });
-
-      res.status(200).json({
-        recommendations: globalRecommendations,
-        analysis: {
-          preferredGenres: ['Action', 'Drama', 'Comedy'],
-          preferredYears: ['1990-2010'],
-          ratingPattern: 'Mixed preferences',
-          suggestions: ['Try different genres to discover your taste']
-        },
-        cached: false
-      });
+      res.status(401).json({ error: 'Authentication required' });
       return;
     }
 
@@ -81,21 +48,12 @@ export default async function handler(
     const ratings = await getUserRatings(userId as string);
     
     if (ratings.length === 0) {
-      // User has no ratings, return global recommendations
-      const globalRecommendations = getGlobalRecommendations();
-      
-      void cacheRecommendations(userId as string, globalRecommendations, {
-        preferredGenres: ['Action', 'Drama', 'Comedy'],
-        preferredYears: ['1990-2010'],
-        ratingPattern: 'No ratings yet',
-        suggestions: ['Start rating shows and movies to get personalized recommendations']
-      });
-
+      // User has no ratings, return empty recommendations
       res.status(200).json({
-        recommendations: globalRecommendations,
+        recommendations: [],
         analysis: {
-          preferredGenres: ['Action', 'Drama', 'Comedy'],
-          preferredYears: ['1990-2010'],
+          preferredGenres: [],
+          preferredYears: [],
           ratingPattern: 'No ratings yet',
           suggestions: ['Start rating shows and movies to get personalized recommendations']
         },
@@ -116,9 +74,15 @@ export default async function handler(
         messages: [
           {
             role: 'system',
-            content: `You are a movie and TV show recommendation expert. Analyze the user's ratings and provide personalized recommendations. 
+            content: `You are a movie and TV show recommendation expert specializing in American popular culture. Analyze the user's ratings and provide personalized recommendations for the MOST POPULAR content. 
             IMPORTANT: Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
             Avoid suggesting content similar to what they've disliked.
+            Focus on popular American content from CURRENT YEAR and recent years that are widely known and accessible.
+            Prioritize shows and movies that are:
+            - Highly rated and critically acclaimed
+            - Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
+            - Well-known and culturally significant
+            - Currently trending or recently released
             Return ONLY a valid JSON object with this exact structure:
             {
               "recommendations": [
@@ -188,22 +152,7 @@ export default async function handler(
   } catch (error) {
     // console.error('Error generating recommendations:', error);
     
-    // Fallback to global recommendations on error
-    try {
-      const globalRecommendations = getGlobalRecommendations();
-      res.status(200).json({
-        recommendations: globalRecommendations,
-        analysis: {
-          preferredGenres: ['Action', 'Drama', 'Comedy'],
-          preferredYears: ['1990-2010'],
-          ratingPattern: 'Fallback recommendations',
-          suggestions: ['Try rating some content to get personalized recommendations']
-        },
-        cached: false,
-        error: 'Using fallback recommendations due to API error'
-      });
-    } catch (fallbackError) {
-      res.status(500).json({ error: 'Failed to generate recommendations' });
-    }
+    // Return empty recommendations on error
+    res.status(500).json({ error: 'Failed to generate recommendations' });
   }
 } 

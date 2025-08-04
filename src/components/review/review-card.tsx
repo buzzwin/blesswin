@@ -1,6 +1,7 @@
 import { UserAvatar } from '@components/user/user-avatar';
 import { TweetDate } from '@components/tweet/tweet-date';
 import { ReviewActions } from '@components/review/review-actions';
+import { ReviewShare } from '@components/review/review-share';
 import type { ReviewWithUser } from '@lib/types/review';
 import { cn } from '@lib/utils';
 import Image from 'next/image';
@@ -8,9 +9,14 @@ import Image from 'next/image';
 type ReviewCardProps = {
   review: ReviewWithUser;
   onDelete?: () => void;
+  viewReview?: boolean;
 };
 
-export function ReviewCard({ review, onDelete }: ReviewCardProps): JSX.Element {
+export function ReviewCard({
+  review,
+  onDelete,
+  viewReview
+}: ReviewCardProps): JSX.Element {
   if (!review.user) return <></>;
 
   return (
@@ -21,11 +27,19 @@ export function ReviewCard({ review, onDelete }: ReviewCardProps): JSX.Element {
         'dark:border-gray-800 dark:bg-gray-900/50'
       )}
     >
-      <ReviewActions
-        reviewId={review.id}
-        userId={review.userId}
-        onDelete={onDelete}
-      />
+      <div className='absolute right-4 top-4 flex items-center gap-2'>
+        <ReviewShare
+          reviewId={review.id}
+          viewReview={viewReview}
+          text={review.review || ''}
+          reviewTitle={review.title}
+        />
+        <ReviewActions
+          reviewId={review.id}
+          userId={review.userId}
+          onDelete={onDelete}
+        />
+      </div>
 
       {/* User Info and Date */}
       <div className='flex items-center gap-3'>
@@ -51,7 +65,9 @@ export function ReviewCard({ review, onDelete }: ReviewCardProps): JSX.Element {
 
       {/* Review Content */}
       <div className='mt-3 space-y-3'>
-        <p className='text-gray-600 dark:text-gray-300'>{review.review}</p>
+        {review.review && (
+          <p className='text-gray-600 dark:text-gray-300'>{review.review}</p>
+        )}
         {review.tags.length > 0 && (
           <div className='flex flex-wrap gap-1.5'>
             {review.tags.map((tag) => (
