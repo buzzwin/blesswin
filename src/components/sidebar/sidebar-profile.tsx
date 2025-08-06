@@ -11,8 +11,8 @@ import { CustomIcon } from '@components/ui/custom-icon';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
-import type { User } from '@lib/types/user';
 import { variants } from './more-settings';
+import type { User } from '@lib/types/user';
 
 export function SidebarProfile(): JSX.Element {
   const { user, signOut } = useAuth();

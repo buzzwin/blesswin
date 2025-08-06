@@ -1,6 +1,6 @@
 import { addDoc, serverTimestamp, type WithFieldValue, doc, getDoc, deleteDoc } from 'firebase/firestore';
-import type { ViewingActivity } from '@components/activity/types';
 import { tweetsCollection } from '../collections';
+import type { ViewingActivity } from '@components/activity/types';
 import type { Tweet, TweetUser } from '@lib/types/tweet';
 
 export const sendTweet = async (

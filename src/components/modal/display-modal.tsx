@@ -1,9 +1,9 @@
+import cn from 'clsx';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { InputThemeRadio } from '@components/input/input-theme-radio';
 import { Button } from '@components/ui/button';
 import { InputAccentRadio } from '@components/input/input-accent-radio';
-import cn from 'clsx';
 import type { Theme, Accent } from '@lib/types/theme';
 
 type DisplayModalProps = {

@@ -1,9 +1,6 @@
 import { useState } from 'react';
 
-import questions from './questions.json';
-import { MainHeader } from '@components/home/main-header';
 import router from 'next/router';
-import { SEO } from '@components/common/seo';
 import Confetti from 'react-confetti';
 
 import {
@@ -18,7 +15,10 @@ import {
   LinkedinShareButton,
   LinkedinIcon
 } from 'next-share';
+import { SEO } from '@components/common/seo';
+import { MainHeader } from '@components/home/main-header';
 import { PublicLayout } from '@components/layout/pub_layout';
+import questions from './questions.json';
 
 const Quiz: React.FC = () => {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);

@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@lib/context/auth-context';
 import {
   collection,
   query,
@@ -12,13 +11,14 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
+import { manageBookmark } from '@lib/firebase/utils';
+import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from '@components/modal/modal';
-import { manageBookmark } from '@lib/firebase/utils';
 import type { Watchlist } from '@lib/types/bookmark';
-import { cn } from '@lib/utils';
-import { toast } from 'react-hot-toast';
 
 type AddToWatchlistModalProps = {
   isOpen: boolean;

@@ -6,10 +6,10 @@ import {
   createRating,
   updateReview
 } from '@lib/firebase/utils/review';
+import { cn } from '@lib/utils';
 import { Modal } from '@components/modal/modal';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReviewWithUser } from '@lib/types/review';
-import { cn } from '@lib/utils';
 import type { ViewingActivity } from '@components/activity/types';
 
 type ReviewModalProps = {
@@ -60,9 +60,9 @@ export function ReviewModal({
         hate: '😢',
         meh: '😐'
       };
-      setSelectedEmoji(ratingToEmoji[existingReview.rating] || '😐');
-      setSelectedTags(existingReview.tags || []);
-      setReviewText(existingReview.review || '');
+      setSelectedEmoji(ratingToEmoji[existingReview.rating] ?? '😐');
+      setSelectedTags(existingReview.tags ?? []);
+      setReviewText(existingReview.review ?? '');
     } else {
       setSelectedEmoji(null);
       setSelectedTags([]);

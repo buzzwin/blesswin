@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { useAuth } from '@lib/context/auth-context';
 import {
   collection,
   addDoc,
@@ -10,11 +9,12 @@ import {
   doc,
   serverTimestamp
 } from 'firebase/firestore';
+import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
+import { manageBookmark } from '@lib/firebase/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { AddToWatchlistModal } from './add-to-watchlist-modal';
 import type { Bookmark } from '@lib/types/bookmark';
-import { manageBookmark } from '@lib/firebase/utils';
 
 type BookmarkButtonProps = {
   title: string;

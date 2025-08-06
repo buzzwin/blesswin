@@ -1,9 +1,9 @@
-import type { ReactNode } from 'react';
+import { Toaster } from 'react-hot-toast';
 import { WindowContextProvider } from '@lib/context/window-context';
 import { useRequireAuth } from '@lib/hooks/useRequireAuth';
 import { Placeholder } from '@components/common/placeholder';
-import { Toaster } from 'react-hot-toast';
 import { MainLayout } from './main-layout';
+import type { ReactNode } from 'react';
 
 interface CommonLayoutProps {
   children: ReactNode;

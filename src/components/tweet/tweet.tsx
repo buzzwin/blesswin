@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Popover } from '@headlessui/react';
-import type { ReactNode } from 'react';
 import { toast } from 'react-hot-toast';
 import Image from 'next/image';
 
@@ -25,25 +24,26 @@ import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
 
 // Component imports
+import { cn } from '@lib/utils';
 import { Modal } from '@components/modal/modal';
 import { TweetReplyModal } from '@components/modal/tweet-reply-modal';
 import { UserAvatar } from '@components/user/user-avatar';
+import { Loading } from '@components/ui/loading';
+import { HeroIcon } from '@components/ui/hero-icon';
+import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
+import { TruncatedText } from '@components/ui/truncated-text';
 import { TweetDate } from './tweet-date';
 import { TweetStats } from './tweet-stats';
 import { TweetReviews } from './tweet-reviews';
-import { Loading } from '@components/ui/loading';
 import type { IconName } from '@components/ui/hero-icon';
-import { HeroIcon } from '@components/ui/hero-icon';
 
 // Utils and types
 import type { Tweet } from '@lib/types/tweet';
-import { cn } from '@lib/utils';
 import type { User } from '@lib/types/user';
 import type { ViewingActivity } from '@components/activity/types';
 import type { ReviewWithUser } from '@lib/types/review';
 import type { TweetWithUser } from '@lib/types/tweet';
-import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
-import { TruncatedText } from '@components/ui/truncated-text';
+import type { ReactNode } from 'react';
 
 export type TweetProps = Tweet & {
   user: User;

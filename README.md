@@ -44,7 +44,7 @@ yarn install
 ```env
 NEXT_PUBLIC_TMDB_API_KEY=your_tmdb_api_key
 NEXT_PUBLIC_TMDB_ACCESS_TOKEN=your_tmdb_access_token
-OPENAI_KEY=your_openai_key
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 4. Start the development server:
@@ -59,7 +59,7 @@ yarn dev
 
 - `NEXT_PUBLIC_TMDB_API_KEY`: TMDB API key for movie/TV show data
 - `NEXT_PUBLIC_TMDB_ACCESS_TOKEN`: TMDB access token
-- `OPENAI_KEY`: OpenAI key
+- `GEMINI_API_KEY`: Gemini API key for AI-powered features
 
 ## 🔧 Development
 

@@ -15,8 +15,8 @@ import { ViewTweet } from '@components/view/view-tweet';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
-import type { ReactElement, ReactNode } from 'react';
 import { ViewParentTweet } from '@components/view/view-parent-tweet';
+import type { ReactElement, ReactNode } from 'react';
 
 export default function TweetId(): JSX.Element {
   const {

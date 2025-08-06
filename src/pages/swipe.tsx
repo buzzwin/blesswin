@@ -1,26 +1,26 @@
+import { useRouter } from 'next/router';
+import { ArrowLeft, Heart, X, Meh } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
+import { createRating } from '@lib/firebase/utils/review';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SEO } from '@components/common/seo';
 import { SwipeInterface } from '@components/swipe/swipe-interface';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
-import { useAuth } from '@lib/context/auth-context';
-import { useRouter } from 'next/router';
-import { ArrowLeft, Heart, X, Meh } from 'lucide-react';
-import { toast } from 'react-hot-toast';
 import type { RatingType, MediaCard } from '@lib/types/review';
-import { createRating } from '@lib/firebase/utils/review';
 
 export default function SwipePage(): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
 
   const handleRatingSubmit = async (
-    mediaId: string,
+    mediaId: string | number,
     rating: RatingType,
     mediaData?: MediaCard
   ): Promise<void> => {
     if (!user?.id) {
-      toast.error('Please sign in to save your ratings');
+      // The sign-in prompt is now handled in the SwipeInterface component
       return;
     }
 
@@ -34,7 +34,7 @@ export default function SwipePage(): JSX.Element {
       const voteAverage = mediaData?.voteAverage ?? 0;
 
       await createRating({
-        tmdbId: Number(mediaId),
+        tmdbId: typeof mediaId === 'string' ? Number(mediaId) : mediaId,
         userId: user.id,
         title,
         mediaType,

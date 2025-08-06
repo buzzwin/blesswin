@@ -1,11 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Modal } from '@components/modal/modal';
-import { cn } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
 import { doc, updateDoc } from 'firebase/firestore';
-import { db } from '@lib/firebase/app';
-import type { Watchlist } from '@lib/types/bookmark';
 import { toast } from 'react-hot-toast';
+import { cn } from '@lib/utils';
+import { db } from '@lib/firebase/app';
+import { Modal } from '@components/modal/modal';
+import { HeroIcon } from '@components/ui/hero-icon';
+import type { Watchlist } from '@lib/types/bookmark';
 
 type EditWatchlistModalProps = {
   watchlist: Watchlist;

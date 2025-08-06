@@ -5,9 +5,9 @@ import cn from 'clsx';
 import { manageLike, manageWatching } from '@lib/firebase/utils';
 import { ViewTweetStats } from '@components/view/view-tweet-stats';
 import { TweetOption } from './tweet-option';
-import type { Tweet } from '@lib/types/tweet';
 import { TweetShare } from './tweet-share';
-import { ViewingActivity } from '@components/activity/types';
+import type { ViewingActivity } from '@components/activity/types';
+import type { Tweet } from '@lib/types/tweet';
 
 type TweetStatsProps = Pick<
   Tweet,

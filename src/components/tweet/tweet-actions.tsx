@@ -22,8 +22,8 @@ import { ActionModal } from '@components/modal/action-modal';
 import { Button } from '@components/ui/button';
 import { ToolTip } from '@components/ui/tooltip';
 import { HeroIcon } from '@components/ui/hero-icon';
-import type { Variants } from 'framer-motion';
 import { CustomIcon } from '@components/ui/custom-icon';
+import type { Variants } from 'framer-motion';
 import type { Tweet } from '@lib/types/tweet';
 import type { User } from '@lib/types/user';
 

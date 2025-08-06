@@ -1,7 +1,10 @@
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import { useState } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
+import { cn } from '@lib/utils';
 import { Modal } from '@components/modal/modal';
 import { TweetReplyModal } from '@components/modal/tweet-reply-modal';
 import { ImagePreview } from '@components/input/image-preview';
@@ -14,11 +17,8 @@ import { TweetActions, variants } from '@components/tweet/tweet-actions';
 import { TweetStats } from '@components/tweet/tweet-stats';
 import { TweetDate } from '@components/tweet/tweet-date';
 import type { Tweet } from '@lib/types/tweet';
-import { cn } from '@lib/utils';
 import type { User } from '@lib/types/user';
-import Image from 'next/image';
 import type { ViewingActivity } from '@components/activity/types';
-import { useState } from 'react';
 
 export type ViewTweetProps = Tweet & {
   user: User;

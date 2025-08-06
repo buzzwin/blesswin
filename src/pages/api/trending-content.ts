@@ -1,17 +1,28 @@
+import { callGeminiAPI, extractJSONFromResponse } from '@lib/api/gemini';
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { fetchGeminiTrends } from '@lib/api/gemini';
 
-interface TrendingContent {
+interface TrendingShow {
+  title: string;
+  tmdbId: string;
+  mediaType: 'movie' | 'tv';
+  posterPath: string;
+  overview: string;
+  releaseDate: string;
+  voteAverage: number;
+  reason?: string;
+  confidence?: number;
+}
+
+interface GeminiResponseItem {
   tmdbId: string;
   title: string;
   mediaType: 'movie' | 'tv';
   posterPath: string;
   overview: string;
   releaseDate: string;
-  voteAverage: number;
-  popularity: number;
-  description: string;
-  network?: string;
+  voteAverage?: number;
+  reason?: string;
+  confidence?: number;
 }
 
 export default async function handler(
@@ -24,67 +35,92 @@ export default async function handler(
   }
 
   try {
-    // Fetch trending shows from Gemini
-    let geminiTrends;
+    // Calculate current year and related years
+    const currentYear = new Date().getFullYear();
+    const previousYear = currentYear - 1;
+    const nextYear = currentYear + 1;
+
+    // Use the same prompt as recommendations API for consistency
+    const prompt = `You are a movie and TV show recommendation expert specializing in American popular culture.
+
+Your task is to provide 10 REAL and CURRENT popular shows and movies from TMDB (The Movie Database).
+
+🚨 CRITICAL: You MUST provide REAL content with ACTUAL TMDB IDs, titles, and poster paths. DO NOT make up fake titles like "Example TV Show" or "Sci Fi Series 2025".
+
+📅 Very Important: Only recommend content released in **${previousYear}, ${currentYear}, or ${nextYear}**. Ignore content older than ${previousYear}.
+
+🎯 Focus on REAL shows and movies that are:
+- Recently released or currently trending (${previousYear}–${nextYear})
+- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
+- Highly rated and culturally relevant
+- Widely known and accessible
+
+🔍 Examples of REAL content to include:
+- "The Bear" (TV series)
+- "Oppenheimer" (movie)
+- "Succession" (TV series)
+- "Barbie" (movie)
+- "Wednesday" (TV series)
+- "Everything Everywhere All at Once" (movie)
+- "Stranger Things" (TV series)
+- "Top Gun: Maverick" (movie)
+
+💡 Output Format:
+Return ONLY a valid JSON object with REAL TMDB data:
+
+{
+  "content": [
+    {
+      "tmdbId": "1234567",
+      "title": "Real Movie/Show Title",
+      "mediaType": "movie" or "tv",
+      "posterPath": "/real-poster-path.jpg",
+      "overview": "Real description from TMDB",
+      "releaseDate": "2024",
+      "voteAverage": 8.5,
+      "reason": "Why this real show/movie is popular",
+      "confidence": 0.9
+    }
+  ]
+}
+
+⚠️ IMPORTANT: Use ONLY real TMDB IDs, real titles, and real poster paths. NO fake or example data.`;
+
+    // Fetch trending content using the same prompt as recommendations
+    let trendingContent: TrendingShow[] = [];
+    
     try {
-      geminiTrends = await fetchGeminiTrends();
+      const responseText = await callGeminiAPI(prompt, 1500, 0.7);
+      const parsedResponse = extractJSONFromResponse(responseText);
+      
+      if (parsedResponse.content && Array.isArray(parsedResponse.content)) {
+        trendingContent = parsedResponse.content.map((item: GeminiResponseItem) => ({
+          title: item.title,
+          tmdbId: item.tmdbId,
+          mediaType: item.mediaType,
+          posterPath: item.posterPath,
+          overview: item.overview,
+          releaseDate: item.releaseDate,
+          voteAverage: item.voteAverage ?? 7.0,
+          reason: item.reason,
+          confidence: item.confidence
+        }));
+      }
     } catch (geminiError) {
-      // Gemini API failed, using TMDB fallback
-      geminiTrends = { trendingShows: [] };
+      // Gemini API failed, will use TMDB fallback
+      // console.error('Gemini API failed:', geminiError);
     }
     
-    if (!geminiTrends.trendingShows || geminiTrends.trendingShows.length === 0) {
-      // If no Gemini data, go directly to TMDB fallback
+    // If we got content from Gemini, return it
+    if (trendingContent.length > 0) {
+      res.status(200).json({ 
+        content: trendingContent,
+        source: 'unified-prompt'
+      });
+    } else {
+      // No Gemini data available, proceed to TMDB fallback
       throw new Error('No trending data from Gemini');
     }
-
-    // Get detailed information from TMDB for each trending show
-    const apiKey = process.env.NEXT_PUBLIC_TMDB_API_KEY ?? '0af4f0642998fa986fe260078ab69ab6';
-    const trendingContent: TrendingContent[] = [];
-
-    for (const show of geminiTrends.trendingShows.slice(0, 10)) { // Limit to 10 shows
-      try {
-        const response = await fetch(
-          `https://api.themoviedb.org/3/${show.mediaType}/${show.mediaId}?api_key=${apiKey}&language=en-US`
-        );
-
-        if (response.ok) {
-          const tmdbData = await response.json();
-          
-          trendingContent.push({
-            tmdbId: show.mediaId,
-            title: tmdbData.title || tmdbData.name || show.title,
-            mediaType: show.mediaType,
-            posterPath: tmdbData.poster_path || show.posterPath,
-            overview: tmdbData.overview || show.description,
-            releaseDate: tmdbData.release_date || tmdbData.first_air_date || show.releaseDate || '',
-            voteAverage: tmdbData.vote_average || 0,
-            popularity: show.popularity,
-            description: show.description,
-            network: show.network
-          });
-        }
-      } catch (error) {
-        // If TMDB fetch fails, use Gemini data as fallback
-        trendingContent.push({
-          tmdbId: show.mediaId,
-          title: show.title,
-          mediaType: show.mediaType,
-          posterPath: show.posterPath,
-          overview: show.description,
-          releaseDate: show.releaseDate || '',
-          voteAverage: 0,
-          popularity: show.popularity,
-          description: show.description,
-          network: show.network
-        });
-      }
-    }
-
-    res.status(200).json({ 
-      content: trendingContent,
-      source: 'gemini-tmdb'
-    });
 
   } catch (error) {
     // Error fetching trending content, using fallback
@@ -101,7 +137,7 @@ export default async function handler(
         { url: 'tv/top_rated', type: 'tv' }
       ];
 
-      const fallbackContent: TrendingContent[] = [];
+      const trendingContent: TrendingShow[] = [];
 
       for (const endpoint of endpoints) {
         try {
@@ -124,19 +160,18 @@ export default async function handler(
               }>;
             };
             const items = data.results.slice(0, 3).map((item) => ({
-              tmdbId: item.id.toString(),
               title: (endpoint.type === 'movie' ? item.title : item.name) ?? 'Unknown Title',
+              tmdbId: item.id.toString(),
               mediaType: endpoint.type as 'movie' | 'tv',
               posterPath: item.poster_path,
               overview: item.overview,
               releaseDate: (endpoint.type === 'movie' ? item.release_date : item.first_air_date) ?? '',
               voteAverage: item.vote_average,
-              popularity: item.popularity,
-              description: item.overview,
-              network: undefined
+              reason: 'Popular content',
+              confidence: item.popularity / 100
             }));
             
-            fallbackContent.push(...items);
+            trendingContent.push(...items);
           }
         } catch (endpointError) {
           // Failed to fetch from endpoint, continuing with others
@@ -145,7 +180,7 @@ export default async function handler(
       }
 
       // Remove duplicates and shuffle
-      const uniqueContent = fallbackContent.filter(
+      const uniqueContent = trendingContent.filter(
         (item, index, self) => index === self.findIndex(t => t.tmdbId === item.tmdbId)
       );
 
@@ -153,10 +188,15 @@ export default async function handler(
         .sort(() => Math.random() - 0.5)
         .slice(0, 15); // Return up to 15 items
 
-      res.status(200).json({ 
-        content: shuffledContent,
-        source: 'tmdb-fallback'
-      });
+      if (shuffledContent.length > 0) {
+        res.status(200).json({ 
+          content: shuffledContent,
+          source: 'tmdb-fallback'
+        });
+      } else {
+        // Even TMDB fallback failed, return a basic error
+        res.status(500).json({ error: 'Failed to fetch trending content' });
+      }
     } catch (fallbackError) {
       // TMDB fallback also failed
       res.status(500).json({ error: 'Failed to fetch trending content' });

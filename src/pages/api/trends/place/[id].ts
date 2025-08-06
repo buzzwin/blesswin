@@ -1,5 +1,5 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { AUTH } from '@lib/api/auth';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import type {
   TrendsData,
   ErrorResponse,

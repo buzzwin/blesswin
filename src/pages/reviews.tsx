@@ -1,9 +1,4 @@
-import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
-import { MainHeader } from '@components/home/main-header';
-import { SEO } from '@components/common/seo';
-import { useAuth } from '@lib/context/auth-context';
 import { useEffect, useState } from 'react';
-import { ReviewWithUser } from '@lib/types/review';
 import {
   collection,
   query,
@@ -12,13 +7,18 @@ import {
   getDoc,
   doc
 } from 'firebase/firestore';
+import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
 import { reviewsCollection, usersCollection } from '@lib/firebase/collections';
+import { SEO } from '@components/common/seo';
+import { MainHeader } from '@components/home/main-header';
+import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { ReviewsList } from '@components/review/reviews-list';
 import { Loading } from '@components/ui/loading';
-import type { ReactElement, ReactNode } from 'react';
 import { StatsEmpty } from '@components/tweet/stats-empty';
-import { User } from '@lib/types/user';
+import type { ReviewWithUser } from '@lib/types/review';
+import type { ReactElement, ReactNode } from 'react';
+import type { User } from '@lib/types/user';
 
 export default function Reviews(): JSX.Element {
   const { user } = useAuth();

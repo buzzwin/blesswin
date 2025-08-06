@@ -1,5 +1,5 @@
-import type { Timestamp } from 'firebase/firestore';
 import { adminDb } from '../admin';
+import type { Timestamp } from 'firebase/firestore';
 
 // Helper function to safely convert Firestore timestamp to Date
 function safeTimestampToDate(timestamp: Timestamp | null | undefined): Date {

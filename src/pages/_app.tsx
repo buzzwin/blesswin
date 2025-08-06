@@ -1,12 +1,13 @@
 import '@styles/globals.scss';
 
 import { isSupported, logEvent } from 'firebase/analytics';
+import { useEffect } from 'react';
 import { AuthContextProvider } from '@lib/context/auth-context';
 import { ThemeContextProvider } from '@lib/context/theme-context';
 import { AppHead } from '@components/common/app-head';
 import { GlobalLayout } from '@components/layout/global-layout';
+import type { ReactElement, ReactNode} from 'react';
 import type { NextPage } from 'next';
-import { ReactElement, ReactNode, useEffect } from 'react';
 import type { AppProps } from 'next/app';
 
 type NextPageWithLayout = NextPage & {

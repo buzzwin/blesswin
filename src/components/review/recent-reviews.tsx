@@ -1,8 +1,8 @@
+import { cn } from '@lib/utils';
 import { ReviewCard } from '@components/review/review-card';
 import { Loading } from '@components/ui/loading';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReviewWithUser } from '@lib/types/review';
-import { cn } from '@lib/utils';
 
 type RecentReviewsProps = {
   reviews: ReviewWithUser[];

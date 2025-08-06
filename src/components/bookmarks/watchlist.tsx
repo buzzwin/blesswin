@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import type { Timestamp } from 'firebase/firestore';
 import {
   collection,
   query,
@@ -11,8 +10,9 @@ import {
 } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
-import type { Bookmark } from '@lib/types/bookmark';
 import { HeroIcon } from '@components/ui/hero-icon';
+import type { Bookmark } from '@lib/types/bookmark';
+import type { Timestamp } from 'firebase/firestore';
 
 type WatchlistProps = {
   watchlistId: string;

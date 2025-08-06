@@ -3,8 +3,8 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
 import { UserName } from './user-name';
 import { UserFollowing } from './user-following';
-import type { IconName } from '@components/ui/hero-icon';
 import { UserFollowStats } from './user-follow-stats';
+import type { IconName } from '@components/ui/hero-icon';
 import type { User } from '@lib/types/user';
 
 type UserDetailsProps = Pick<

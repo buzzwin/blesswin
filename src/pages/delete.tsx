@@ -1,8 +1,8 @@
+import router from 'next/router';
+import { useState } from 'react';
 import { SEO } from '@components/common/seo';
 import { MainHeader } from '@components/home/main-header';
 import { PublicLayout } from '@components/layout/pub_layout';
-import router from 'next/router';
-import { useState } from 'react';
 
 const DataDeletionInstructions = () => {
   const [email, setEmail] = useState('');

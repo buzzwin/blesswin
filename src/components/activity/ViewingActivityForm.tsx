@@ -1,15 +1,15 @@
 import { type ChangeEvent, useState } from 'react';
 import axios from 'axios';
 import { debounce } from 'lodash';
-import SpinnerComponent from '@components/common/spinner';
-import SearchResults from './searchresults';
-import type { SearchResult, ViewingActivity, TMDBResult } from './types';
+import { toast } from 'react-hot-toast';
 import { cn } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
-import { DefaultAvatar } from '@components/ui/default-avatar';
 import { useAuth } from '@lib/context/auth-context';
 import { sendTweet } from '@lib/firebase/utils/tweet';
-import { toast } from 'react-hot-toast';
+import SpinnerComponent from '@components/common/spinner';
+import { HeroIcon } from '@components/ui/hero-icon';
+import { DefaultAvatar } from '@components/ui/default-avatar';
+import SearchResults from './searchresults';
+import type { SearchResult, ViewingActivity, TMDBResult } from './types';
 
 type ViewingActivityFormProps = {
   onSave: (activity: ViewingActivity) => void;

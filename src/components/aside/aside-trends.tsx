@@ -1,5 +1,5 @@
-import { TrendingShows } from '@components/trending/trending-shows';
 import { cn } from '@lib/utils';
+import { TrendingShows } from '@components/trending/trending-shows';
 
 type AsideTrendsProps = {
   inTrendsPage?: boolean;

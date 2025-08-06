@@ -1,7 +1,8 @@
-import axios, { AxiosResponse } from 'axios';
-import { useState } from 'react';
+import axios from 'axios';
+import { useState  } from 'react';
 import Head from 'next/head';
-import { ChangeEvent, FormEvent } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
+import type { AxiosResponse } from 'axios';
 
 interface SearchResults {
   id: number;

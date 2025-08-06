@@ -1,30 +1,105 @@
 import { useRouter } from 'next/router';
+import { useEffect, useCallback, useState } from 'react';
+import { BarChart3, TrendingUp, LogOut, RefreshCw } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
 import { Button } from '@components/ui/button-shadcn';
 import { Loading } from '@components/ui/loading';
 import { UpdateUsername } from '@components/home/update-username';
-import { useAuth } from '@lib/context/auth-context';
-import { useGeminiTrends } from '@lib/hooks/useGeminiTrends';
-import { useRecentReviews } from '@lib/hooks/useRecentReviews';
 import { TrendingShows } from '@components/trending/trending-shows';
-import { TrendingNetworks } from '@components/trending/trending-networks';
-import { RecentReviews } from '@components/review/recent-reviews';
-import { BarChart3, TrendingUp, LogOut, RefreshCw } from 'lucide-react';
+import { NetworkTrendsAnalysis } from '@components/trending/network-trends-analysis';
 import LogoIcon from '@components/ui/logo';
 import type { ReactElement, ReactNode } from 'react';
-import { useState } from 'react';
-import toast from 'react-hot-toast';
+
+interface TrendingShow {
+  title: string;
+  mediaId: string;
+  mediaType: 'movie' | 'tv';
+  posterPath: string;
+  popularity: number;
+  description: string;
+  network?: string;
+  releaseDate?: string;
+}
+
+interface NetworkTrend {
+  network: string;
+  type: 'streaming' | 'cable' | 'broadcast';
+  trendingShows: Array<{
+    title: string;
+    tmdbId: string;
+    mediaType: 'movie' | 'tv';
+    posterPath: string;
+    overview: string;
+    releaseDate: string;
+    voteAverage?: number;
+    reason: string;
+    culturalImpact: string;
+  }>;
+  networkInsight: string;
+  overallTrend: string;
+}
 
 export default function Trends(): JSX.Element {
   const router = useRouter();
   const { user, signOut } = useAuth();
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [trendingShows, setTrendingShows] = useState<TrendingShow[]>([]);
+  const [networkTrends, setNetworkTrends] = useState<NetworkTrend[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const { trendingShows, trendingNetworks, loading, error, refreshTrends } =
-    useGeminiTrends();
-  
-  const { reviews: recentReviews, loading: reviewsLoading, error: reviewsError } =
-    useRecentReviews(6);
+  const fetchTrends = useCallback(async (): Promise<void> => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      // Fetch general trending content
+      const trendingResponse = await fetch('/api/trending-content');
+      if (trendingResponse.ok) {
+        const trendingData = (await trendingResponse.json()) as {
+          content?: TrendingShow[];
+        };
+        if (trendingData.content && Array.isArray(trendingData.content)) {
+          setTrendingShows(trendingData.content);
+        } else {
+          setTrendingShows([]);
+        }
+      }
+
+      // Fetch network-specific trends
+      const networkResponse = await fetch('/api/trends/network-trends');
+      if (networkResponse.ok) {
+        const networkData = (await networkResponse.json()) as {
+          networks?: NetworkTrend[];
+        };
+        if (networkData.networks && Array.isArray(networkData.networks)) {
+          setNetworkTrends(networkData.networks);
+        } else {
+          setNetworkTrends([]);
+        }
+      } else {
+        setNetworkTrends([]);
+      }
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to load trends');
+      setTrendingShows([]);
+      setNetworkTrends([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  const refreshTrends = useCallback(async (): Promise<void> => {
+    await fetchTrends();
+  }, [fetchTrends]);
+
+  useEffect(() => {
+    void fetchTrends();
+  }, [fetchTrends]);
+
+
 
   const handleSignIn = (): void => {
     void router.push('/login');
@@ -215,11 +290,21 @@ export default function Trends(): JSX.Element {
           </h2>
           <p className='text-gray-600 dark:text-gray-400'>
             Powered by AI - Discover what&apos;s trending in TV and streaming
-            today
+            today, with network-specific insights
           </p>
         </div>
 
         <div className='space-y-8'>
+          {/* Network Trends Analysis - Show first if we have network data */}
+          {networkTrends.length > 0 && (
+            <div className='space-y-4'>
+              <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>
+                Network Trends & Insights
+              </h3>
+              <NetworkTrendsAnalysis networks={networkTrends} variant='dark' />
+            </div>
+          )}
+
           {/* Trending Shows */}
           <div className='space-y-4'>
             <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>
@@ -228,23 +313,7 @@ export default function Trends(): JSX.Element {
             <TrendingShows trendingData={trendingShows} variant='dark' />
           </div>
 
-          {/* Recent Reviews */}
-          <div className='space-y-4'>
-            <RecentReviews
-              reviews={recentReviews}
-              loading={reviewsLoading}
-              error={reviewsError}
-              variant='dark'
-            />
-          </div>
 
-          {/* Trending Networks */}
-          <div className='space-y-4'>
-            <h3 className='text-xl font-semibold text-gray-900 dark:text-white'>
-              Popular Networks & Platforms
-            </h3>
-            <TrendingNetworks networksData={trendingNetworks} variant='dark' />
-          </div>
         </div>
       </main>
     </div>

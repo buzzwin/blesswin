@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@lib/context/auth-context';
 import { doc, updateDoc, arrayUnion, arrayRemove } from 'firebase/firestore';
+import { useAuth } from '@lib/context/auth-context';
 import { usersCollection } from '@lib/firebase/collections';
 
 export function useFollowUser(targetUserId: string) {

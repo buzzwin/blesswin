@@ -1,5 +1,5 @@
-import type { ReviewWithUser } from '@lib/types/review';
 import { ReviewCard } from '@components/review/review-card';
+import type { ReviewWithUser } from '@lib/types/review';
 
 type TweetReviewsProps = {
   reviews: ReviewWithUser[];

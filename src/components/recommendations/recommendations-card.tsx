@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Brain, Sparkles, RefreshCw, Star, Calendar, Film } from 'lucide-react';
+import Link from 'next/link';
+import { useRecommendations } from '@lib/hooks/useRecommendations';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { NextImage } from '@components/ui/next-image';
-import { useRecommendations } from '@lib/hooks/useRecommendations';
-import { Brain, Sparkles, RefreshCw, Star, Calendar, Film } from 'lucide-react';
-import Link from 'next/link';
 
 interface Recommendation {
   tmdbId: string;

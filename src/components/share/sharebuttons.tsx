@@ -4,7 +4,7 @@ import {
   WhatsappShareButton,
   WhatsappIcon
 } from 'next-share';
-import { ViewingActivity } from '@components/activity/types';
+import type { ViewingActivity } from '@components/activity/types';
 
 interface ShareButtonsProps {
   viewingActivity: ViewingActivity;

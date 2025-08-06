@@ -3,19 +3,19 @@ import cn from 'clsx';
 import { Dialog, Popover } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
+import { useState } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 import { manageBookmark } from '@lib/firebase/utils';
 import { preventBubbling } from '@lib/utils';
 import { siteURL } from '@lib/env';
+import { Tweet } from '@lib/types/tweet';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
-import { variants } from './tweet-actions';
-import { Tweet } from '@lib/types/tweet';
 import { Modal } from '@components/modal/modal';
 import ShareButtons from '@components/share/sharebuttons';
-import { useState } from 'react';
-import { ViewingActivity } from '@components/activity/types';
+import { variants } from './tweet-actions';
+import type { ViewingActivity } from '@components/activity/types';
 
 type TweetShareProps = {
   userId: string;

@@ -10,8 +10,8 @@ import { UserDataLayout } from '@components/layout/user-data-layout';
 import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import { Loading } from '@components/ui/loading';
-import type { ReactElement, ReactNode } from 'react';
 import { Tweet } from '@components/tweet/tweet';
+import type { ReactElement, ReactNode } from 'react';
 
 export default function UserTweets(): JSX.Element {
   const { user } = useUser();

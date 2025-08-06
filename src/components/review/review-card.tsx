@@ -1,10 +1,10 @@
+import Image from 'next/image';
+import { cn } from '@lib/utils';
 import { UserAvatar } from '@components/user/user-avatar';
 import { TweetDate } from '@components/tweet/tweet-date';
 import { ReviewActions } from '@components/review/review-actions';
 import { ReviewShare } from '@components/review/review-share';
 import type { ReviewWithUser } from '@lib/types/review';
-import { cn } from '@lib/utils';
-import Image from 'next/image';
 
 type ReviewCardProps = {
   review: ReviewWithUser;

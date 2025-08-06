@@ -1,12 +1,12 @@
-import { useAuth } from '@lib/context/auth-context';
-import ActivityFeed from '@components/activity/activity';
-import { TrendingShows } from '@components/trending/trending-shows';
-import JustLogin from './justlogin';
 import cn from 'clsx';
 import { useEffect, useState } from 'react';
 import { collection, getCountFromServer } from 'firebase/firestore';
+import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
+import { TrendingShows } from '@components/trending/trending-shows';
+import ActivityFeed from '@components/activity/activity';
 import { HeroIcon } from '@components/ui/hero-icon';
+import JustLogin from './justlogin';
 
 export function LoginMain(): JSX.Element {
   const [userCount, setUserCount] = useState<number>(0);

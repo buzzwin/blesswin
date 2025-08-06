@@ -1,12 +1,12 @@
+import Image from 'next/image';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserTooltip } from '@components/user/user-tooltip';
 import { UserUsername } from '@components/user/user-username';
-import Image from 'next/image';
-import { User } from '@lib/types/user';
-import { ViewingActivity } from './types';
+import type { User } from '@lib/types/user';
+import type { ViewingActivity } from './types';
 
 export const ActivityItem: React.FC<{
   activity: ViewingActivity;

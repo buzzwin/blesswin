@@ -1,10 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
 import { Search, Film, Tv, Star, Calendar } from 'lucide-react';
+import axios from 'axios';
+import { cn } from '@lib/utils';
 import { Button } from '@components/ui/button-shadcn';
 import { Input } from '@components/ui/input';
 import { Card, CardContent } from '@components/ui/card';
-import { cn } from '@lib/utils';
-import axios from 'axios';
 
 interface TMDBResult {
   id: number;

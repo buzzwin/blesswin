@@ -1,10 +1,10 @@
+import { BookOpen } from 'lucide-react';
+import { cn } from '@lib/utils';
 import { Card, CardContent } from '@components/ui/card';
 import { Tweet } from '@components/tweet/tweet';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
-import { cn } from '@lib/utils';
 import type { Tweet as TweetType } from '@lib/types/tweet';
-import { BookOpen } from 'lucide-react';
 import type { User } from '@lib/types/user';
 
 type ModernTweetCardProps = {

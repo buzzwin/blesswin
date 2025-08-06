@@ -1,6 +1,6 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
 import { getUserRatings } from '@lib/firebase/utils/review';
-import { getCachedRecommendations, cacheRecommendations, getGlobalRecommendations } from '@lib/firebase/utils/admin-recommendations';
+import { callGeminiAPI, extractJSONFromResponse } from '@lib/api/gemini';
+import type { NextApiRequest, NextApiResponse } from 'next';
 
 interface Recommendation {
   tmdbId: string;
@@ -13,7 +13,7 @@ interface Recommendation {
   year: string;
 }
 
-interface OpenAIResponse {
+interface GeminiResponse {
   recommendations: Recommendation[];
   analysis: {
     preferredGenres: string[];
@@ -62,83 +62,89 @@ export default async function handler(
       return;
     }
 
-    // Generate AI recommendations
-    const openAIResponse = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${process.env.OPENAI_KEY}`
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [
-          {
-            role: 'system',
-            content: `You are a movie and TV show recommendation expert specializing in American popular culture. Analyze the user's ratings and provide personalized recommendations for the MOST POPULAR content. 
-            IMPORTANT: Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
-            Avoid suggesting content similar to what they've disliked.
-            Focus on popular American content from CURRENT YEAR and recent years that are widely known and accessible.
-            Prioritize shows and movies that are:
-            - Highly rated and critically acclaimed
-            - Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
-            - Well-known and culturally significant
-            - Currently trending or recently released
-            Return ONLY a valid JSON object with this exact structure:
-            {
-              "recommendations": [
-                {
-                  "tmdbId": "string (TMDB ID)",
-                  "title": "string (title)",
-                  "mediaType": "movie" or "tv",
-                  "posterPath": "string (poster path)",
-                  "reason": "string (why this is recommended)",
-                  "confidence": number (0-1),
-                  "genre": "string (primary genre)",
-                  "year": "string (release year)"
-                }
-              ],
-              "analysis": {
-                "preferredGenres": ["array of preferred genres"],
-                "preferredYears": ["array of preferred years"],
-                "ratingPattern": "string (description of rating pattern)",
-                "suggestions": ["array of suggestions"]
-              }
-            }`
-          },
-          {
-            role: 'user',
-            content: `Analyze these ratings and provide 5 personalized recommendations. Consider ALL ratings (likes, dislikes, and meh) to avoid suggesting content similar to what they've disliked:
-            ${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}`
-          }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7
-      })
-    });
+    // Calculate current year and related years
+    const currentYear = new Date().getFullYear();
+    const previousYear = currentYear - 1;
+    const nextYear = currentYear + 1;
 
-    if (!openAIResponse.ok) {
-      throw new Error(`OpenAI API error: ${openAIResponse.status}`);
+    // Generate AI recommendations using Gemini
+    const prompt = `You are a movie and TV show recommendation expert specializing in American popular culture.
+
+Your task is to analyze the user's ratings and provide 5 personalized recommendations for REAL and CURRENT content from TMDB.
+
+🚨 CRITICAL: You MUST provide REAL content with ACTUAL TMDB IDs, titles, and poster paths. DO NOT make up fake titles like "Example TV Show" or "Sci Fi Series 2025".
+
+🔁 Consider ALL the user's ratings: likes, dislikes, and "meh" to detect patterns and avoid recommending similar content they disliked.
+
+📅 Very Important: Only recommend content released in **${previousYear}, ${currentYear}, or ${nextYear}**. Ignore content older than ${previousYear}.
+
+🎯 Focus on REAL shows and movies that are:
+- Recently released or currently trending (${previousYear}–${nextYear})
+- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
+- Highly rated and culturally relevant
+- Widely known and accessible
+
+🔍 Examples of REAL content to include:
+- "The Bear" (TV series)
+- "Oppenheimer" (movie)
+- "Succession" (TV series)
+- "Barbie" (movie)
+- "Wednesday" (TV series)
+- "Everything Everywhere All at Once" (movie)
+- "Stranger Things" (TV series)
+- "Top Gun: Maverick" (movie)
+
+🔍 Ratings Input:
+${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}
+
+💡 Output Format:
+Return ONLY a valid JSON object with REAL TMDB data:
+
+{
+  "recommendations": [
+    {
+      "tmdbId": "1234567",
+      "title": "Real Movie/Show Title",
+      "mediaType": "movie" or "tv",
+      "posterPath": "/real-poster-path.jpg",
+      "reason": "Why this real show/movie is recommended",
+      "confidence": 0.9,
+      "genre": "Real genre",
+      "year": "2024"
     }
+  ],
+  "analysis": {
+    "preferredGenres": ["genre1", "genre2", ...],
+    "preferredYears": ["${previousYear}", "${currentYear}", "${nextYear}"],
+    "ratingPattern": "Brief description of what the user's ratings suggest",
+    "suggestions": [
+      "Optional tips for better matches",
+      "Optional ideas to improve recommendations"
+    ]
+  }
+}
 
-    const openAIData = await openAIResponse.json();
-    const content = openAIData.choices[0]?.message?.content;
+⚠️ IMPORTANT: Use ONLY real TMDB IDs, real titles, and real poster paths. NO fake or example data.`;
+
+    const content = await callGeminiAPI(prompt, 1000, 0.7);
 
     if (!content || typeof content !== 'string') {
-      throw new Error('No content received from OpenAI');
+      throw new Error('No content received from Gemini API');
     }
 
     // Parse the response
-    let parsedResponse: OpenAIResponse;
+    let parsedResponse: GeminiResponse;
     try {
-      parsedResponse = JSON.parse(content);
+      const rawResponse = extractJSONFromResponse(content);
+      parsedResponse = rawResponse as unknown as GeminiResponse;
     } catch (parseError) {
-      // console.error('Failed to parse OpenAI response:', content);
-      throw new Error('Invalid response format from OpenAI');
+      // console.error('Failed to parse Gemini response:', content);
+      throw new Error('Invalid response format from Gemini API');
     }
 
     // Validate the response structure
     if (!parsedResponse.recommendations || !Array.isArray(parsedResponse.recommendations)) {
-      throw new Error('Invalid response format from OpenAI');
+      throw new Error('Invalid response format from Gemini API');
     }
 
     // Removed caching to ensure fresh recommendations after each rating

@@ -1,6 +1,4 @@
 //Create a spinner component
-import React from 'react';
-
 export default function SpinnerComponent() {
   return (
     <div className='flex items-center justify-center'>

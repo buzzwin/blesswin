@@ -1,27 +1,28 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { isSupported, logEvent } from 'firebase/analytics';
-import { useAuth } from '@lib/context/auth-context';
-
-import { DocumentData, doc, getDoc, Timestamp } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import Image from 'next/image';
-import { ViewingActivity } from '@components/activity/types';
-import { SEO } from '@components/common/seo';
+import Link from 'next/link';
+import { FacebookIcon } from 'next-share';
+import { useAuth } from '@lib/context/auth-context';
+
 import { db } from '@lib/firebase/app';
+import { formatDate } from '@lib/date';
+import { SEO } from '@components/common/seo';
 import SpinnerComponent from '@components/common/spinner';
 import { PublicLayout } from '@components/layout/pub_layout';
-import { GetServerSideProps } from 'next/types';
-import { formatDate } from '@lib/date';
 import { MainHeader } from '@components/home/main-header';
-import Link from 'next/link';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { LoginMain } from '@components/login/login-main';
 import { Button } from '@components/ui/button';
 import { CustomIcon } from '@components/ui/custom-icon';
 import LogoIcon from '@components/ui/logo';
-import { FacebookIcon } from 'next-share';
 import JustLogin from '@components/login/justlogin';
+import type { GetServerSideProps } from 'next/types';
+import type { ViewingActivity } from '@components/activity/types';
+import type { DocumentData, Timestamp } from 'firebase/firestore';
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const id = query.id as string;

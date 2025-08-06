@@ -1,9 +1,9 @@
-import { useAuth } from '@lib/context/auth-context';
 import cn from 'clsx';
 import { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { GoogleIcon } from '@components/ui/google-icon';
 import Link from 'next/link';
+import { useAuth } from '@lib/context/auth-context';
+import { GoogleIcon } from '@components/ui/google-icon';
 
 export default function JustLogin(): JSX.Element {
   const { signInWithGoogle, signInWithEmail, createUserWithEmail } = useAuth();

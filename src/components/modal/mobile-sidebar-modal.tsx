@@ -11,13 +11,19 @@ import { MainHeader } from '@components/home/main-header';
 import { MobileSidebarLink } from '@components/sidebar/mobile-sidebar-link';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from './modal';
-import type { NavLink } from '@components/sidebar/sidebar';
 import { DisplayModal } from './display-modal';
+import type { NavLink } from '@components/sidebar/sidebar';
 import type { User } from '@lib/types/user';
 
 export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
 
 const getTopNavLinks = (username: string): Readonly<MobileNavLink[]> => [
+  {
+    href: '/trends',
+    linkName: 'Trends',
+    iconName: 'ChartBarIcon',
+    disabled: false
+  },
   {
     href: '/recommendations',
     linkName: 'AI Recommendations',
@@ -30,12 +36,7 @@ const getTopNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     iconName: 'StarIcon',
     disabled: false
   },
-  {
-    href: '/reviews',
-    linkName: 'Recent Reviews',
-    iconName: 'ClockIcon',
-    disabled: false
-  },
+
   {
     href: `/user/${username}`,
     linkName: 'Profile',

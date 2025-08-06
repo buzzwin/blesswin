@@ -1,7 +1,7 @@
 import Link from 'next/link';
-import { SearchResult } from './types';
-
 import React from 'react';
+import type { SearchResult } from './types';
+
 
 interface SearchResultProps {
   results: SearchResult[];

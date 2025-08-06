@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@lib/context/auth-context';
 import {
   collection,
   query,
@@ -9,9 +8,10 @@ import {
   serverTimestamp,
   onSnapshot
 } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
 import type { Watchlist } from '@lib/types/bookmark';
-import { toast } from 'react-hot-toast';
 
 export function useWatchlists() {
   const { user } = useAuth();

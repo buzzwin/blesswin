@@ -1,18 +1,18 @@
+import Link from 'next/link';
 import { useAuth } from '@lib/context/auth-context';
 import { useWindow } from '@lib/context/window-context';
 import { useWatchlists } from '@lib/hooks/useWatchlists';
 import { useSuggestedUsers } from '@lib/hooks/useSuggestedUsers';
+import { cn } from '@lib/utils';
 import { Watchlists } from '@components/bookmarks/watchlists';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Button } from '@components/ui/button';
-import { SearchBar } from './search-bar';
-import { AsideFooter } from './aside-footer';
-import { cn } from '@lib/utils';
-import Link from 'next/link';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
-import { ReactNode } from 'react';
+import { AsideFooter } from './aside-footer';
+import { SearchBar } from './search-bar';
+import type { ReactNode } from 'react';
 
 type AsideProps = {
   children?: ReactNode;

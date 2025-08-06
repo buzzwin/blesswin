@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
-import Image from 'next/image';
-import { cn } from '@lib/utils';
-import { HeroIcon } from '@components/ui/hero-icon';
-import { Loading } from '@components/ui/loading';
 import { TrendingUp, Tv, Wifi, Radio } from 'lucide-react';
-import type { TrendingNetwork } from '@lib/api/gemini';
+import { cn } from '@lib/utils';
+import { Loading } from '@components/ui/loading';
+
+// Local interface since we removed it from the unified API
+interface TrendingNetwork {
+  name: string;
+  type: 'streaming' | 'cable' | 'broadcast';
+  popularity: number;
+  description: string;
+  topShows: string[];
+  logoUrl?: string;
+}
 
 type TrendingNetworksProps = {
   networksData: TrendingNetwork[];

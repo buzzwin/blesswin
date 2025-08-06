@@ -1,9 +1,9 @@
 import { useEffect } from 'react';
 import { doc } from 'firebase/firestore';
+import cn from 'clsx';
 import { useDocument } from '@lib/hooks/useDocument';
 import { tweetsCollection } from '@lib/firebase/collections';
 import { Tweet } from '@components/tweet/tweet';
-import cn from 'clsx';
 import type { RefObject } from 'react';
 
 type ViewParentTweetProps = {

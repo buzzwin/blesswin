@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import cn from 'clsx';
 import { checkUsernameAvailability, updateUsername } from '@lib/firebase/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
@@ -13,7 +14,6 @@ import { ToolTip } from '@components/ui/tooltip';
 import { Modal } from '@components/modal/modal';
 import { UsernameModal } from '@components/modal/username-modal';
 import { InputField } from '@components/input/input-field';
-import cn from 'clsx';
 import type { FormEvent, ChangeEvent } from 'react';
 
 export function UpdateUsername(): JSX.Element {

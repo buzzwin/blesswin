@@ -14,8 +14,8 @@ import { MainHeader } from '@components/home/main-header';
 import { MainContainer } from '@components/home/main-container';
 import { UserCard } from '@components/user/user-card';
 import { Loading } from '@components/ui/loading';
-import type { ReactElement, ReactNode } from 'react';
 import { Error } from '@components/ui/error';
+import type { ReactElement, ReactNode } from 'react';
 import type { MotionProps } from 'framer-motion';
 
 const variants: MotionProps = {

@@ -7,8 +7,8 @@ import { preventBubbling } from '@lib/utils';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Loading } from '@components/ui/loading';
-import type { VariantLabels } from 'framer-motion';
 import { backdrop, modal } from './modal';
+import type { VariantLabels } from 'framer-motion';
 import type { ImageData } from '@lib/types/file';
 import type { IconName } from '@components/ui/hero-icon';
 

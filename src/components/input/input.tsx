@@ -1,21 +1,21 @@
 import { useState, useEffect, useRef, useId } from 'react';
-import type { ReactNode, ChangeEvent, ClipboardEvent } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { toast } from 'react-hot-toast';
+import { cn } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
+import { getImagesData } from '@lib/validation';
+import { HeroIcon } from '@components/ui/hero-icon';
+import { UserAvatar } from '@components/user/user-avatar';
+import { InputForm } from './input-form';
+import { ImagePreview } from './image-preview';
+import { InputOptions } from './input-options';
+import type { ReactNode, ChangeEvent, ClipboardEvent } from 'react';
 import type { Variants } from 'framer-motion';
 import type { ViewingActivity } from '@components/activity/types';
 
 // Components
-import { InputForm } from './input-form';
-import { ImagePreview } from './image-preview';
-import { InputOptions } from './input-options';
-import { HeroIcon } from '@components/ui/hero-icon';
-import { UserAvatar } from '@components/user/user-avatar';
 
 // Utils
-import { cn } from '@lib/utils';
-import { useAuth } from '@lib/context/auth-context';
-import { toast } from 'react-hot-toast';
-import { getImagesData } from '@lib/validation';
 
 // Types
 type FilesWithId = Array<{ id: string; file: File }>;

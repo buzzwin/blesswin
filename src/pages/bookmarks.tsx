@@ -23,8 +23,8 @@ import { StatsEmpty } from '@components/tweet/stats-empty';
 import { Button } from '@components/ui/button';
 import { ToolTip } from '@components/ui/tooltip';
 import { HeroIcon } from '@components/ui/hero-icon';
-import type { ReactElement, ReactNode } from 'react';
 import { Loading } from '@components/ui/loading';
+import type { ReactElement, ReactNode } from 'react';
 
 export default function Bookmarks(): JSX.Element {
   const { user } = useAuth();

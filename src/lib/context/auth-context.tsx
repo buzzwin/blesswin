@@ -17,21 +17,21 @@ import {
   onSnapshot,
   serverTimestamp
 } from 'firebase/firestore';
+import { toast } from 'react-hot-toast';
 import { auth } from '@lib/firebase/app';
 import {
   usersCollection,
   userStatsCollection,
   userBookmarksCollection
 } from '@lib/firebase/collections';
-import type { ReactNode } from 'react';
 import { getRandomId, getRandomInt } from '@lib/random';
+import { DefaultAvatar } from '@components/ui/default-avatar';
+import type { ReactNode } from 'react';
 import type { User as AuthUser } from 'firebase/auth';
 import type { WithFieldValue } from 'firebase/firestore';
 import type { User } from '@lib/types/user';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
-import { DefaultAvatar } from '@components/ui/default-avatar';
-import { toast } from 'react-hot-toast';
 
 type AuthContext = {
   user: User | null;

@@ -1,14 +1,13 @@
-import type { TweetProps } from '@components/tweet/tweet';
-import { Input } from '@components/input/input';
-import type { ReviewWithUser } from '@lib/types/review';
-import { ViewingActivity } from '@components/activity/types';
-import { cn } from '@lib/utils';
 import { useState } from 'react';
-import { createReview } from '@lib/firebase/utils/review';
-import { createRating } from '@lib/firebase/utils/review';
-import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
+import { cn } from '@lib/utils';
+import { createReview, createRating } from '@lib/firebase/utils/review';
+import { useAuth } from '@lib/context/auth-context';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { Input } from '@components/input/input';
+import type { TweetProps } from '@components/tweet/tweet';
+import type { ReviewWithUser } from '@lib/types/review';
+import type { ViewingActivity } from '@components/activity/types';
 
 type TweetReplyModalProps = {
   tweet: TweetProps;
@@ -58,7 +57,7 @@ export function TweetReplyModal({
     setInputValue(value);
   };
 
-  const handleSubmit = async (data: ViewingActivity) => {
+  const handleSubmit = async () => {
     setLoading(true);
 
     try {
@@ -159,7 +158,7 @@ export function TweetReplyModal({
       </div>
 
       {/* Content */}
-      <div className='space-y-4 p-3'>
+      <div className='p-3 space-y-4'>
         {/* Emoji Rating */}
         <div>
           <div className='flex justify-between'>
@@ -235,7 +234,7 @@ export function TweetReplyModal({
         />
 
         {/* Add Share Review Button */}
-        <div className='flex justify-end gap-3 border-t border-gray-100 pt-3 dark:border-gray-800'>
+        <div className='flex gap-3 justify-end pt-3 border-t border-gray-100 dark:border-gray-800'>
           <button
             onClick={closeModal}
             className={cn(
@@ -251,7 +250,7 @@ export function TweetReplyModal({
             Cancel
           </button>
           <button
-            onClick={() => handleSubmit(tweet.viewingActivity)}
+            onClick={handleSubmit}
             disabled={loading}
             className={cn(
               'px-4 py-2',
@@ -261,14 +260,14 @@ export function TweetReplyModal({
               'text-white',
               'hover:bg-emerald-600 dark:hover:bg-emerald-700',
               'transition-colors duration-200',
-              'flex items-center gap-2',
+              'flex gap-2 items-center',
               'disabled:cursor-not-allowed disabled:opacity-50'
             )}
           >
             {loading ? (
-              <div className='h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
+              <div className='w-4 h-4 rounded-full border-2 border-white animate-spin border-t-transparent' />
             ) : (
-              <HeroIcon iconName='PaperAirplaneIcon' className='h-4 w-4' />
+              <HeroIcon iconName='PaperAirplaneIcon' className='w-4 h-4' />
             )}
             {loading ? 'Posting...' : 'Share Review'}
           </button>

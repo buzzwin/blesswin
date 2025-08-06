@@ -1,13 +1,13 @@
+import Link from 'next/link';
+import { useState } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 import { useModal } from '@lib/hooks/useModal';
 import { useWatchlists } from '@lib/hooks/useWatchlists';
 import { useWindow } from '@lib/context/window-context';
-import { HeroIcon } from '@components/ui/hero-icon';
 import { cn } from '@lib/utils';
-import Link from 'next/link';
-import { useState } from 'react';
-import type { Watchlist } from '@lib/types/bookmark';
+import { HeroIcon } from '@components/ui/hero-icon';
 import { WatchlistShare } from '@components/share/watchlist-share';
+import type { Watchlist } from '@lib/types/bookmark';
 
 type WatchlistsProps = {
   watchlists: Watchlist[];

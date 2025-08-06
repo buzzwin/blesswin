@@ -1,15 +1,15 @@
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import { useUser } from '@lib/context/user-context';
+import { getUserReviews } from '@lib/firebase/utils/review';
 import { UserLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { MainLayout } from '@components/layout/main-layout';
 import { SEO } from '@components/common/seo';
 import { UserDataLayout } from '@components/layout/user-data-layout';
 import { UserHomeLayout } from '@components/layout/user-home-layout';
 import { ReviewsList } from '@components/review/reviews-list';
-import { useUser } from '@lib/context/user-context';
-import { useEffect, useState } from 'react';
-import { ReviewWithUser } from '@lib/types/review';
+import type { ReviewWithUser } from '@lib/types/review';
 import type { ReactElement, ReactNode } from 'react';
-import { getUserReviews } from '@lib/firebase/utils/review';
 
 export default function UserProfile(): JSX.Element {
   const { user } = useUser();

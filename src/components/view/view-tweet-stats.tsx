@@ -6,8 +6,8 @@ import { usersCollection } from '@lib/firebase/collections';
 import { Modal } from '@components/modal/modal';
 import { TweetStatsModal } from '@components/modal/tweet-stats-modal';
 import { NumberStats } from '@components/tweet/number-stats';
-import type { Tweet } from '@lib/types/tweet';
 import { UserCards } from '@components/user/user-cards';
+import type { Tweet } from '@lib/types/tweet';
 
 type viewTweetStats = Pick<
   Tweet,

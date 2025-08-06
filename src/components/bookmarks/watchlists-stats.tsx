@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { cn } from '@lib/utils';
-import type { IconName } from '@components/ui/hero-icon';
 import { HeroIcon } from '@components/ui/hero-icon';
+import type { IconName } from '@components/ui/hero-icon';
 
 type WatchlistStats = {
   total: number;

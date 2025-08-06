@@ -1,20 +1,20 @@
+import { useState } from 'react';
 import { useAuth } from '@lib/context/auth-context';
+import { useModal } from '@lib/hooks/useModal';
+import { useWatchlists } from '@lib/hooks/useWatchlists';
+import { cn } from '@lib/utils';
+import { WindowContextProvider } from '@lib/context/window-context';
 import {
   ProtectedLayout,
   WatchListsLayout
 } from '@components/layout/common-layout';
 import { MainHeader } from '@components/home/main-header';
-import { useState } from 'react';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from '@components/modal/modal';
-import { useModal } from '@lib/hooks/useModal';
-import { useWatchlists } from '@lib/hooks/useWatchlists';
-import { cn } from '@lib/utils';
 import { SEO } from '@components/common/seo';
 import { Watchlists } from '@components/bookmarks/watchlists';
 import { WatchlistsStats } from '@components/bookmarks/watchlists-stats';
 import type { ReactElement, ReactNode } from 'react';
-import { WindowContextProvider } from '@lib/context/window-context';
 
 function CreateWatchlistModal({
   open,

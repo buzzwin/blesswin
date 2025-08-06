@@ -4,14 +4,14 @@ import { Dialog, Popover } from '@headlessui/react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from 'react-hot-toast';
 import { useState } from 'react';
+import { preventBubbling } from '@lib/utils';
+import { siteURL } from '@lib/env';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { ToolTip } from '@components/ui/tooltip';
 import { Modal } from '@components/modal/modal';
 import ShareButtons from '@components/share/sharebuttons';
-import { ViewingActivity } from '@components/activity/types';
-import { preventBubbling } from '@lib/utils';
-import { siteURL } from '@lib/env';
+import type { ViewingActivity } from '@components/activity/types';
 
 type ReviewShareProps = {
   reviewId: string;

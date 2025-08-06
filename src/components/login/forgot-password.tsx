@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
-import { auth } from '@lib/firebase/app';
 import { sendPasswordResetEmail } from 'firebase/auth';
 import { toast } from 'react-hot-toast';
+import { auth } from '@lib/firebase/app';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 

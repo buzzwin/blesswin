@@ -1,5 +1,5 @@
-import { db } from '../app';
 import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
+import { db } from '../app';
 
 interface Recommendation {
   tmdbId: string;

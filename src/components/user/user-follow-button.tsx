@@ -1,8 +1,8 @@
 import { useAuth } from '@lib/context/auth-context';
-import { Button } from '@components/ui/button';
-import { HeroIcon } from '@components/ui/hero-icon';
 import { useFollowUser } from '@lib/hooks/useFollowUser';
 import { cn } from '@lib/utils';
+import { Button } from '@components/ui/button';
+import { HeroIcon } from '@components/ui/hero-icon';
 
 type UserFollowButtonProps = {
   userTargetId: string;

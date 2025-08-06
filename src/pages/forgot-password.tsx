@@ -1,6 +1,6 @@
 import { ForgotPassword } from '@components/login/forgot-password';
-import type { ReactElement, ReactNode } from 'react';
 import { AuthLayout } from '@components/layout/auth-layout';
+import type { ReactElement, ReactNode } from 'react';
 
 export default function ForgotPasswordPage(): JSX.Element {
   return (

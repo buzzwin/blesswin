@@ -1,8 +1,5 @@
 import { useState } from 'react';
-import { Modal } from '@components/modal/modal';
-import { HeroIcon } from '@components/ui/hero-icon';
 import { toast } from 'react-hot-toast';
-import type { Watchlist } from '@lib/types/bookmark';
 import {
   FacebookShareButton,
   FacebookIcon,
@@ -15,6 +12,9 @@ import {
   TelegramShareButton,
   TelegramIcon
 } from 'next-share';
+import { Modal } from '@components/modal/modal';
+import { HeroIcon } from '@components/ui/hero-icon';
+import type { Watchlist } from '@lib/types/bookmark';
 
 type WatchlistShareProps = {
   watchlist: Watchlist;

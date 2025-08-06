@@ -1,7 +1,7 @@
 import { SWRConfig } from 'swr';
 import { Toaster } from 'react-hot-toast';
-import type { DefaultToastOptions } from 'react-hot-toast';
 import { fetchJSON } from '@lib/fetch';
+import type { DefaultToastOptions } from 'react-hot-toast';
 import type { ReactNode } from 'react';
 
 const toastOptions: DefaultToastOptions = {

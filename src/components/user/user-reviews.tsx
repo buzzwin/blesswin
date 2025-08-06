@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { getUserReviews } from '@lib/firebase/utils/review';
-import type { ReviewWithUser } from '@lib/types/review';
 import { TweetReviews } from '@components/tweet/tweet-reviews';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
+import type { ReviewWithUser } from '@lib/types/review';
 
 type UserReviewsProps = {
   userId: string;

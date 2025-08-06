@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { ActivityItem } from '@components/activity/ActivityItem';
-import { ViewingActivity } from './types';
-import { TMDBResult, TMDBResponse } from './types';
 import axios from 'axios';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline';
-import { useAuth } from '@lib/context/auth-context';
 import NextImage from 'next/image';
 import cn from 'clsx';
+import { useAuth } from '@lib/context/auth-context';
+import { ActivityItem } from '@components/activity/ActivityItem';
 import { DefaultAvatar } from '@components/ui/default-avatar';
+import type { TMDBResult, TMDBResponse , ViewingActivity } from './types';
 
 const ActivityFeed: React.FC = () => {
   const { user } = useAuth();

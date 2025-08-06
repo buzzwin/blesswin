@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Button } from './button-shadcn';
 import { cn } from '@lib/utils';
+import { Button } from './button-shadcn';
 
 type TruncatedTextProps = {
   text: string;

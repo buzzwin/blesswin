@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { Modal } from '@components/modal/modal';
 import { cn } from '@lib/utils';
+import { Modal } from '@components/modal/modal';
 
 type CreateWatchlistModalProps = {
   open: boolean;

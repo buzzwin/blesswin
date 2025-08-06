@@ -1,15 +1,15 @@
 import Link from 'next/link';
 import cn from 'clsx';
 import { useWindow } from '@lib/context/window-context';
+import { useModal } from '@lib/hooks/useModal';
 import { FollowButton } from '@components/ui/follow-button';
 import { NextImage } from '@components/ui/next-image';
 import { UserAvatar } from './user-avatar';
 import { UserName } from './user-name';
 import { UserFollowing } from './user-following';
-import type { ReactNode } from 'react';
 import { UserUsername } from './user-username';
+import type { ReactNode } from 'react';
 import type { User } from '@lib/types/user';
-import { useModal } from '@lib/hooks/useModal';
 
 type UserTooltipProps = Pick<
   User,

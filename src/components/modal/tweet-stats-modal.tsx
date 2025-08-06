@@ -1,5 +1,5 @@
-import type { ReactNode } from 'react';
 import { MainHeader } from '@components/home/main-header';
+import type { ReactNode } from 'react';
 import type { StatsType } from '@components/view/view-tweet-stats';
 
 type TweetStatsModalProps = {

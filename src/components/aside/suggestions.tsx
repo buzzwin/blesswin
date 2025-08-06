@@ -3,10 +3,10 @@ import { motion } from 'framer-motion';
 import { useAuth } from '@lib/context/auth-context';
 import { useCollection } from '@lib/hooks/useCollection';
 import { usersCollection } from '@lib/firebase/collections';
+import { cn } from '@lib/utils';
 import { UserCard } from '@components/user/user-card';
 import { Loading } from '@components/ui/loading';
 import { Error } from '@components/ui/error';
-import { cn } from '@lib/utils';
 
 const variants = {
   initial: { opacity: 0 },

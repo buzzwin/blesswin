@@ -5,8 +5,8 @@ import { motion } from 'framer-motion';
 import { query, limit } from 'firebase/firestore';
 import { getCollectionCount } from '@lib/firebase/utils';
 import { Loading } from '@components/ui/loading';
-import type { UseCollectionOptions } from './useCollection';
 import { useCollection } from './useCollection';
+import type { UseCollectionOptions } from './useCollection';
 import type { Query, QueryConstraint } from 'firebase/firestore';
 import type { User } from '@lib/types/user';
 

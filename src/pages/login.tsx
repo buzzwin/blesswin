@@ -1,7 +1,7 @@
-import { ReactElement, ReactNode } from 'react';
 import { AuthLayout } from '@components/layout/auth-layout';
 import { SEO } from '@components/common/seo';
 import JustLogin from '@components/login/justlogin';
+import type { ReactElement, ReactNode } from 'react';
 
 export default function Login(): JSX.Element {
   return (

@@ -1,12 +1,6 @@
-import type { ChangeEvent } from 'react';
 import { useState, useRef } from 'react';
 
 // Components
-import { UserAvatar } from '@components/user/user-avatar';
-import { Button } from '@components/ui/button-shadcn';
-import { Card, CardContent } from '@components/ui/card';
-import { Textarea } from '@components/ui/textarea';
-import { Separator } from '@components/ui/separator';
 import {
   Plus,
   Image as ImageIcon,
@@ -16,12 +10,18 @@ import {
   Search,
   Sparkles
 } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { cn } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
+import { UserAvatar } from '@components/user/user-avatar';
+import { Button } from '@components/ui/button-shadcn';
+import { Card, CardContent } from '@components/ui/card';
+import { Textarea } from '@components/ui/textarea';
+import { Separator } from '@components/ui/separator';
 import { MediaSearch } from './media-search';
 
 // Utils
-import { cn } from '@lib/utils';
-import { useAuth } from '@lib/context/auth-context';
-import { toast } from 'react-hot-toast';
+import type { ChangeEvent } from 'react';
 
 type ModernInputProps = {
   placeholder?: string;

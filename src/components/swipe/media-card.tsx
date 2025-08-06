@@ -1,9 +1,9 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
 import Image from 'next/image';
-import type { MediaCard } from '@lib/types/review';
 import { X, Heart, Meh, Sparkles } from 'lucide-react';
 import { getTMDBImageUrl } from '@lib/utils';
 import { FallbackImage } from '@components/ui/fallback-image';
+import type { MediaCard } from '@lib/types/review';
 
 interface MediaCardProps {
   media: MediaCard;
@@ -56,6 +56,7 @@ export function SwipeableMediaCard({
             layout='fill'
             className='object-cover'
             sizes='100vw'
+            priority={isActive}
           />
         ) : (
           <div className='h-full w-full bg-gradient-to-br from-gray-800 to-gray-900' />
@@ -100,6 +101,7 @@ export function SwipeableMediaCard({
                 layout='fill'
                 className='object-cover'
                 sizes='64px'
+                priority={isActive}
               />
             </div>
           ) : (

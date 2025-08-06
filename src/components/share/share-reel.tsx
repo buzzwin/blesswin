@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { toPng } from 'html-to-image';
+import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { Modal } from '@components/modal/modal';
 import type { Bookmark } from '@lib/types/bookmark';
-import { cn } from '@lib/utils';
 
 type ShareReelProps = {
   bookmarks: Bookmark[];

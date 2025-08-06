@@ -1,9 +1,9 @@
 import cn from 'clsx';
+import { Home, Sparkles } from 'lucide-react';
 import { Button } from '@components/ui/button-shadcn';
 import { Card, CardContent } from '@components/ui/card';
 import { Separator } from '@components/ui/separator';
 import type { ReactNode } from 'react';
-import { Home, Sparkles } from 'lucide-react';
 
 type ModernHeaderProps = {
   tip?: string;

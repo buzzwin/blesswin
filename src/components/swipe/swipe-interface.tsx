@@ -1,17 +1,27 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { SwipeableMediaCard } from './media-card';
+import {
+  Heart,
+  X,
+  Meh,
+  RefreshCw,
+  Filter,
+  LogIn,
+  Star,
+  TrendingUp
+} from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { Loading } from '@components/ui/loading';
 import { Button } from '@components/ui/button-shadcn';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
-import { Heart, X, Meh, RefreshCw, Filter } from 'lucide-react';
-import { useAuth } from '@lib/context/auth-context';
+import { SwipeableMediaCard } from './media-card';
+import { useRouter } from 'next/router';
 import type { MediaCard, RatingType } from '@lib/types/review';
-import { toast } from 'react-hot-toast';
 
 interface SwipeInterfaceProps {
   onRatingSubmit?: (
-    mediaId: string,
+    mediaId: string | number,
     rating: RatingType,
     mediaData?: MediaCard
   ) => void;
@@ -25,17 +35,24 @@ export function SwipeInterface({
   const [loading, setLoading] = useState(true);
   const [fetchingMore, setFetchingMore] = useState(false);
   const [filter, setFilter] = useState<'all' | 'movie' | 'tv'>('all');
+  const [showSignInPrompt, setShowSignInPrompt] = useState(false);
   const { user } = useAuth();
+  const router = useRouter();
 
   // Fetch AI-recommended content or trending content
   useEffect(() => {
     const fetchMedia = async (): Promise<void> => {
       try {
         setLoading(true);
+        console.log(
+          'Fetching media for user:',
+          user?.id ? 'logged in' : 'not logged in'
+        );
 
         if (user?.id) {
-          // Always try to get fresh AI-recommended content first
+          // For logged-in users, try AI recommendations first
           try {
+            console.log('Attempting AI recommendations...');
             const response = await fetch('/api/recommended-content', {
               method: 'POST',
               headers: {
@@ -63,10 +80,84 @@ export function SwipeInterface({
                 source: string;
               };
 
-              // Convert AI recommendations to MediaCard format
-              const aiMedia = data.content.map((item) => ({
+              console.log('AI recommendations response:', data);
+
+              // Check if we got actual content
+              if (data.content && data.content.length > 0) {
+                console.log(
+                  'Setting AI recommendations:',
+                  data.content.length,
+                  'items'
+                );
+                // Convert AI recommendations to MediaCard format
+                const aiMedia = data.content.map((item) => ({
+                  id: `${item.mediaType}-${item.tmdbId}`,
+                  tmdbId: Number(item.tmdbId),
+                  title: item.title,
+                  mediaType: item.mediaType,
+                  posterPath: item.posterPath,
+                  backdropPath: item.posterPath, // Use poster as backdrop fallback
+                  overview: item.overview,
+                  releaseDate: item.releaseDate,
+                  voteAverage: item.voteAverage,
+                  genres: [],
+                  reason: item.reason,
+                  confidence: item.confidence
+                }));
+
+                setMediaCards(aiMedia as MediaCard[]);
+                return;
+              } else {
+                console.log('AI recommendations returned empty content');
+              }
+            } else {
+              console.log(
+                'AI recommendations failed with status:',
+                response.status
+              );
+            }
+          } catch (aiError) {
+            console.error(
+              'AI recommendations failed, falling back to trending content:',
+              aiError
+            );
+          }
+        }
+
+        // For both logged-in and non-logged-in users, try trending content
+        try {
+          console.log('Attempting trending content...');
+          const response = await fetch('/api/trending-content');
+
+          if (response.ok) {
+            const data = (await response.json()) as {
+              content: Array<{
+                tmdbId: string;
+                title: string;
+                mediaType: 'movie' | 'tv';
+                posterPath: string;
+                overview: string;
+                releaseDate: string;
+                voteAverage: number;
+                reason?: string;
+                confidence?: number;
+              }>;
+              source: string;
+            };
+
+            console.log('Trending content response:', data);
+
+            // Check if we got actual content
+            if (data.content && data.content.length > 0) {
+              console.log(
+                'Setting trending content:',
+                data.content.length,
+                'items'
+              );
+              // Convert trending content to MediaCard format
+              const trendingMedia = data.content.map((item) => ({
                 id: `${item.mediaType}-${item.tmdbId}`,
-                tmdbId: item.tmdbId,
+                tmdbId: Number(item.tmdbId),
                 title: item.title,
                 mediaType: item.mediaType,
                 posterPath: item.posterPath,
@@ -79,136 +170,30 @@ export function SwipeInterface({
                 confidence: item.confidence
               }));
 
-              setMediaCards(aiMedia as MediaCard[]);
-              return;
-            }
-          } catch (aiError) {
-            // console.error('AI recommendations failed, falling back to popular content:', aiError);
-          }
-        } else {
-          // For non-logged-in users, fetch trending content from Gemini + TMDB
-          try {
-            const response = await fetch('/api/trending-content');
-
-            if (response.ok) {
-              const data = (await response.json()) as {
-                content: Array<{
-                  tmdbId: string;
-                  title: string;
-                  mediaType: 'movie' | 'tv';
-                  posterPath: string;
-                  overview: string;
-                  releaseDate: string;
-                  voteAverage: number;
-                  popularity: number;
-                  description: string;
-                  network?: string;
-                }>;
-                source: string;
-              };
-
-              // Convert trending content to MediaCard format
-              const trendingMedia = data.content.map((item) => ({
-                id: `${item.mediaType}-${item.tmdbId}`,
-                tmdbId: item.tmdbId,
-                title: item.title,
-                mediaType: item.mediaType,
-                posterPath: item.posterPath,
-                backdropPath: item.posterPath, // Use poster as backdrop fallback
-                overview: item.overview,
-                releaseDate: item.releaseDate,
-                voteAverage: item.voteAverage,
-                genres: [],
-                reason: `Trending on ${item.network || 'streaming platforms'}`,
-                confidence: item.popularity / 100
-              }));
-
               setMediaCards(trendingMedia as MediaCard[]);
               return;
+            } else {
+              console.log('Trending content returned empty content');
             }
-          } catch (trendingError) {
-            // console.error('Trending content failed, falling back to popular content:', trendingError);
+          } else {
+            console.log(
+              'Trending content failed with status:',
+              response.status
+            );
           }
+        } catch (trendingError) {
+          console.error(
+            'Trending content failed, falling back to diverse content:',
+            trendingError
+          );
         }
 
-        // Fallback to diverse content from multiple TMDB endpoints
-        const endpoints = [
-          { url: 'movie/popular', type: 'movie' },
-          { url: 'tv/popular', type: 'tv' },
-          { url: 'movie/top_rated', type: 'movie' },
-          { url: 'tv/top_rated', type: 'tv' },
-          { url: 'movie/now_playing', type: 'movie' },
-          { url: 'tv/on_the_air', type: 'tv' }
-        ];
-
-        const allMedia: MediaCard[] = [];
-        const apiKey =
-          process.env.NEXT_PUBLIC_TMDB_API_KEY ??
-          '0af4f0642998fa986fe260078ab69ab6';
-
-        // Fetch from multiple pages and endpoints for variety
-        for (const endpoint of endpoints) {
-          for (let page = 1; page <= 3; page++) {
-            // Fetch 3 pages from each endpoint
-            try {
-              const response = await fetch(
-                `https://api.themoviedb.org/3/${endpoint.url}?api_key=${apiKey}&language=en-US&page=${page}`
-              );
-              const data = (await response.json()) as {
-                results: Array<{
-                  id: number;
-                  title?: string;
-                  name?: string;
-                  poster_path: string;
-                  backdrop_path: string;
-                  overview: string;
-                  release_date?: string;
-                  first_air_date?: string;
-                  vote_average: number;
-                }>;
-              };
-
-              const items = data.results
-                .filter((item) => item.poster_path && item.overview) // Only include items with poster and overview
-                .slice(0, 8) // Take 8 items per page to avoid overwhelming
-                .map((item) => ({
-                  id: `${endpoint.type}-${item.id}`,
-                  tmdbId: item.id.toString(),
-                  title: endpoint.type === 'movie' ? item.title! : item.name!,
-                  mediaType: endpoint.type as 'movie' | 'tv',
-                  posterPath: item.poster_path,
-                  backdropPath: item.backdrop_path,
-                  overview: item.overview,
-                  releaseDate:
-                    endpoint.type === 'movie'
-                      ? item.release_date!
-                      : item.first_air_date!,
-                  voteAverage: item.vote_average,
-                  genres: []
-                }));
-
-              allMedia.push(...items);
-            } catch (error) {
-              // console.error(`Error fetching ${endpoint.url} page ${page}:`, error);
-              continue; // Continue with other endpoints if one fails
-            }
-          }
-        }
-
-        // Remove duplicates based on tmdbId
-        const uniqueMedia = allMedia.filter(
-          (item, index, self) =>
-            index === self.findIndex((t) => t.tmdbId === item.tmdbId)
-        );
-
-        // Shuffle and take a good variety
-        const shuffled = uniqueMedia
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 50);
-        setMediaCards(shuffled);
+        // Final fallback to diverse content if all else fails
+        console.log('Attempting diverse content fallback...');
+        await fetchMoreDiverseContent();
       } catch (error) {
-        // console.error('Error fetching media:', error);
-        toast.error('Failed to load media');
+        console.error('Error fetching media:', error);
+        setMediaCards([]);
       } finally {
         setLoading(false);
       }
@@ -217,100 +202,123 @@ export function SwipeInterface({
     void fetchMedia();
   }, [user?.id]);
 
-  // Function to fetch more diverse content for unauthenticated users
   const fetchMoreDiverseContent = async (): Promise<void> => {
     try {
+      console.log('Starting fetchMoreDiverseContent...');
+      // Fetch diverse content from multiple TMDB endpoints
       const apiKey =
         process.env.NEXT_PUBLIC_TMDB_API_KEY ??
         '0af4f0642998fa986fe260078ab69ab6';
-      const additionalEndpoints = [
-        { url: 'movie/upcoming', type: 'movie' },
-        { url: 'tv/airing_today', type: 'tv' },
-        {
-          url: 'discover/movie',
-          type: 'movie',
-          params:
-            '&sort_by=popularity.desc&include_adult=false&include_video=false&page=1'
-        },
-        {
-          url: 'discover/tv',
-          type: 'tv',
-          params:
-            '&sort_by=popularity.desc&include_adult=false&include_video=false&page=1'
-        }
+      console.log(
+        'Using TMDB API key:',
+        apiKey ? 'configured' : 'using fallback'
+      );
+
+      const endpoints = [
+        { url: 'movie/popular', type: 'movie' },
+        { url: 'tv/popular', type: 'tv' },
+        { url: 'movie/now_playing', type: 'movie' },
+        { url: 'tv/on_the_air', type: 'tv' },
+        { url: 'movie/top_rated', type: 'movie' },
+        { url: 'tv/top_rated', type: 'tv' }
       ];
 
-      const newMedia: MediaCard[] = [];
+      const allMedia: MediaCard[] = [];
 
-      for (const endpoint of additionalEndpoints) {
+      for (const endpoint of endpoints) {
         try {
+          console.log(`Fetching from ${endpoint.url}...`);
           const response = await fetch(
-            `https://api.themoviedb.org/3/${
-              endpoint.url
-            }?api_key=${apiKey}&language=en-US${endpoint.params || ''}`
+            `https://api.themoviedb.org/3/${endpoint.url}?api_key=${apiKey}&language=en-US&page=1`
           );
-          const data = (await response.json()) as {
-            results: Array<{
-              id: number;
-              title?: string;
-              name?: string;
-              poster_path: string;
-              backdrop_path: string;
-              overview: string;
-              release_date?: string;
-              first_air_date?: string;
-              vote_average: number;
-            }>;
-          };
 
-          const items = data.results
-            .filter((item) => item.poster_path && item.overview)
-            .slice(0, 5)
-            .map((item) => ({
+          if (response.ok) {
+            const data = (await response.json()) as {
+              results: Array<{
+                id: number;
+                title?: string;
+                name?: string;
+                poster_path: string;
+                overview: string;
+                release_date?: string;
+                first_air_date?: string;
+                vote_average: number;
+                popularity: number;
+              }>;
+            };
+
+            console.log(
+              `Got ${data.results.length} results from ${endpoint.url}`
+            );
+
+            const items = data.results.slice(0, 5).map((item) => ({
               id: `${endpoint.type}-${item.id}`,
-              tmdbId: item.id.toString(),
-              title: endpoint.type === 'movie' ? item.title! : item.name!,
+              tmdbId: item.id,
+              title:
+                (endpoint.type === 'movie' ? item.title : item.name) ??
+                'Unknown Title',
               mediaType: endpoint.type as 'movie' | 'tv',
               posterPath: item.poster_path,
-              backdropPath: item.backdrop_path,
+              backdropPath: item.poster_path, // Use poster as backdrop fallback
               overview: item.overview,
               releaseDate:
-                endpoint.type === 'movie'
-                  ? item.release_date!
-                  : item.first_air_date!,
+                (endpoint.type === 'movie'
+                  ? item.release_date
+                  : item.first_air_date) ?? '',
               voteAverage: item.vote_average,
-              genres: []
+              genres: [],
+              reason: 'Popular content',
+              confidence: item.popularity / 100
             }));
 
-          newMedia.push(...items);
-        } catch (error) {
-          // console.error(`Error fetching ${endpoint.url}:`, error);
+            allMedia.push(...items);
+          } else {
+            console.log(
+              `Failed to fetch from ${endpoint.url}, status:`,
+              response.status
+            );
+          }
+        } catch (endpointError) {
+          console.error(`Error fetching from ${endpoint.url}:`, endpointError);
+          // Continue with other endpoints
           continue;
         }
       }
 
-      // Remove duplicates and add to existing cards
-      const uniqueNewMedia = newMedia.filter(
+      console.log(`Total media items collected: ${allMedia.length}`);
+
+      // Remove duplicates and shuffle
+      const uniqueMedia = allMedia.filter(
         (item, index, self) =>
           index === self.findIndex((t) => t.tmdbId === item.tmdbId)
       );
 
-      setMediaCards((prev) => {
-        const existingIds = new Set(prev.map((card) => card.tmdbId));
-        const filteredNewMedia = uniqueNewMedia.filter(
-          (item) => !existingIds.has(item.tmdbId)
-        );
-        return [...prev, ...filteredNewMedia];
-      });
+      console.log(
+        `Unique media items after deduplication: ${uniqueMedia.length}`
+      );
+
+      const shuffledMedia = uniqueMedia.sort(() => Math.random() - 0.5);
+      console.log('Setting diverse content:', shuffledMedia.length, 'items');
+      setMediaCards(shuffledMedia);
     } catch (error) {
-      // console.error('Error fetching more diverse content:', error);
+      console.error('Error fetching diverse content:', error);
+      setMediaCards([]);
     }
   };
 
   const handleSwipe = async (
     direction: 'left' | 'right' | 'middle'
   ): Promise<void> => {
-    if (!currentCard) return;
+    if (!currentCard) {
+      console.error('No current card available');
+      return;
+    }
+
+    // Check if user is authenticated before allowing rating
+    if (!user) {
+      setShowSignInPrompt(true);
+      return;
+    }
 
     // Map direction to rating type
     let rating: RatingType;
@@ -330,7 +338,18 @@ export function SwipeInterface({
 
     // Call the callback with the rating
     if (onRatingSubmit) {
-      onRatingSubmit(currentCard.tmdbId, rating, currentCard);
+      // Ensure tmdbId is a valid number
+      const tmdbId =
+        typeof currentCard.tmdbId === 'number'
+          ? currentCard.tmdbId
+          : Number(currentCard.tmdbId);
+
+      if (isNaN(tmdbId)) {
+        console.error('Invalid tmdbId:', currentCard.tmdbId);
+        return;
+      }
+
+      onRatingSubmit(tmdbId, rating, currentCard);
     }
 
     // Move to next card
@@ -376,7 +395,7 @@ export function SwipeInterface({
             // Convert AI recommendations to MediaCard format
             const newMedia = data.content.map((item) => ({
               id: `${item.mediaType}-${item.tmdbId}`,
-              tmdbId: item.tmdbId,
+              tmdbId: Number(item.tmdbId),
               title: item.title,
               mediaType: item.mediaType,
               posterPath: item.posterPath,
@@ -396,7 +415,7 @@ export function SwipeInterface({
           // For unauthenticated users, fetch more trending content
           try {
             const response = await fetch('/api/trending-content');
-            
+
             if (response.ok) {
               const data = (await response.json()) as {
                 content: Array<{
@@ -407,17 +426,16 @@ export function SwipeInterface({
                   overview: string;
                   releaseDate: string;
                   voteAverage: number;
-                  popularity: number;
-                  description: string;
-                  network?: string;
+                  reason?: string;
+                  confidence?: number;
                 }>;
                 source: string;
               };
 
               // Convert trending content to MediaCard format
-              const newTrendingMedia = data.content.map((item) => ({
+              const newMedia = data.content.map((item) => ({
                 id: `${item.mediaType}-${item.tmdbId}`,
-                tmdbId: item.tmdbId,
+                tmdbId: Number(item.tmdbId),
                 title: item.title,
                 mediaType: item.mediaType,
                 posterPath: item.posterPath,
@@ -426,15 +444,12 @@ export function SwipeInterface({
                 releaseDate: item.releaseDate,
                 voteAverage: item.voteAverage,
                 genres: [],
-                reason: `Trending on ${item.network || 'streaming platforms'}`,
-                confidence: item.popularity / 100
+                reason: item.reason,
+                confidence: item.confidence
               }));
 
               // Add new trending content to the existing cards
-              setMediaCards((prev) => [...prev, ...(newTrendingMedia as MediaCard[])]);
-            } else {
-              // Fallback to diverse content if trending fails
-              await fetchMoreDiverseContent();
+              setMediaCards((prev) => [...prev, ...(newMedia as MediaCard[])]);
             }
           } catch (trendingError) {
             // Fallback to diverse content if trending fails
@@ -448,6 +463,14 @@ export function SwipeInterface({
         setFetchingMore(false);
       }
     }
+  };
+
+  const handleSignIn = () => {
+    void router.push('/login');
+  };
+
+  const handleClosePrompt = () => {
+    setShowSignInPrompt(false);
   };
 
   const handleReset = (): void => {
@@ -471,14 +494,16 @@ export function SwipeInterface({
 
   if (loading) {
     return (
-      <div className='flex flex-col justify-center items-center min-h-96 space-y-4'>
+      <div className='min-h-96 flex flex-col items-center justify-center space-y-4'>
         <Loading />
         <div className='text-center'>
-          <h3 className='text-lg font-semibold text-gray-900 dark:text-white mb-2'>
+          <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
             Loading Trending Content
           </h3>
           <p className='text-sm text-gray-600 dark:text-gray-400'>
-            {user ? 'Getting personalized recommendations...' : 'Fetching the most popular shows in America...'}
+            {user
+              ? 'Getting personalized recommendations...'
+              : 'Fetching the most popular shows in America...'}
           </p>
         </div>
       </div>
@@ -490,24 +515,36 @@ export function SwipeInterface({
       <Card className='mx-auto w-full max-w-md'>
         <CardHeader className='text-center'>
           <CardTitle className='text-2xl font-bold text-gray-800'>
-            No more cards!
+            {mediaCards.length === 0
+              ? 'No Content Available'
+              : 'No more cards!'}
           </CardTitle>
         </CardHeader>
         <CardContent className='space-y-4 text-center'>
           <p className='text-gray-600'>
-            You&apos;ve gone through all the available shows and movies.
+            {mediaCards.length === 0
+              ? 'Unable to load trending content. This might be due to API issues or network problems.'
+              : "You've gone through all the available shows and movies."}
           </p>
-          <Button onClick={handleReset} className='w-full'>
-            <RefreshCw className='mr-2 w-4 h-4' />
-            Start Over
-          </Button>
+          <div className='flex justify-center gap-2'>
+            <Button onClick={() => window.location.reload()} className='flex-1'>
+              <RefreshCw className='mr-2 h-4 w-4' />
+              Reload Page
+            </Button>
+            {mediaCards.length > 0 && (
+              <Button onClick={handleReset} className='flex-1'>
+                <RefreshCw className='mr-2 h-4 w-4' />
+                Start Over
+              </Button>
+            )}
+          </div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <div className='mx-auto space-y-4 w-full max-w-md'>
+    <div className='mx-auto w-full max-w-md space-y-4'>
       {/* Card Stack */}
       <div className='relative h-96'>
         <AnimatePresence>
@@ -528,44 +565,79 @@ export function SwipeInterface({
             </motion.div>
           )}
         </AnimatePresence>
-        
+
         {/* Loading indicator for fetching more content */}
         {fetchingMore && (
-          <div className='absolute bottom-4 right-4 bg-white/90 dark:bg-gray-800/90 rounded-full p-2 shadow-lg'>
-            <div className='animate-spin rounded-full h-4 w-4 border-b-2 border-amber-500'></div>
+          <div className='absolute bottom-4 right-4 rounded-full bg-white/90 p-2 shadow-lg dark:bg-gray-800/90'>
+            <div className='h-4 w-4 animate-spin rounded-full border-b-2 border-amber-500'></div>
           </div>
         )}
       </div>
 
-      {/* Quick Action Buttons */}
-      <div className='flex gap-4 justify-center'>
-        <Button
-          variant='outline'
-          size='lg'
-          onClick={() => handleSwipe('left')}
-          className='p-0 w-12 h-12 rounded-full'
-        >
-          <X className='w-6 h-6' />
-        </Button>
+      {/* Prominent Sign-In Prompt Modal */}
+      {showSignInPrompt && (
+        <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
+          <div className='w-full max-w-md rounded-xl bg-white p-6 shadow-2xl dark:bg-gray-800'>
+            <div className='text-center'>
+              {/* Icon */}
+              <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30'>
+                <LogIn className='h-8 w-8 text-amber-600 dark:text-amber-400' />
+              </div>
 
-        <Button
-          variant='outline'
-          size='lg'
-          onClick={() => handleSwipe('middle')}
-          className='p-0 w-12 h-12 rounded-full'
-        >
-          <Meh className='w-6 h-6' />
-        </Button>
+              {/* Title */}
+              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
+                Sign In to Rate Shows!
+              </h3>
 
-        <Button
-          variant='outline'
-          size='lg'
-          onClick={() => handleSwipe('right')}
-          className='p-0 w-12 h-12 rounded-full'
-        >
-          <Heart className='w-6 h-6' />
-        </Button>
-      </div>
+              {/* Description */}
+              <p className='mb-6 text-sm text-gray-600 dark:text-gray-300'>
+                Join thousands of users who are rating and discovering amazing
+                shows and movies. Your ratings help others find great content!
+              </p>
+
+              {/* Benefits */}
+              <div className='mb-6 space-y-2 text-left'>
+                <div className='flex items-center gap-2'>
+                  <Heart className='h-4 w-4 text-red-500' />
+                  <span className='text-sm text-gray-600 dark:text-gray-300'>
+                    Rate shows you love or hate
+                  </span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <TrendingUp className='h-4 w-4 text-green-500' />
+                  <span className='text-sm text-gray-600 dark:text-gray-300'>
+                    Get personalized recommendations
+                  </span>
+                </div>
+                <div className='flex items-center gap-2'>
+                  <Star className='h-4 w-4 text-amber-500' />
+                  <span className='text-sm text-gray-600 dark:text-gray-300'>
+                    Discover trending content
+                  </span>
+                </div>
+              </div>
+
+              {/* Action Buttons */}
+              <div className='flex gap-3'>
+                <Button
+                  onClick={handleSignIn}
+                  className='flex-1 bg-amber-600 text-white hover:bg-amber-700'
+                >
+                  <LogIn className='mr-2 h-4 w-4' />
+                  Sign In
+                </Button>
+                <Button
+                  onClick={handleClosePrompt}
+                  variant='outline'
+                  className='flex-1'
+                >
+                  Maybe Later
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

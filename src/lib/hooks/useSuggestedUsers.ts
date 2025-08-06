@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { collection, query, limit, getDocs } from 'firebase/firestore';
-import type { User } from '@lib/types/user';
 import { db } from '@lib/firebase/app';
+import type { User } from '@lib/types/user';
 
 export function useSuggestedUsers(limitCount = 3) {
   const [users, setUsers] = useState<User[]>([]);

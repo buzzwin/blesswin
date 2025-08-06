@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import { doc } from 'firebase/firestore';
+import { useState } from 'react';
 import { useDocument } from '@lib/hooks/useDocument';
 import { watchlistsCollection } from '@lib/firebase/collections';
 import {
@@ -14,7 +15,6 @@ import { Watchlist } from '@components/bookmarks/watchlist';
 import { WatchlistShare } from '@components/share/watchlist-share';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { ReactElement, ReactNode } from 'react';
-import { useState } from 'react';
 
 export default function WatchlistPage(): JSX.Element {
   const {

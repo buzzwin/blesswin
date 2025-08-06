@@ -1,10 +1,10 @@
-import { useAuth } from '@lib/context/auth-context';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { BarChart3, TrendingUp } from 'lucide-react';
+import { useAuth } from '@lib/context/auth-context';
 import { MobileSidebar } from '@components/sidebar/mobile-sidebar';
 import LogoIcon from '@components/ui/logo';
 import { Button } from '@components/ui/button-shadcn';
-import { BarChart3, TrendingUp } from 'lucide-react';
 
 export function GlobalMobileHeader(): JSX.Element {
   const { signOut } = useAuth();

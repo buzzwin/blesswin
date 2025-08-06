@@ -1,7 +1,7 @@
 import Link from 'next/link';
+import { cn } from '@lib/utils';
 import { NextImage } from '@components/ui/next-image';
 import { DefaultAvatar } from '@components/ui/default-avatar';
-import { cn } from '@lib/utils';
 
 type UserAvatarProps = {
   src: string;

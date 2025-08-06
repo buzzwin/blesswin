@@ -34,7 +34,7 @@ export type ReviewWithUser = Review & {
 
 export interface MediaCard {
   id: string;
-  tmdbId: string;
+  tmdbId: number;
   title: string;
   mediaType: 'movie' | 'tv';
   posterPath: string;

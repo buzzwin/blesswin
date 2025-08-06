@@ -27,7 +27,9 @@ service cloud.firestore {
       allow create: if isSignedIn() 
         && request.resource.data.userId == request.auth.uid
         && request.resource.data.tmdbId is number
-        && request.resource.data.title is string;
+        && request.resource.data.title is string
+        && request.resource.data.mediaType in ['movie', 'tv']
+        && request.resource.data.rating in ['love', 'hate', 'meh'];
       allow update: if isSignedIn() && (
         resource.data.userId == request.auth.uid ||
         // Allow updating likes array only

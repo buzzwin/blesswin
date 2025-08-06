@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '@lib/context/auth-context';
 import { useRouter } from 'next/router';
+import { ArrowLeft, Sparkles, TrendingUp, Clock, Star } from 'lucide-react';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { RecommendationsCard } from '@components/recommendations/recommendations-card';
-import { ArrowLeft, Sparkles, TrendingUp, Clock, Star } from 'lucide-react';
-import { toast } from 'react-hot-toast';
 
 interface Recommendation {
   tmdbId: string;

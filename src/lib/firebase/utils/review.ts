@@ -16,10 +16,9 @@ import {
   deleteDoc,
   limit
 } from 'firebase/firestore';
-import type { Review, ReviewWithUser, RatingType } from '@lib/types/review';
 import { reviewsCollection, usersCollection } from '../collections';
+import type { Review, ReviewWithUser, RatingType } from '@lib/types/review';
 import type { User } from '@lib/types/user';
-import { invalidateRecommendationsCache } from './recommendations';
 
 export const createReview = async (
   reviewData: Omit<Review, 'id' | 'createdAt' | 'updatedAt' | 'likes'>
@@ -46,9 +45,6 @@ export const createReview = async (
 
     // Add to reviews collection
     const reviewRef = await addDoc(reviewsCollection, firestoreData as any);
-
-    // Invalidate recommendations cache for the user
-    await invalidateRecommendationsCache(reviewData.userId);
 
     // Get user data for response
     const userDoc = await getDoc(doc(usersCollection, reviewData.userId));
@@ -92,6 +88,8 @@ export const createRating = async (
   }
 
   try {
+    console.log('Creating rating with data:', ratingData);
+    
     // Validate required fields
     if (!ratingData.tmdbId || !ratingData.title || !ratingData.mediaType || !ratingData.rating) {
       throw new Error('Missing required fields for rating');
@@ -107,11 +105,11 @@ export const createRating = async (
       likes: []
     } as const;
 
+    console.log('Firestore data to save:', firestoreData);
+
     // Add to reviews collection
     const ratingRef = await addDoc(reviewsCollection, firestoreData as any);
-
-    // Invalidate recommendations cache for the user
-    await invalidateRecommendationsCache(ratingData.userId);
+    console.log('Rating saved with ID:', ratingRef.id);
 
     // Get user data for response
     const userDoc = await getDoc(doc(usersCollection, ratingData.userId));
@@ -121,6 +119,7 @@ export const createRating = async (
     }
 
     const userData = userDoc.data();
+    console.log('User data retrieved:', userData);
 
     return {
       ...ratingData,
@@ -139,7 +138,7 @@ export const createRating = async (
       }
     };
   } catch (error) {
-    // console.error('Error in createRating:', error);
+    console.error('Error in createRating:', error);
     throw new Error(
       error instanceof Error 
         ? `Failed to create rating: ${error.message}`
