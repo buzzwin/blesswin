@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-export default async function handler(
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse
-): Promise<void> {
+): void {
   const { width, height } = req.query;
   
   const w = parseInt(width as string) || 300;

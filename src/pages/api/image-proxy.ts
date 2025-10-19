@@ -29,7 +29,7 @@ export default async function handler(
     
     const response = await fetch(url, {
       method: 'HEAD', // Only check if the image exists
-      signal: controller.signal,
+      signal: controller.signal
     });
     
     clearTimeout(timeoutId);

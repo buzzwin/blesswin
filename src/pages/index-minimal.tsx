@@ -263,8 +263,8 @@ export default function Home(): JSX.Element {
                     </div>
                   ) : (
                     <p className='text-gray-600 dark:text-gray-400'>
-                      Discover what's trending right now. Sign in to rate and
-                      get personalized recommendations!
+                      Discover what&apos;s trending right now. Sign in to rate
+                      and get personalized recommendations!
                     </p>
                   )}
                 </div>
