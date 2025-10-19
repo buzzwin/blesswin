@@ -23,12 +23,6 @@ export type NavLink = {
 
 const getNavLinks = (username: string): Readonly<NavLink[]> => [
   {
-    href: '/trends',
-    linkName: 'Trends',
-    iconName: 'ChartBarIcon',
-    disabled: false
-  },
-  {
     href: '/recommendations',
     linkName: 'AI Recommendations',
     iconName: 'SparklesIcon',
@@ -40,7 +34,6 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     iconName: 'StarIcon',
     disabled: false
   },
-
   {
     href: `/user/${username}`,
     linkName: 'Profile',

@@ -32,3 +32,5 @@ export function userStatsCollection(id: string): CollectionReference<Stats> {
 export const watchlistsCollection = collection(db, 'watchlists').withConverter(watchlistConverter);
 
 export const reviewsCollection = collection(db, 'reviews') as CollectionReference<Review>;
+
+export const visitsCollection = collection(db, 'visits');

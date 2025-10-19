@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { db } from '@lib/firebase/app';
-import { TrendingShows } from '@components/trending/trending-shows';
 import ActivityFeed from '@components/activity/activity';
 import { HeroIcon } from '@components/ui/hero-icon';
 import JustLogin from './justlogin';
@@ -64,9 +63,16 @@ export function LoginMain(): JSX.Element {
         <div className='grid gap-8 lg:grid-cols-2'>
           {/* Left Side - Features */}
           <div className='space-y-6'>
-            {/* Add TrendingShows component */}
+            {/* AI Recommendations placeholder */}
             <div className='transform transition-all duration-500 hover:scale-[1.02]'>
-              <TrendingShows limit={5} variant='dark' />
+              <div className='rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm hover:border-emerald-500/20 hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40'>
+                <h3 className='mb-2 text-xl font-bold text-white'>
+                  AI Recommendations
+                </h3>
+                <p className='text-gray-400'>
+                  Get personalized show recommendations powered by AI
+                </p>
+              </div>
             </div>
 
             <div className='hidden space-y-6 lg:block'>

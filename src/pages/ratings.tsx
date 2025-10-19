@@ -9,8 +9,7 @@ import {
   Star,
   User,
   LogOut,
-  BarChart3,
-  TrendingUp
+  BarChart3
 } from 'lucide-react';
 import Image from 'next/image';
 import { toast } from 'react-hot-toast';
@@ -26,7 +25,7 @@ import {
   createRating
 } from '@lib/firebase/utils/review';
 import { useAuth } from '@lib/context/auth-context';
-import { getTMDBImageUrl , cn } from '@lib/utils';
+import { getTMDBImageUrl, cn } from '@lib/utils';
 import { FallbackImage } from '@components/ui/fallback-image';
 import { Loading } from '@components/ui/loading';
 import { Button } from '@components/ui/button-shadcn';
@@ -272,13 +271,13 @@ export default function RatingsPage(): JSX.Element {
   const getRatingIcon = (rating: string) => {
     switch (rating) {
       case 'love':
-        return <Heart className='w-5 h-5 text-green-600 dark:text-green-400' />;
+        return <Heart className='h-5 w-5 text-green-600 dark:text-green-400' />;
       case 'hate':
-        return <X className='w-5 h-5 text-red-600 dark:text-red-400' />;
+        return <X className='h-5 w-5 text-red-600 dark:text-red-400' />;
       case 'meh':
-        return <Meh className='w-5 h-5 text-yellow-600 dark:text-yellow-400' />;
+        return <Meh className='h-5 w-5 text-yellow-600 dark:text-yellow-400' />;
       default:
-        return <Star className='w-5 h-5 text-gray-600 dark:text-gray-400' />;
+        return <Star className='h-5 w-5 text-gray-600 dark:text-gray-400' />;
     }
   };
 
@@ -327,11 +326,11 @@ export default function RatingsPage(): JSX.Element {
 
   if (loading) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white dark:to-amber-950/10 to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
+      <div className='dark:to-amber-950/10 min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
         <SEO title='My Ratings - Buzzwin' />
-        <div className='flex justify-center items-center min-h-screen'>
+        <div className='flex min-h-screen items-center justify-center'>
           <div className='text-center'>
-            <Loading className='mx-auto mb-4 w-8 h-8' />
+            <Loading className='mx-auto mb-4 h-8 w-8' />
             <p className='text-gray-600 dark:text-gray-400'>
               Loading your ratings...
             </p>
@@ -343,12 +342,12 @@ export default function RatingsPage(): JSX.Element {
 
   if (error) {
     return (
-      <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white dark:to-amber-950/10 to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
+      <div className='dark:to-amber-950/10 min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
         <SEO title='My Ratings - Buzzwin' />
-        <div className='flex justify-center items-center min-h-screen'>
+        <div className='flex min-h-screen items-center justify-center'>
           <div className='text-center'>
-            <div className='flex justify-center items-center mx-auto mb-4 w-16 h-16 bg-red-100 rounded-full dark:bg-red-900/30'>
-              <X className='w-8 h-8 text-red-600 dark:text-red-400' />
+            <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/30'>
+              <X className='h-8 w-8 text-red-600 dark:text-red-400' />
             </div>
             <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
               Error Loading Ratings
@@ -394,20 +393,20 @@ export default function RatingsPage(): JSX.Element {
   );
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white dark:to-amber-950/10 to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
+    <div className='dark:to-amber-950/10 min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
       <SEO title='My Ratings - Buzzwin' />
 
       {/* Professional Header - Desktop Only */}
-      <header className='hidden sticky top-0 z-50 border-b border-gray-200 backdrop-blur-xl bg-white/95 dark:border-gray-800 dark:bg-gray-900/95 md:block'>
-        <div className='px-6 py-3 mx-auto max-w-7xl'>
-          <div className='flex justify-between items-center mb-4'>
-            <div className='flex gap-4 items-center'>
+      <header className='sticky top-0 z-50 hidden border-b border-gray-200 bg-white/95 backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95 md:block'>
+        <div className='mx-auto max-w-7xl px-6 py-3'>
+          <div className='mb-4 flex items-center justify-between'>
+            <div className='flex items-center gap-4'>
               <button
                 onClick={() => router.push('/')}
-                className='flex gap-4 items-center transition-opacity hover:opacity-80'
+                className='flex items-center gap-4 transition-opacity hover:opacity-80'
               >
-                <div className='flex justify-center items-center w-16 h-16'>
-                  <LogoIcon className='w-16 h-16' />
+                <div className='flex h-16 w-16 items-center justify-center'>
+                  <LogoIcon className='h-16 w-16' />
                 </div>
                 <div>
                   <h1 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
@@ -421,28 +420,19 @@ export default function RatingsPage(): JSX.Element {
             </div>
 
             {/* Quick Actions - Integrated in Header */}
-            <div className='flex gap-3 items-center'>
+            <div className='flex items-center gap-3'>
               <Button
                 variant='outline'
                 size='sm'
                 onClick={() => router.push('/')}
-                className='px-4 py-2 text-sm font-medium text-blue-700 border-blue-300 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
+                className='border-blue-300 px-4 py-2 text-sm font-medium text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
               >
-                <BarChart3 className='mr-2 w-4 h-4' />
+                <BarChart3 className='mr-2 h-4 w-4' />
                 Home
-              </Button>
-              <Button
-                variant='outline'
-                size='sm'
-                onClick={() => router.push('/trends')}
-                className='px-4 py-2 text-sm font-medium text-purple-700 border-purple-300 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
-              >
-                <TrendingUp className='mr-2 w-4 h-4' />
-                Trending
               </Button>
             </div>
 
-            <div className='flex gap-4 items-center'>
+            <div className='flex items-center gap-4'>
               <UpdateUsername />
 
               {!user ? (
@@ -450,7 +440,7 @@ export default function RatingsPage(): JSX.Element {
                   variant='outline'
                   size='sm'
                   onClick={handleSignIn}
-                  className='px-6 py-2 font-medium text-amber-700 border-amber-300 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                  className='border-amber-300 px-6 py-2 font-medium text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
                 >
                   Sign In
                 </Button>
@@ -459,9 +449,9 @@ export default function RatingsPage(): JSX.Element {
                   variant='outline'
                   size='sm'
                   onClick={handleLogout}
-                  className='px-6 py-2 font-medium text-amber-700 border-amber-300 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                  className='border-amber-300 px-6 py-2 font-medium text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
                 >
-                  <LogOut className='mr-2 w-4 h-4' />
+                  <LogOut className='mr-2 h-4 w-4' />
                   Sign Out
                 </Button>
               )}
@@ -472,7 +462,7 @@ export default function RatingsPage(): JSX.Element {
 
       {/* Main Content */}
       <main className='flex-1'>
-        <div className='px-4 py-8 mx-auto max-w-4xl'>
+        <div className='mx-auto max-w-4xl px-4 py-8'>
           <div className='mb-8'>
             <h1 className='mb-2 text-3xl font-bold text-gray-900 dark:text-white'>
               My Ratings & Reviews
@@ -485,18 +475,18 @@ export default function RatingsPage(): JSX.Element {
 
           {/* Filter Toggle - Only show when logged in */}
           {user && (
-            <div className='flex justify-between items-center mb-4'>
-              <div className='flex gap-2 items-center'>
+            <div className='mb-4 flex items-center justify-between'>
+              <div className='flex items-center gap-2'>
                 <button
                   onClick={() => setShowOnlyMine(!showOnlyMine)}
                   className={cn(
-                    'flex gap-2 items-center px-3 py-2 text-sm font-medium rounded-lg transition-colors',
+                    'flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
                     showOnlyMine
-                      ? 'text-blue-700 bg-blue-100 dark:bg-blue-900/30 dark:text-blue-300'
-                      : 'text-gray-700 bg-gray-100 dark:bg-gray-800 dark:text-gray-300'
+                      ? 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
+                      : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
                   )}
                 >
-                  <User className='w-4 h-4' />
+                  <User className='h-4 w-4' />
                   {showOnlyMine
                     ? 'My Ratings & Reviews'
                     : 'All Ratings & Reviews'}
@@ -517,7 +507,7 @@ export default function RatingsPage(): JSX.Element {
                     : 'border border-gray-200 bg-white text-gray-600 hover:text-gray-900 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-white'
                 )}
               >
-                <Film className='w-4 h-4' />
+                <Film className='h-4 w-4' />
                 All ({currentRatings.length})
               </button>
               <button
@@ -529,7 +519,7 @@ export default function RatingsPage(): JSX.Element {
                     : 'border border-gray-200 bg-white text-gray-600 hover:text-green-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-green-300'
                 )}
               >
-                <Heart className='w-4 h-4' />
+                <Heart className='h-4 w-4' />
                 Loved (
                 {currentRatings.filter((r) => r.rating === 'love').length})
               </button>
@@ -542,7 +532,7 @@ export default function RatingsPage(): JSX.Element {
                     : 'border border-gray-200 bg-white text-gray-600 hover:text-red-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-red-300'
                 )}
               >
-                <X className='w-4 h-4' />
+                <X className='h-4 w-4' />
                 Hated (
                 {currentRatings.filter((r) => r.rating === 'hate').length})
               </button>
@@ -555,7 +545,7 @@ export default function RatingsPage(): JSX.Element {
                     : 'border border-gray-200 bg-white text-gray-600 hover:text-yellow-700 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:hover:text-yellow-300'
                 )}
               >
-                <Meh className='w-4 h-4' />
+                <Meh className='h-4 w-4' />
                 Meh ({currentRatings.filter((r) => r.rating === 'meh').length})
               </button>
             </div>
@@ -563,11 +553,11 @@ export default function RatingsPage(): JSX.Element {
 
           {/* Stats Cards - Only show for logged-in users */}
           {user && (
-            <div className='grid grid-cols-1 gap-4 mb-8 sm:grid-cols-4'>
-              <Card className='bg-green-50 border-green-200 dark:border-green-800/30 dark:bg-green-900/20'>
+            <div className='mb-8 grid grid-cols-1 gap-4 sm:grid-cols-4'>
+              <Card className='border-green-200 bg-green-50 dark:border-green-800/30 dark:bg-green-900/20'>
                 <CardContent className='p-4'>
-                  <div className='flex gap-2 items-center'>
-                    <Heart className='w-5 h-5 text-green-600 dark:text-green-400' />
+                  <div className='flex items-center gap-2'>
+                    <Heart className='h-5 w-5 text-green-600 dark:text-green-400' />
                     <span className='text-sm font-medium text-green-800 dark:text-green-200'>
                       Loved
                     </span>
@@ -578,10 +568,10 @@ export default function RatingsPage(): JSX.Element {
                 </CardContent>
               </Card>
 
-              <Card className='bg-red-50 border-red-200 dark:border-red-800/30 dark:bg-red-900/20'>
+              <Card className='border-red-200 bg-red-50 dark:border-red-800/30 dark:bg-red-900/20'>
                 <CardContent className='p-4'>
-                  <div className='flex gap-2 items-center'>
-                    <X className='w-5 h-5 text-red-600 dark:text-red-400' />
+                  <div className='flex items-center gap-2'>
+                    <X className='h-5 w-5 text-red-600 dark:text-red-400' />
                     <span className='text-sm font-medium text-red-800 dark:text-red-200'>
                       Hated
                     </span>
@@ -592,10 +582,10 @@ export default function RatingsPage(): JSX.Element {
                 </CardContent>
               </Card>
 
-              <Card className='bg-yellow-50 border-yellow-200 dark:border-yellow-800/30 dark:bg-yellow-900/20'>
+              <Card className='border-yellow-200 bg-yellow-50 dark:border-yellow-800/30 dark:bg-yellow-900/20'>
                 <CardContent className='p-4'>
-                  <div className='flex gap-2 items-center'>
-                    <Meh className='w-5 h-5 text-yellow-600 dark:text-yellow-400' />
+                  <div className='flex items-center gap-2'>
+                    <Meh className='h-5 w-5 text-yellow-600 dark:text-yellow-400' />
                     <span className='text-sm font-medium text-yellow-800 dark:text-yellow-200'>
                       Meh
                     </span>
@@ -606,10 +596,10 @@ export default function RatingsPage(): JSX.Element {
                 </CardContent>
               </Card>
 
-              <Card className='bg-blue-50 border-blue-200 dark:border-blue-800/30 dark:bg-blue-900/20'>
+              <Card className='border-blue-200 bg-blue-50 dark:border-blue-800/30 dark:bg-blue-900/20'>
                 <CardContent className='p-4'>
-                  <div className='flex gap-2 items-center'>
-                    <Film className='w-5 h-5 text-blue-600 dark:text-blue-400' />
+                  <div className='flex items-center gap-2'>
+                    <Film className='h-5 w-5 text-blue-600 dark:text-blue-400' />
                     <span className='text-sm font-medium text-blue-800 dark:text-blue-200'>
                       Total
                     </span>
@@ -626,8 +616,8 @@ export default function RatingsPage(): JSX.Element {
           {allItems.length === 0 ? (
             <Card>
               <CardContent className='py-12 text-center'>
-                <div className='flex justify-center items-center mx-auto mb-4 w-16 h-16 bg-gray-100 rounded-full dark:bg-gray-800'>
-                  <Film className='w-8 h-8 text-gray-400' />
+                <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800'>
+                  <Film className='h-8 w-8 text-gray-400' />
                 </div>
                 <h3 className='mb-2 text-lg font-medium text-gray-900 dark:text-white'>
                   {ratingFilter === 'all'
@@ -671,7 +661,7 @@ export default function RatingsPage(): JSX.Element {
                       <CardContent className='p-4'>
                         <div className='flex gap-4'>
                           {/* Poster */}
-                          <div className='overflow-hidden relative flex-shrink-0 w-14 h-20 rounded-lg shadow-md'>
+                          <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded-lg shadow-md'>
                             {imageUrl && !hasImageError ? (
                               <Image
                                 src={imageUrl}
@@ -684,19 +674,19 @@ export default function RatingsPage(): JSX.Element {
                             ) : (
                               <FallbackImage
                                 mediaType={rating.mediaType}
-                                className='w-full h-full'
+                                className='h-full w-full'
                               />
                             )}
                           </div>
 
                           {/* Content */}
-                          <div className='flex-1 min-w-0'>
-                            <div className='flex justify-between items-start mb-2'>
-                              <div className='flex-1 min-w-0'>
-                                <h3 className='text-lg font-semibold text-gray-900 truncate dark:text-white'>
+                          <div className='min-w-0 flex-1'>
+                            <div className='mb-2 flex items-start justify-between'>
+                              <div className='min-w-0 flex-1'>
+                                <h3 className='truncate text-lg font-semibold text-gray-900 dark:text-white'>
                                   {rating.title}
                                 </h3>
-                                <div className='flex gap-2 items-center text-sm text-gray-600 dark:text-gray-400'>
+                                <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
                                   <span className='capitalize'>
                                     {rating.mediaType}
                                   </span>
@@ -722,7 +712,7 @@ export default function RatingsPage(): JSX.Element {
                                 </div>
                               </div>
 
-                              <div className='flex gap-2 items-center'>
+                              <div className='flex items-center gap-2'>
                                 {getRatingIcon(rating.rating)}
                                 {user && rating.userId === user.id && (
                                   <Button
@@ -733,14 +723,14 @@ export default function RatingsPage(): JSX.Element {
                                     }
                                     className='text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
                                   >
-                                    <Trash2 className='w-4 h-4' />
+                                    <Trash2 className='h-4 w-4' />
                                   </Button>
                                 )}
                               </div>
                             </div>
 
                             {rating.overview && (
-                              <p className='text-sm text-gray-600 line-clamp-2 dark:text-gray-400'>
+                              <p className='line-clamp-2 text-sm text-gray-600 dark:text-gray-400'>
                                 {rating.overview}
                               </p>
                             )}
@@ -753,14 +743,14 @@ export default function RatingsPage(): JSX.Element {
                             {!hasReview(rating) &&
                               user &&
                               rating.userId === user.id && (
-                                <div className='flex gap-2 items-center mt-2'>
+                                <div className='mt-2 flex items-center gap-2'>
                                   <Button
                                     variant='outline'
                                     size='sm'
                                     onClick={() => handleWriteReview(rating)}
-                                    className='text-amber-600 border-amber-300 hover:bg-amber-50 hover:text-amber-700 dark:border-amber-700 dark:text-amber-400 dark:hover:bg-amber-900/20 dark:hover:text-amber-300'
+                                    className='border-amber-300 text-amber-600 hover:bg-amber-50 hover:text-amber-700 dark:border-amber-700 dark:text-amber-400 dark:hover:bg-amber-900/20 dark:hover:text-amber-300'
                                   >
-                                    <MessageSquare className='mr-1 w-3 h-3' />
+                                    <MessageSquare className='mr-1 h-3 w-3' />
                                     Write Review
                                   </Button>
                                 </div>
@@ -782,12 +772,12 @@ export default function RatingsPage(): JSX.Element {
                   return (
                     <Card
                       key={`review-${review.id}`}
-                      className='bg-amber-50 border-amber-200 dark:border-amber-800/30 dark:bg-amber-900/20'
+                      className='border-amber-200 bg-amber-50 dark:border-amber-800/30 dark:bg-amber-900/20'
                     >
                       <CardContent className='p-4'>
                         <div className='flex gap-4'>
                           {/* Poster */}
-                          <div className='overflow-hidden relative flex-shrink-0 w-14 h-20 rounded-lg shadow-md'>
+                          <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded-lg shadow-md'>
                             {imageUrl && !hasImageError ? (
                               <Image
                                 src={imageUrl}
@@ -800,19 +790,19 @@ export default function RatingsPage(): JSX.Element {
                             ) : (
                               <FallbackImage
                                 mediaType={review.mediaType}
-                                className='w-full h-full'
+                                className='h-full w-full'
                               />
                             )}
                           </div>
 
                           {/* Content */}
-                          <div className='flex-1 min-w-0'>
-                            <div className='flex justify-between items-start mb-2'>
-                              <div className='flex-1 min-w-0'>
-                                <h3 className='text-lg font-semibold text-gray-900 truncate dark:text-white'>
+                          <div className='min-w-0 flex-1'>
+                            <div className='mb-2 flex items-start justify-between'>
+                              <div className='min-w-0 flex-1'>
+                                <h3 className='truncate text-lg font-semibold text-gray-900 dark:text-white'>
                                   {review.title}
                                 </h3>
-                                <div className='flex gap-2 items-center text-sm text-gray-600 dark:text-gray-400'>
+                                <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
                                   <span className='capitalize'>
                                     {review.mediaType}
                                   </span>
@@ -827,7 +817,7 @@ export default function RatingsPage(): JSX.Element {
                                 </div>
                               </div>
 
-                              <div className='flex gap-2 items-center'>
+                              <div className='flex items-center gap-2'>
                                 <Button
                                   variant='ghost'
                                   size='sm'
@@ -835,7 +825,7 @@ export default function RatingsPage(): JSX.Element {
                                   className='text-amber-600 hover:bg-amber-50 hover:text-amber-700 dark:text-amber-400 dark:hover:bg-amber-900/20 dark:hover:text-amber-300'
                                   title='Write a review'
                                 >
-                                  <MessageSquare className='w-5 h-5' />
+                                  <MessageSquare className='h-5 w-5' />
                                 </Button>
                                 {user && review.userId === user.id && (
                                   <Button
@@ -846,20 +836,20 @@ export default function RatingsPage(): JSX.Element {
                                     }
                                     className='text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
                                   >
-                                    <Trash2 className='w-4 h-4' />
+                                    <Trash2 className='h-4 w-4' />
                                   </Button>
                                 )}
                               </div>
                             </div>
 
                             {review.review && (
-                              <p className='text-sm text-gray-600 line-clamp-3 dark:text-gray-400'>
+                              <p className='line-clamp-3 text-sm text-gray-600 dark:text-gray-400'>
                                 {review.review}
                               </p>
                             )}
 
                             {review.tags && review.tags.length > 0 && (
-                              <div className='flex flex-wrap gap-1 mt-2'>
+                              <div className='mt-2 flex flex-wrap gap-1'>
                                 {review.tags.slice(0, 3).map((tag, index) => (
                                   <span
                                     key={index}
@@ -871,7 +861,7 @@ export default function RatingsPage(): JSX.Element {
                               </div>
                             )}
 
-                            <div className='flex justify-between items-center mt-2'>
+                            <div className='mt-2 flex items-center justify-between'>
                               <div className='text-xs text-gray-500 dark:text-gray-500'>
                                 Reviewed on {item.date.toLocaleDateString()}
                               </div>
@@ -880,11 +870,11 @@ export default function RatingsPage(): JSX.Element {
                               {!reviewHasRating &&
                                 user &&
                                 review.userId === user.id && (
-                                  <div className='flex gap-1 items-center'>
+                                  <div className='flex items-center gap-1'>
                                     <span className='text-xs text-gray-500 dark:text-gray-400'>
                                       No rating yet
                                     </span>
-                                    <div className='flex gap-1 items-center'>
+                                    <div className='flex items-center gap-1'>
                                       <Button
                                         variant='ghost'
                                         size='sm'
@@ -895,9 +885,9 @@ export default function RatingsPage(): JSX.Element {
                                             'love'
                                           )
                                         }
-                                        className='p-0 w-6 h-6 text-green-600 hover:bg-green-50 hover:text-green-700 dark:text-green-400 dark:hover:bg-green-900/20 dark:hover:text-green-300'
+                                        className='h-6 w-6 p-0 text-green-600 hover:bg-green-50 hover:text-green-700 dark:text-green-400 dark:hover:bg-green-900/20 dark:hover:text-green-300'
                                       >
-                                        <Heart className='w-3 h-3' />
+                                        <Heart className='h-3 w-3' />
                                       </Button>
                                       <Button
                                         variant='ghost'
@@ -909,9 +899,9 @@ export default function RatingsPage(): JSX.Element {
                                             'hate'
                                           )
                                         }
-                                        className='p-0 w-6 h-6 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
+                                        className='h-6 w-6 p-0 text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
                                       >
-                                        <X className='w-3 h-3' />
+                                        <X className='h-3 w-3' />
                                       </Button>
                                       <Button
                                         variant='ghost'
@@ -920,9 +910,9 @@ export default function RatingsPage(): JSX.Element {
                                         onClick={() =>
                                           void handleAddRating(review.id, 'meh')
                                         }
-                                        className='p-0 w-6 h-6 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20 dark:hover:text-yellow-300'
+                                        className='h-6 w-6 p-0 text-yellow-600 hover:bg-yellow-50 hover:text-yellow-700 dark:text-yellow-400 dark:hover:bg-yellow-900/20 dark:hover:text-yellow-300'
                                       >
-                                        <Meh className='w-3 h-3' />
+                                        <Meh className='h-3 w-3' />
                                       </Button>
                                     </div>
                                   </div>

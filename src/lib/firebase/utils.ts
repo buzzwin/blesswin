@@ -14,7 +14,8 @@ import {
   serverTimestamp,
   getCountFromServer,
   addDoc,
-  collection
+  collection,
+  orderBy
 } from 'firebase/firestore';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { db, storage } from './app';
@@ -28,6 +29,7 @@ import type { WithFieldValue, Query } from 'firebase/firestore';
 import type { EditableUserData } from '@lib/types/user';
 import type { FilesWithId, ImagesPreview } from '@lib/types/file';
 import type { Bookmark } from '@lib/types/bookmark';
+import type { Tweet } from '@lib/types/tweet';
 import type { Theme, Accent } from '@lib/types/theme';
 
 export async function checkUsernameAvailability(
@@ -325,3 +327,46 @@ export const manageWatching =
       // console.error('Error updating watching status:', error);
     }
   };
+
+// Get all tweets for the home page
+export async function getTweets(): Promise<Tweet[]> {
+  try {
+    const tweetsQuery = query(
+      tweetsCollection,
+      orderBy('createdAt', 'desc'),
+      limit(50)
+    );
+    
+    const snapshot = await getDocs(tweetsQuery);
+    return snapshot.docs.map(doc => ({
+      ...doc.data(),
+      id: doc.id
+    } as Tweet));
+  } catch (error) {
+    console.error('Error fetching tweets:', error);
+    return [];
+  }
+}
+
+// Get basic stats for the home page
+export async function getStats(): Promise<{ totalReviews: number; activeUsers: number; loading: boolean }> {
+  try {
+    const [tweetsCount, usersCount] = await Promise.all([
+      getCollectionCount(tweetsCollection),
+      getCollectionCount(usersCollection)
+    ]);
+    
+    return {
+      totalReviews: tweetsCount,
+      activeUsers: usersCount,
+      loading: false
+    };
+  } catch (error) {
+    console.error('Error fetching stats:', error);
+    return {
+      totalReviews: 0,
+      activeUsers: 0,
+      loading: false
+    };
+  }
+}

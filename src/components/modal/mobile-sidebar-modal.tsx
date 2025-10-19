@@ -19,12 +19,6 @@ export type MobileNavLink = Omit<NavLink, 'canBeHidden'>;
 
 const getTopNavLinks = (username: string): Readonly<MobileNavLink[]> => [
   {
-    href: '/trends',
-    linkName: 'Trends',
-    iconName: 'ChartBarIcon',
-    disabled: false
-  },
-  {
     href: '/recommendations',
     linkName: 'AI Recommendations',
     iconName: 'SparklesIcon',
@@ -36,7 +30,6 @@ const getTopNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     iconName: 'StarIcon',
     disabled: false
   },
-
   {
     href: `/user/${username}`,
     linkName: 'Profile',

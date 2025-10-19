@@ -95,12 +95,12 @@ export default function Recommendations(): JSX.Element {
   }
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
+    <div className='min-h-screen bg-white dark:bg-gray-900'>
       <SEO title='AI Recommendations / Buzzwin' />
 
-      {/* Header - Desktop Only */}
-      <header className='sticky top-0 z-50 hidden border-b border-gray-200 bg-white/95 backdrop-blur-xl dark:border-gray-800 dark:bg-gray-900/95 md:block'>
-        <div className='mx-auto max-w-7xl px-6 py-4'>
+      {/* Simple Header */}
+      <header className='border-b border-gray-200 dark:border-gray-700'>
+        <div className='mx-auto max-w-6xl px-4 py-4'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-4'>
               <Button
@@ -111,9 +111,11 @@ export default function Recommendations(): JSX.Element {
               >
                 <ArrowLeft className='h-5 w-5' />
               </Button>
-              <div className='flex items-center gap-2'>
-                <Sparkles className='h-6 w-6 text-amber-500' />
-                <h1 className='text-xl font-bold text-gray-900 dark:text-white'>
+              <div className='flex items-center gap-3'>
+                <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 dark:bg-white'>
+                  <Sparkles className='h-4 w-4 text-white dark:text-gray-900' />
+                </div>
+                <h1 className='text-xl font-semibold text-gray-900 dark:text-white'>
                   AI Recommendations
                 </h1>
               </div>
@@ -124,7 +126,7 @@ export default function Recommendations(): JSX.Element {
                 size='sm'
                 onClick={() => fetchRecommendations(false)}
                 disabled={loading}
-                className='border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
+                className='hidden sm:flex'
               >
                 <TrendingUp className='mr-2 h-4 w-4' />
                 Refresh
@@ -134,54 +136,32 @@ export default function Recommendations(): JSX.Element {
                 size='sm'
                 onClick={() => fetchRecommendations(true)}
                 disabled={loading}
-                className='border-blue-300 text-blue-700 hover:bg-blue-50 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/20'
+                className='hidden sm:flex'
               >
                 <Sparkles className='mr-2 h-4 w-4' />
                 Force Refresh
+              </Button>
+              <Button
+                variant='outline'
+                size='sm'
+                onClick={() => fetchRecommendations(false)}
+                disabled={loading}
+                className='sm:hidden'
+              >
+                <TrendingUp className='h-4 w-4' />
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile Header */}
-      <div className='px-4 py-4 md:hidden'>
-        <div className='flex items-center justify-between'>
-          <div className='flex items-center gap-3'>
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={handleBack}
-              className='p-2'
-            >
-              <ArrowLeft className='h-5 w-5' />
-            </Button>
-            <div className='flex items-center gap-2'>
-              <Sparkles className='h-5 w-5 text-amber-500' />
-              <h1 className='text-lg font-bold text-gray-900 dark:text-white'>
-                AI Recommendations
-              </h1>
-            </div>
-          </div>
-          <Button
-            variant='outline'
-            size='sm'
-            onClick={() => fetchRecommendations(false)}
-            disabled={loading}
-            className='border-amber-300 text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20'
-          >
-            <TrendingUp className='h-4 w-4' />
-          </Button>
-        </div>
-      </div>
-
       {/* Main Content */}
-      <main className='mx-auto max-w-7xl px-6 py-8'>
+      <main className='mx-auto max-w-6xl px-4 py-8'>
         {loading ? (
-          <div className='flex items-center justify-center py-12'>
+          <div className='flex items-center justify-center py-16'>
             <div className='text-center'>
               <div className='mb-4 flex justify-center'>
-                <Sparkles className='h-12 w-12 animate-pulse text-amber-500' />
+                <div className='h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900 dark:border-gray-600 dark:border-t-white'></div>
               </div>
               <h2 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
                 Analyzing your preferences...
@@ -194,107 +174,119 @@ export default function Recommendations(): JSX.Element {
           </div>
         ) : recommendations ? (
           <div className='space-y-8'>
-            {/* Analysis Section */}
-            <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
-              <CardHeader>
-                <div className='flex items-center justify-between'>
-                  <CardTitle className='flex items-center gap-2 text-gray-900 dark:text-white'>
-                    <Star className='h-5 w-5 text-amber-500' />
-                    Your Taste Analysis
-                  </CardTitle>
-                  {recommendations.cached && (
-                    <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
-                      <Clock className='h-3 w-3' />
-                      <span>
-                        Cached • Expires{' '}
-                        {recommendations.expiresAt
-                          ? new Date(
-                              recommendations.expiresAt
-                            ).toLocaleDateString()
-                          : 'Unknown'}
-                      </span>
-                    </div>
-                  )}
-                </div>
-              </CardHeader>
-              <CardContent className='space-y-4'>
-                <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
-                  <div>
-                    <h4 className='mb-2 font-semibold text-gray-900 dark:text-white'>
-                      Preferred Genres
-                    </h4>
-                    <div className='flex flex-wrap gap-2'>
-                      {recommendations.analysis.preferredGenres.map(
-                        (genre, index) => (
-                          <span
-                            key={index}
-                            className='rounded-full bg-amber-100 px-3 py-1 text-xs font-medium text-amber-800 dark:bg-amber-900/30 dark:text-amber-300'
-                          >
-                            {genre}
-                          </span>
-                        )
-                      )}
-                    </div>
+            {/* Simple Analysis Section */}
+            <Card className='border border-gray-200 dark:border-gray-700'>
+              <CardContent className='p-6'>
+                <div className='mb-6 flex items-center gap-3'>
+                  <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-gray-900 dark:bg-white'>
+                    <Star className='h-5 w-5 text-white dark:text-gray-900' />
                   </div>
                   <div>
-                    <h4 className='mb-2 font-semibold text-gray-900 dark:text-white'>
-                      Preferred Years
-                    </h4>
-                    <div className='flex flex-wrap gap-2'>
-                      {recommendations.analysis.preferredYears.map(
-                        (year, index) => (
-                          <span
-                            key={index}
-                            className='rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800 dark:bg-blue-900/30 dark:text-blue-300'
-                          >
-                            {year}
-                          </span>
-                        )
-                      )}
-                    </div>
+                    <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                      Your Taste Analysis
+                    </h2>
+                    <p className='text-sm text-gray-500 dark:text-gray-400'>
+                      AI insights from your preferences
+                    </p>
                   </div>
                 </div>
-                <div>
-                  <h4 className='mb-2 font-semibold text-gray-900 dark:text-white'>
-                    Rating Pattern
-                  </h4>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    {recommendations.analysis.ratingPattern}
-                  </p>
-                </div>
-                <div>
-                  <h4 className='mb-2 font-semibold text-gray-900 dark:text-white'>
-                    Suggestions
-                  </h4>
-                  <ul className='space-y-1 text-sm text-gray-600 dark:text-gray-400'>
-                    {recommendations.analysis.suggestions.map(
-                      (suggestion, index) => (
-                        <li key={index} className='flex items-start gap-2'>
-                          <span className='mt-1 h-1.5 w-1.5 rounded-full bg-amber-500' />
-                          {suggestion}
-                        </li>
-                      )
-                    )}
-                  </ul>
+
+                <div className='grid grid-cols-1 gap-6 md:grid-cols-2'>
+                  <div className='space-y-4'>
+                    <div>
+                      <h3 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                        Preferred Genres
+                      </h3>
+                      <div className='flex flex-wrap gap-2'>
+                        {recommendations.analysis.preferredGenres.map(
+                          (genre, index) => (
+                            <span
+                              key={index}
+                              className='rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                            >
+                              {genre}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                    <div>
+                      <h3 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                        Preferred Years
+                      </h3>
+                      <div className='flex flex-wrap gap-2'>
+                        {recommendations.analysis.preferredYears.map(
+                          (year, index) => (
+                            <span
+                              key={index}
+                              className='rounded-full bg-gray-100 px-3 py-1 text-sm text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                            >
+                              {year}
+                            </span>
+                          )
+                        )}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className='space-y-4'>
+                    <div>
+                      <h3 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                        Rating Pattern
+                      </h3>
+                      <p className='rounded-lg bg-gray-50 p-3 text-sm text-gray-700 dark:bg-gray-800 dark:text-gray-300'>
+                        {recommendations.analysis.ratingPattern}
+                      </p>
+                    </div>
+                    <div>
+                      <h3 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+                        AI Suggestions
+                      </h3>
+                      <ul className='space-y-1'>
+                        {recommendations.analysis.suggestions.map(
+                          (suggestion, index) => (
+                            <li
+                              key={index}
+                              className='flex items-start gap-2 text-sm text-gray-600 dark:text-gray-400'
+                            >
+                              <div className='mt-1.5 h-1.5 w-1.5 rounded-full bg-gray-400'></div>
+                              <span>{suggestion}</span>
+                            </li>
+                          )
+                        )}
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
 
             {/* Recommendations Section */}
             <div>
-              <h2 className='mb-6 flex items-center gap-2 text-2xl font-bold text-gray-900 dark:text-white'>
-                <Sparkles className='h-6 w-6 text-amber-500' />
-                Personalized Recommendations
-              </h2>
+              <div className='mb-6 flex items-center gap-3'>
+                <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-gray-900 dark:bg-white'>
+                  <Sparkles className='h-5 w-5 text-white dark:text-gray-900' />
+                </div>
+                <div>
+                  <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                    Personalized Recommendations
+                  </h2>
+                  <p className='text-sm text-gray-500 dark:text-gray-400'>
+                    Curated just for you
+                  </p>
+                </div>
+              </div>
               <RecommendationsCard />
             </div>
           </div>
         ) : (
-          <div className='py-12 text-center'>
-            <div className='mb-4 flex justify-center'>
-              <Sparkles className='h-12 w-12 text-amber-500' />
+          <div className='py-16 text-center'>
+            <div className='mb-6 flex justify-center'>
+              <div className='flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800'>
+                <Sparkles className='h-8 w-8 text-gray-400' />
+              </div>
             </div>
-            <h2 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
+            <h2 className='mb-3 text-xl font-semibold text-gray-900 dark:text-white'>
               No recommendations yet
             </h2>
             <p className='mb-6 text-gray-600 dark:text-gray-400'>
@@ -303,10 +295,10 @@ export default function Recommendations(): JSX.Element {
             </p>
             <Button
               onClick={() => router.push('/swipe')}
-              className='bg-amber-500 text-white hover:bg-amber-600 dark:bg-amber-600 dark:hover:bg-amber-700'
+              className='bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'
             >
               <Clock className='mr-2 h-4 w-4' />
-              Rate Some Shows
+              Start Rating Shows
             </Button>
           </div>
         )}

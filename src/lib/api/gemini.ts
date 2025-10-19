@@ -1,7 +1,7 @@
 // Note: These interfaces are no longer used since we unified the prompts.
 // The trending content now uses the same structure as recommendations.
 
-const GEMINI_API_KEY = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
 if (!GEMINI_API_KEY) {
   // Gemini API key not found. Trending data will be limited.
@@ -18,7 +18,7 @@ export async function callGeminiAPI(
   }
 
   const response = await fetch(
-    `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash-lite:generateContent?key=${GEMINI_API_KEY}`,
     {
       method: 'POST',
       headers: {
@@ -59,7 +59,10 @@ export async function callGeminiAPI(
     }>
   };
   
+  console.log('Gemini API response structure:', JSON.stringify(data, null, 2));
+  
   if (!data.candidates?.[0]?.content?.parts?.[0]?.text) {
+    console.error('Invalid response structure:', data);
     throw new Error('Invalid response from Gemini API');
   }
 

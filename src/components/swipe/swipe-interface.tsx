@@ -124,69 +124,8 @@ export function SwipeInterface({
           }
         }
 
-        // For both logged-in and non-logged-in users, try trending content
-        try {
-          console.log('Attempting trending content...');
-          const response = await fetch('/api/trending-content');
-
-          if (response.ok) {
-            const data = (await response.json()) as {
-              content: Array<{
-                tmdbId: string;
-                title: string;
-                mediaType: 'movie' | 'tv';
-                posterPath: string;
-                overview: string;
-                releaseDate: string;
-                voteAverage: number;
-                reason?: string;
-                confidence?: number;
-              }>;
-              source: string;
-            };
-
-            console.log('Trending content response:', data);
-
-            // Check if we got actual content
-            if (data.content && data.content.length > 0) {
-              console.log(
-                'Setting trending content:',
-                data.content.length,
-                'items'
-              );
-              // Convert trending content to MediaCard format
-              const trendingMedia = data.content.map((item) => ({
-                id: `${item.mediaType}-${item.tmdbId}`,
-                tmdbId: Number(item.tmdbId),
-                title: item.title,
-                mediaType: item.mediaType,
-                posterPath: item.posterPath,
-                backdropPath: item.posterPath, // Use poster as backdrop fallback
-                overview: item.overview,
-                releaseDate: item.releaseDate,
-                voteAverage: item.voteAverage,
-                genres: [],
-                reason: item.reason,
-                confidence: item.confidence
-              }));
-
-              setMediaCards(trendingMedia as MediaCard[]);
-              return;
-            } else {
-              console.log('Trending content returned empty content');
-            }
-          } else {
-            console.log(
-              'Trending content failed with status:',
-              response.status
-            );
-          }
-        } catch (trendingError) {
-          console.error(
-            'Trending content failed, falling back to diverse content:',
-            trendingError
-          );
-        }
+        // For both logged-in and non-logged-in users, fall back to diverse content
+        console.log('Falling back to diverse content...');
 
         // Final fallback to diverse content if all else fails
         console.log('Attempting diverse content fallback...');
@@ -412,49 +351,8 @@ export function SwipeInterface({
             setMediaCards((prev) => [...prev, ...(newMedia as MediaCard[])]);
           }
         } else {
-          // For unauthenticated users, fetch more trending content
-          try {
-            const response = await fetch('/api/trending-content');
-
-            if (response.ok) {
-              const data = (await response.json()) as {
-                content: Array<{
-                  tmdbId: string;
-                  title: string;
-                  mediaType: 'movie' | 'tv';
-                  posterPath: string;
-                  overview: string;
-                  releaseDate: string;
-                  voteAverage: number;
-                  reason?: string;
-                  confidence?: number;
-                }>;
-                source: string;
-              };
-
-              // Convert trending content to MediaCard format
-              const newMedia = data.content.map((item) => ({
-                id: `${item.mediaType}-${item.tmdbId}`,
-                tmdbId: Number(item.tmdbId),
-                title: item.title,
-                mediaType: item.mediaType,
-                posterPath: item.posterPath,
-                backdropPath: item.posterPath, // Use poster as backdrop fallback
-                overview: item.overview,
-                releaseDate: item.releaseDate,
-                voteAverage: item.voteAverage,
-                genres: [],
-                reason: item.reason,
-                confidence: item.confidence
-              }));
-
-              // Add new trending content to the existing cards
-              setMediaCards((prev) => [...prev, ...(newMedia as MediaCard[])]);
-            }
-          } catch (trendingError) {
-            // Fallback to diverse content if trending fails
-            await fetchMoreDiverseContent();
-          }
+          // For unauthenticated users, fetch more diverse content
+          await fetchMoreDiverseContent();
         }
       } catch (error) {
         // console.error('Error fetching new recommendations:', error);
@@ -498,12 +396,12 @@ export function SwipeInterface({
         <Loading />
         <div className='text-center'>
           <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
-            Loading Trending Content
+            Loading Content
           </h3>
           <p className='text-sm text-gray-600 dark:text-gray-400'>
             {user
               ? 'Getting personalized recommendations...'
-              : 'Fetching the most popular shows in America...'}
+              : 'Fetching popular shows and movies...'}
           </p>
         </div>
       </div>
@@ -523,7 +421,7 @@ export function SwipeInterface({
         <CardContent className='space-y-4 text-center'>
           <p className='text-gray-600'>
             {mediaCards.length === 0
-              ? 'Unable to load trending content. This might be due to API issues or network problems.'
+              ? 'Unable to load content. This might be due to API issues or network problems.'
               : "You've gone through all the available shows and movies."}
           </p>
           <div className='flex justify-center gap-2'>
@@ -612,7 +510,7 @@ export function SwipeInterface({
                 <div className='flex items-center gap-2'>
                   <Star className='h-4 w-4 text-amber-500' />
                   <span className='text-sm text-gray-600 dark:text-gray-300'>
-                    Discover trending content
+                    Discover great content
                   </span>
                 </div>
               </div>

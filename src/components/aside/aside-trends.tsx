@@ -1,5 +1,4 @@
 import { cn } from '@lib/utils';
-import { TrendingShows } from '@components/trending/trending-shows';
 
 type AsideTrendsProps = {
   inTrendsPage?: boolean;
@@ -12,12 +11,15 @@ export function AsideTrends({
 }: AsideTrendsProps): JSX.Element {
   return (
     <section className={cn('sticky top-0 py-4', inTrendsPage && 'mt-0.5')}>
-      <TrendingShows
-        trendingData={trendingData}
-        limit={inTrendsPage ? 10 : 5}
-        variant={inTrendsPage ? 'dark' : 'default'}
-        useFirestore={!trendingData || trendingData.length === 0}
-      />
+      <div className='rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+        <h3 className='mb-4 text-lg font-semibold text-gray-900 dark:text-white'>
+          Trending Content
+        </h3>
+        <p className='text-sm text-gray-600 dark:text-gray-400'>
+          Trending content feature has been removed. Check out our AI
+          recommendations instead!
+        </p>
+      </div>
     </section>
   );
 }

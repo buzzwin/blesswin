@@ -34,6 +34,7 @@ export default async function handler(
 
   try {
     const { userId } = req.body;
+    console.log('Recommendations API called with userId:', userId);
 
     // Handle anonymous users
     if (!userId) {
@@ -46,58 +47,72 @@ export default async function handler(
 
     // Fetch user's ratings
     const ratings = await getUserRatings(userId as string);
+    console.log('User ratings count:', ratings.length);
     
-    if (ratings.length === 0) {
-      // User has no ratings, return empty recommendations
-      res.status(200).json({
-        recommendations: [],
-        analysis: {
-          preferredGenres: [],
-          preferredYears: [],
-          ratingPattern: 'No ratings yet',
-          suggestions: ['Start rating shows and movies to get personalized recommendations']
-        },
-        cached: false
-      });
-      return;
-    }
-
-    // Calculate current year and related years
-    const currentYear = new Date().getFullYear();
-    const previousYear = currentYear - 1;
-    const nextYear = currentYear + 1;
-
     // Generate AI recommendations using Gemini
-    const prompt = `You are a movie and TV show recommendation expert specializing in American popular culture.
+    // For users with no ratings, suggest popular content
+    // For users with ratings, use their preferences
+    const currentYear = new Date().getFullYear();
+    const targetYear = currentYear - 1; // One year prior to current year
+    const prompt = ratings.length === 0 
+      ? `You are a movie and TV show recommendation expert specializing in American popular culture. This user is new and has no ratings yet. Suggest the MOST POPULAR and well-known content from ${targetYear} ONLY.
 
-Your task is to analyze the user's ratings and provide 5 personalized recommendations for REAL and CURRENT content from TMDB.
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. ABSOLUTELY NO content from ${currentYear}, ${currentYear - 2}, ${currentYear - 3}, or any other year. Every single recommendation MUST be from ${targetYear}.
 
-🚨 CRITICAL: You MUST provide REAL content with ACTUAL TMDB IDs, titles, and poster paths. DO NOT make up fake titles like "Example TV Show" or "Sci Fi Series 2025".
-
-🔁 Consider ALL the user's ratings: likes, dislikes, and "meh" to detect patterns and avoid recommending similar content they disliked.
-
-📅 Very Important: Only recommend content released in **${previousYear}, ${currentYear}, or ${nextYear}**. Ignore content older than ${previousYear}.
-
-🎯 Focus on REAL shows and movies that are:
-- Recently released or currently trending (${previousYear}–${nextYear})
+Focus on popular American content from ${targetYear} that are widely known and accessible.
+Prioritize shows and movies that are:
+- Released in ${targetYear} (MANDATORY)
+- Highly rated and critically acclaimed
 - Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
-- Highly rated and culturally relevant
-- Widely known and accessible
+- Well-known and culturally significant
+- Currently trending or recently released in ${targetYear}
+- Great for new users to start their rating journey
 
-🔍 Examples of REAL content to include:
-- "The Bear" (TV series)
-- "Oppenheimer" (movie)
-- "Succession" (TV series)
-- "Barbie" (movie)
-- "Wednesday" (TV series)
-- "Everything Everywhere All at Once" (movie)
-- "Stranger Things" (TV series)
-- "Top Gun: Maverick" (movie)
+Suggest 5 diverse shows/movies from ${targetYear} that are perfect for someone just starting to rate content. DOUBLE-CHECK that every single item is from ${targetYear}.
 
-🔍 Ratings Input:
+Return ONLY a valid JSON object with REAL TMDB data:
+
+{
+  "recommendations": [
+    {
+      "tmdbId": "1234567",
+      "title": "Real Movie/Show Title from ${targetYear}",
+      "mediaType": "movie" or "tv",
+      "posterPath": "/real-poster-path.jpg",
+      "reason": "Why this real ${targetYear} show/movie is recommended",
+      "confidence": 0.9,
+      "genre": "Real genre",
+      "year": "${targetYear}"
+    }
+  ],
+  "analysis": {
+    "preferredGenres": ["Popular", "Trending"],
+    "preferredYears": ["${targetYear}"],
+    "ratingPattern": "New user - exploring ${targetYear} content",
+    "suggestions": [
+      "Start rating shows and movies to get personalized recommendations",
+      "Try different genres to help us understand your preferences"
+    ]
+  }
+}`
+
+      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest the MOST POPULAR and well-known content from ${targetYear} ONLY.
+
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. ABSOLUTELY NO content from ${currentYear}, ${currentYear - 2}, ${currentYear - 3}, or any other year. Every single recommendation MUST be from ${targetYear}.
+
+Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
+Avoid suggesting content similar to what they've disliked.
+Focus on popular American content from ${targetYear} that are widely known and accessible.
+Prioritize shows and movies that are:
+- Released in ${targetYear} (MANDATORY)
+- Highly rated and critically acclaimed
+- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
+- Well-known and culturally significant
+- Currently trending or recently released in ${targetYear}
+
+Based on these ratings, suggest 5 diverse shows/movies from ${targetYear} for rating. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear}:
 ${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}
 
-💡 Output Format:
 Return ONLY a valid JSON object with REAL TMDB data:
 
 {
@@ -110,23 +125,23 @@ Return ONLY a valid JSON object with REAL TMDB data:
       "reason": "Why this real show/movie is recommended",
       "confidence": 0.9,
       "genre": "Real genre",
-      "year": "2024"
+      "year": "${targetYear}"
     }
   ],
   "analysis": {
     "preferredGenres": ["genre1", "genre2", ...],
-    "preferredYears": ["${previousYear}", "${currentYear}", "${nextYear}"],
+    "preferredYears": ["${targetYear}"],
     "ratingPattern": "Brief description of what the user's ratings suggest",
     "suggestions": [
       "Optional tips for better matches",
       "Optional ideas to improve recommendations"
     ]
   }
-}
+}`;
 
-⚠️ IMPORTANT: Use ONLY real TMDB IDs, real titles, and real poster paths. NO fake or example data.`;
-
+    console.log('Calling Gemini API with prompt length:', prompt.length);
     const content = await callGeminiAPI(prompt, 1000, 0.7);
+    console.log('Gemini API response length:', content?.length || 0);
 
     if (!content || typeof content !== 'string') {
       throw new Error('No content received from Gemini API');
@@ -147,11 +162,24 @@ Return ONLY a valid JSON object with REAL TMDB data:
       throw new Error('Invalid response format from Gemini API');
     }
 
-    // Removed caching to ensure fresh recommendations after each rating
+    // Filter to only include target year content (one year prior to current year)
+    const filteredRecommendations = parsedResponse.recommendations.filter(rec => {
+      const year = rec.year ? parseInt(rec.year) : null;
+      return year === targetYear;
+    });
+
+    console.log(`Filtered recommendations: ${filteredRecommendations.length} out of ${parsedResponse.recommendations.length} are from ${targetYear}`);
+
+    // Update analysis to reflect target year focus
+    const updatedAnalysis = {
+      ...parsedResponse.analysis,
+      preferredYears: [targetYear.toString()],
+      ratingPattern: parsedResponse.analysis.ratingPattern || `Content from ${targetYear}`
+    };
 
     res.status(200).json({
-      recommendations: parsedResponse.recommendations,
-      analysis: parsedResponse.analysis,
+      recommendations: filteredRecommendations,
+      analysis: updatedAnalysis,
       cached: false
     });
 
