@@ -8,6 +8,7 @@ import { SEO } from '@components/common/seo';
 import { SwipeInterface } from '@components/swipe/swipe-interface';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
+// import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 import type { RatingType, MediaCard } from '@lib/types/review';
 
 export default function SwipePage(): JSX.Element {
@@ -109,6 +110,25 @@ export default function SwipePage(): JSX.Element {
               </p>
             </div>
           )}
+
+          {/* Social Share Section - Temporarily disabled */}
+          {/* <div className='mt-8'>
+            <Card className='border-0 bg-gradient-to-br from-green-50 to-emerald-50 shadow-lg dark:from-green-900/20 dark:to-emerald-900/20'>
+              <CardContent className='p-6'>
+                <SocialShare
+                  title="I'm rating shows and movies on Buzzwin!"
+                  description='Join me in discovering and rating the best shows and movies with AI-powered recommendations!'
+                  url={
+                    typeof window !== 'undefined' ? window.location.href : ''
+                  }
+                  hashtags={['Buzzwin', 'RateShows', 'Movies', 'TVShows']}
+                  showTitle={true}
+                  size='md'
+                  variant='default'
+                />
+              </CardContent>
+            </Card>
+          </div> */}
         </div>
       </div>
     </HomeLayout>

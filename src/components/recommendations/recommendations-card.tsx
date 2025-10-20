@@ -5,6 +5,7 @@ import { useRecommendations } from '@lib/hooks/useRecommendations';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { ImageWithFallback } from '@components/ui/image-with-fallback';
+import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 
 interface Recommendation {
   tmdbId: string;
@@ -176,12 +177,17 @@ export function RecommendationsCard({
                     onError={(e) => {
                       console.log('Image failed to load:', e.currentTarget.src);
                       e.currentTarget.style.display = 'none';
-                      e.currentTarget.nextElementSibling?.classList.remove(
-                        'hidden'
-                      );
+                      const fallback = e.currentTarget
+                        .nextElementSibling as HTMLElement;
+                      if (fallback) {
+                        fallback.style.display = 'flex';
+                      }
                     }}
                   />
-                  <div className='absolute inset-0 flex hidden items-center justify-center bg-gray-200 dark:bg-gray-700'>
+                  <div
+                    className='absolute inset-0 hidden items-center justify-center bg-gray-200 dark:bg-gray-700'
+                    style={{ display: 'none' }}
+                  >
                     <div className='text-xs text-gray-500 dark:text-gray-400'>
                       📽️
                     </div>
@@ -250,12 +256,17 @@ export function RecommendationsCard({
                       e.currentTarget.src
                     );
                     e.currentTarget.style.display = 'none';
-                    e.currentTarget.nextElementSibling?.classList.remove(
-                      'hidden'
-                    );
+                    const fallback = e.currentTarget
+                      .nextElementSibling as HTMLElement;
+                    if (fallback) {
+                      fallback.style.display = 'flex';
+                    }
                   }}
                 />
-                <div className='absolute inset-0 flex hidden items-center justify-center bg-gray-200 dark:bg-gray-700'>
+                <div
+                  className='absolute inset-0 items-center justify-center bg-gray-200 dark:bg-gray-700'
+                  style={{ display: 'none' }}
+                >
                   <div className='text-sm text-gray-500 dark:text-gray-400'>
                     📽️
                   </div>
@@ -303,19 +314,42 @@ export function RecommendationsCard({
               </p>
             </div>
 
-            <div className='flex gap-2'>
-              <Button
-                variant='outline'
-                className='flex-1'
-                onClick={() => setSelectedRecommendation(null)}
-              >
-                Close
-              </Button>
-              <Link href={`/swipe?tmdbId=${selectedRecommendation.tmdbId}`}>
-                <Button className='flex-1 bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'>
-                  Rate This
+            <div className='space-y-3'>
+              <div className='flex gap-2'>
+                <Button
+                  variant='outline'
+                  className='flex-1'
+                  onClick={() => setSelectedRecommendation(null)}
+                >
+                  Close
                 </Button>
-              </Link>
+                <Link href={`/swipe?tmdbId=${selectedRecommendation.tmdbId}`}>
+                  <Button className='flex-1 bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'>
+                    Rate This
+                  </Button>
+                </Link>
+              </div>
+
+              {/* Compact Social Share */}
+              <div className='border-t border-gray-200 pt-2 dark:border-gray-700'>
+                <SocialShare
+                  title={`Check out "${selectedRecommendation.title}" recommended by Buzzwin AI!`}
+                  description={`${selectedRecommendation.reason} - Discover more AI-powered recommendations!`}
+                  url={
+                    typeof window !== 'undefined' ? window.location.href : ''
+                  }
+                  hashtags={[
+                    'Buzzwin',
+                    'AIRecommendations',
+                    selectedRecommendation.mediaType === 'movie'
+                      ? 'Movies'
+                      : 'TVShows'
+                  ]}
+                  showTitle={false}
+                  size='sm'
+                  variant='compact'
+                />
+              </div>
             </div>
           </div>
         </div>

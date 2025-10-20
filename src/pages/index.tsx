@@ -8,6 +8,7 @@ import { Card, CardContent } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { SwipeInterface } from '@components/swipe/swipe-interface';
 import { RecommendationsCard } from '@components/recommendations/recommendations-card';
+import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 import { createRating } from '@lib/firebase/utils/review';
 import { getStats } from '@lib/firebase/utils';
 import type { MediaCard } from '@lib/types/review';
@@ -248,6 +249,32 @@ export default function Home(): JSX.Element {
                   </CardContent>
                 </Card>
               </div>
+            </div>
+
+            {/* Social Share Section */}
+            <div className='mt-8'>
+              <Card className='bg-gradient-to-br from-blue-50 to-indigo-50 border-0 shadow-lg dark:from-blue-900/20 dark:to-indigo-900/20'>
+                <CardContent className='p-6'>
+                  <SocialShare
+                    title='Check out Buzzwin - Rate Shows & Movies'
+                    description='Discover and rate your favorite shows and movies with AI-powered recommendations!'
+                    url={
+                      typeof window !== 'undefined'
+                        ? window.location.origin
+                        : ''
+                    }
+                    hashtags={[
+                      'Buzzwin',
+                      'Movies',
+                      'TVShows',
+                      'Recommendations'
+                    ]}
+                    showTitle={true}
+                    size='md'
+                    variant='default'
+                  />
+                </CardContent>
+              </Card>
             </div>
           </div>
         </div>

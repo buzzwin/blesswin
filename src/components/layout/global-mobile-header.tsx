@@ -5,6 +5,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { MobileSidebar } from '@components/sidebar/mobile-sidebar';
 import LogoIcon from '@components/ui/logo';
 import { Button } from '@components/ui/button-shadcn';
+// import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 
 export function GlobalMobileHeader(): JSX.Element {
   const { signOut } = useAuth();
@@ -36,6 +37,16 @@ export function GlobalMobileHeader(): JSX.Element {
 
         {/* Right side - Quick Actions and Mobile menu */}
         <div className='flex items-center gap-2'>
+          {/* Social Share - Temporarily disabled */}
+          {/* <SocialShare
+            title='Check out Buzzwin - Rate Shows & Movies'
+            description='Discover and rate your favorite shows and movies with AI-powered recommendations!'
+            url={typeof window !== 'undefined' ? window.location.origin : ''}
+            hashtags={['Buzzwin', 'Movies', 'TVShows', 'Recommendations']}
+            showTitle={false}
+            size='sm'
+            variant='minimal'
+          /> */}
           <Button
             variant='ghost'
             size='sm'

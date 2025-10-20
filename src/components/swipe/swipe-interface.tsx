@@ -17,6 +17,7 @@ import { Button } from '@components/ui/button-shadcn';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { SwipeableMediaCard } from './media-card';
 import { useRouter } from 'next/router';
+import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 import type { MediaCard, RatingType } from '@lib/types/review';
 
 interface SwipeInterfaceProps {
@@ -424,17 +425,35 @@ export function SwipeInterface({
               ? 'Unable to load content. This might be due to API issues or network problems.'
               : "You've gone through all the available shows and movies."}
           </p>
-          <div className='flex justify-center gap-2'>
-            <Button onClick={() => window.location.reload()} className='flex-1'>
-              <RefreshCw className='mr-2 h-4 w-4' />
-              Reload Page
-            </Button>
-            {mediaCards.length > 0 && (
-              <Button onClick={handleReset} className='flex-1'>
+          <div className='space-y-4'>
+            <div className='flex justify-center gap-2'>
+              <Button
+                onClick={() => window.location.reload()}
+                className='flex-1'
+              >
                 <RefreshCw className='mr-2 h-4 w-4' />
-                Start Over
+                Reload Page
               </Button>
-            )}
+              {mediaCards.length > 0 && (
+                <Button onClick={handleReset} className='flex-1'>
+                  <RefreshCw className='mr-2 h-4 w-4' />
+                  Start Over
+                </Button>
+              )}
+            </div>
+
+            {/* Compact Social Share */}
+            <div className='border-t border-gray-200 pt-4 dark:border-gray-700'>
+              <SocialShare
+                title="I'm discovering shows and movies on Buzzwin!"
+                description='Join me in rating and discovering the best content with AI-powered recommendations!'
+                url={typeof window !== 'undefined' ? window.location.href : ''}
+                hashtags={['Buzzwin', 'RateShows', 'Movies', 'TVShows']}
+                showTitle={false}
+                size='sm'
+                variant='compact'
+              />
+            </div>
           </div>
         </CardContent>
       </Card>

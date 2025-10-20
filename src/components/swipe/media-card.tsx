@@ -1,6 +1,8 @@
 import { motion, useMotionValue, useTransform } from 'framer-motion';
-import { X, Heart, Meh, Sparkles } from 'lucide-react';
+import { X, Heart, Meh, Sparkles, Share2 } from 'lucide-react';
 import { ImageWithFallback } from '@components/ui/image-with-fallback';
+import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
+import { useState } from 'react';
 import type { MediaCard } from '@lib/types/review';
 
 interface MediaCardProps {
@@ -14,6 +16,7 @@ export function SwipeableMediaCard({
   onSwipe,
   isActive
 }: MediaCardProps): JSX.Element {
+  const [showSocialShare, setShowSocialShare] = useState(false);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const rotate = useTransform(x, [-200, 200], [-25, 25]);
@@ -109,10 +112,17 @@ export function SwipeableMediaCard({
                   e.currentTarget.src
                 );
                 e.currentTarget.style.display = 'none';
-                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                const fallback = e.currentTarget
+                  .nextElementSibling as HTMLElement;
+                if (fallback) {
+                  fallback.style.display = 'flex';
+                }
               }}
             />
-            <div className='absolute inset-0 flex hidden items-center justify-center bg-gray-200 dark:bg-gray-700'>
+            <div
+              className='absolute inset-0 items-center justify-center bg-gray-200 dark:bg-gray-700'
+              style={{ display: 'none' }}
+            >
               <div className='text-lg text-gray-500 dark:text-gray-400'>🎬</div>
             </div>
           </div>
@@ -187,6 +197,48 @@ export function SwipeableMediaCard({
           >
             <Heart className='h-5 w-5' />
           </button>
+
+          <button
+            onClick={() => setShowSocialShare(true)}
+            className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500 text-white shadow-lg transition-all hover:scale-105 hover:bg-blue-600'
+          >
+            <Share2 className='h-5 w-5' />
+          </button>
+        </div>
+      )}
+
+      {/* Social Share Modal */}
+      {showSocialShare && (
+        <div className='absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
+          <div className='mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800'>
+            <div className='mb-4 flex items-center justify-between'>
+              <h3 className='text-lg font-bold text-gray-900 dark:text-white'>
+                Share &ldquo;{media.title}&rdquo;
+              </h3>
+              <button
+                onClick={() => setShowSocialShare(false)}
+                className='rounded-full p-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+              >
+                <X className='h-5 w-5' />
+              </button>
+            </div>
+
+            <SocialShare
+              title={`Check out "${media.title}" on Buzzwin!`}
+              description={`${
+                media.overview || 'A great show/movie to watch!'
+              } - Discover more with AI-powered recommendations!`}
+              url={typeof window !== 'undefined' ? window.location.href : ''}
+              hashtags={[
+                'Buzzwin',
+                media.mediaType === 'movie' ? 'Movies' : 'TVShows',
+                'AIRecommendations'
+              ]}
+              showTitle={false}
+              size='sm'
+              variant='default'
+            />
+          </div>
         </div>
       )}
     </motion.div>

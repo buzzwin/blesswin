@@ -31,6 +31,7 @@ import { Loading } from '@components/ui/loading';
 import { Button } from '@components/ui/button-shadcn';
 import { Card, CardContent } from '@components/ui/card';
 import { SEO } from '@components/common/seo';
+// import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 import LogoIcon from '@components/ui/logo';
 import { UpdateUsername } from '@components/home/update-username';
 import { ReviewModal } from '@components/modal/review-modal';
@@ -927,6 +928,25 @@ export default function RatingsPage(): JSX.Element {
               })}
             </div>
           )}
+
+          {/* Social Share Section - Temporarily disabled */}
+          {/* <div className='mt-8'>
+            <Card className='border-0 bg-gradient-to-br from-amber-50 to-orange-50 shadow-lg dark:from-amber-900/20 dark:to-orange-900/20'>
+              <CardContent className='p-6'>
+                <SocialShare
+                  title='Check out my ratings on Buzzwin!'
+                  description={`I&apos;ve rated ${currentRatings.length} shows and movies. See what I&apos;m watching and get AI-powered recommendations!`}
+                  url={
+                    typeof window !== 'undefined' ? window.location.href : ''
+                  }
+                  hashtags={['Buzzwin', 'MyRatings', 'Movies', 'TVShows']}
+                  showTitle={true}
+                  size='md'
+                  variant='default'
+                />
+              </CardContent>
+            </Card>
+          </div> */}
         </div>
       </main>
 

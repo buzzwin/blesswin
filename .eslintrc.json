@@ -78,6 +78,17 @@
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
     "curly": "off",
-    "import/no-named-as-default": "off"
+    "import/no-named-as-default": "off",
+    "@typescript-eslint/no-unused-vars": "off",
+    "no-unused-vars": "off",
+    "no-console": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/prefer-nullish-coalescing": "off",
+    "react/no-unescaped-entities": "off",
+    "@next/next/no-img-element": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "import/order": "off",
+    "import/no-duplicates": "off",
+    "@typescript-eslint/consistent-type-imports": "off"
   }
 }

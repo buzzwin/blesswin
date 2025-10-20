@@ -7,6 +7,7 @@ import { SEO } from '@components/common/seo';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { RecommendationsCard } from '@components/recommendations/recommendations-card';
+import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 
 interface Recommendation {
   tmdbId: string;
@@ -302,6 +303,23 @@ export default function Recommendations(): JSX.Element {
             </Button>
           </div>
         )}
+
+        {/* Social Share Section */}
+        <div className='mt-8'>
+          <Card className='border-0 bg-gradient-to-br from-purple-50 to-blue-50 shadow-lg dark:from-purple-900/20 dark:to-blue-900/20'>
+            <CardContent className='p-6'>
+              <SocialShare
+                title='Check out my AI recommendations on Buzzwin!'
+                description="I'm getting personalized movie and TV show recommendations powered by AI. Check out what I'm watching!"
+                url={typeof window !== 'undefined' ? window.location.href : ''}
+                hashtags={['Buzzwin', 'AIRecommendations', 'Movies', 'TVShows']}
+                showTitle={true}
+                size='md'
+                variant='default'
+              />
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   );

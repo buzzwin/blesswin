@@ -5,6 +5,7 @@ import { useAuth } from '@lib/context/auth-context';
 import LogoIcon from '@components/ui/logo';
 import { Button } from '@components/ui/button-shadcn';
 import { UserAvatar } from '@components/user/user-avatar';
+// import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
 
 export function GlobalDesktopHeader(): JSX.Element {
   const { user, signOut } = useAuth();
@@ -62,6 +63,17 @@ export function GlobalDesktopHeader(): JSX.Element {
 
         {/* User Actions */}
         <div className='flex items-center gap-3'>
+          {/* Compact Social Share - Temporarily disabled */}
+          {/* <SocialShare
+            title='Check out Buzzwin - Rate Shows & Movies'
+            description='Discover and rate your favorite shows and movies with AI-powered recommendations!'
+            url={typeof window !== 'undefined' ? window.location.origin : ''}
+            hashtags={['Buzzwin', 'Movies', 'TVShows', 'Recommendations']}
+            showTitle={false}
+            size='sm'
+            variant='compact'
+          /> */}
+
           {user ? (
             <>
               <Button
