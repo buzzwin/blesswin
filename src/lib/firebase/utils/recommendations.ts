@@ -1,160 +1,276 @@
-import { doc, getDoc, setDoc, deleteDoc } from 'firebase/firestore';
-import { db } from '../app';
+import { Timestamp } from 'firebase/firestore';
+import { adminDb } from '../admin';
+import type { Recommendation } from '@lib/types/recommendation';
 
-interface Recommendation {
-  tmdbId: string;
-  title: string;
-  mediaType: 'movie' | 'tv';
-  posterPath: string;
-  reason: string;
-  confidence: number;
-  genre: string;
-  year: string;
-}
-
-interface Analysis {
-  preferredGenres: string[];
-  preferredYears: string[];
-  ratingPattern: string;
-  suggestions: string[];
-}
-
-interface CachedRecommendations {
+export interface AIRecommendationSession {
+  id?: string;
+  userId: string;
   recommendations: Recommendation[];
-  analysis: Analysis;
-  createdAt: Date;
-  expiresAt: Date;
+  analysis: {
+    preferredGenres: string[];
+    preferredYears: string[];
+    ratingPattern: string;
+    suggestions: string[];
+  };
+  createdAt: Timestamp;
+  updatedAt: Timestamp;
+  source: 'ai_generated' | 'fallback';
+  userRatingCount: number;
+  targetYear: number;
 }
 
-// Cache duration for different user types
-const CACHE_DURATION_DAYS = {
-  ANONYMOUS: 7, // Longer cache for anonymous users
-  AUTHENTICATED: 3, // Standard cache for authenticated users
-  FREQUENT_USER: 1 // Shorter cache for users who rate frequently
+export interface RecommendationWithSession extends AIRecommendationSession {
+  id: string;
+}
+
+// Save unique AI recommendations to Firestore (avoiding duplicates)
+export const saveAIRecommendations = async (
+  userId: string,
+  recommendations: Recommendation[],
+  analysis: {
+    preferredGenres: string[];
+    preferredYears: string[];
+    ratingPattern: string;
+    suggestions: string[];
+  },
+  userRatingCount: number,
+  targetYear: number,
+  source: 'ai_generated' | 'fallback' = 'ai_generated'
+): Promise<string> => {
+  try {
+    // Get existing recommendations to check for duplicates
+    const existingSnapshot = await adminDb
+      .collection('user_recommendations')
+      .where('userId', '==', userId)
+      .get();
+
+    const existingRecommendations = new Set<string>();
+    existingSnapshot.forEach((doc) => {
+      const data = doc.data();
+      existingRecommendations.add(`${data.tmdbId}-${data.mediaType}`);
+    });
+
+    // Filter out duplicates
+    const uniqueRecommendations = recommendations.filter(rec => 
+      !existingRecommendations.has(`${rec.tmdbId}-${rec.mediaType}`)
+    );
+
+    if (uniqueRecommendations.length === 0) {
+      console.log('No new unique recommendations to save');
+      return 'no-new-recommendations';
+    }
+
+    // Save unique recommendations individually
+    const batch = adminDb.batch();
+    const savedIds: string[] = [];
+
+    for (const recommendation of uniqueRecommendations) {
+      const docRef = adminDb.collection('user_recommendations').doc();
+      batch.set(docRef, {
+        userId,
+        tmdbId: recommendation.tmdbId,
+        title: recommendation.title,
+        mediaType: recommendation.mediaType,
+        posterPath: recommendation.posterPath,
+        reason: recommendation.reason,
+        confidence: recommendation.confidence,
+        genre: recommendation.genre,
+        year: recommendation.year,
+        createdAt: new Date(),
+        source,
+        userRatingCount,
+        targetYear
+      });
+      savedIds.push(docRef.id);
+    }
+
+    await batch.commit();
+    console.log(`Saved ${uniqueRecommendations.length} unique recommendations out of ${recommendations.length} total`);
+    
+    // Also save the analysis as a separate document
+    const analysisRef = adminDb.collection('user_analyses').doc();
+    await analysisRef.set({
+      userId,
+      analysis,
+      createdAt: new Date(),
+      source,
+      userRatingCount,
+      targetYear,
+      recommendationCount: uniqueRecommendations.length
+    });
+
+    return analysisRef.id;
+  } catch (error) {
+    console.error('Error saving AI recommendations:', error);
+    throw new Error('Failed to save AI recommendations');
+  }
 };
 
-// Global cache for anonymous users (in-memory)
-const anonymousCache = new Map<string, CachedRecommendations>();
-
-export async function getCachedRecommendations(userId: string | null): Promise<CachedRecommendations | null> {
+// Get user's unique AI recommendations
+export const getUserAIRecommendations = async (
+  userId: string,
+  limitCount = 20
+): Promise<Recommendation[]> => {
   try {
-    // For anonymous users, use in-memory cache
-    if (!userId) {
-      const cacheKey = 'anonymous_recommendations';
-      const cached = anonymousCache.get(cacheKey);
+    const querySnapshot = await adminDb
+      .collection('user_recommendations')
+      .where('userId', '==', userId)
+      .limit(limitCount)
+      .get();
+    
+    const recommendations: Recommendation[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      recommendations.push({
+        tmdbId: data.tmdbId,
+        title: data.title,
+        mediaType: data.mediaType,
+        posterPath: data.posterPath,
+        reason: data.reason,
+        confidence: data.confidence,
+        genre: data.genre,
+        year: data.year
+      });
+    });
+
+    // Sort by createdAt descending (newest first)
+    recommendations.sort((a, b) => {
+      const aDoc = querySnapshot.docs.find(doc => doc.data().tmdbId === a.tmdbId);
+      const bDoc = querySnapshot.docs.find(doc => doc.data().tmdbId === b.tmdbId);
       
-      if (cached && new Date() < cached.expiresAt) {
-        // console.log('Using anonymous cache');
-        return cached;
-      }
+      if (!aDoc || !bDoc) return 0;
       
-      // Clear expired cache
-      if (cached) {
-        anonymousCache.delete(cacheKey);
-      }
+      const aTime = aDoc.data().createdAt;
+      const bTime = bDoc.data().createdAt;
       
-      return null;
-    }
+      if (!aTime || !bTime) return 0;
+      
+      // Handle both Date objects and Firestore Timestamps
+      const aTimestamp = aTime instanceof Date ? aTime.getTime() : aTime.toMillis?.() || 0;
+      const bTimestamp = bTime instanceof Date ? bTime.getTime() : bTime.toMillis?.() || 0;
+      
+      return bTimestamp - aTimestamp;
+    });
 
-    // For authenticated users, use Firestore
-    const docRef = doc(db, 'recommendations', userId);
-    const docSnap = await getDoc(docRef);
-
-    if (!docSnap.exists()) {
-      return null;
-    }
-
-    const data = docSnap.data() as CachedRecommendations;
-    const expiresAt = data.expiresAt instanceof Date ? data.expiresAt : (data.expiresAt as { toDate?: () => Date })?.toDate?.() ?? new Date();
-
-    if (new Date() >= expiresAt) {
-      // Cache expired, delete it
-      await deleteDoc(docRef);
-      return null;
-    }
-
-    // console.log('Using cached recommendations');
-    return data;
-
+    return recommendations.slice(0, limitCount);
   } catch (error) {
-    // console.error('Error getting cached recommendations:', error);
-    return null;
+    console.error('Error fetching user AI recommendations:', error);
+    throw new Error('Failed to fetch AI recommendations');
   }
-}
+};
 
-export async function cacheRecommendations(
-  userId: string | null,
-  recommendations: Recommendation[],
-  analysis: Analysis
-): Promise<void> {
+// Get the latest AI analysis for a user
+export const getLatestAIRecommendations = async (
+  userId: string
+): Promise<any> => {
   try {
-    const now = new Date();
+    const querySnapshot = await adminDb
+      .collection('user_analyses')
+      .where('userId', '==', userId)
+      .limit(1)
+      .get();
     
-    // Determine cache duration based on user type
-    let cacheDuration = CACHE_DURATION_DAYS.AUTHENTICATED;
-    
-    if (!userId) {
-      cacheDuration = CACHE_DURATION_DAYS.ANONYMOUS;
-    } else {
-      // Check if user is a frequent rater (has more than 10 ratings in last 7 days)
-      // This could be enhanced with more sophisticated logic
-      cacheDuration = CACHE_DURATION_DAYS.FREQUENT_USER;
+    if (querySnapshot.empty) {
+      return null;
     }
-    
-    const expiresAt = new Date(now.getTime() + cacheDuration * 24 * 60 * 60 * 1000);
 
-    const cachedData: CachedRecommendations = {
-      recommendations,
-      analysis,
-      createdAt: now,
-      expiresAt
+    // Sort by createdAt descending and get the latest
+    const sortedDocs = querySnapshot.docs.sort((a, b) => {
+      const aTime = a.data().createdAt;
+      const bTime = b.data().createdAt;
+      if (!aTime || !bTime) return 0;
+      
+      // Handle both Date objects and Firestore Timestamps
+      const aTimestamp = aTime instanceof Date ? aTime.getTime() : aTime.toMillis?.() || 0;
+      const bTimestamp = bTime instanceof Date ? bTime.getTime() : bTime.toMillis?.() || 0;
+      
+      return bTimestamp - aTimestamp;
+    });
+
+    const doc = sortedDocs[0];
+    return {
+      id: doc.id,
+      ...doc.data()
     };
-
-    // For anonymous users, use in-memory cache
-    if (!userId) {
-      anonymousCache.set('anonymous_recommendations', cachedData);
-      // console.log('Cached anonymous recommendations in memory');
-      return;
-    }
-
-    // For authenticated users, use Firestore
-    const docRef = doc(db, 'recommendations', userId);
-    await setDoc(docRef, cachedData);
-    // console.log('Cached recommendations in Firestore');
-
   } catch (error) {
-    // console.error('Error caching recommendations:', error);
+    console.error('Error fetching latest AI analysis:', error);
+    throw new Error('Failed to fetch latest AI analysis');
   }
-}
+};
 
-export async function invalidateRecommendationsCache(userId: string | null): Promise<void> {
+// Get AI recommendation statistics for a user
+export const getAIRecommendationStats = async (userId: string): Promise<{
+  totalRecommendations: number;
+  lastRecommendationDate: Date | null;
+  mostRecommendedGenres: string[];
+  totalAnalyses: number;
+}> => {
   try {
-    // For anonymous users, clear in-memory cache
-    if (!userId) {
-      anonymousCache.clear();
-      // console.log('Cleared anonymous cache');
-      return;
+    // Get unique recommendations count
+    const recommendationsSnapshot = await adminDb
+      .collection('user_recommendations')
+      .where('userId', '==', userId)
+      .get();
+
+    // Get analyses count
+    const analysesSnapshot = await adminDb
+      .collection('user_analyses')
+      .where('userId', '==', userId)
+      .get();
+
+    if (recommendationsSnapshot.empty) {
+      return {
+        totalRecommendations: 0,
+        lastRecommendationDate: null,
+        mostRecommendedGenres: [],
+        totalAnalyses: 0
+      };
     }
 
-    // For authenticated users, delete from Firestore
-    const docRef = doc(db, 'recommendations', userId);
-    await deleteDoc(docRef);
-    // console.log('Invalidated recommendations cache');
+    const genreCount: Record<string, number> = {};
+    let lastRecommendationDate: Date | null = null;
 
+    recommendationsSnapshot.forEach((doc) => {
+      const data = doc.data();
+      
+      // Track last recommendation date
+      const createdAt = data.createdAt;
+      let createdAtDate: Date | null = null;
+      
+      if (createdAt) {
+        if (createdAt instanceof Date) {
+          createdAtDate = createdAt;
+        } else if (createdAt.toDate) {
+          createdAtDate = createdAt.toDate();
+        } else if (createdAt.toMillis) {
+          createdAtDate = new Date(createdAt.toMillis());
+        }
+      }
+      
+      if (createdAtDate && (!lastRecommendationDate || createdAtDate > lastRecommendationDate)) {
+        lastRecommendationDate = createdAtDate;
+      }
+
+      // Count genres
+      if (data.genre) {
+        genreCount[data.genre] = (genreCount[data.genre] || 0) + 1;
+      }
+    });
+
+    const mostRecommendedGenres = Object.entries(genreCount)
+      .sort(([,a], [,b]) => b - a)
+      .slice(0, 5)
+      .map(([genre]) => genre);
+
+    return {
+      totalRecommendations: recommendationsSnapshot.size,
+      lastRecommendationDate,
+      mostRecommendedGenres,
+      totalAnalyses: analysesSnapshot.size
+    };
   } catch (error) {
-    // console.error('Error invalidating recommendations cache:', error);
+    console.error('Error fetching AI recommendation stats:', error);
+    throw new Error('Failed to fetch AI recommendation statistics');
   }
-}
-
-// Function to get global recommendations for anonymous users
-export function getGlobalRecommendations(): Recommendation[] {
-  // Check if we have cached global recommendations
-  const cached = anonymousCache.get('global_recommendations');
-  
-  if (cached && new Date() < cached.expiresAt) {
-    return cached.recommendations;
-  }
-
-  // If no cache, return empty array
-  return [];
-} 
+};

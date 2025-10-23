@@ -34,3 +34,5 @@ export const watchlistsCollection = collection(db, 'watchlists').withConverter(w
 export const reviewsCollection = collection(db, 'reviews') as CollectionReference<Review>;
 
 export const visitsCollection = collection(db, 'visits');
+
+export const recommendationsCollection = collection(db, 'ai_recommendations');

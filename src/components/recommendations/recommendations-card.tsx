@@ -43,15 +43,15 @@ export function RecommendationsCard({
 
   if (loading) {
     return (
-      <Card className='border border-gray-200 dark:border-gray-700'>
+      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
         <CardContent className='p-6 text-center'>
           <div className='mb-4 flex justify-center'>
-            <div className='h-8 w-8 animate-spin rounded-full border-2 border-gray-300 border-t-gray-900 dark:border-gray-600 dark:border-t-white'></div>
+            <div className='h-8 w-8 animate-spin rounded-full border-2 border-blue-500/30 border-t-blue-500'></div>
           </div>
-          <h4 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+          <h4 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
             Analyzing Your Preferences...
           </h4>
-          <p className='text-xs text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-muted-foreground dark:text-gray-400'>
             Our AI is learning from your ratings to provide personalized
             recommendations
           </p>
@@ -62,24 +62,26 @@ export function RecommendationsCard({
 
   if (error) {
     return (
-      <Card className='border border-red-200 dark:border-red-800'>
+      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
         <CardContent className='p-6 text-center'>
-          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/20'>
-            <Brain className='h-6 w-6 text-red-600 dark:text-red-400' />
+          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/20'>
+            <Brain className='h-6 w-6 text-red-400' />
           </div>
-          <h4 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+          <h4 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
             Unable to Load Recommendations
           </h4>
-          <p className='mb-4 text-xs text-gray-600 dark:text-gray-400'>
-            {error}
+          <p className='mb-4 text-sm text-muted-foreground dark:text-gray-400'>
+            {error.includes('Failed to fetch')
+              ? 'Connection issue. Please check your internet connection and try again.'
+              : error}
           </p>
           <Button
             variant='outline'
             size='sm'
             onClick={() => void refetch()}
-            className='border-red-300 text-red-700 hover:bg-red-50 dark:border-red-700 dark:text-red-300 dark:hover:bg-red-900/20'
+            className='group rounded-lg border-2 border-red-500/40 bg-red-500/10 px-4 py-2 text-sm font-medium text-red-300 transition-all duration-300 hover:border-red-500/60 hover:bg-red-500/20 hover:text-red-200'
           >
-            <RefreshCw className='mr-2 h-4 w-4' />
+            <RefreshCw className='mr-2 h-4 w-4 transition-transform duration-300 group-hover:rotate-180' />
             Try Again
           </Button>
         </CardContent>
@@ -89,15 +91,15 @@ export function RecommendationsCard({
 
   if (!recommendations || recommendations.length === 0) {
     return (
-      <Card className='border border-gray-200 dark:border-gray-700'>
+      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
         <CardContent className='p-6 text-center'>
-          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800'>
-            <Brain className='h-6 w-6 text-gray-400' />
+          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20'>
+            <Brain className='h-6 w-6 text-blue-400' />
           </div>
-          <h4 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
+          <h4 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
             AI-Powered Recommendations
           </h4>
-          <p className='mb-4 text-xs text-gray-600 dark:text-gray-400'>
+          <p className='mb-4 text-sm text-muted-foreground dark:text-gray-400'>
             {analysis?.suggestions?.[0] ??
               'Start rating shows and movies to get AI-powered recommendations!'}
           </p>
@@ -105,9 +107,9 @@ export function RecommendationsCard({
             <Button
               variant='outline'
               size='sm'
-              className='border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+              className='group rounded-lg border-2 border-blue-500/40 bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-300 transition-all duration-300 hover:border-blue-500/60 hover:bg-blue-500/20 hover:text-blue-200'
             >
-              <Sparkles className='mr-2 h-4 w-4' />
+              <Sparkles className='mr-2 h-4 w-4 transition-transform duration-300 group-hover:scale-110' />
               Start Rating
             </Button>
           </Link>
@@ -120,14 +122,14 @@ export function RecommendationsCard({
     <div className='space-y-3'>
       {/* Compact AI Analysis Section */}
       {analysis && (
-        <div className='rounded-lg bg-gray-50 p-3 dark:bg-gray-800'>
+        <div className='rounded-lg bg-muted/50 p-3 dark:bg-gray-800'>
           <div className='mb-2 flex items-center gap-2'>
             <Brain className='h-4 w-4 text-purple-600 dark:text-purple-400' />
-            <h4 className='text-xs font-semibold text-gray-900 dark:text-white'>
+            <h4 className='text-xs font-semibold text-foreground dark:text-white'>
               AI Insights
             </h4>
           </div>
-          <p className='text-xs text-gray-600 dark:text-gray-400'>
+          <p className='line-clamp-2 text-xs text-muted-foreground dark:text-gray-400'>
             {analysis.ratingPattern}
           </p>
           {analysis.preferredGenres.length > 0 && (
@@ -148,7 +150,7 @@ export function RecommendationsCard({
       {/* Compact Recommendations List */}
       <div className='space-y-2'>
         <div className='flex items-center justify-between'>
-          <h4 className='text-xs font-semibold text-gray-900 dark:text-white'>
+          <h4 className='text-xs font-semibold text-foreground dark:text-white'>
             Recommendations
           </h4>
           <Button
@@ -165,39 +167,39 @@ export function RecommendationsCard({
           {recommendations.slice(0, 3).map((recommendation, index) => (
             <div
               key={index}
-              className='group cursor-pointer rounded-lg border border-gray-200 bg-white p-2 transition-all duration-200 hover:border-gray-300 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
+              className='group cursor-pointer rounded-lg border border-border bg-card p-2 transition-all duration-200 hover:border-border/80 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
               onClick={() => setSelectedRecommendation(recommendation)}
             >
-              <div className='flex gap-2'>
-                <div className='relative h-12 w-8 flex-shrink-0 overflow-hidden rounded bg-gray-200 dark:bg-gray-700'>
-                  <img
-                    src={`https://image.tmdb.org/t/p/w154${recommendation.posterPath}`}
-                    alt={recommendation.title}
-                    className='h-full w-full object-cover'
-                    onError={(e) => {
-                      console.log('Image failed to load:', e.currentTarget.src);
-                      e.currentTarget.style.display = 'none';
-                      const fallback = e.currentTarget
-                        .nextElementSibling as HTMLElement;
-                      if (fallback) {
-                        fallback.style.display = 'flex';
-                      }
-                    }}
-                  />
-                  <div
-                    className='absolute inset-0 hidden items-center justify-center bg-gray-200 dark:bg-gray-700'
-                    style={{ display: 'none' }}
-                  >
-                    <div className='text-xs text-gray-500 dark:text-gray-400'>
-                      📽️
+              <div className='flex gap-3'>
+                <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
+                  {recommendation.posterPath ? (
+                    <ImageWithFallback
+                      src={`https://image.tmdb.org/t/p/w92${recommendation.posterPath}`}
+                      alt={recommendation.title}
+                      width={48}
+                      height={64}
+                      className='h-full w-full object-cover'
+                      fallback='/api/placeholder/48/64'
+                      onError={() => {
+                        console.log(
+                          'Image failed to load for:',
+                          recommendation.title
+                        );
+                      }}
+                    />
+                  ) : (
+                    <div className='absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700'>
+                      <div className='text-lg text-gray-500 dark:text-gray-400'>
+                        📽️
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
                 <div className='min-w-0 flex-1'>
-                  <h5 className='line-clamp-1 text-xs font-medium text-gray-900 dark:text-white'>
+                  <h5 className='line-clamp-1 text-xs font-medium text-foreground dark:text-white'>
                     {recommendation.title}
                   </h5>
-                  <div className='mb-1 flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
+                  <div className='mb-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400'>
                     <span className='font-medium'>
                       {recommendation.mediaType === 'movie' ? 'Movie' : 'TV'}
                     </span>
@@ -215,7 +217,7 @@ export function RecommendationsCard({
                         }}
                       />
                     </div>
-                    <span className='text-xs text-gray-500 dark:text-gray-400'>
+                    <span className='text-xs text-muted-foreground dark:text-gray-400'>
                       {Math.round(recommendation.confidence * 100)}%
                     </span>
                   </div>
@@ -231,7 +233,7 @@ export function RecommendationsCard({
               <Button
                 variant='outline'
                 size='sm'
-                className='h-7 border-gray-300 text-xs text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+                className='h-7 border-border text-xs text-foreground hover:bg-muted dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
               >
                 View All
               </Button>
@@ -246,31 +248,28 @@ export function RecommendationsCard({
           <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800'>
             <div className='mb-4 flex items-start gap-4'>
               <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded bg-gray-200 dark:bg-gray-700'>
-                <img
-                  src={`https://image.tmdb.org/t/p/w154${selectedRecommendation.posterPath}`}
-                  alt={selectedRecommendation.title}
-                  className='h-full w-full object-cover'
-                  onError={(e) => {
-                    console.log(
-                      'Modal image failed to load:',
-                      e.currentTarget.src
-                    );
-                    e.currentTarget.style.display = 'none';
-                    const fallback = e.currentTarget
-                      .nextElementSibling as HTMLElement;
-                    if (fallback) {
-                      fallback.style.display = 'flex';
-                    }
-                  }}
-                />
-                <div
-                  className='absolute inset-0 items-center justify-center bg-gray-200 dark:bg-gray-700'
-                  style={{ display: 'none' }}
-                >
-                  <div className='text-sm text-gray-500 dark:text-gray-400'>
-                    📽️
+                {selectedRecommendation.posterPath ? (
+                  <ImageWithFallback
+                    src={`https://image.tmdb.org/t/p/w154${selectedRecommendation.posterPath}`}
+                    alt={selectedRecommendation.title}
+                    width={56}
+                    height={80}
+                    className='h-full w-full object-cover'
+                    fallback='/api/placeholder/56/80'
+                    onError={() => {
+                      console.log(
+                        'Modal image failed to load for:',
+                        selectedRecommendation.title
+                      );
+                    }}
+                  />
+                ) : (
+                  <div className='absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700'>
+                    <div className='text-sm text-gray-500 dark:text-gray-400'>
+                      📽️
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               <div className='min-w-0 flex-1'>
                 <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
@@ -309,7 +308,7 @@ export function RecommendationsCard({
               <h4 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
                 Why This is Recommended
               </h4>
-              <p className='rounded bg-gray-50 p-3 text-sm text-gray-700 dark:bg-gray-700 dark:text-gray-300'>
+              <p className='max-h-32 overflow-y-auto rounded bg-gray-50 p-3 text-sm text-gray-700 dark:bg-gray-700 dark:text-gray-300'>
                 {selectedRecommendation.reason}
               </p>
             </div>
@@ -334,7 +333,11 @@ export function RecommendationsCard({
               <div className='border-t border-gray-200 pt-2 dark:border-gray-700'>
                 <SocialShare
                   title={`Check out "${selectedRecommendation.title}" recommended by Buzzwin AI!`}
-                  description={`${selectedRecommendation.reason} - Discover more AI-powered recommendations!`}
+                  description={`${
+                    selectedRecommendation.reason.length > 100
+                      ? selectedRecommendation.reason.substring(0, 100) + '...'
+                      : selectedRecommendation.reason
+                  } - Discover more AI-powered recommendations!`}
                   url={
                     typeof window !== 'undefined' ? window.location.href : ''
                   }

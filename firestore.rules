@@ -75,5 +75,38 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isSignedIn() && request.auth.uid == userId;
     }
+
+    // AI Recommendations sessions collection
+    match /ai_recommendations/{sessionId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.recommendations is list
+        && request.resource.data.analysis is map
+        && request.resource.data.source in ['ai_generated', 'fallback'];
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // User recommendations collection (unique recommendations)
+    match /user_recommendations/{recommendationId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.tmdbId is string
+        && request.resource.data.title is string
+        && request.resource.data.mediaType in ['movie', 'tv']
+        && request.resource.data.source in ['ai_generated', 'fallback'];
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
+    // User analyses collection (AI analysis data)
+    match /user_analyses/{analysisId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() 
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.analysis is map
+        && request.resource.data.source in ['ai_generated', 'fallback'];
+      allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
   }
 }

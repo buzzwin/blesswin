@@ -1,6 +1,62 @@
 import { getUserRatings } from '@lib/firebase/utils/review';
+import { saveAIRecommendations } from '@lib/firebase/utils/recommendations';
 import { callGeminiAPI, extractJSONFromResponse } from '@lib/api/gemini';
 import type { NextApiRequest, NextApiResponse } from 'next';
+
+// Simple in-memory cache for poster paths
+const posterCache = new Map<string, string>();
+
+// Function to get real poster paths from TMDB API
+async function getPosterPathFromTMDB(title: string, mediaType: 'movie' | 'tv', year?: string): Promise<string> {
+  const cacheKey = `${title}-${mediaType}-${year || ''}`;
+  
+  // Check cache first
+  if (posterCache.has(cacheKey)) {
+    console.log(`Using cached poster for ${title}`);
+    const cached = posterCache.get(cacheKey);
+    return (cached as string) || '/api/placeholder/154/231';
+  }
+  
+  const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+  
+  if (!TMDB_API_KEY) {
+    console.log('TMDB API key not found, using fallback poster');
+    return '/api/placeholder/154/231';
+  }
+
+  try {
+    // Search for the movie/show on TMDB
+    const searchUrl = `https://api.themoviedb.org/3/search/${mediaType}?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(title)}&year=${year || ''}`;
+    
+    const response = await fetch(searchUrl);
+    if (!response.ok) {
+      throw new Error(`TMDB API error: ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    if (data.results && data.results.length > 0) {
+      const result = data.results[0];
+      if (result.poster_path) {
+        console.log(`Found TMDB poster for ${title}: ${result.poster_path}`);
+        // Cache the result
+        posterCache.set(cacheKey, result.poster_path);
+        return result.poster_path as string;
+      }
+    }
+    
+    console.log(`No poster found for ${title} on TMDB`);
+    // Cache the fallback result too
+    posterCache.set(cacheKey, '/api/placeholder/154/231');
+    return '/api/placeholder/154/231';
+    
+  } catch (error) {
+    console.error(`Error fetching TMDB poster for ${title}:`, error);
+    // Cache the fallback result for errors too
+    posterCache.set(cacheKey, '/api/placeholder/154/231');
+    return '/api/placeholder/154/231';
+  }
+}
 
 interface Recommendation {
   tmdbId: string;
@@ -32,28 +88,29 @@ export default async function handler(
     return;
   }
 
+  const { userId } = req.body;
+  console.log('Recommendations API called with userId:', userId);
+
+  // Handle anonymous users
+  if (!userId) {
+    res.status(401).json({ error: 'Authentication required' });
+    return;
+  }
+
+  // For authenticated users, always generate fresh recommendations
+  // Removed caching to ensure fresh recommendations after each rating
+
+  // Fetch user's ratings
+  const ratings = await getUserRatings(userId as string);
+  console.log('User ratings count:', ratings.length);
+
+  // Generate AI recommendations using Gemini
+  // For users with no ratings, suggest popular content
+  // For users with ratings, use their preferences
+  const currentYear = new Date().getFullYear();
+  const targetYear = currentYear - 1; // One year prior to current year
+
   try {
-    const { userId } = req.body;
-    console.log('Recommendations API called with userId:', userId);
-
-    // Handle anonymous users
-    if (!userId) {
-      res.status(401).json({ error: 'Authentication required' });
-      return;
-    }
-
-    // For authenticated users, always generate fresh recommendations
-    // Removed caching to ensure fresh recommendations after each rating
-
-    // Fetch user's ratings
-    const ratings = await getUserRatings(userId as string);
-    console.log('User ratings count:', ratings.length);
-    
-    // Generate AI recommendations using Gemini
-    // For users with no ratings, suggest popular content
-    // For users with ratings, use their preferences
-    const currentYear = new Date().getFullYear();
-    const targetYear = currentYear - 1; // One year prior to current year
     const prompt = ratings.length === 0 
       ? `You are a movie and TV show recommendation expert specializing in American popular culture. This user is new and has no ratings yet. Suggest the MOST POPULAR and well-known content from ${targetYear} ONLY.
 
@@ -70,7 +127,7 @@ Prioritize shows and movies that are:
 
 Suggest 5 diverse shows/movies from ${targetYear} that are perfect for someone just starting to rate content. DOUBLE-CHECK that every single item is from ${targetYear}.
 
-Return ONLY a valid JSON object with REAL TMDB data:
+Return ONLY a valid JSON object with movie/show titles and basic info. DO NOT include posterPath as it will be added automatically:
 
 {
   "recommendations": [
@@ -78,7 +135,6 @@ Return ONLY a valid JSON object with REAL TMDB data:
       "tmdbId": "1234567",
       "title": "Real Movie/Show Title from ${targetYear}",
       "mediaType": "movie" or "tv",
-      "posterPath": "/real-poster-path.jpg",
       "reason": "Why this real ${targetYear} show/movie is recommended",
       "confidence": 0.9,
       "genre": "Real genre",
@@ -170,6 +226,14 @@ Return ONLY a valid JSON object with REAL TMDB data:
 
     console.log(`Filtered recommendations: ${filteredRecommendations.length} out of ${parsedResponse.recommendations.length} are from ${targetYear}`);
 
+    // Add real poster paths to recommendations using TMDB API
+    const recommendationsWithPosters = await Promise.all(
+      filteredRecommendations.map(async (rec) => ({
+        ...rec,
+        posterPath: await getPosterPathFromTMDB(rec.title, rec.mediaType, rec.year)
+      }))
+    );
+
     // Update analysis to reflect target year focus
     const updatedAnalysis = {
       ...parsedResponse.analysis,
@@ -177,16 +241,100 @@ Return ONLY a valid JSON object with REAL TMDB data:
       ratingPattern: parsedResponse.analysis.ratingPattern || `Content from ${targetYear}`
     };
 
+    // Save recommendations to Firestore
+    let sessionId: string | undefined;
+    try {
+      sessionId = await saveAIRecommendations(
+        userId,
+        recommendationsWithPosters,
+        updatedAnalysis,
+        ratings.length,
+        targetYear,
+        'ai_generated'
+      );
+      console.log('AI recommendations saved to Firestore with session ID:', sessionId);
+    } catch (error) {
+      console.error('Failed to save recommendations to Firestore:', error);
+      // Continue without failing the API call
+    }
+
     res.status(200).json({
-      recommendations: filteredRecommendations,
+      recommendations: recommendationsWithPosters,
       analysis: updatedAnalysis,
-      cached: false
+      cached: false,
+      sessionId
     });
 
   } catch (error) {
-    // console.error('Error generating recommendations:', error);
+    console.error('Error generating recommendations:', error);
     
-    // Return empty recommendations on error
-    res.status(500).json({ error: 'Failed to generate recommendations' });
+    // Return fallback recommendations on error
+    const fallbackRecommendations = [
+      {
+        tmdbId: '550',
+        title: 'Fight Club',
+        mediaType: 'movie' as const,
+        posterPath: '/pB8BM7pdSp6B6Ih7QZ4DrQ3PmJK.jpg',
+        reason: 'A mind-bending psychological thriller that explores themes of consumerism and identity. Perfect for fans of complex narratives.',
+        confidence: 0.85,
+        genre: 'Drama',
+        year: '1999'
+      },
+      {
+        tmdbId: '238',
+        title: 'The Godfather',
+        mediaType: 'movie' as const,
+        posterPath: '/3bhkrj58Vtu7enYsRolD1fZdja1.jpg',
+        reason: 'A cinematic masterpiece about family, power, and loyalty. Essential viewing for any film enthusiast.',
+        confidence: 0.92,
+        genre: 'Crime',
+        year: '1972'
+      },
+      {
+        tmdbId: '13',
+        title: 'Forrest Gump',
+        mediaType: 'movie' as const,
+        posterPath: '/arw2vcBveWOVZr6pxd9XTd1TdQa.jpg',
+        reason: 'A heartwarming tale of an extraordinary man\'s journey through American history. Timeless and inspiring.',
+        confidence: 0.88,
+        genre: 'Drama',
+        year: '1994'
+      }
+    ];
+
+    const fallbackAnalysis = {
+      preferredGenres: ['Drama', 'Thriller', 'Crime'],
+      preferredYears: ['1990s', '2000s'],
+      ratingPattern: 'You enjoy complex narratives and character-driven stories',
+      suggestions: [
+        'Try rating more movies to get personalized recommendations',
+        'Explore different genres to help us understand your preferences'
+      ]
+    };
+
+    // Save fallback recommendations to Firestore
+    let sessionId: string | undefined;
+    try {
+      sessionId = await saveAIRecommendations(
+        userId,
+        fallbackRecommendations,
+        fallbackAnalysis,
+        ratings.length,
+        targetYear,
+        'fallback'
+      );
+      console.log('Fallback recommendations saved to Firestore with session ID:', sessionId);
+    } catch (error) {
+      console.error('Failed to save fallback recommendations to Firestore:', error);
+      // Continue without failing the API call
+    }
+
+    res.status(200).json({
+      recommendations: fallbackRecommendations,
+      analysis: fallbackAnalysis,
+      cached: false,
+      fallback: true,
+      sessionId
+    });
   }
 } 

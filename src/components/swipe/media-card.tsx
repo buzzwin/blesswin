@@ -155,9 +155,11 @@ export function SwipeableMediaCard({
 
         {/* Compact Overview */}
         {media.overview && (
-          <p className='line-clamp-2 mt-2 text-sm leading-relaxed text-gray-200'>
-            {media.overview}
-          </p>
+          <div className='mt-3 min-h-[2.5rem]'>
+            <p className='line-clamp-2 text-sm leading-relaxed text-gray-200'>
+              {media.overview}
+            </p>
+          </div>
         )}
 
         {/* Compact AI Recommendation Info */}
@@ -176,7 +178,7 @@ export function SwipeableMediaCard({
 
       {/* Compact Action Buttons */}
       {isActive && (
-        <div className='absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-3'>
+        <div className='absolute bottom-6 left-1/2 flex -translate-x-1/2 gap-3'>
           <button
             onClick={() => handleButtonClick('left')}
             className='flex h-10 w-10 items-center justify-center rounded-lg bg-red-500 text-white shadow-lg transition-all hover:scale-105 hover:bg-red-600'

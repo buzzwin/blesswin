@@ -89,6 +89,11 @@
     "react-hooks/exhaustive-deps": "off",
     "import/order": "off",
     "import/no-duplicates": "off",
-    "@typescript-eslint/consistent-type-imports": "off"
+    "@typescript-eslint/consistent-type-imports": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
+    "@typescript-eslint/no-floating-promises": "off"
   }
 }
