@@ -174,7 +174,7 @@ export function RecommendationsCard({
                 <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
                   {recommendation.posterPath ? (
                     <ImageWithFallback
-                      src={`https://image.tmdb.org/t/p/w92${recommendation.posterPath}`}
+                      src={recommendation.posterPath.startsWith('http') ? recommendation.posterPath : `https://image.tmdb.org/t/p/w92${recommendation.posterPath}`}
                       alt={recommendation.title}
                       width={48}
                       height={64}
@@ -250,7 +250,7 @@ export function RecommendationsCard({
               <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded bg-gray-200 dark:bg-gray-700'>
                 {selectedRecommendation.posterPath ? (
                   <ImageWithFallback
-                    src={`https://image.tmdb.org/t/p/w154${selectedRecommendation.posterPath}`}
+                    src={selectedRecommendation.posterPath.startsWith('http') ? selectedRecommendation.posterPath : `https://image.tmdb.org/t/p/w154${selectedRecommendation.posterPath}`}
                     alt={selectedRecommendation.title}
                     width={56}
                     height={80}

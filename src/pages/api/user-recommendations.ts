@@ -48,9 +48,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
   } catch (error) {
     console.error('Error fetching user recommendations:', error);
-    return res.status(500).json({ 
-      error: 'Failed to fetch recommendations',
-      details: error instanceof Error ? error.message : 'Unknown error'
-    });
+    
+    // Return empty data instead of 500 error for better UX
+    const emptyResponse = {
+      recommendations: [],
+      type: type as string,
+      count: 0
+    };
+
+    if (type === 'stats') {
+      return res.status(200).json({
+        stats: {
+          totalRecommendations: 0,
+          lastRecommendationDate: null,
+          mostRecommendedGenres: [],
+          totalAnalyses: 0
+        },
+        type: 'stats'
+      });
+    }
+
+    return res.status(200).json(emptyResponse);
   }
 }

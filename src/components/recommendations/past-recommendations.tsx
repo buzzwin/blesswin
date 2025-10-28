@@ -86,17 +86,21 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
         <div className='mb-6 flex items-center justify-between px-6 pt-6'>
           <div className='flex items-center gap-3'>
             <Calendar className='h-6 w-6 text-blue-500' />
-            <h3 className='text-xl font-bold text-foreground dark:text-white'>
-              Your Recommendations
-            </h3>
+            <div>
+              <h3 className='text-xl font-bold text-foreground dark:text-white'>
+                Recommendation History
+              </h3>
+              <p className='text-xs text-muted-foreground dark:text-gray-400'>
+                All recommendations your Curator has shared with you
+              </p>
+            </div>
           </div>
           <p className='text-sm text-muted-foreground dark:text-gray-400'>
-            {recommendations.length} unique recommendation
-            {recommendations.length !== 1 ? 's' : ''}
+            {recommendations.length} total
           </p>
         </div>
 
-        <div className='grid grid-cols-1 gap-4 px-6 pb-6 sm:grid-cols-2 lg:grid-cols-3'>
+        <div className='grid grid-cols-1 gap-4 px-6 pb-6 md:grid-cols-2 xl:grid-cols-3'>
           {displayedRecommendations.map((rec, index) => (
             <div
               key={`${rec.tmdbId}-${rec.mediaType}`}
@@ -105,7 +109,11 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
               <div className='flex gap-3'>
                 <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
                   <ImageWithFallback
-                    src={`https://image.tmdb.org/t/p/w92${rec.posterPath}`}
+                    src={
+                      rec.posterPath.startsWith('http')
+                        ? rec.posterPath
+                        : `https://image.tmdb.org/t/p/w92${rec.posterPath}`
+                    }
                     alt={rec.title}
                     width={48}
                     height={64}

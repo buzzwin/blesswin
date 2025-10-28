@@ -112,6 +112,12 @@ export const getUserAIRecommendations = async (
   limitCount = 20
 ): Promise<Recommendation[]> => {
   try {
+    // Check if we're in production and Firebase Admin is not available
+    if (process.env.NODE_ENV === 'production' && !adminDb) {
+      console.log('Firebase Admin not available in production, returning empty array');
+      return [];
+    }
+
     const querySnapshot = await adminDb
       .collection('user_recommendations')
       .where('userId', '==', userId)
@@ -165,6 +171,12 @@ export const getLatestAIRecommendations = async (
   userId: string
 ): Promise<any> => {
   try {
+    // Check if we're in production and Firebase Admin is not available
+    if (process.env.NODE_ENV === 'production' && !adminDb) {
+      console.log('Firebase Admin not available in production, returning null');
+      return null;
+    }
+
     const querySnapshot = await adminDb
       .collection('user_analyses')
       .where('userId', '==', userId)
@@ -207,6 +219,17 @@ export const getAIRecommendationStats = async (userId: string): Promise<{
   totalAnalyses: number;
 }> => {
   try {
+    // Check if we're in production and Firebase Admin is not available
+    if (process.env.NODE_ENV === 'production' && !adminDb) {
+      console.log('Firebase Admin not available in production, returning empty stats');
+      return {
+        totalRecommendations: 0,
+        lastRecommendationDate: null,
+        mostRecommendedGenres: [],
+        totalAnalyses: 0
+      };
+    }
+
     // Get unique recommendations count
     const recommendationsSnapshot = await adminDb
       .collection('user_recommendations')

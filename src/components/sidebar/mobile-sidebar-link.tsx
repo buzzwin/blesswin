@@ -19,20 +19,20 @@ export function MobileSidebarLink({
   const getIcon = () => {
     switch (iconName) {
       case 'SparklesIcon':
+      case 'sparkles':
         return <Sparkles className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
       case 'StarIcon':
+      case 'star':
         return <Star className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
       case 'ClockIcon':
+      case 'clock':
         return <Clock className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
       case 'UserIcon':
+      case 'user':
         return <User className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
       default:
-        return (
-          <HeroIcon
-            className={bottom ? 'h-4 w-4' : 'h-5 w-5'}
-            iconName={iconName}
-          />
-        );
+        // Fallback to Sparkles if icon not recognized
+        return <Sparkles className={bottom ? 'h-4 w-4' : 'h-5 w-5'} />;
     }
   };
 

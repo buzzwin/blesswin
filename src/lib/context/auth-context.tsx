@@ -1,6 +1,8 @@
 import { useState, useEffect, useContext, createContext, useMemo } from 'react';
 import {
   signInWithPopup,
+  signInWithRedirect,
+  getRedirectResult,
   GoogleAuthProvider,
   FacebookAuthProvider,
   onAuthStateChanged,
@@ -70,6 +72,98 @@ export function AuthContextProvider({
   const [userBookmarks, setUserBookmarks] = useState<Bookmark[] | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Detect if user is on mobile device
+  const isMobileDevice = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    );
+  };
+
+  // Handle redirect result
+  useEffect(() => {
+    const handleRedirectResult = async (): Promise<void> => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result && result.user) {
+          setLoading(true); // Set loading state during redirect handling
+          const authUser = result.user;
+          const { uid, displayName, photoURL } = authUser;
+
+          const userSnapshot = await getDoc(doc(usersCollection, uid));
+
+          if (!userSnapshot.exists()) {
+            let available = false;
+            let randomUsername = '';
+
+            while (!available) {
+              const normalizeName = displayName
+                ?.replace(/\s/g, '')
+                .toLowerCase();
+              const randomInt = getRandomInt(1, 10_000);
+
+              randomUsername = `${normalizeName as string}${randomInt}`;
+
+              const randomUserSnapshot = await getDoc(
+                doc(usersCollection, randomUsername)
+              );
+
+              if (!randomUserSnapshot.exists()) available = true;
+            }
+
+            const userData: WithFieldValue<User> = {
+              id: uid,
+              bio: null,
+              name: (displayName as string) ?? 'anonymous',
+              theme: null,
+              accent: null,
+              website: null,
+              location: null,
+              photoURL: photoURL ?? '/logo.PNG',
+              username: randomUsername,
+              verified: false,
+              following: [],
+              followers: [],
+              createdAt: serverTimestamp(),
+              updatedAt: null,
+              totalTweets: 0,
+              totalPhotos: 0,
+              pinnedTweet: null,
+              coverPhotoURL: null
+            };
+
+            const userStatsData: WithFieldValue<Stats> = {
+              likes: [],
+              tweets: [],
+              updatedAt: null
+            };
+
+            await Promise.all([
+              setDoc(doc(usersCollection, uid), userData),
+              setDoc(doc(userStatsCollection(uid), 'stats'), userStatsData)
+            ]);
+
+            const newUser = (await getDoc(doc(usersCollection, uid))).data();
+            setUser(newUser as User);
+            setLoading(false);
+          } else {
+            const userData = userSnapshot.data();
+            setUser(userData);
+            setLoading(false);
+          }
+
+          toast.success('Successfully signed in!');
+        }
+      } catch (error) {
+        toast.error('Failed to complete sign in');
+        setError(error as Error);
+        setLoading(false);
+      }
+    };
+
+    void handleRedirectResult();
+  }, []);
 
   useEffect(() => {
     const manageUser = async (authUser: AuthUser): Promise<void> => {
@@ -180,8 +274,15 @@ export function AuthContextProvider({
   const signInWithGoogle = async (): Promise<void> => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
-      toast.success('Successfully signed in with Google!');
+
+      // Use redirect for mobile devices, popup for desktop
+      if (isMobileDevice()) {
+        await signInWithRedirect(auth, provider);
+        // Don't show success message yet as user will be redirected
+      } else {
+        await signInWithPopup(auth, provider);
+        toast.success('Successfully signed in with Google!');
+      }
     } catch (error) {
       const firebaseError = error as FirebaseError;
       if (firebaseError.code === 'auth/popup-closed-by-user') {
@@ -206,8 +307,15 @@ export function AuthContextProvider({
   const signInWithFacebook = async (): Promise<void> => {
     try {
       const provider = new FacebookAuthProvider();
-      await signInWithPopup(auth, provider);
-      toast.success('Successfully signed in with Facebook!');
+
+      // Use redirect for mobile devices, popup for desktop
+      if (isMobileDevice()) {
+        await signInWithRedirect(auth, provider);
+        // Don't show success message yet as user will be redirected
+      } else {
+        await signInWithPopup(auth, provider);
+        toast.success('Successfully signed in with Facebook!');
+      }
     } catch (error) {
       const firebaseError = error as FirebaseError;
       if (firebaseError.code === 'auth/popup-closed-by-user') {
