@@ -88,6 +88,13 @@ export function AuthContextProvider({
         const result = await getRedirectResult(auth);
         if (result && result.user) {
           setLoading(true); // Set loading state during redirect handling
+
+          // Check for redirect path
+          const redirectPath =
+            typeof window !== 'undefined'
+              ? sessionStorage.getItem('redirectAfterLogin') ||
+                new URLSearchParams(window.location.search).get('redirect')
+              : null;
           const authUser = result.user;
           const { uid, displayName, photoURL } = authUser;
 
@@ -154,6 +161,12 @@ export function AuthContextProvider({
           }
 
           toast.success('Successfully signed in!');
+
+          // Redirect to the stored path or default to home
+          if (redirectPath && typeof window !== 'undefined') {
+            sessionStorage.removeItem('redirectAfterLogin');
+            window.location.href = redirectPath;
+          }
         }
       } catch (error) {
         toast.error('Failed to complete sign in');
@@ -237,8 +250,24 @@ export function AuthContextProvider({
     const handleUserAuth = (authUser: AuthUser | null): void => {
       setLoading(true);
 
-      if (authUser) void manageUser(authUser);
-      else {
+      if (authUser) {
+        void manageUser(authUser).then(() => {
+          // Check for redirect path after successful login (for email/password login)
+          const redirectPath =
+            typeof window !== 'undefined'
+              ? sessionStorage.getItem('redirectAfterLogin') ||
+                new URLSearchParams(window.location.search).get('redirect')
+              : null;
+
+          if (redirectPath && typeof window !== 'undefined') {
+            sessionStorage.removeItem('redirectAfterLogin');
+            // Use router for client-side navigation
+            setTimeout(() => {
+              window.location.href = redirectPath;
+            }, 500);
+          }
+        });
+      } else {
         setUser(null);
         setLoading(false);
       }

@@ -32,6 +32,7 @@ import type { MediaCard } from '@lib/types/review';
 import type { RatingType } from '@lib/types/review';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
+import { CuratorChat } from '@components/chat/curator-chat';
 
 interface HomeStats {
   totalReviews: number;
@@ -88,7 +89,11 @@ export default function Home(): JSX.Element {
   };
 
   const handleSignIn = (): void => {
-    void router.push('/login');
+    // Store redirect path to go to curator chat after login
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem('redirectAfterLogin', '/curator');
+    }
+    void router.push('/login?redirect=/curator');
   };
 
   const formatNumber = (num: number): string => {
@@ -141,69 +146,13 @@ export default function Home(): JSX.Element {
                 </p>
               </div>
 
-              {/* chat mock */}
-              <div className='mt-10 space-y-4 w-full max-w-2xl'>
-                {/* you */}
-                <div className='flex gap-3 items-start'>
-                  <div className='flex justify-center items-center w-10 h-10 bg-blue-500 rounded-full ring-2 shrink-0 ring-blue-400/50'>
-                    <Users className='w-5 h-5 text-white' />
-                  </div>
-                  <div className='flex-1 p-4 bg-gray-50 rounded-2xl border border-gray-200 dark:border-white/20 dark:bg-white/10 dark:backdrop-blur-md'>
-                    <div className='mb-1 text-[10px] font-semibold uppercase tracking-wide text-gray-600 dark:text-purple-300'>
-                      You
-                    </div>
-                    <p className='text-sm text-gray-900 dark:text-white'>
-                      What should I watch tonight? Feeling something dark but
-                      not depressing.
-                    </p>
-                  </div>
-                </div>
-
-                {/* cinewolf */}
-                <div className='flex gap-3 items-start'>
-                  <div className='flex justify-center items-center w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full ring-4 animate-pulse shrink-0 ring-purple-500/30'>
-                    <Bot className='w-5 h-5 text-white' />
-                  </div>
-                  <div className='flex-1 p-4 bg-purple-50 rounded-2xl border border-purple-300 dark:border-purple-400/30 dark:bg-purple-500/20 dark:backdrop-blur-md'>
-                    <div className='flex gap-2 items-center mb-1'>
-                      <span className='text-[10px] font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-200'>
-                        CineWolf-93
-                      </span>
-                      <span className='rounded-full bg-purple-200 px-2 py-0.5 text-[9px] font-medium text-purple-700 dark:bg-purple-400/20 dark:text-purple-200'>
-                        Your Curator
-                      </span>
-                    </div>
-                    <p className='text-sm text-gray-900 dark:text-white'>
-                      I've got 3 dark-smart thrillers under 40 min per ep. Want
-                      me to battle FilmSnob.AI for the best pick?
-                    </p>
-                    <div className='flex flex-wrap gap-2 mt-3'>
-                      <span className='inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:bg-purple-500/30 dark:text-purple-200'>
-                        <Trophy className='w-3 h-3' />
-                        WIN STREAK: 7
-                      </span>
-                      <span className='inline-flex items-center gap-1 rounded-full bg-gray-200 px-2 py-1 text-[10px] font-semibold text-gray-700 dark:bg-white/10 dark:text-white/80'>
-                        <Star className='w-3 h-3' />
-                        95% match
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* filmsnob */}
-                <div className='flex gap-3 justify-end items-start'>
-                  <div className='flex-1 p-4 text-right bg-gray-100 rounded-2xl border border-gray-200 dark:border-white/10 dark:bg-white/5 dark:backdrop-blur-md'>
-                    <div className='mb-1 text-[10px] font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400'>
-                      FilmSnob.AI
-                    </div>
-                    <p className='text-sm text-gray-700 dark:text-gray-300'>
-                      Respectfully, your picks are mid. Here's what actually
-                      matters...
-                    </p>
-                  </div>
-                  <div className='flex justify-center items-center w-10 h-10 bg-gray-600 rounded-full ring-2 shrink-0 ring-gray-500/50'>
-                    <Bot className='w-5 h-5 text-white' />
-                  </div>
+              {/* Interactive Chat */}
+              <div className='mt-10 w-full max-w-2xl'>
+                <div className='rounded-2xl border backdrop-blur-md border-white/20 bg-white/10 dark:border-white/20 dark:bg-white/5'>
+                  <CuratorChat
+                    className='max-h-[500px] min-h-[400px]'
+                    onLoginRequest={handleSignIn}
+                  />
                 </div>
               </div>
 
