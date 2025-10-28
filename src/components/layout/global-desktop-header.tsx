@@ -1,6 +1,14 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { BarChart3, Sparkles, Star, Clock, User, LogOut } from 'lucide-react';
+import {
+  BarChart3,
+  Sparkles,
+  Star,
+  Clock,
+  User,
+  LogOut,
+  Bot
+} from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import LogoIcon from '@components/ui/logo';
 import { Button } from '@components/ui/button-shadcn';
@@ -41,6 +49,17 @@ export function GlobalDesktopHeader(): JSX.Element {
 
         {/* Navigation Links */}
         <nav className='flex items-center gap-4'>
+          {user && (
+            <Button
+              variant='ghost'
+              size='sm'
+              onClick={() => router.push('/curator')}
+              className='text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
+            >
+              <Bot className='mr-2 h-4 w-4' />
+              Chat
+            </Button>
+          )}
           <Button
             variant='ghost'
             size='sm'

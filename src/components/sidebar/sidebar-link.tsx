@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import cn from 'clsx';
-import { Sparkles, Clock, User, Star } from 'lucide-react';
+import { Sparkles, Clock, User, Star, Bot } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
 import type { NavLink } from './sidebar';
@@ -22,6 +22,11 @@ export function SidebarLink({
   const isActive = username ? asPath.includes(username) : asPath === href;
 
   const getIcon = () => {
+    // Use Bot icon for Chat with Curator link
+    if (href === '/curator') {
+      return <Bot className='h-7 w-7' />;
+    }
+
     switch (iconName) {
       case 'SparklesIcon':
         return <Sparkles className='h-7 w-7' />;

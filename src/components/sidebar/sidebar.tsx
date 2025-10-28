@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { LogOut } from 'lucide-react';
+import { LogOut, Bot } from 'lucide-react';
 import { useModal } from '@lib/hooks/useModal';
 import { useAuth } from '@lib/context/auth-context';
 import { Modal } from '@components/modal/modal';
@@ -22,6 +22,12 @@ export type NavLink = {
 };
 
 const getNavLinks = (username: string): Readonly<NavLink[]> => [
+  {
+    href: '/curator',
+    linkName: 'Chat',
+    iconName: 'SparklesIcon' as IconName, // Will use Bot icon in SidebarLink
+    disabled: false
+  },
   {
     href: '/recommendations',
     linkName: 'AI Recommendations',
