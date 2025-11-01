@@ -221,13 +221,16 @@ export const getUserReviews = async (userId: string): Promise<ReviewWithUser[]> 
   }
 };
 
-// Get user ratings (reviews without review text)
+// Get user ratings (all entries with a rating field, regardless of review text)
+// This includes both standalone ratings and reviews that have ratings
 export const getUserRatings = async (userId: string): Promise<ReviewWithUser[]> => {
   try {
+    // Get all reviews/ratings for this user that have a rating field
+    // We can't query by rating field existence directly, so we get all user reviews
+    // and filter for those with a rating field
     const q = query(
       reviewsCollection,
       where('userId', '==', userId),
-      where('review', '==', ''), // Only get entries with empty review text
       orderBy('createdAt', 'desc')
     );
     const snapshot = await getDocs(q);
@@ -236,21 +239,37 @@ export const getUserRatings = async (userId: string): Promise<ReviewWithUser[]> 
     const userDoc = await getDoc(doc(usersCollection, userId));
     const userData = userDoc.data() as User;
 
-    return snapshot.docs.map(doc => {
+    // Filter to only include entries that have a rating field (love, hate, or meh)
+    // and remove duplicates based on tmdbId (prefer entries with review text over empty ones)
+    const ratingsMap = new Map<string, ReviewWithUser>();
+    
+    snapshot.docs.forEach(doc => {
       const data = doc.data();
-      return {
-        ...data,
-        id: doc.id,
-        createdAt: data.createdAt,
-        user: {
-          id: userData.id,
-          name: userData.name,
-          username: userData.username,
-          photoURL: userData.photoURL,
-          verified: userData.verified
+      // Only include entries that have a rating field
+      if (data.rating && ['love', 'hate', 'meh'].includes(data.rating)) {
+        const tmdbId = String(data.tmdbId);
+        const existing = ratingsMap.get(tmdbId);
+        
+        // If we already have this tmdbId, prefer the one with review text if current has text
+        // Otherwise, prefer the one without review text if current doesn't have text
+        if (!existing || (data.review && !existing.review)) {
+          ratingsMap.set(tmdbId, {
+            ...data,
+            id: doc.id,
+            createdAt: data.createdAt,
+            user: {
+              id: userData.id,
+              name: userData.name,
+              username: userData.username,
+              photoURL: userData.photoURL,
+              verified: userData.verified
+            }
+          } as ReviewWithUser);
         }
-      } as ReviewWithUser;
+      }
     });
+
+    return Array.from(ratingsMap.values());
   } catch (error) {
     // console.error('Error fetching user ratings:', error);
     return [];

@@ -156,8 +156,12 @@ Return ONLY a valid JSON object with movie/show titles and basic info. DO NOT in
 
 CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. ABSOLUTELY NO content from ${currentYear}, ${currentYear - 2}, ${currentYear - 3}, or any other year. Every single recommendation MUST be from ${targetYear}.
 
-Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
-Avoid suggesting content similar to what they've disliked.
+IMPORTANT: You must carefully analyze the user's preferences based on their ratings. Pay special attention to:
+- Content they LOVED: Suggest similar content (same genres, themes, styles, directors, or actors)
+- Content they HATED: AVOID suggesting anything similar (genres, themes, styles, directors, or actors)
+- Content they found MEH: Avoid similar content, but don't treat it as harshly as hated content
+
+Always consider ALL the user's ratings to provide better recommendations.
 Focus on popular American content from ${targetYear} that are widely known and accessible.
 Prioritize shows and movies that are:
 - Released in ${targetYear} (MANDATORY)
@@ -165,9 +169,19 @@ Prioritize shows and movies that are:
 - Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
 - Well-known and culturally significant
 - Currently trending or recently released in ${targetYear}
+- Similar to what they LOVED (genres, themes, styles, directors, actors)
+- NOT similar to what they HATED (genres, themes, styles, directors, actors)
 
 Based on these ratings, suggest 5 diverse shows/movies from ${targetYear} for rating. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear}:
-${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}
+
+LIKED (love):
+${ratings.filter(r => r.rating === 'love').map(r => `- ${r.title} (${r.mediaType})`).join('\n') || '- None yet'}
+
+DISLIKED (hate):
+${ratings.filter(r => r.rating === 'hate').map(r => `- ${r.title} (${r.mediaType})`).join('\n') || '- None yet'}
+
+NEUTRAL (meh):
+${ratings.filter(r => r.rating === 'meh').map(r => `- ${r.title} (${r.mediaType})`).join('\n') || '- None yet'}
 
 Return ONLY a valid JSON object with REAL TMDB data:
 
