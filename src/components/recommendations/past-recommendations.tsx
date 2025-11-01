@@ -22,6 +22,24 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
     ? recommendations
     : recommendations.slice(0, 6);
 
+  // Helper function to construct image URL from posterPath
+  const getImageUrl = (posterPath: string): string => {
+    if (!posterPath) return '/api/placeholder/48/64';
+
+    // If it's already a full URL, return as-is
+    if (posterPath.startsWith('http')) {
+      return posterPath;
+    }
+
+    // If it's a placeholder path, return as-is (it's already a valid relative URL)
+    if (posterPath.startsWith('/api/placeholder')) {
+      return posterPath;
+    }
+
+    // Otherwise, assume it's a TMDB path and construct the full URL
+    return `https://image.tmdb.org/t/p/w92${posterPath}`;
+  };
+
   if (historyLoading) {
     return (
       <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-gray-900/50'>
@@ -109,11 +127,7 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
               <div className='flex gap-3'>
                 <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
                   <ImageWithFallback
-                    src={
-                      rec.posterPath.startsWith('http')
-                        ? rec.posterPath
-                        : `https://image.tmdb.org/t/p/w92${rec.posterPath}`
-                    }
+                    src={getImageUrl(rec.posterPath)}
                     alt={rec.title}
                     width={48}
                     height={64}

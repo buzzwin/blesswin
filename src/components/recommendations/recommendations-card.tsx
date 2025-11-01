@@ -41,6 +41,28 @@ export function RecommendationsCard({
     // console.error('Failed to load image:', imageUrl);
   };
 
+  // Helper function to construct image URL from posterPath
+  const getImageUrl = (
+    posterPath: string,
+    size: 'w92' | 'w154' = 'w92'
+  ): string => {
+    if (!posterPath)
+      return `/api/placeholder/${size === 'w92' ? '48/64' : '56/80'}`;
+
+    // If it's already a full URL, return as-is
+    if (posterPath.startsWith('http')) {
+      return posterPath;
+    }
+
+    // If it's a placeholder path, return as-is (it's already a valid relative URL)
+    if (posterPath.startsWith('/api/placeholder')) {
+      return posterPath;
+    }
+
+    // Otherwise, assume it's a TMDB path and construct the full URL
+    return `https://image.tmdb.org/t/p/${size}${posterPath}`;
+  };
+
   if (loading) {
     return (
       <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
@@ -174,7 +196,7 @@ export function RecommendationsCard({
                 <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
                   {recommendation.posterPath ? (
                     <ImageWithFallback
-                      src={recommendation.posterPath.startsWith('http') ? recommendation.posterPath : `https://image.tmdb.org/t/p/w92${recommendation.posterPath}`}
+                      src={getImageUrl(recommendation.posterPath, 'w92')}
                       alt={recommendation.title}
                       width={48}
                       height={64}
@@ -250,7 +272,7 @@ export function RecommendationsCard({
               <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded bg-gray-200 dark:bg-gray-700'>
                 {selectedRecommendation.posterPath ? (
                   <ImageWithFallback
-                    src={selectedRecommendation.posterPath.startsWith('http') ? selectedRecommendation.posterPath : `https://image.tmdb.org/t/p/w154${selectedRecommendation.posterPath}`}
+                    src={getImageUrl(selectedRecommendation.posterPath, 'w154')}
                     alt={selectedRecommendation.title}
                     width={56}
                     height={80}

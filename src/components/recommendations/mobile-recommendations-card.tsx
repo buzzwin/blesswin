@@ -21,7 +21,9 @@ interface MobileRecommendationsCardProps {
   refreshKey?: number;
 }
 
-export function MobileRecommendationsCard({ refreshKey }: MobileRecommendationsCardProps): JSX.Element {
+export function MobileRecommendationsCard({
+  refreshKey
+}: MobileRecommendationsCardProps): JSX.Element {
   const { recommendations, analysis, loading, error, refetch } =
     useRecommendations();
   const [selectedRecommendation, setSelectedRecommendation] =
@@ -36,6 +38,24 @@ export function MobileRecommendationsCard({ refreshKey }: MobileRecommendationsC
 
   const handleImageError = (imageUrl: string) => {
     // console.error('Failed to load image:', imageUrl);
+  };
+
+  // Helper function to construct image URL from posterPath
+  const getImageUrl = (posterPath: string): string => {
+    if (!posterPath) return '/api/placeholder/32/48';
+
+    // If it's already a full URL, return as-is
+    if (posterPath.startsWith('http')) {
+      return posterPath;
+    }
+
+    // If it's a placeholder path, return as-is (it's already a valid relative URL)
+    if (posterPath.startsWith('/api/placeholder')) {
+      return posterPath;
+    }
+
+    // Otherwise, assume it's a TMDB path and construct the full URL
+    return `https://image.tmdb.org/t/p/w92${posterPath}`;
   };
 
   if (loading) {
@@ -202,7 +222,7 @@ export function MobileRecommendationsCard({ refreshKey }: MobileRecommendationsC
                 <div className='flex gap-2'>
                   <div className='relative h-12 w-8 flex-shrink-0 overflow-hidden rounded'>
                     <NextImage
-                      src={`https://image.tmdb.org/t/p/w92${recommendation.posterPath}`}
+                      src={getImageUrl(recommendation.posterPath)}
                       alt={recommendation.title}
                       width={32}
                       height={48}
