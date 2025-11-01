@@ -1,5 +1,6 @@
 import { getUserRatings } from '@lib/firebase/utils/review';
 import { saveAIRecommendations } from '@lib/firebase/utils/recommendations';
+import { adminDb } from '@lib/firebase/admin';
 import { callGeminiAPI, extractJSONFromResponse } from '@lib/api/gemini';
 import type { NextApiRequest, NextApiResponse } from 'next';
 
@@ -103,6 +104,30 @@ export default async function handler(
   // Fetch user's ratings
   const ratings = await getUserRatings(userId as string);
   console.log('User ratings count:', ratings.length);
+
+  // Fetch dismissed recommendations (gracefully handle if Admin SDK not available)
+  let dismissedRecommendations = new Set<string>();
+  if (adminDb) {
+    try {
+      const dismissedSnapshot = await adminDb
+        .collection('dismissed_recommendations')
+        .where('userId', '==', userId)
+        .get();
+      
+      dismissedSnapshot.forEach((doc) => {
+        const data = doc.data();
+        dismissedRecommendations.add(`${data.tmdbId}-${data.mediaType}`);
+      });
+      
+      console.log('Dismissed recommendations count:', dismissedRecommendations.size);
+    } catch (error) {
+      // If Admin SDK not configured, continue without filtering dismissed recommendations
+      console.warn('Could not fetch dismissed recommendations (Admin SDK not configured):', error instanceof Error ? error.message : 'Unknown error');
+      dismissedRecommendations = new Set<string>();
+    }
+  } else {
+    console.warn('Admin SDK not available, skipping dismissed recommendations filter');
+  }
 
   // Generate AI recommendations using Gemini
   // For users with no ratings, suggest popular content
@@ -240,9 +265,16 @@ Return ONLY a valid JSON object with REAL TMDB data:
 
     console.log(`Filtered recommendations: ${filteredRecommendations.length} out of ${parsedResponse.recommendations.length} are from ${targetYear}`);
 
+    // Filter out dismissed recommendations
+    const nonDismissedRecommendations = filteredRecommendations.filter(rec => 
+      !dismissedRecommendations.has(`${rec.tmdbId}-${rec.mediaType}`)
+    );
+    
+    console.log(`Filtered out ${filteredRecommendations.length - nonDismissedRecommendations.length} dismissed recommendations`);
+
     // Add real poster paths to recommendations using TMDB API
     const recommendationsWithPosters = await Promise.all(
-      filteredRecommendations.map(async (rec) => ({
+      nonDismissedRecommendations.map(async (rec) => ({
         ...rec,
         posterPath: await getPosterPathFromTMDB(rec.title, rec.mediaType, rec.year)
       }))

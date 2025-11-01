@@ -99,6 +99,17 @@ service cloud.firestore {
       allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
     }
 
+    // Dismissed recommendations collection
+    match /dismissed_recommendations/{dismissalId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.tmdbId is string
+        && request.resource.data.title is string
+        && request.resource.data.mediaType in ['movie', 'tv'];
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
+
     // User analyses collection (AI analysis data)
     match /user_analyses/{analysisId} {
       allow read: if isSignedIn() && resource.data.userId == request.auth.uid;

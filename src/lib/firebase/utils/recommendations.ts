@@ -37,6 +37,11 @@ export const saveAIRecommendations = async (
   targetYear: number,
   source: 'ai_generated' | 'fallback' = 'ai_generated'
 ): Promise<string> => {
+  if (!adminDb) {
+    console.warn('Admin SDK not available, skipping save of recommendations');
+    return 'no-admin-sdk';
+  }
+
   try {
     // Get existing recommendations to check for duplicates
     const existingSnapshot = await adminDb
@@ -102,7 +107,9 @@ export const saveAIRecommendations = async (
     return analysisRef.id;
   } catch (error) {
     console.error('Error saving AI recommendations:', error);
-    throw new Error('Failed to save AI recommendations');
+    // Don't throw - just log and return a failure indicator
+    // This allows the API to continue even if saving fails
+    return 'save-failed';
   }
 };
 
@@ -111,13 +118,12 @@ export const getUserAIRecommendations = async (
   userId: string,
   limitCount = 20
 ): Promise<Recommendation[]> => {
-  try {
-    // Check if we're in production and Firebase Admin is not available
-    if (process.env.NODE_ENV === 'production' && !adminDb) {
-      console.log('Firebase Admin not available in production, returning empty array');
-      return [];
-    }
+  if (!adminDb) {
+    console.warn('Firebase Admin not available, returning empty array');
+    return [];
+  }
 
+  try {
     const querySnapshot = await adminDb
       .collection('user_recommendations')
       .where('userId', '==', userId)
@@ -162,7 +168,8 @@ export const getUserAIRecommendations = async (
     return recommendations.slice(0, limitCount);
   } catch (error) {
     console.error('Error fetching user AI recommendations:', error);
-    throw new Error('Failed to fetch AI recommendations');
+    // Return empty array instead of throwing - allows API to continue
+    return [];
   }
 };
 
@@ -170,13 +177,12 @@ export const getUserAIRecommendations = async (
 export const getLatestAIRecommendations = async (
   userId: string
 ): Promise<any> => {
-  try {
-    // Check if we're in production and Firebase Admin is not available
-    if (process.env.NODE_ENV === 'production' && !adminDb) {
-      console.log('Firebase Admin not available in production, returning null');
-      return null;
-    }
+  if (!adminDb) {
+    console.warn('Firebase Admin not available, returning null');
+    return null;
+  }
 
+  try {
     const querySnapshot = await adminDb
       .collection('user_analyses')
       .where('userId', '==', userId)
@@ -207,7 +213,8 @@ export const getLatestAIRecommendations = async (
     };
   } catch (error) {
     console.error('Error fetching latest AI analysis:', error);
-    throw new Error('Failed to fetch latest AI analysis');
+    // Return null instead of throwing - allows API to continue
+    return null;
   }
 };
 

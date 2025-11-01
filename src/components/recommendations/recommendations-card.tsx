@@ -1,11 +1,28 @@
 import { useState, useEffect } from 'react';
-import { Brain, Sparkles, RefreshCw, Star, Calendar, Film } from 'lucide-react';
+import {
+  Brain,
+  Sparkles,
+  RefreshCw,
+  Star,
+  Calendar,
+  Film,
+  X,
+  Bookmark
+} from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { useRecommendations } from '@lib/hooks/useRecommendations';
+import { manageBookmark } from '@lib/firebase/utils';
+import {
+  dismissRecommendation,
+  getDismissedRecommendations
+} from '@lib/firebase/utils/dismissed-recommendations';
 import { Card, CardContent, CardHeader, CardTitle } from '@components/ui/card';
 import { Button } from '@components/ui/button-shadcn';
 import { ImageWithFallback } from '@components/ui/image-with-fallback';
 import { SimpleSocialShare as SocialShare } from '@components/share/simple-social-share';
+import { AddToWatchlistModal } from '@components/bookmarks/add-to-watchlist-modal';
 
 interface Recommendation {
   tmdbId: string;
@@ -25,10 +42,26 @@ interface RecommendationsCardProps {
 export function RecommendationsCard({
   refreshKey
 }: RecommendationsCardProps): JSX.Element {
+  const { user } = useAuth();
   const { recommendations, analysis, loading, error, refetch } =
     useRecommendations();
   const [selectedRecommendation, setSelectedRecommendation] =
     useState<Recommendation | null>(null);
+  const [dismissedRecommendations, setDismissedRecommendations] = useState<
+    Set<string>
+  >(new Set());
+  const [watchlistModalOpen, setWatchlistModalOpen] = useState(false);
+  const [watchlistRecommendation, setWatchlistRecommendation] =
+    useState<Recommendation | null>(null);
+
+  // Load dismissed recommendations on mount
+  useEffect(() => {
+    if (user?.id) {
+      void getDismissedRecommendations(user.id).then((dismissed) => {
+        setDismissedRecommendations(dismissed);
+      });
+    }
+  }, [user?.id]);
 
   // Refresh recommendations when refreshKey changes
   useEffect(() => {
@@ -62,6 +95,91 @@ export function RecommendationsCard({
     // Otherwise, assume it's a TMDB path and construct the full URL
     return `https://image.tmdb.org/t/p/${size}${posterPath}`;
   };
+
+  // Handle discarding a recommendation
+  const handleDiscard = async (
+    e: React.MouseEvent,
+    recommendation: Recommendation
+  ): Promise<void> => {
+    e.stopPropagation(); // Prevent opening the modal
+
+    if (!user?.id) {
+      toast.error('Please sign in to dismiss recommendations');
+      return;
+    }
+
+    try {
+      // Add to local state immediately for instant UI feedback
+      setDismissedRecommendations((prev) => {
+        const newSet = new Set(prev);
+        newSet.add(`${recommendation.tmdbId}-${recommendation.mediaType}`);
+        return newSet;
+      });
+
+      // Save to database
+      await dismissRecommendation(
+        user.id,
+        recommendation.tmdbId,
+        recommendation.mediaType,
+        recommendation.title
+      );
+
+      toast.success(`Dismissed "${recommendation.title}"`);
+    } catch (error) {
+      // Revert local state on error
+      setDismissedRecommendations((prev) => {
+        const newSet = new Set(prev);
+        newSet.delete(`${recommendation.tmdbId}-${recommendation.mediaType}`);
+        return newSet;
+      });
+      toast.error('Failed to dismiss recommendation');
+    }
+  };
+
+  // Handle adding to watchlist
+  const handleAddToWatchlist = (
+    e: React.MouseEvent,
+    recommendation: Recommendation
+  ): void => {
+    e.stopPropagation(); // Prevent opening the modal
+    if (!user?.id) {
+      toast.error('Please sign in to add to watchlist');
+      return;
+    }
+    setWatchlistRecommendation(recommendation);
+    setWatchlistModalOpen(true);
+  };
+
+  // Add to watchlist callback
+  const addToWatchlist = async (watchlistId: string): Promise<void> => {
+    if (!user?.id || !watchlistRecommendation) return;
+
+    try {
+      await manageBookmark(
+        'bookmark',
+        user.id,
+        watchlistRecommendation.tmdbId,
+        {
+          title: watchlistRecommendation.title,
+          mediaType: watchlistRecommendation.mediaType,
+          posterPath: watchlistRecommendation.posterPath,
+          watchlistId,
+          mediaId: watchlistRecommendation.tmdbId,
+          tags: []
+        }
+      );
+      toast.success(`Added "${watchlistRecommendation.title}" to watchlist!`);
+      setWatchlistModalOpen(false);
+      setWatchlistRecommendation(null);
+    } catch (error) {
+      toast.error('Failed to add to watchlist');
+    }
+  };
+
+  // Filter out dismissed recommendations
+  const visibleRecommendations = recommendations.filter(
+    (rec) => !dismissedRecommendations.has(`${rec.tmdbId}-${rec.mediaType}`)
+  );
 
   if (loading) {
     return (
@@ -186,13 +304,15 @@ export function RecommendationsCard({
         </div>
 
         <div className='space-y-2'>
-          {recommendations.slice(0, 3).map((recommendation, index) => (
+          {visibleRecommendations.slice(0, 3).map((recommendation, index) => (
             <div
               key={index}
-              className='group cursor-pointer rounded-lg border border-border bg-card p-2 transition-all duration-200 hover:border-border/80 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
-              onClick={() => setSelectedRecommendation(recommendation)}
+              className='group relative rounded-lg border border-border bg-card p-2 transition-all duration-200 hover:border-border/80 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
             >
-              <div className='flex gap-3'>
+              <div
+                className='flex cursor-pointer gap-3'
+                onClick={() => setSelectedRecommendation(recommendation)}
+              >
                 <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
                   {recommendation.posterPath ? (
                     <ImageWithFallback
@@ -245,11 +365,32 @@ export function RecommendationsCard({
                   </div>
                 </div>
               </div>
+              {/* Action buttons */}
+              <div className='mt-2 flex gap-2'>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={(e) => handleDiscard(e, recommendation)}
+                  className='flex-1 text-xs hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400'
+                >
+                  <X className='mr-1 h-3 w-3' />
+                  Discard
+                </Button>
+                <Button
+                  variant='outline'
+                  size='sm'
+                  onClick={(e) => handleAddToWatchlist(e, recommendation)}
+                  className='flex-1 text-xs hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400'
+                >
+                  <Bookmark className='mr-1 h-3 w-3' />
+                  Save
+                </Button>
+              </div>
             </div>
           ))}
         </div>
 
-        {recommendations.length > 3 && (
+        {visibleRecommendations.length > 3 && (
           <div className='text-center'>
             <Link href='/recommendations'>
               <Button
@@ -339,6 +480,34 @@ export function RecommendationsCard({
               <div className='flex gap-2'>
                 <Button
                   variant='outline'
+                  onClick={(e) => {
+                    if (selectedRecommendation) {
+                      handleDiscard(e, selectedRecommendation);
+                      setSelectedRecommendation(null);
+                    }
+                  }}
+                  className='flex-1 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900/20 dark:hover:text-red-400'
+                >
+                  <X className='mr-2 h-4 w-4' />
+                  Discard
+                </Button>
+                <Button
+                  variant='outline'
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (selectedRecommendation) {
+                      handleAddToWatchlist(e, selectedRecommendation);
+                    }
+                  }}
+                  className='flex-1 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400'
+                >
+                  <Bookmark className='mr-2 h-4 w-4' />
+                  Save to Watchlist
+                </Button>
+              </div>
+              <div className='flex gap-2'>
+                <Button
+                  variant='outline'
                   className='flex-1'
                   onClick={() => setSelectedRecommendation(null)}
                 >
@@ -378,6 +547,24 @@ export function RecommendationsCard({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Add to Watchlist Modal */}
+      {watchlistRecommendation && (
+        <AddToWatchlistModal
+          isOpen={watchlistModalOpen}
+          onClose={() => {
+            setWatchlistModalOpen(false);
+            setWatchlistRecommendation(null);
+          }}
+          onAdd={addToWatchlist}
+          mediaData={{
+            id: watchlistRecommendation.tmdbId,
+            title: watchlistRecommendation.title,
+            mediaType: watchlistRecommendation.mediaType,
+            posterPath: watchlistRecommendation.posterPath
+          }}
+        />
       )}
     </div>
   );
