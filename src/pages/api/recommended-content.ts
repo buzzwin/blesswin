@@ -48,40 +48,40 @@ export default async function handler(
     // For users with no ratings, suggest popular content
     // For users with ratings, use their preferences
     const currentYear = new Date().getFullYear();
-    // Use current year for Discover & Rate to get fresh content
-    const targetYear = currentYear;
+    // Use current year and previous year for Discover & Rate to get more content
+    const targetYears = [currentYear, currentYear - 1];
     const prompt = ratings.length === 0 
-      ? `You are a movie and TV show recommendation expert specializing in American popular culture. This user is new and has no ratings yet. Suggest DIVERSE and DISCOVERABLE content from ${targetYear} for the Discover & Rate section.
+      ? `You are a movie and TV show recommendation expert specializing in American popular culture. This user is new and has no ratings yet. Suggest DIVERSE and DISCOVERABLE content from ${targetYears[0]} or ${targetYears[1]} for the Discover & Rate section.
 
-CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. This is for DISCOVERY - focus on hidden gems, critically acclaimed indie films, international hits, and underrated content that users might not have heard of yet.
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYears[0]} or ${targetYears[1]}. This is for DISCOVERY - focus on hidden gems, critically acclaimed indie films, international hits, and underrated content that users might not have heard of yet.
 
-Focus on diverse American and international content from ${targetYear} that is:
-- Released in ${targetYear} (MANDATORY)
+Focus on diverse American and international content from ${targetYears[0]} or ${targetYears[1]} that is:
+- Released in ${targetYears[0]} or ${targetYears[1]} (MANDATORY)
 - Not necessarily the most mainstream - include indie films, foreign films, documentaries, and niche TV shows
 - Highly rated and critically acclaimed (even if not widely known)
 - Available on streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
 - Great for discovery and exploration
 
-Suggest 30 diverse shows/movies from ${targetYear} that are perfect for discovery and rating. Include a mix of genres, styles, and popularity levels. DOUBLE-CHECK that every single item is from ${targetYear}.`
+Suggest 30 diverse shows/movies from ${targetYears[0]} or ${targetYears[1]} that are perfect for discovery and rating. Include a mix of genres, styles, and popularity levels. DOUBLE-CHECK that every single item is from ${targetYears[0]} or ${targetYears[1]}.`
 
-      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest DIVERSE and DISCOVERABLE content from ${targetYear} for the Discover & Rate section.
+      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest DIVERSE and DISCOVERABLE content from ${targetYears[0]} or ${targetYears[1]} for the Discover & Rate section.
 
-CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. This is for DISCOVERY - focus on content that matches their taste but they haven't discovered yet.
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYears[0]} or ${targetYears[1]}. This is for DISCOVERY - focus on content that matches their taste but they haven't discovered yet.
 
 IMPORTANT: DO NOT suggest content the user has already rated. They have already rated these items:
 ${ratings.map(r => `- ${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}
 
 Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
 Avoid suggesting content similar to what they've disliked.
-Focus on diverse content from ${targetYear} that:
-- Released in ${targetYear} (MANDATORY)
+Focus on diverse content from ${targetYears[0]} or ${targetYears[1]} that:
+- Released in ${targetYears[0]} or ${targetYears[1]} (MANDATORY)
 - NOT already rated by the user (check the list above)
 - Matches their taste based on their ratings
 - Includes indie films, foreign films, documentaries, and niche TV shows
 - Highly rated and critically acclaimed
 - Available on streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
 
-Based on these ratings, suggest 30 diverse shows/movies from ${targetYear} for discovery and rating. Include a mix of genres, styles, and popularity levels. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear} and NOT in the already-rated list.`;
+Based on these ratings, suggest 30 diverse shows/movies from ${targetYears[0]} or ${targetYears[1]} for discovery and rating. Include a mix of genres, styles, and popularity levels. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYears[0]} or ${targetYears[1]} and NOT in the already-rated list.`;
 
     const fullPrompt = `${prompt}
 
@@ -129,15 +129,29 @@ Return ONLY a valid JSON object with this exact structure:
     // Filter to only include target year content and exclude already-rated items
     const filteredContent = parsedResponse.content.filter(item => {
       const year = item.releaseDate ? new Date(item.releaseDate).getFullYear() : null;
-      const isFromTargetYear = year === targetYear;
+      const isFromTargetYear = year !== null && targetYears.includes(year);
       const isNotRated = !ratedItems.has(`${item.tmdbId}-${item.mediaType}`);
       return isFromTargetYear && isNotRated;
     });
 
-    console.log(`Filtered content: ${filteredContent.length} out of ${parsedResponse.content.length} are from ${targetYear} and not already rated`);
+    console.log(`Filtered content: ${filteredContent.length} out of ${parsedResponse.content.length} are from ${targetYears.join(' or ')} and not already rated`);
+    
+    // If filtered content is empty, try to be less restrictive - allow items from a wider year range
+    let finalContent = filteredContent;
+    if (filteredContent.length === 0 && parsedResponse.content.length > 0) {
+      console.log('No content after filtering, trying less restrictive year range...');
+      const expandedYears = [currentYear, currentYear - 1, currentYear - 2];
+      finalContent = parsedResponse.content.filter(item => {
+        const year = item.releaseDate ? new Date(item.releaseDate).getFullYear() : null;
+        const isFromExpandedYear = year !== null && expandedYears.includes(year);
+        const isNotRated = !ratedItems.has(`${item.tmdbId}-${item.mediaType}`);
+        return isFromExpandedYear && isNotRated;
+      });
+      console.log(`Expanded year range content: ${finalContent.length} items`);
+    }
 
     res.status(200).json({
-      content: filteredContent,
+      content: finalContent,
       cached: false,
       source: ratings.length === 0 ? 'ai-popular-content' : 'ai-personalized'
     });

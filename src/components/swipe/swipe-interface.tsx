@@ -348,8 +348,20 @@ export function SwipeInterface({
               confidence: item.confidence
             }));
 
-            // Add new recommendations to the existing cards
-            setMediaCards((prev) => [...prev, ...(newMedia as MediaCard[])]);
+            // Add new recommendations to the existing cards, but only if we got new content
+            if (newMedia.length > 0) {
+              setMediaCards((prev) => [...prev, ...(newMedia as MediaCard[])]);
+            } else {
+              // If API returned empty, fall back to diverse content
+              console.log(
+                'API returned empty content, falling back to diverse content'
+              );
+              await fetchMoreDiverseContent();
+            }
+          } else {
+            // If API request failed, fall back to diverse content
+            console.log('API request failed, falling back to diverse content');
+            await fetchMoreDiverseContent();
           }
         } else {
           // For unauthenticated users, fetch more diverse content
