@@ -6,6 +6,8 @@ export type Bookmark = {
   watchlistId: string;
   title: string;
   description?: string;
+  mediaType?: 'movie' | 'tv';
+  mediaId?: string;
   posterPath?: string;
   tags?: string[];
   createdAt: Timestamp;

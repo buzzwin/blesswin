@@ -56,6 +56,11 @@ export async function getCachedRecommendations(userId: string | null): Promise<C
     }
 
     // For authenticated users, use Firestore (admin SDK for server-side)
+    if (!adminDb) {
+      console.warn('Admin SDK not available, returning null for cached recommendations');
+      return null;
+    }
+    
     const docRef = adminDb.collection('recommendations').doc(userId);
     const docSnap = await docRef.get();
 
@@ -117,6 +122,11 @@ export async function cacheRecommendations(
     }
 
     // For authenticated users, use Firestore (admin SDK for server-side)
+    if (!adminDb) {
+      console.warn('Admin SDK not available, cannot cache recommendations');
+      return;
+    }
+    
     const docRef = adminDb.collection('recommendations').doc(userId);
     await docRef.set(cachedData);
     // console.log('Cached recommendations in Firestore');
@@ -136,6 +146,11 @@ export async function invalidateRecommendationsCache(userId: string | null): Pro
     }
 
     // For authenticated users, delete from Firestore (admin SDK for server-side)
+    if (!adminDb) {
+      console.warn('Admin SDK not available, cannot invalidate recommendations cache');
+      return;
+    }
+    
     const docRef = adminDb.collection('recommendations').doc(userId);
     await docRef.delete();
     // console.log('Invalidated recommendations cache');

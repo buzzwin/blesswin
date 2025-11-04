@@ -298,9 +298,11 @@ export function WatchlistCollection({
             ? 'Movies'
             : 'TV Shows'}
         </h3>
-        {categories.all.filter((item) =>
-          selectedCategory === null ? true : item.mediaType === selectedCategory
-        ).length === 0 ? (
+        {categories.all
+          .filter((item) =>
+            selectedCategory === null ? true : (item.mediaType === selectedCategory)
+          )
+          .length === 0 ? (
           <div className='rounded-lg border border-border bg-card p-8 text-center dark:border-gray-700'>
             <Bookmark className='mx-auto h-12 w-12 text-gray-400' />
             <p className='mt-4 text-muted-foreground dark:text-gray-400'>
@@ -313,7 +315,7 @@ export function WatchlistCollection({
               .filter((item) =>
                 selectedCategory === null
                   ? true
-                  : item.mediaType === selectedCategory
+                  : (item.mediaType === selectedCategory)
               )
               .map((item) => (
                 <div
@@ -347,14 +349,16 @@ export function WatchlistCollection({
                     <h4 className='line-clamp-1 text-xs font-medium text-foreground dark:text-white'>
                       {item.title}
                     </h4>
-                    <div className='mt-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400'>
-                      {item.mediaType === 'movie' ? (
-                        <Film className='h-3 w-3' />
-                      ) : (
-                        <Tv className='h-3 w-3' />
-                      )}
-                      <span className='capitalize'>{item.mediaType}</span>
-                    </div>
+                    {item.mediaType && (
+                      <div className='mt-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400'>
+                        {item.mediaType === 'movie' ? (
+                          <Film className='h-3 w-3' />
+                        ) : (
+                          <Tv className='h-3 w-3' />
+                        )}
+                        <span className='capitalize'>{item.mediaType}</span>
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}

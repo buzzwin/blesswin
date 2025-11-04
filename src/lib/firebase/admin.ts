@@ -51,8 +51,8 @@ try {
         credential: cert({
           projectId: projectId,
           clientEmail: clientEmail,
-          privateKey: privateKey.replace(/\\n/g, '\n'),
-        }),
+          privateKey: privateKey.replace(/\\n/g, '\n')
+        })
       });
       console.log('Firebase Admin SDK initialized with individual credentials');
     }

@@ -226,9 +226,9 @@ export const getAIRecommendationStats = async (userId: string): Promise<{
   totalAnalyses: number;
 }> => {
   try {
-    // Check if we're in production and Firebase Admin is not available
-    if (process.env.NODE_ENV === 'production' && !adminDb) {
-      console.log('Firebase Admin not available in production, returning empty stats');
+    // Check if Firebase Admin is not available
+    if (!adminDb) {
+      console.warn('Firebase Admin not available, returning empty stats');
       return {
         totalRecommendations: 0,
         lastRecommendationDate: null,

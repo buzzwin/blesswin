@@ -37,43 +37,51 @@ export default async function handler(
     const ratings = await getUserRatings(userId as string);
     console.log('User ratings count:', ratings.length);
     
+    // Create a set of already-rated items to exclude them
+    const ratedItems = new Set<string>();
+    ratings.forEach(rating => {
+      ratedItems.add(`${rating.tmdbId}-${rating.mediaType}`);
+    });
+    console.log('Already-rated items to exclude:', ratedItems.size);
+    
     // Generate AI recommendations using Gemini
     // For users with no ratings, suggest popular content
     // For users with ratings, use their preferences
     const currentYear = new Date().getFullYear();
-    const targetYear = currentYear - 1; // One year prior to current year
+    // Use current year for Discover & Rate to get fresh content
+    const targetYear = currentYear;
     const prompt = ratings.length === 0 
-      ? `You are a movie and TV show recommendation expert specializing in American popular culture. This user is new and has no ratings yet. Suggest the MOST POPULAR and well-known content from ${targetYear} ONLY.
+      ? `You are a movie and TV show recommendation expert specializing in American popular culture. This user is new and has no ratings yet. Suggest DIVERSE and DISCOVERABLE content from ${targetYear} for the Discover & Rate section.
 
-CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. ABSOLUTELY NO content from ${currentYear}, ${currentYear - 2}, ${currentYear - 3}, or any other year. Every single recommendation MUST be from ${targetYear}.
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. This is for DISCOVERY - focus on hidden gems, critically acclaimed indie films, international hits, and underrated content that users might not have heard of yet.
 
-Focus on popular American content from ${targetYear} that are widely known and accessible.
-Prioritize shows and movies that are:
+Focus on diverse American and international content from ${targetYear} that is:
 - Released in ${targetYear} (MANDATORY)
-- Highly rated and critically acclaimed
-- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
-- Well-known and culturally significant
-- Currently trending or recently released in ${targetYear}
-- Great for new users to start their rating journey
+- Not necessarily the most mainstream - include indie films, foreign films, documentaries, and niche TV shows
+- Highly rated and critically acclaimed (even if not widely known)
+- Available on streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
+- Great for discovery and exploration
 
-Suggest 10 diverse shows/movies from ${targetYear} that are perfect for someone just starting to rate content. DOUBLE-CHECK that every single item is from ${targetYear}.`
+Suggest 30 diverse shows/movies from ${targetYear} that are perfect for discovery and rating. Include a mix of genres, styles, and popularity levels. DOUBLE-CHECK that every single item is from ${targetYear}.`
 
-      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest the MOST POPULAR and well-known content from ${targetYear} ONLY.
+      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest DIVERSE and DISCOVERABLE content from ${targetYear} for the Discover & Rate section.
 
-CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. ABSOLUTELY NO content from ${currentYear}, ${currentYear - 2}, ${currentYear - 3}, or any other year. Every single recommendation MUST be from ${targetYear}.
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. This is for DISCOVERY - focus on content that matches their taste but they haven't discovered yet.
+
+IMPORTANT: DO NOT suggest content the user has already rated. They have already rated these items:
+${ratings.map(r => `- ${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}
 
 Always consider ALL the user's ratings (likes, dislikes, and meh) to provide better recommendations.
 Avoid suggesting content similar to what they've disliked.
-Focus on popular American content from ${targetYear} that are widely known and accessible.
-Prioritize shows and movies that are:
+Focus on diverse content from ${targetYear} that:
 - Released in ${targetYear} (MANDATORY)
+- NOT already rated by the user (check the list above)
+- Matches their taste based on their ratings
+- Includes indie films, foreign films, documentaries, and niche TV shows
 - Highly rated and critically acclaimed
-- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
-- Well-known and culturally significant
-- Currently trending or recently released in ${targetYear}
+- Available on streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
 
-Based on these ratings, suggest 10 diverse shows/movies from ${targetYear} for rating. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear}:
-${ratings.map(r => `${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}`;
+Based on these ratings, suggest 30 diverse shows/movies from ${targetYear} for discovery and rating. Include a mix of genres, styles, and popularity levels. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear} and NOT in the already-rated list.`;
 
     const fullPrompt = `${prompt}
 
@@ -118,13 +126,15 @@ Return ONLY a valid JSON object with this exact structure:
       throw new Error('Invalid response format from Gemini API');
     }
 
-    // Filter to only include target year content (one year prior to current year)
+    // Filter to only include target year content and exclude already-rated items
     const filteredContent = parsedResponse.content.filter(item => {
       const year = item.releaseDate ? new Date(item.releaseDate).getFullYear() : null;
-      return year === targetYear;
+      const isFromTargetYear = year === targetYear;
+      const isNotRated = !ratedItems.has(`${item.tmdbId}-${item.mediaType}`);
+      return isFromTargetYear && isNotRated;
     });
 
-    console.log(`Filtered content: ${filteredContent.length} out of ${parsedResponse.content.length} are from ${targetYear}`);
+    console.log(`Filtered content: ${filteredContent.length} out of ${parsedResponse.content.length} are from ${targetYear} and not already rated`);
 
     res.status(200).json({
       content: filteredContent,

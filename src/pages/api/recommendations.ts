@@ -105,6 +105,13 @@ export default async function handler(
   const ratings = await getUserRatings(userId as string);
   console.log('User ratings count:', ratings.length);
 
+  // Create a set of already-rated items to exclude them
+  const ratedItems = new Set<string>();
+  ratings.forEach(rating => {
+    ratedItems.add(`${rating.tmdbId}-${rating.mediaType}`);
+  });
+  console.log('Already-rated items to exclude:', ratedItems.size);
+
   // Fetch dismissed recommendations (gracefully handle if Admin SDK not available)
   let dismissedRecommendations = new Set<string>();
   if (adminDb) {
@@ -177,27 +184,28 @@ Return ONLY a valid JSON object with movie/show titles and basic info. DO NOT in
   }
 }`
 
-      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest the MOST POPULAR and well-known content from ${targetYear} ONLY.
+      : `You are a movie and TV show recommendation expert specializing in American popular culture. Based on the user's ratings, suggest PERSONALIZED recommendations from ${targetYear} for the "Tonight's Picks" section.
 
-CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. ABSOLUTELY NO content from ${currentYear}, ${currentYear - 2}, ${currentYear - 3}, or any other year. Every single recommendation MUST be from ${targetYear}.
+CRITICAL REQUIREMENT: ONLY suggest movies and TV shows released in ${targetYear}. This is for PERSONALIZED RECOMMENDATIONS - focus on content similar to what they've loved.
 
-IMPORTANT: You must carefully analyze the user's preferences based on their ratings. Pay special attention to:
+IMPORTANT: DO NOT suggest content the user has already rated. They have already rated these items:
+${ratings.map(r => `- ${r.title} (${r.mediaType}) - ${r.rating}`).join('\n')}
+
+You must carefully analyze the user's preferences based on their ratings. Pay special attention to:
 - Content they LOVED: Suggest similar content (same genres, themes, styles, directors, or actors)
 - Content they HATED: AVOID suggesting anything similar (genres, themes, styles, directors, or actors)
 - Content they found MEH: Avoid similar content, but don't treat it as harshly as hated content
 
 Always consider ALL the user's ratings to provide better recommendations.
-Focus on popular American content from ${targetYear} that are widely known and accessible.
-Prioritize shows and movies that are:
+Focus on personalized content from ${targetYear} that:
 - Released in ${targetYear} (MANDATORY)
-- Highly rated and critically acclaimed
-- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
-- Well-known and culturally significant
-- Currently trending or recently released in ${targetYear}
+- NOT already rated by the user (check the list above)
 - Similar to what they LOVED (genres, themes, styles, directors, actors)
 - NOT similar to what they HATED (genres, themes, styles, directors, actors)
+- Highly rated and critically acclaimed
+- Popular on major streaming platforms (Netflix, Hulu, Prime Video, HBO Max, Disney+, Apple TV+)
 
-Based on these ratings, suggest 5 diverse shows/movies from ${targetYear} for rating. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear}:
+Based on these ratings, suggest 5 personalized shows/movies from ${targetYear} that match their taste. Consider ALL ratings to avoid disliked content. DOUBLE-CHECK that every single item is from ${targetYear} and NOT in the already-rated list:
 
 LIKED (love):
 ${ratings.filter(r => r.rating === 'love').map(r => `- ${r.title} (${r.mediaType})`).join('\n') || '- None yet'}
@@ -265,12 +273,14 @@ Return ONLY a valid JSON object with REAL TMDB data:
 
     console.log(`Filtered recommendations: ${filteredRecommendations.length} out of ${parsedResponse.recommendations.length} are from ${targetYear}`);
 
-    // Filter out dismissed recommendations
-    const nonDismissedRecommendations = filteredRecommendations.filter(rec => 
-      !dismissedRecommendations.has(`${rec.tmdbId}-${rec.mediaType}`)
-    );
+    // Filter out dismissed recommendations and already-rated items
+    const nonDismissedRecommendations = filteredRecommendations.filter(rec => {
+      const isDismissed = dismissedRecommendations.has(`${rec.tmdbId}-${rec.mediaType}`);
+      const isRated = ratedItems.has(`${rec.tmdbId}-${rec.mediaType}`);
+      return !isDismissed && !isRated;
+    });
     
-    console.log(`Filtered out ${filteredRecommendations.length - nonDismissedRecommendations.length} dismissed recommendations`);
+    console.log(`Filtered out ${filteredRecommendations.length - nonDismissedRecommendations.length} dismissed/rated recommendations`);
 
     // Add real poster paths to recommendations using TMDB API
     const recommendationsWithPosters = await Promise.all(

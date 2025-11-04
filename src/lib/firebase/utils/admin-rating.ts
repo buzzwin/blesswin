@@ -26,6 +26,11 @@ interface Rating {
 export async function getUserRatings(userId: string): Promise<Rating[]> {
   // console.log('Fetching ratings for userId:', userId);
   
+  if (!adminDb) {
+    console.warn('Admin SDK not available, returning empty ratings array');
+    return [];
+  }
+  
   const querySnapshot = await adminDb
     .collection('ratings')
     .where('userId', '==', userId)
@@ -59,6 +64,10 @@ export async function getUserRatings(userId: string): Promise<Rating[]> {
 }
 
 export async function saveUserRating(rating: Omit<Rating, 'id' | 'createdAt'>): Promise<void> {
+  if (!adminDb) {
+    throw new Error('Admin SDK not available');
+  }
+  
   try {
     const docRef = adminDb.collection('ratings').doc();
     await docRef.set({
