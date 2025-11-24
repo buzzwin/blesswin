@@ -33,11 +33,60 @@ import type { RatingType } from '@lib/types/review';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
 import { CuratorChat } from '@components/chat/curator-chat';
+import { InstagramCardFeed } from '@components/recommendations/instagram-card-feed';
+import { useRecommendationsFeed } from '@lib/hooks/useRecommendationsFeed';
+import type { PreferenceType } from '@lib/types/recommendation-item';
 
 interface HomeStats {
   totalReviews: number;
   activeUsers: number;
   loading: boolean;
+}
+
+function RecommendationsFeedSection({ userId }: { userId: string }): JSX.Element {
+  const {
+    items,
+    error,
+    isLoading,
+    isLoadingMore,
+    isReachingEnd,
+    loadMore,
+    refresh
+  } = useRecommendationsFeed(userId);
+
+  const handlePreferenceChange = async (
+    itemId: string,
+    preference: PreferenceType
+  ): Promise<void> => {
+    // Preference is already saved in the InstagramCardFeed component
+    // Refresh feed to get new recommendations
+    setTimeout(() => {
+      void refresh();
+    }, 500);
+  };
+
+  if (error) {
+    return (
+      <div className='flex min-h-[400px] items-center justify-center'>
+        <div className='text-center'>
+          <p className='mb-4 text-red-600 dark:text-red-400'>
+            Failed to load recommendations
+          </p>
+          <Button onClick={() => void refresh()}>Try Again</Button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <InstagramCardFeed
+      items={items}
+      onPreferenceChange={handlePreferenceChange}
+      onLoadMore={loadMore}
+      hasMore={!isReachingEnd}
+      loading={isLoadingMore}
+    />
+  );
 }
 
 export default function Home(): JSX.Element {
@@ -287,73 +336,22 @@ export default function Home(): JSX.Element {
         </div>
       )}
 
-      {/* Authenticated User Home */}
+      {/* Authenticated User Home - Instagram Style Feed */}
       {user && (
         <SectionShell>
-          <div className='px-6 py-12 mx-auto max-w-7xl'>
+          <div className='px-4 py-8 mx-auto max-w-7xl'>
             {/* Header */}
-            <div className='mb-8 text-center'>
-              <h1 className='text-[clamp(2rem,2vw+1rem,3rem)] font-black leading-tight text-gray-900 dark:text-white'>
-                Your AI Taste Agent.
+            <div className='mb-6 text-center'>
+              <h1 className='text-[clamp(1.75rem,2vw+1rem,2.5rem)] font-black leading-tight text-gray-900 dark:text-white'>
+                Discover What You&apos;ll Love
               </h1>
-              <p className='mx-auto mt-4 max-w-2xl text-[clamp(1rem,0.4vw+0.875rem,1.125rem)] text-gray-600 dark:text-purple-200'>
-                Rate shows to train your Curator. It learns your chaos.
+              <p className='mx-auto mt-2 max-w-2xl text-[clamp(0.875rem,0.4vw+0.75rem,1rem)] text-gray-600 dark:text-purple-200'>
+                We learn from what you like and dislike to recommend movies, products, and more
               </p>
             </div>
 
-            {/* Main Content */}
-            <div className='space-y-8'>
-              {/* Swipe Interface */}
-              <div className='mx-auto max-w-4xl'>
-                <div className='p-6 bg-white rounded-2xl border border-gray-200 shadow-lg dark:border-gray-700 dark:bg-gray-800/50 dark:backdrop-blur-sm'>
-                  <div className='flex justify-between items-center mb-4'>
-                    <h2 className='text-lg font-bold text-gray-900 dark:text-white'>
-                      Discover & Rate
-                    </h2>
-                    <div className='flex gap-2'>
-                      <div className='flex gap-1 items-center px-2 py-1 text-xs bg-red-50 rounded-full dark:bg-red-900/20'>
-                        <X className='w-3 h-3 text-red-500' />
-                        <span className='hidden sm:inline'>Pass</span>
-                      </div>
-                      <div className='flex gap-1 items-center px-2 py-1 text-xs bg-yellow-50 rounded-full dark:bg-yellow-900/20'>
-                        <Meh className='w-3 h-3 text-yellow-500' />
-                        <span className='hidden sm:inline'>Maybe</span>
-                      </div>
-                      <div className='flex gap-1 items-center px-2 py-1 text-xs bg-green-50 rounded-full dark:bg-green-900/20'>
-                        <Heart className='w-3 h-3 text-green-500' />
-                        <span className='hidden sm:inline'>Love</span>
-                      </div>
-                    </div>
-                  </div>
-                  <SwipeInterface onRatingSubmit={handleRatingSubmit} />
-                </div>
-              </div>
-
-              {/* Fresh AI Recommendations */}
-              <div className='mx-auto max-w-4xl'>
-                <div className='p-6 bg-white rounded-2xl border border-gray-200 shadow-lg dark:border-gray-700 dark:bg-gray-800/50 dark:backdrop-blur-sm'>
-                  <div className='flex gap-2 items-center mb-4'>
-                    <Sparkles className='w-5 h-5 text-purple-500' />
-                    <div>
-                      <h2 className='text-lg font-bold text-gray-900 dark:text-white'>
-                        Tonight&apos;s Picks
-                      </h2>
-                      <p className='text-xs text-gray-600 dark:text-gray-400'>
-                        Fresh recommendations based on your latest ratings
-                      </p>
-                    </div>
-                  </div>
-                  <RecommendationsCard refreshKey={refreshKey} />
-                </div>
-              </div>
-
-              {/* Recommendation History */}
-              <div className='mx-auto max-w-4xl'>
-                <div className='p-6 bg-white rounded-2xl border border-gray-200 shadow-lg dark:border-gray-700 dark:bg-gray-800/50 dark:backdrop-blur-sm'>
-                  <PastRecommendations userId={user?.id || null} />
-                </div>
-              </div>
-            </div>
+            {/* Instagram Style Feed */}
+            <RecommendationsFeedSection userId={user.id} />
           </div>
         </SectionShell>
       )}

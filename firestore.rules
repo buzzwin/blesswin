@@ -119,5 +119,19 @@ service cloud.firestore {
         && request.resource.data.source in ['ai_generated', 'fallback'];
       allow update, delete: if isSignedIn() && resource.data.userId == request.auth.uid;
     }
+
+    // User preferences collection (likes/dislikes for recommendations)
+    match /user_preferences/{preferenceId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn()
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.itemId is string
+        && request.resource.data.itemType is string
+        && request.resource.data.preference in ['like', 'dislike', 'neutral'];
+      allow update: if isSignedIn() 
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.preference in ['like', 'dislike', 'neutral'];
+      allow delete: if isSignedIn() && resource.data.userId == request.auth.uid;
+    }
   }
 }
