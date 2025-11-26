@@ -1,26 +1,28 @@
-# 🎬 Buzzwin - Social Movie & TV Show Tracking Platform
+# 🌍 Buzzwin - AI-Powered Wellness Platform for World Peace
 
-Buzzwin is an open-source social platform that lets users track, review, and discuss movies and TV shows with friends and communities.
+Buzzwin is a transformative wellness platform dedicated to promoting **world peace, good thoughts, happiness, and positive vibes** through AI-powered guidance. Our mission is to help individuals find inner peace, which contributes to global harmony.
 
 ## ✨ Features
 
-- 🎯 Track movies and TV shows you're watching
-- ⭐ Share reviews and ratings
-- 👥 Create and join watch clubs
-- 📝 Curate personal watchlists
-- 🤝 Follow friends and see their activity
+- 🧘 **AI Yoga Guide** - Personalized yoga poses, sequences, and breathing techniques
+- 🧠 **AI Mindfulness Coach** - Cultivate present-moment awareness and reduce stress
+- 🧘‍♀️ **AI Meditation Guide** - Deepen your meditation practice with personalized guidance
+- 🌊 **AI Harmony Advisor** - Find balance and harmony in all aspects of life
+- 💚 **World Peace Mission** - Join a community dedicated to spreading peace and positivity
 - 🌙 Dark/Light mode support
 - 🔐 Secure authentication with Google & Email
 - 📱 Responsive design for all devices
+- 🆓 **100% Free** - Wellness and peace should be accessible to everyone
 
 ## 🚀 Tech Stack
 
 - **Frontend**: Next.js, TypeScript, Tailwind CSS
 - **Backend**: Firebase (Firestore, Auth)
-- **APIs**: TMDB API for movie/TV show data
+- **AI**: Google Gemini API for wellness guidance
 - **Animation**: Framer Motion
 - **State Management**: React Context
-- **UI Components**: Headless UI
+- **UI Components**: Headless UI, Radix UI
+- **SEO**: Comprehensive meta tags, Open Graph, structured data (JSON-LD)
 
 ## 🛠️ Installation
 
@@ -42,9 +44,8 @@ yarn install
 3. Create a `.env.local` file in the root directory with your API keys:
 
 ```env
-NEXT_PUBLIC_TMDB_API_KEY=your_tmdb_api_key
-NEXT_PUBLIC_TMDB_ACCESS_TOKEN=your_tmdb_access_token
 GEMINI_API_KEY=your_gemini_api_key
+NEXT_PUBLIC_URL=https://your-domain.com
 ```
 
 4. Start the development server:
@@ -57,9 +58,8 @@ yarn dev
 
 ## 🔑 Environment Variables
 
-- `NEXT_PUBLIC_TMDB_API_KEY`: TMDB API key for movie/TV show data
-- `NEXT_PUBLIC_TMDB_ACCESS_TOKEN`: TMDB access token
-- `GEMINI_API_KEY`: Gemini API key for AI-powered features
+- `GEMINI_API_KEY`: Google Gemini API key for AI-powered wellness guidance
+- `NEXT_PUBLIC_URL`: Your site URL (for SEO and social sharing)
 
 ## 🔧 Development
 

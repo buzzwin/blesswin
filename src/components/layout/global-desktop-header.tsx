@@ -3,11 +3,10 @@ import Link from 'next/link';
 import {
   BarChart3,
   Sparkles,
-  Star,
   Clock,
   User,
   LogOut,
-  Bot
+  BookOpen
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import LogoIcon from '@components/ui/logo';
@@ -49,35 +48,12 @@ export function GlobalDesktopHeader(): JSX.Element {
 
         {/* Navigation Links */}
         <nav className='flex items-center gap-4'>
-          {user && (
-            <Button
-              variant='ghost'
-              size='sm'
-              onClick={() => router.push('/curator')}
-              className='text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-            >
-              <Bot className='mr-2 h-4 w-4' />
-              Chat
-            </Button>
-          )}
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={() => router.push('/recommendations')}
-            className='text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-          >
-            <Sparkles className='mr-2 h-4 w-4' />
-            AI Recommendations
-          </Button>
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={() => router.push('/ratings')}
-            className='text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-          >
-            <Star className='mr-2 h-4 w-4' />
-            Ratings
-          </Button>
+          <Link href='/blog'>
+            <a className='flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+              <BookOpen className='h-4 w-4' />
+              Blog
+            </a>
+          </Link>
         </nav>
 
         {/* User Actions */}

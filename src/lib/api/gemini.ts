@@ -147,15 +147,67 @@ export async function callGeminiAPI(
 
 // Utility function to extract JSON from Gemini response
 export function extractJSONFromResponse(responseText: string): Record<string, unknown> {
-  const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+  // Remove markdown code blocks if present
+  let cleanedText = responseText.trim();
+  if (cleanedText.startsWith('```json')) {
+    cleanedText = cleanedText.replace(/^```json\s*/, '').replace(/\s*```$/, '');
+  } else if (cleanedText.startsWith('```')) {
+    cleanedText = cleanedText.replace(/^```\s*/, '').replace(/\s*```$/, '');
+  }
+  
+  // Find JSON object
+  const jsonMatch = cleanedText.match(/\{[\s\S]*\}/);
   if (!jsonMatch) {
     throw new Error('No valid JSON found in Gemini response');
   }
   
+  let jsonString = jsonMatch[0];
+  
+  // Try to fix truncated JSON by closing arrays and objects
   try {
-    return JSON.parse(jsonMatch[0]) as Record<string, unknown>;
-  } catch (error) {
-    throw new Error('Invalid JSON format in Gemini response');
+    return JSON.parse(jsonString) as Record<string, unknown>;
+  } catch (parseError) {
+    // If parsing fails, try to fix truncated JSON
+    // Count open braces and brackets
+    const openBraces = (jsonString.match(/\{/g) || []).length;
+    const closeBraces = (jsonString.match(/\}/g) || []).length;
+    const openBrackets = (jsonString.match(/\[/g) || []).length;
+    const closeBrackets = (jsonString.match(/\]/g) || []).length;
+    
+    // Close arrays first, then objects
+    let fixedJson = jsonString;
+    for (let i = 0; i < openBrackets - closeBrackets; i++) {
+      fixedJson += ']';
+    }
+    for (let i = 0; i < openBraces - closeBraces; i++) {
+      fixedJson += '}';
+    }
+    
+    try {
+      return JSON.parse(fixedJson) as Record<string, unknown>;
+    } catch {
+      // If still failing, try to extract partial data
+      // Look for wellnessContent array
+      const wellnessContentMatch = jsonString.match(/"wellnessContent"\s*:\s*\[([\s\S]*)/);
+      if (wellnessContentMatch) {
+        // Try to extract individual items
+        const items = [];
+        const itemRegex = /\{[^{}]*"tmdbId"[^{}]*\}/g;
+        let match;
+        while ((match = itemRegex.exec(jsonString)) !== null) {
+          try {
+            items.push(JSON.parse(match[0]));
+          } catch {
+            // Skip invalid items
+          }
+        }
+        if (items.length > 0) {
+          return { wellnessContent: items } as Record<string, unknown>;
+        }
+      }
+      
+      throw new Error(`Invalid JSON format in Gemini response: ${parseError instanceof Error ? parseError.message : 'Unknown error'}`);
+    }
   }
 }
 

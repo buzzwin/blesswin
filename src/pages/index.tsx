@@ -1,357 +1,191 @@
-import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import {
   Heart,
-  X,
-  Meh,
-  Star,
-  Users,
-  Sparkles,
-  Copy,
-  Bot,
-  Trophy,
-  Users2,
-  MessageCircle,
-  TrendingUp,
-  Zap,
-  Flame,
-  CheckCircle2,
-  Film
+  ArrowRight,
+  Flower2,
+  Moon,
+  Waves,
+  BookOpen
 } from 'lucide-react';
-import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
 import { Button } from '@components/ui/button-shadcn';
-import { SwipeInterface } from '@components/swipe/swipe-interface';
-import { RecommendationsCard } from '@components/recommendations/recommendations-card';
-import { PastRecommendations } from '@components/recommendations/past-recommendations';
-import { AchievementSystem } from '@components/gamification/achievement-system';
-import { createRating } from '@lib/firebase/utils/review';
-import { getStats } from '@lib/firebase/utils';
-import type { MediaCard } from '@lib/types/review';
-import type { RatingType } from '@lib/types/review';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
-import { CuratorChat } from '@components/chat/curator-chat';
-import { InstagramCardFeed } from '@components/recommendations/instagram-card-feed';
-import { useRecommendationsFeed } from '@lib/hooks/useRecommendationsFeed';
-import type { PreferenceType } from '@lib/types/recommendation-item';
-
-interface HomeStats {
-  totalReviews: number;
-  activeUsers: number;
-  loading: boolean;
-}
-
-function RecommendationsFeedSection({ userId }: { userId: string }): JSX.Element {
-  const {
-    items,
-    error,
-    isLoading,
-    isLoadingMore,
-    isReachingEnd,
-    loadMore,
-    refresh
-  } = useRecommendationsFeed(userId);
-
-  const handlePreferenceChange = async (
-    itemId: string,
-    preference: PreferenceType
-  ): Promise<void> => {
-    // Preference is already saved in the InstagramCardFeed component
-    // Refresh feed to get new recommendations
-    setTimeout(() => {
-      void refresh();
-    }, 500);
-  };
-
-  if (error) {
-    return (
-      <div className='flex min-h-[400px] items-center justify-center'>
-        <div className='text-center'>
-          <p className='mb-4 text-red-600 dark:text-red-400'>
-            Failed to load recommendations
-          </p>
-          <Button onClick={() => void refresh()}>Try Again</Button>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <InstagramCardFeed
-      items={items}
-      onPreferenceChange={handlePreferenceChange}
-      onLoadMore={loadMore}
-      hasMore={!isReachingEnd}
-      loading={isLoadingMore}
-    />
-  );
-}
+import { WellnessAgentCard } from '@components/wellness/wellness-agent-card';
+import { CurrentEvents } from '@components/home/current-events';
+import { siteURL } from '@lib/env';
+import Head from 'next/head';
 
 export default function Home(): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
-  const [stats, setStats] = useState<HomeStats>({
-    totalReviews: 0,
-    activeUsers: 0,
-    loading: true
-  });
-  const [refreshKey, setRefreshKey] = useState(0);
-  const [showDemo, setShowDemo] = useState(false);
-
-  useEffect(() => {
-    void getStats().then(setStats);
-  }, []);
-
-  const handleRatingSubmit = async (
-    mediaId: string | number,
-    rating: RatingType,
-    mediaData?: MediaCard
-  ): Promise<void> => {
-    if (!user?.id) {
-      toast.error('Please sign in to rate shows and movies');
-      return;
-    }
-
-    const title = mediaData?.title ?? 'Unknown';
-    const mediaType = mediaData?.mediaType ?? 'movie';
-    const posterPath = mediaData?.posterPath ?? '';
-    const overview = mediaData?.overview ?? '';
-    const releaseDate = mediaData?.releaseDate ?? '';
-    const voteAverage = mediaData?.voteAverage ?? 0;
-
-    await createRating({
-      tmdbId: typeof mediaId === 'string' ? Number(mediaId) : mediaId,
-      userId: user.id,
-      title,
-      mediaType,
-      posterPath,
-      rating,
-      overview,
-      releaseDate,
-      voteAverage
-    });
-
-    toast.success('Rating saved!');
-    setRefreshKey((prev) => prev + 1);
-  };
 
   const handleSignIn = (): void => {
-    // Store redirect path to go to curator chat after login
-    if (typeof window !== 'undefined') {
-      sessionStorage.setItem('redirectAfterLogin', '/curator');
-    }
-    void router.push('/login?redirect=/curator');
+    void router.push('/login');
   };
 
-  const formatNumber = (num: number): string => {
-    if (num >= 1000000) {
-      return (num / 1000000).toFixed(1) + 'M';
+  const wellnessAgents = [
+    {
+      type: 'yoga' as const,
+      title: 'Yoga AI Pal',
+      description:
+        'Find your flow and cultivate inner peace through mindful movement.',
+      icon: Flower2,
+      gradient: 'from-green-500 to-emerald-600'
+    },
+    {
+      type: 'meditation' as const,
+      title: 'Meditation & Mindfulness AI Pal',
+      description: 'Deepen your meditation practice and cultivate present-moment awareness.',
+      icon: Moon,
+      gradient: 'from-purple-500 to-violet-600'
+    },
+    {
+      type: 'harmony' as const,
+      title: 'Harmony AI Pal',
+      description: 'Find balance and spread positive energy to the world.',
+      icon: Waves,
+      gradient: 'from-teal-500 to-cyan-600'
     }
-    if (num >= 1000) {
-      return (num / 1000).toFixed(1) + 'k';
+  ];
+
+  // Structured data for SEO
+  const structuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    name: 'Buzzwin',
+    description:
+      'AI-powered wellness platform promoting world peace, meditation, mindfulness, yoga, and harmony',
+    url: siteURL || 'https://Buzzwin.com',
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${
+          siteURL || 'https://Buzzwin.com'
+        }/search?q={search_term_string}`
+      },
+      'query-input': 'required name=search_term_string'
+    },
+    publisher: {
+      '@type': 'Organization',
+      name: 'Buzzwin',
+      description: 'Promoting world peace through individual transformation',
+      url: siteURL || 'https://Buzzwin.com'
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock'
     }
-    return num.toString();
   };
 
-  const handleShare = () => {
-    if (navigator.share) {
-      navigator.share({
-        title: 'Buzzwin - Discover Your Next Obsession',
-        text: 'This app predicted my taste in shows perfectly! Swipe through movies and get AI recommendations.',
-        url: window.location.origin
-      });
-    } else {
-      // Fallback to copy link
-      void navigator.clipboard.writeText(window.location.origin);
-      toast.success('Link copied to clipboard!');
+  const organizationStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    name: 'Buzzwin',
+    description:
+      'AI-powered wellness platform dedicated to promoting world peace, good thoughts, happiness, and positive vibes',
+    url: siteURL || 'https://Buzzwin.com',
+    logo: `${siteURL || 'https://Buzzwin.com'}/logo192.png`,
+    sameAs: [],
+    contactPoint: {
+      '@type': 'ContactPoint',
+      contactType: 'Customer Support',
+      availableLanguage: ['English']
     }
   };
 
   return (
     <HomeLayout>
-      <SEO title='Buzzwin - Your AI Taste Agent' />
+      <SEO
+        title='Buzzwin - AI-Powered Wellness Platform for World Peace'
+        description='Discover AI pals that guide you through yoga, meditation & mindfulness, and harmony. Join our community promoting world peace, good thoughts, happiness, and positive vibes.'
+        keywords='yoga, meditation, mindfulness, world peace, AI wellness, harmony, positive vibes, mental health, spiritual growth, inner peace'
+        structuredData={structuredData}
+      />
+      <Head>
+        <script
+          type='application/ld+json'
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationStructuredData)
+          }}
+        />
+      </Head>
 
-      {/* Landing Page Sections - Horizontal Scroll on Desktop */}
-      {!user && (
-        <div className='flex flex-col lg:h-screen lg:snap-x lg:snap-mandatory lg:flex-row lg:overflow-x-auto'>
-          {/* HERO SECTION */}
-          <SectionShell className='flex-shrink-0 lg:h-screen lg:w-screen lg:snap-start'>
-            <div className='flex relative flex-col justify-center items-center px-6 py-16 mx-auto max-w-7xl h-full min-h-screen sm:py-20 lg:py-24'>
-              {/* top text */}
-              <div className='w-full max-w-3xl text-center'>
-                <h1 className='text-[clamp(2rem,2vw+1rem,3rem)] font-black leading-[1.05] text-gray-900 dark:text-white'>
-                  Your AI Taste Agent.
-                </h1>
-                <h2 className='bg-gradient-to-r from-purple-400 via-pink-400 to-blue-400 bg-clip-text text-[clamp(2rem,2vw+1rem,3rem)] font-black leading-[1.05] text-transparent'>
-                  Your Next Obsession.
-                </h2>
+      {/* AI Agents Section */}
+      <SectionShell id='agents' className='py-32'>
+        <div className='mx-auto max-w-6xl px-6'>
+          <div className='mb-20 text-center'>
+            <h2 className='mb-4 text-3xl font-light text-gray-900 dark:text-white sm:text-4xl'>
+              Your AI Wellness Pals
+            </h2>
+            <p className='mx-auto max-w-2xl text-lg font-light text-gray-600 dark:text-gray-300'>
+              Discover personalized guidance for your wellness journey
+            </p>
+          </div>
 
-                <p className='mx-auto mt-4 max-w-xl text-[clamp(1rem,0.4vw+0.875rem,1.125rem)] text-gray-600 dark:text-purple-200'>
-                  Buzzwin gives you a personal Curator that knows your vibe,
-                  battles other curators for better picks, and negotiates movie
-                  night so nobody rage-quits.
-                </p>
-              </div>
+          <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
+            {wellnessAgents.map((agent) => (
+              <WellnessAgentCard
+                key={agent.type}
+                agentType={agent.type}
+                title={agent.title}
+                description={agent.description}
+                icon={agent.icon}
+                gradient={agent.gradient}
+                onLoginRequest={handleSignIn}
+              />
+            ))}
+          </div>
 
-              {/* Interactive Chat */}
-              <div className='mt-10 w-full max-w-2xl'>
-                <div className='rounded-2xl border backdrop-blur-md border-white/20 bg-white/10 dark:border-white/20 dark:bg-white/5'>
-                  <CuratorChat
-                    className='max-h-[500px] min-h-[400px]'
-                    onLoginRequest={handleSignIn}
-                  />
-                </div>
-              </div>
-
-              {/* proof + ctas */}
-              <div className='flex flex-col gap-8 items-center mt-10 w-full'>
-                {/* proof row */}
-                <div className='flex flex-wrap items-center justify-center gap-4 text-[12px] text-gray-600 dark:text-purple-200'>
-                  <div className='flex gap-2 items-center'>
-                    <Bot className='w-4 h-4' />
-                    <span>50k+ taste profiles trained</span>
-                  </div>
-                  <div className='w-px h-4 bg-gray-300 dark:bg-white/20' />
-                  <div className='flex gap-2 items-center'>
-                    <Star className='w-4 h-4' />
-                    <span>1M+ ratings absorbed</span>
-                  </div>
-                  <div className='w-px h-4 bg-gray-300 dark:bg-white/20' />
-                  <div className='flex gap-2 items-center'>
-                    <Trophy className='w-4 h-4' />
-                    <span>95% "yeah I'd watch that" match</span>
-                  </div>
-                </div>
-
-                {/* CTA buttons */}
-                <div className='flex flex-col gap-4 items-center sm:flex-row sm:justify-center'>
-                  <Button
-                    onClick={handleSignIn}
-                    size='lg'
-                    className='px-8 py-4 text-base font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-lg transition-all group shadow-purple-500/30 hover:scale-105 hover:from-purple-500 hover:to-pink-500'
-                  >
-                    <Bot className='mr-2 w-5 h-5 group-hover:animate-spin' />
-                    Get My Curator
-                  </Button>
-
-                  <Button
-                    onClick={() => setShowDemo(true)}
-                    size='lg'
-                    variant='outline'
-                    className='px-8 py-4 text-base font-semibold text-gray-700 rounded-full border-2 border-gray-300 hover:bg-gray-100 dark:border-white/30 dark:text-white dark:backdrop-blur-sm dark:hover:bg-white/10'
-                  >
-                    See Battles
-                  </Button>
-                </div>
-              </div>
-
-              {/* demo modal */}
-              {showDemo && (
-                <div className='flex fixed inset-0 z-50 justify-center items-center p-4 backdrop-blur-sm bg-black/50'>
-                  <div className='relative p-6 w-full max-w-md rounded-2xl border shadow-2xl backdrop-blur-md border-white/20 bg-slate-900'>
-                    <Button
-                      onClick={() => setShowDemo(false)}
-                      size='icon'
-                      variant='ghost'
-                      className='absolute top-4 right-4 text-white hover:bg-white/20'
-                    >
-                      <X className='w-4 h-4' />
-                    </Button>
-                    <h3 className='mb-4 text-xl font-bold text-white'>
-                      Try it now
-                    </h3>
-                    <SwipeInterface onRatingSubmit={handleRatingSubmit} />
-                  </div>
-                </div>
-              )}
-            </div>
-          </SectionShell>
-
-          {/* BATTLE MODE */}
-          <SectionShell
-            variant='dark'
-            className='flex-shrink-0 lg:h-screen lg:w-screen lg:snap-start'
-          >
-            <div className='flex flex-col justify-center px-6 py-24 mx-auto max-w-3xl h-full min-h-screen text-center lg:py-32'>
-              <h2 className='text-[clamp(2rem,2vw+1rem,3rem)] font-black leading-tight text-gray-900 dark:text-white'>
-                Taste Battles
-              </h2>
-              <p className='mx-auto mt-4 max-w-2xl text-[clamp(1rem,0.4vw+0.875rem,1.125rem)] leading-relaxed text-gray-600 dark:text-purple-200'>
-                Your Curator and other AIs go head-to-head. Who can predict the
-                next obsession before it blows up?
-              </p>
-              <div className='mt-8'>
-                <Button
-                  onClick={() => setShowDemo(true)}
-                  size='lg'
-                  variant='outline'
-                  className='px-8 py-4 text-base font-semibold text-gray-700 rounded-full border-2 border-gray-300 hover:bg-gray-100 dark:border-white/30 dark:text-white dark:backdrop-blur-sm dark:hover:bg-white/10'
-                >
-                  Watch My Curator Fight
-                </Button>
-              </div>
-            </div>
-          </SectionShell>
-
-          {/* FINAL CTA: Spin Up Your Curator */}
-          <SectionShell
-            variant='dark'
-            className='flex-shrink-0 lg:h-screen lg:w-screen lg:snap-start'
-          >
-            {/* Subtle background glow */}
-            <div className='absolute inset-0 bg-gradient-to-t to-transparent from-purple-500/5' />
-
-            <div className='flex relative flex-col justify-center px-6 py-32 mx-auto max-w-3xl h-full min-h-screen text-center'>
-              <h2 className='mb-6 text-5xl font-black text-gray-900 dark:text-white sm:text-6xl lg:text-7xl'>
-                Spin up your Curator.
-              </h2>
-              <p className='mb-12 text-xl text-gray-600 dark:text-purple-200 sm:text-2xl'>
-                30 seconds of swiping. After that, it knows you scarily well.
-              </p>
-
-              <div className='mb-10'>
-                <Button
-                  onClick={handleSignIn}
-                  size='lg'
-                  className='px-12 py-7 text-xl font-bold text-white bg-gradient-to-r from-purple-600 to-pink-600 rounded-full shadow-xl transition-all transform group shadow-purple-500/40 hover:scale-105 hover:from-purple-500 hover:to-pink-500'
-                >
-                  <Bot className='mr-3 w-6 h-6 group-hover:animate-spin' />
-                  Get My Curator
-                </Button>
-              </div>
-
-              {/* Trust Text */}
-              <div className='px-6 py-4 mx-auto max-w-xl bg-gray-50 rounded-lg border border-gray-200 dark:border-white/10 dark:bg-white/5 dark:backdrop-blur-sm'>
-                <p className='text-sm leading-relaxed text-gray-600 dark:text-gray-400'>
-                  <strong className='text-gray-900 dark:text-white'>
-                    You control your Curator.
-                  </strong>{' '}
-                  You can wipe its memory or delete your data anytime.
-                </p>
-              </div>
-            </div>
-          </SectionShell>
+          {/* Disclaimer Notice */}
+          <div className='mt-12 rounded-lg border border-yellow-200 bg-yellow-50 p-4 text-center dark:border-yellow-800 dark:bg-yellow-900/20'>
+            <p className='text-sm text-yellow-800 dark:text-yellow-200'>
+              <strong>Disclaimer:</strong> Buzzwin does not provide medical
+              advice. Consult a healthcare professional before starting any
+              wellness practice.{' '}
+              <Link
+                href='/disclaimer'
+                className='underline hover:text-yellow-900 dark:hover:text-yellow-100'
+              >
+                Read full disclaimer
+              </Link>
+            </p>
+          </div>
         </div>
-      )}
+      </SectionShell>
 
-      {/* Authenticated User Home - Instagram Style Feed */}
-      {user && (
-        <SectionShell>
-          <div className='px-4 py-8 mx-auto max-w-7xl'>
-            {/* Header */}
-            <div className='mb-6 text-center'>
-              <h1 className='text-[clamp(1.75rem,2vw+1rem,2.5rem)] font-black leading-tight text-gray-900 dark:text-white'>
-                Discover What You&apos;ll Love
-              </h1>
-              <p className='mx-auto mt-2 max-w-2xl text-[clamp(0.875rem,0.4vw+0.75rem,1rem)] text-gray-600 dark:text-purple-200'>
-                We learn from what you like and dislike to recommend movies, products, and more
-              </p>
-            </div>
+      {/* Current Events Section */}
+      <SectionShell className='py-20'>
+        <div className='mx-auto max-w-4xl px-6'>
+          <CurrentEvents />
+        </div>
+      </SectionShell>
 
-            {/* Instagram Style Feed */}
-            <RecommendationsFeedSection userId={user.id} />
+      {/* Simple CTA Section */}
+      {!user && (
+        <SectionShell variant='dark' className='py-32'>
+          <div className='mx-auto max-w-3xl px-6 text-center'>
+            <h2 className='mb-6 text-3xl font-light text-gray-900 dark:text-white sm:text-4xl'>
+              Ready to begin?
+            </h2>
+            <p className='mb-10 text-lg font-light text-gray-600 dark:text-gray-300'>
+              Join our community dedicated to peace, wellness, and positive
+              transformation.
+            </p>
+            <Button
+              onClick={handleSignIn}
+              size='lg'
+              className='rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-purple-600 px-12 py-6 text-lg font-medium text-white shadow-lg transition-all hover:shadow-xl'
+            >
+              <Heart className='mr-3 h-5 w-5' />
+              Start Your Journey
+              <ArrowRight className='ml-3 h-5 w-5' />
+            </Button>
           </div>
         </SectionShell>
       )}

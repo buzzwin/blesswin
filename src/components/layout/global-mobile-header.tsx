@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { BarChart3 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import { MobileSidebar } from '@components/sidebar/mobile-sidebar';
 import LogoIcon from '@components/ui/logo';
@@ -47,14 +46,6 @@ export function GlobalMobileHeader(): JSX.Element {
             size='sm'
             variant='minimal'
           /> */}
-          <Button
-            variant='ghost'
-            size='sm'
-            onClick={() => router.push('/ratings')}
-            className='text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-          >
-            <BarChart3 className='h-4 w-4' />
-          </Button>
           <MobileSidebar />
         </div>
       </div>

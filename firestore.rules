@@ -42,6 +42,9 @@ service cloud.firestore {
     match /users/{userId} {
       allow read: if true;
       allow write: if isSignedIn() && request.auth.uid == userId;
+      // Allow updating disclaimer acceptance
+      allow update: if isSignedIn() && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['disclaimerAccepted', 'disclaimerAcceptedAt']);
     }
 
     // Watchlists collection

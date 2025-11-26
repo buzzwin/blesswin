@@ -11,8 +11,8 @@ import {
   Sparkles,
   Heart,
   Bookmark,
-  Bot,
-  Home
+  Home,
+  BookOpen
 } from 'lucide-react';
 import cn from 'clsx';
 import { useModal } from '@lib/hooks/useModal';
@@ -41,21 +41,9 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
-    href: '/curator',
-    linkName: 'Chat',
-    iconName: 'sparkles',
-    disabled: false
-  },
-  {
-    href: '/recommendations',
-    linkName: 'AI Recommendations',
-    iconName: 'sparkles',
-    disabled: false
-  },
-  {
-    href: '/ratings',
-    linkName: 'My Ratings',
-    iconName: 'star',
+    href: '/blog',
+    linkName: 'Blog',
+    iconName: 'book',
     disabled: false
   },
   {
@@ -117,14 +105,11 @@ export function MobileSidebarModal({
   };
 
   const getIcon = (iconName: string, href?: string) => {
-    // Use Bot icon for Chat with Curator
-    if (href === '/curator') {
-      return <Bot className='h-6 w-6' />;
-    }
-
     switch (iconName) {
       case 'home':
         return <Home className='h-6 w-6' />;
+      case 'book':
+        return <BookOpen className='h-6 w-6' />;
       case 'sparkles':
         return <Sparkles className='h-6 w-6' />;
       case 'star':

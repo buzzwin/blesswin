@@ -5,24 +5,19 @@ import type { ReactElement, ReactNode } from 'react';
 
 export default function Login(): JSX.Element {
   return (
-    <div className='grid min-h-screen grid-rows-[1fr,auto]'>
+    <div className='min-h-screen bg-gray-50 dark:bg-gray-900'>
       <SEO
         title='Sign In - Buzzwin'
-        description='Sign in to Buzzwin and start sharing your favorite shows and movies'
+        description='Sign in to Buzzwin and start your wellness journey'
       />
-      <div className='dark:via-amber-950/20 dark:to-orange-950/20 flex items-center justify-center bg-gradient-to-br from-amber-50 via-orange-50 to-red-50 dark:from-gray-900'>
-        <div className='w-full max-w-md p-8'>
-          <div className='mb-8 text-center'>
-            <h1 className='mb-2 text-3xl font-bold text-gray-900 dark:text-white'>
-              Welcome to Buzzwin
-            </h1>
-            <p className='text-gray-600 dark:text-gray-400'>
-              Your next favorite show awaits
-            </p>
-          </div>
-          <div className='rounded-2xl border border-amber-200 bg-white/80 p-8 shadow-xl backdrop-blur-sm dark:border-amber-800/30 dark:bg-gray-800/80'>
-            <JustLogin />
-          </div>
+      <div className='mx-auto max-w-md px-6 py-12'>
+        <div className='mb-8 text-center'>
+          <h1 className='text-2xl font-light text-gray-900 dark:text-white'>
+            Welcome to Buzzwin
+          </h1>
+        </div>
+        <div className='rounded-xl border border-gray-200 bg-white p-8 shadow-sm dark:border-gray-700 dark:bg-gray-800'>
+          <JustLogin />
         </div>
       </div>
     </div>

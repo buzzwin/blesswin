@@ -392,15 +392,9 @@ export function RecommendationsCard({
 
         {visibleRecommendations.length > 3 && (
           <div className='text-center'>
-            <Link href='/recommendations'>
-              <Button
-                variant='outline'
-                size='sm'
-                className='h-7 border-border text-xs text-foreground hover:bg-muted dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
-              >
-                View All
-              </Button>
-            </Link>
+            <div className='text-xs text-gray-500 dark:text-gray-400'>
+              Showing {visibleRecommendations.length} recommendations
+            </div>
           </div>
         )}
       </div>

@@ -23,24 +23,6 @@ export type NavLink = {
 
 const getNavLinks = (username: string): Readonly<NavLink[]> => [
   {
-    href: '/curator',
-    linkName: 'Chat',
-    iconName: 'SparklesIcon' as IconName, // Will use Bot icon in SidebarLink
-    disabled: false
-  },
-  {
-    href: '/recommendations',
-    linkName: 'AI Recommendations',
-    iconName: 'SparklesIcon',
-    disabled: false
-  },
-  {
-    href: '/ratings',
-    linkName: 'Ratings & Reviews',
-    iconName: 'StarIcon',
-    disabled: false
-  },
-  {
     href: `/user/${username}`,
     linkName: 'Profile',
     iconName: 'UserIcon',
