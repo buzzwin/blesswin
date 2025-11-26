@@ -94,7 +94,11 @@ export default async function handler(
               snippet: {
                 title: string;
                 description: string;
-                thumbnails: { high: { url: string } };
+                thumbnails: {
+                  high?: { url: string };
+                  default?: { url: string };
+                  medium?: { url: string };
+                };
                 channelTitle: string;
                 publishedAt: string;
               };
@@ -126,7 +130,7 @@ export default async function handler(
                 videoId: item.id.videoId,
                 title: item.snippet.title,
                 description: item.snippet.description,
-                thumbnail: item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.default?.url || '',
+                thumbnail: item.snippet.thumbnails?.high?.url || item.snippet.thumbnails?.medium?.url || item.snippet.thumbnails?.default?.url || '',
                 channelTitle: item.snippet.channelTitle,
                 publishedAt: item.snippet.publishedAt,
                 viewCount: details?.statistics?.viewCount,
