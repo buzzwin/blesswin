@@ -6,7 +6,8 @@ import {
   Clock,
   User,
   LogOut,
-  BookOpen
+  BookOpen,
+  Youtube
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import LogoIcon from '@components/ui/logo';
@@ -52,6 +53,12 @@ export function GlobalDesktopHeader(): JSX.Element {
             <a className='flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
               <BookOpen className='h-4 w-4' />
               Blog
+            </a>
+          </Link>
+          <Link href='/videos'>
+            <a className='flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+              <Youtube className='h-4 w-4' />
+              Videos
             </a>
           </Link>
         </nav>

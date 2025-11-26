@@ -15,6 +15,7 @@ import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
 import { WellnessAgentCard } from '@components/wellness/wellness-agent-card';
 import { CurrentEvents } from '@components/home/current-events';
+import { YouTubeVideos } from '@components/home/youtube-videos';
 import { siteURL } from '@lib/env';
 import Head from 'next/head';
 
@@ -165,6 +166,13 @@ export default function Home(): JSX.Element {
       <SectionShell className='py-20'>
         <div className='mx-auto max-w-4xl px-6'>
           <CurrentEvents />
+        </div>
+      </SectionShell>
+
+      {/* YouTube Videos Section */}
+      <SectionShell variant='dark' className='py-20'>
+        <div className='mx-auto max-w-6xl px-6'>
+          <YouTubeVideos category='all' limit={6} />
         </div>
       </SectionShell>
 
