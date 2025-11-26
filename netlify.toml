@@ -1,0 +1,13 @@
+[build]
+  command = "npm run build"
+  # Netlify Next.js plugin handles publish directory automatically
+  publish = ".next"
+
+[build.environment]
+  NODE_VERSION = "18"
+  # Ensure devDependencies are installed (default for Next.js, but explicit here)
+  NPM_FLAGS = ""
+
+# Skip processing if using Netlify Next.js plugin
+# The plugin handles everything automatically
+
