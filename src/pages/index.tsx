@@ -117,7 +117,8 @@ export default function Home(): JSX.Element {
       </Head>
 
       {/* AI Agents Section */}
-      <SectionShell id='agents' className='py-32'>
+      <div id='agents'>
+        <SectionShell className='py-32'>
         <div className='mx-auto max-w-6xl px-6'>
           <div className='mb-20 text-center'>
             <h2 className='mb-4 text-3xl font-light text-gray-900 dark:text-white sm:text-4xl'>
@@ -157,7 +158,8 @@ export default function Home(): JSX.Element {
             </p>
           </div>
         </div>
-      </SectionShell>
+        </SectionShell>
+      </div>
 
       {/* Current Events Section */}
       <SectionShell className='py-20'>

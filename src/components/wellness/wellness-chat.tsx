@@ -265,7 +265,9 @@ export function WellnessChat({
                 key={idx}
                 onClick={() => {
                   setInput(suggestion);
-                  setTimeout(() => handleSend(), 100);
+                  setTimeout(() => {
+                    void handleSend();
+                  }, 100);
                 }}
                 className='rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-all hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700'
               >

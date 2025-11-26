@@ -18,12 +18,11 @@ export default function DisclaimerPage(): JSX.Element {
 
       <SectionShell className='py-12'>
         <div className='mx-auto max-w-4xl px-6'>
-          <Link
-            href='/'
-            className='mb-8 inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'
-          >
-            <ArrowLeft className='h-4 w-4' />
-            <span className='font-medium'>Back</span>
+          <Link href='/'>
+            <a className='mb-8 inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+              <ArrowLeft className='h-4 w-4' />
+              <span className='font-medium'>Back</span>
+            </a>
           </Link>
 
           <div className='mb-8 flex items-center gap-4'>

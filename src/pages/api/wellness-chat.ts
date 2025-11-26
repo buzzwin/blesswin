@@ -186,12 +186,7 @@ export default async function handler(
   }
 
   try {
-    let { messages, agentType, userId } = req.body as WellnessChatRequest;
-
-    // Redirect mindfulness to meditation
-    if (agentType === 'mindfulness') {
-      agentType = 'meditation';
-    }
+    const { messages, agentType, userId } = req.body as WellnessChatRequest;
 
     if (!messages || messages.length === 0) {
       return res.status(400).json({ error: 'Messages are required' });

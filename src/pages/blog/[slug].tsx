@@ -46,8 +46,8 @@ export default function BlogPostPage({
 }: BlogPostPageProps): JSX.Element {
   // Map mindfulness to meditation
   const category = post.category === 'mindfulness' ? 'meditation' : post.category;
-  const gradient = categoryColors[category as keyof typeof categoryColors] || categoryColors.wellness;
-  const categoryLabel = categoryLabels[category as keyof typeof categoryLabels] || 'Wellness';
+  const gradient = (category in categoryColors ? categoryColors[category] : null) || categoryColors.wellness;
+  const categoryLabel = (category in categoryLabels ? categoryLabels[category] : null) || 'Wellness';
 
   const publishedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     year: 'numeric',

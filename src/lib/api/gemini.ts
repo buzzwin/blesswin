@@ -161,7 +161,7 @@ export function extractJSONFromResponse(responseText: string): Record<string, un
     throw new Error('No valid JSON found in Gemini response');
   }
   
-  let jsonString = jsonMatch[0];
+  const jsonString = jsonMatch[0];
   
   // Try to fix truncated JSON by closing arrays and objects
   try {

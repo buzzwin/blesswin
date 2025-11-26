@@ -39,14 +39,14 @@ interface TMDBTVShow {
 // Wellness-related genre IDs from TMDB
 const wellnessGenres = {
   documentary: 99,
-  health: 99, // Using documentary as proxy
+  health: 99 // Using documentary as proxy
 };
 
 // Function to search TMDB for wellness content
 async function searchTMDBWellnessContent(
   query: string,
   mediaType: 'movie' | 'tv' = 'movie',
-  limit: number = 20
+  limit = 20
 ): Promise<Array<TMDBMovie | TMDBTVShow>> {
   if (!TMDB_API_KEY) {
     console.warn('TMDB API key not found');
@@ -61,7 +61,7 @@ async function searchTMDBWellnessContent(
       throw new Error(`TMDB API error: ${response.status}`);
     }
     
-    const data = await response.json();
+    const data = await response.json() as { results?: Array<TMDBMovie | TMDBTVShow> };
     return (data.results || []).slice(0, limit);
   } catch (error) {
     console.error('Error searching TMDB:', error);
@@ -72,7 +72,7 @@ async function searchTMDBWellnessContent(
 // Function to get popular wellness content from TMDB
 async function getPopularWellnessContent(
   mediaType: 'movie' | 'tv' = 'movie',
-  limit: number = 20
+  limit = 20
 ): Promise<Array<TMDBMovie | TMDBTVShow>> {
   if (!TMDB_API_KEY) {
     return [];
@@ -87,7 +87,7 @@ async function getPopularWellnessContent(
       throw new Error(`TMDB API error: ${response.status}`);
     }
     
-    const data = await response.json();
+    const data = await response.json() as { results?: Array<TMDBMovie | TMDBTVShow> };
     return (data.results || []).slice(0, limit);
   } catch (error) {
     console.error('Error fetching popular wellness content:', error);
@@ -105,14 +105,19 @@ export default async function handler(
   }
 
   try {
-    let { category, limit = '10' } = req.query;
+    const { category: rawCategory, limit: rawLimit = '10' } = req.query;
+    let category: string | undefined;
+    if (typeof rawCategory === 'string') {
+      category = rawCategory;
+    }
+    const limit = typeof rawLimit === 'string' ? rawLimit : '10';
     
     // Redirect mindfulness to meditation
     if (category === 'mindfulness') {
       category = 'meditation';
     }
     
-    const contentLimit = parseInt(limit as string, 10);
+    const contentLimit = parseInt(limit, 10);
 
     // Search terms for different wellness categories
     const searchTerms: Record<string, string[]> = {

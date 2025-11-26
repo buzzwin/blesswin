@@ -62,7 +62,7 @@ export function CurrentEvents(): JSX.Element {
   }
 
   if (error || events.length === 0) {
-    return null; // Don't show anything if there's an error or no events
+    return <></>; // Don't show anything if there's an error or no events
   }
 
   const formatDate = (dateString: string): string => {

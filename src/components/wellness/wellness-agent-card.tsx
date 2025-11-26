@@ -57,12 +57,8 @@ export function WellnessAgentCard({
           {/* CTA Button */}
           <Button
             onClick={() => {
-              // Check if disclaimer accepted, if not, redirect to the page which will show the modal
-              if (!hasAcceptedDisclaimer()) {
-                void router.push(`/${agentType}`);
-              } else {
-                void router.push(`/${agentType}`);
-              }
+              // Navigate to the agent page (disclaimer modal will show if needed)
+              void router.push(`/${agentType}`);
             }}
             className={`w-full rounded-lg bg-gradient-to-r ${gradient} text-white shadow-md transition-all hover:scale-105 hover:shadow-lg`}
           >
