@@ -28,11 +28,13 @@ export function CommonLayout({
 }
 
 export function ProtectedLayout({
-  children
+  children,
+  redirectUrl
 }: {
   children: ReactNode;
+  redirectUrl?: string;
 }): JSX.Element {
-  const user = useRequireAuth();
+  const user = useRequireAuth(redirectUrl);
 
   if (!user) return <Placeholder />;
 

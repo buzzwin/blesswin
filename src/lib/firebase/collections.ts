@@ -1,10 +1,10 @@
-import { collection } from 'firebase/firestore';
+import { collection, doc } from 'firebase/firestore';
 import { userConverter } from '@lib/types/user';
 import { tweetConverter } from '@lib/types/tweet';
 import { bookmarkConverter, watchlistConverter } from '@lib/types/bookmark';
 import { statsConverter } from '@lib/types/stats';
 import { db } from './app';
-import type { CollectionReference } from 'firebase/firestore';
+import type { CollectionReference, DocumentReference } from 'firebase/firestore';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 import type { Review } from '@lib/types/review';
@@ -12,6 +12,8 @@ import { impactMomentConverter } from '@lib/types/impact-moment';
 import type { ImpactMoment } from '@lib/types/impact-moment';
 import { commentConverter } from '@lib/types/comment';
 import type { Comment } from '@lib/types/comment';
+import { ritualDefinitionConverter, userRitualStateConverter, ritualCompletionConverter } from '@lib/types/ritual';
+import type { RitualDefinition, UserRitualState, RitualCompletion } from '@lib/types/ritual';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -45,4 +47,14 @@ export const impactMomentsCollection = collection(db, 'impact_moments').withConv
 
 export function impactMomentCommentsCollection(momentId: string): CollectionReference<Comment> {
   return collection(db, `impact_moments/${momentId}/comments`).withConverter(commentConverter);
+}
+
+export const ritualsCollection = collection(db, 'rituals').withConverter(ritualDefinitionConverter);
+
+export function userRitualStateDoc(userId: string): DocumentReference<UserRitualState> {
+  return doc(db, `users/${userId}/ritual_state/${userId}`).withConverter(userRitualStateConverter);
+}
+
+export function ritualCompletionsCollection(userId: string): CollectionReference<RitualCompletion> {
+  return collection(db, `users/${userId}/ritual_completions`).withConverter(ritualCompletionConverter);
 }

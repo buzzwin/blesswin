@@ -30,6 +30,9 @@ export interface ImpactMoment {
   userRipples?: string[]; // user IDs who have rippled this
   joinedFromMomentId?: string; // ID of the original moment this was joined from
   joinedByUsers?: string[]; // user IDs who have joined this moment
+  fromDailyRitual?: boolean; // Whether this Impact Moment was created from a Daily Ritual
+  ritualId?: string; // ID of the ritual that inspired this moment
+  ritualTitle?: string; // Title of the ritual (for display)
 }
 
 export interface ImpactMomentWithUser extends ImpactMoment {
@@ -86,7 +89,7 @@ export const rippleTypeIcons: Record<RippleType, string> = {
 
 export const impactMomentConverter: FirestoreDataConverter<ImpactMoment> = {
   toFirestore(moment) {
-    const { id, updatedAt, moodCheckIn, images, videoUrl, userRipples, joinedFromMomentId, joinedByUsers, ...requiredData } = moment;
+    const { id, updatedAt, moodCheckIn, images, videoUrl, userRipples, joinedFromMomentId, joinedByUsers, fromDailyRitual, ritualId, ritualTitle, ...requiredData } = moment;
     const firestoreData: Record<string, unknown> = {
       ...requiredData,
       createdAt: moment.createdAt instanceof Date ? moment.createdAt : moment.createdAt
@@ -113,6 +116,15 @@ export const impactMomentConverter: FirestoreDataConverter<ImpactMoment> = {
     }
     if (joinedByUsers !== undefined) {
       firestoreData.joinedByUsers = joinedByUsers;
+    }
+    if (fromDailyRitual !== undefined) {
+      firestoreData.fromDailyRitual = fromDailyRitual;
+    }
+    if (ritualId !== undefined) {
+      firestoreData.ritualId = ritualId;
+    }
+    if (ritualTitle !== undefined) {
+      firestoreData.ritualTitle = ritualTitle;
     }
     
     return firestoreData;

@@ -9,6 +9,7 @@ import { MainHeader } from '@components/home/main-header';
 import { ImpactMomentInput } from '@components/impact/impact-moment-input';
 import { ImpactMomentCard } from '@components/impact/impact-moment-card';
 import { JoinMomentModal } from '@components/impact/join-moment-modal';
+import { RitualsBanner } from '@components/rituals/rituals-banner';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
@@ -19,6 +20,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
 import { useModal } from '@lib/hooks/useModal';
 import type { ImpactMomentWithUser, RippleType, ImpactTag, EffortLevel } from '@lib/types/impact-moment';
+import type { RitualDefinition } from '@lib/types/ritual';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
@@ -28,6 +30,8 @@ export default function HomeFeed(): JSX.Element {
   const [refreshing, setRefreshing] = useState(false);
   const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
   const [selectedMomentForJoin, setSelectedMomentForJoin] = useState<ImpactMomentWithUser | null>(null);
+  const [todayRitual, setTodayRitual] = useState<RitualDefinition | null>(null);
+  const [ritualCompleted, setRitualCompleted] = useState(false);
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -93,6 +97,29 @@ export default function HomeFeed(): JSX.Element {
   useEffect(() => {
     void fetchMoments();
   }, []);
+
+  // Fetch today's ritual for banner
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchTodayRitual = async (): Promise<void> => {
+      try {
+        const response = await fetch(`/api/rituals/today?userId=${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.rituals?.globalRitual) {
+            const ritual = data.rituals.globalRitual;
+            setTodayRitual(ritual);
+            setRitualCompleted(ritual.completed || false);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching today\'s ritual:', error);
+      }
+    };
+
+    void fetchTodayRitual();
+  }, [user?.id]);
 
   const handleRipple = async (momentId: string, rippleType: RippleType): Promise<void> => {
     if (!user?.id) {
@@ -294,6 +321,22 @@ export default function HomeFeed(): JSX.Element {
           </div>
         </div>
       </div>
+
+      {/* Rituals Banner */}
+      {todayRitual && !ritualCompleted && (
+        <RitualsBanner
+          ritual={todayRitual}
+          completed={ritualCompleted}
+          onDismiss={() => setTodayRitual(null)}
+          onComplete={() => {
+            // Navigate to rituals page or open completion flow
+            window.location.href = '/rituals';
+          }}
+          onViewAll={() => {
+            window.location.href = '/rituals';
+          }}
+        />
+      )}
 
       <div className='px-4 py-4'>
         <ImpactMomentInput onSuccess={handleMomentCreated} />

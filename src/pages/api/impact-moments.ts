@@ -14,6 +14,9 @@ interface CreateImpactMomentRequest {
   images?: string[];
   videoUrl?: string;
   userId: string;
+  fromDailyRitual?: boolean;
+  ritualId?: string;
+  ritualTitle?: string;
 }
 
 export default async function handler(
@@ -27,7 +30,7 @@ export default async function handler(
   }
 
   try {
-    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId } = req.body as CreateImpactMomentRequest;
+    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, fromDailyRitual, ritualId, ritualTitle } = req.body as CreateImpactMomentRequest;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized. User ID required.' });
@@ -86,6 +89,17 @@ export default async function handler(
       rippleCount: 0
     };
 
+    // Add ritual-related fields if provided
+    if (fromDailyRitual !== undefined) {
+      impactMomentData.fromDailyRitual = fromDailyRitual;
+    }
+    if (ritualId !== undefined) {
+      impactMomentData.ritualId = ritualId;
+    }
+    if (ritualTitle !== undefined) {
+      impactMomentData.ritualTitle = ritualTitle;
+    }
+
     // Only include optional fields if they have values
     if (moodCheckIn) {
       impactMomentData.moodCheckIn = moodCheckIn;
@@ -102,6 +116,7 @@ export default async function handler(
     res.status(201).json({
       success: true,
       id: docRef.id,
+      momentId: docRef.id, // Alias for compatibility
       message: 'Impact moment created successfully'
     });
   } catch (error) {

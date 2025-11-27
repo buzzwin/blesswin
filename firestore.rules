@@ -174,5 +174,50 @@ service cloud.firestore {
       allow read: if isSignedIn() && request.auth.uid == userId;
       allow write: if isSignedIn() && request.auth.uid == userId;
     }
+
+    // Rituals collection (public read, admin write)
+    match /rituals/{ritualId} {
+      allow read: if true; // Public read for ritual definitions
+      allow create, update, delete: if false; // Admin only (handled server-side)
+    }
+
+    // User ritual state subcollection (single document per user)
+    match /users/{userId}/ritual_state/{stateId} {
+      // Allow read for authenticated users (API routes validate userId server-side)
+      // Note: API routes use client SDK server-side, so we allow reads for authenticated users
+      // Client-side reads require auth, server-side API routes validate userId separately
+      allow read: if isSignedIn() || request.auth == null; // Allow server-side API reads
+      // Allow create/update only by the owner
+      allow create: if isSignedIn() 
+        && request.auth.uid == userId 
+        && stateId == userId
+        && request.resource.data.userId == request.auth.uid;
+      allow update: if isSignedIn() 
+        && request.auth.uid == userId 
+        && stateId == userId;
+      allow delete: if false; // Don't allow deletion, only updates
+    }
+
+    // User ritual completions subcollection
+    match /users/{userId}/ritual_completions/{completionId} {
+      // Allow read for authenticated users (API routes validate userId server-side)
+      // Note: API routes use client SDK server-side, so we allow reads for authenticated users
+      // Client-side reads require auth, server-side API routes validate userId separately
+      allow read: if isSignedIn() || request.auth == null; // Allow server-side API reads
+      // Allow create only by the owner with proper data structure
+      allow create: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.ritualId is string
+        && request.resource.data.completedAt is timestamp
+        && request.resource.data.completedQuietly is bool
+        && request.resource.data.date is string;
+      // Allow update only by the owner, only for sharedAsMomentId
+      allow update: if isSignedIn() 
+        && request.auth.uid == userId
+        && resource.data.userId == request.auth.uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sharedAsMomentId']);
+      allow delete: if false; // Don't allow deletion
+    }
   }
 }

@@ -1,11 +1,25 @@
 import Error from 'next/error';
-import { useTheme } from '@lib/context/theme-context';
 import { SEO } from '@components/common/seo';
+import { useState, useEffect } from 'react';
 
 export default function NotFound(): JSX.Element {
-  const { theme } = useTheme();
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const isDarkMode = ['dim', 'dark'].includes(theme);
+  useEffect(() => {
+    // Get theme from localStorage or system preference
+    const getTheme = (): string => {
+      if (typeof window === 'undefined') return 'light';
+      
+      const storedTheme = localStorage.getItem('theme');
+      if (storedTheme) return storedTheme;
+      
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      return prefersDark ? 'dark' : 'light';
+    };
+
+    const theme = getTheme();
+    setIsDarkMode(['dim', 'dark'].includes(theme));
+  }, []);
 
   return (
     <>

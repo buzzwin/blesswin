@@ -13,7 +13,8 @@ import {
   Heart,
   Bookmark,
   Home,
-  BookOpen
+  BookOpen,
+  Calendar
 } from 'lucide-react';
 import cn from 'clsx';
 import { useModal } from '@lib/hooks/useModal';
@@ -57,6 +58,12 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     href: '/real-stories',
     linkName: 'Stories',
     iconName: 'heart',
+    disabled: false
+  },
+  {
+    href: '/rituals',
+    linkName: 'Rituals',
+    iconName: 'calendar',
     disabled: false
   },
   {
@@ -138,6 +145,8 @@ export function MobileSidebarModal({
         return <BookOpen className='h-6 w-6' />;
       case 'heart':
         return <Heart className='h-6 w-6' />;
+      case 'calendar':
+        return <Calendar className='h-6 w-6' />;
       case 'sparkles':
         return <Sparkles className='h-6 w-6' />;
       case 'star':

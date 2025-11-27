@@ -99,6 +99,16 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
 
         {/* Content */}
         <div className='flex-1 min-w-0'>
+          {/* Ritual Badge */}
+          {moment.fromDailyRitual && (
+            <div className='mb-3 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 dark:border-green-800 dark:bg-green-900/20'>
+              <span className='text-lg'>🌱</span>
+              <span className='text-sm font-medium text-green-700 dark:text-green-300'>
+                From today's ritual{moment.ritualTitle ? `: ${moment.ritualTitle}` : ''}
+              </span>
+            </div>
+          )}
+
           {/* Joined Badge */}
           {moment.joinedFromMomentId && (
             <div className='mb-3 flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 dark:border-purple-800 dark:bg-purple-900/20'>
