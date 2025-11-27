@@ -8,14 +8,15 @@ export function useRequireAuth(redirectUrl?: string): User | null {
   const { replace } = useRouter();
 
   useEffect(() => {
-    if (!loading) {
+    // Only redirect if redirectUrl is explicitly provided (not undefined)
+    if (!loading && redirectUrl !== undefined) {
       if (!user) {
-        void replace(redirectUrl ?? '/');
+        void replace(redirectUrl);
       } else if (!isEmailVerified) {
         void replace('/verify-email');
       }
     }
-  }, [user, loading, isEmailVerified]);
+  }, [user, loading, isEmailVerified, redirectUrl, replace]);
 
   return user;
 }

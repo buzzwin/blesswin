@@ -57,7 +57,7 @@ export function Input({
   children,
   closeModal,
   selectedTags = [],
-  placeholder = 'Share what you are watching...',
+  placeholder = 'Share your meditation practice, yoga journey, act of kindness, or community impact story...',
   onSubmit,
   selectedEmoji,
   onChange,
@@ -125,15 +125,15 @@ export function Input({
 
       if (!response.ok) {
         const errorData = (await response.json()) as ErrorResponse;
-        throw new Error(errorData.message ?? 'Failed to post review');
+        throw new Error(errorData.message ?? 'Failed to share your story');
       }
 
       discardTweet();
       closeModal?.();
-      toast.success('Review posted successfully!');
+      toast.success('Your story has been shared! Thank you for amplifying good in the world.');
     } catch (error) {
       const message =
-        error instanceof Error ? error.message : 'Failed to post review';
+        error instanceof Error ? error.message : 'Failed to share your story';
       toast.error(message);
     } finally {
       setLoading(false);

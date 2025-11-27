@@ -84,19 +84,19 @@ export default function BlogPage(): JSX.Element {
       </Head>
 
       {/* Simple Header */}
-      <SectionShell className='py-12 sm:py-16'>
+      <SectionShell className='min-h-0 py-6 sm:py-8'>
         <div className='mx-auto max-w-6xl px-4 sm:px-6'>
-          <div className='mb-6 text-center sm:mb-8'>
-            <h1 className='mb-2 text-3xl font-light text-gray-900 dark:text-white sm:text-4xl md:text-5xl'>
+          <div className='mb-4 text-center'>
+            <h1 className='mb-2 text-2xl font-semibold text-gray-900 dark:text-white sm:text-3xl'>
               Wellness Blog
             </h1>
-            <p className='mx-auto max-w-2xl text-base font-light text-gray-600 dark:text-gray-300 sm:text-lg'>
+            <p className='mx-auto max-w-2xl text-sm text-gray-600 dark:text-gray-300'>
               Articles and insights for your wellness journey
             </p>
           </div>
 
           {/* Category Filters */}
-          <div className='mb-6 flex flex-wrap items-center justify-center gap-2 sm:mb-8'>
+          <div className='mb-4 flex flex-wrap items-center justify-center gap-2'>
             {categories.map((category) => {
               const Icon = category.icon;
               const isActive = selectedCategory === category.value;
@@ -120,17 +120,17 @@ export default function BlogPage(): JSX.Element {
       </SectionShell>
 
       {/* Posts Grid */}
-      <SectionShell className='py-8 sm:py-12'>
+      <SectionShell className='min-h-0 py-4 sm:py-6'>
         <div className='mx-auto max-w-6xl px-4 sm:px-6'>
           {filteredPosts.length > 0 ? (
-            <div className='grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-3'>
+            <div className='grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3'>
               {filteredPosts.map((post) => (
                 <BlogCard key={post.slug} post={post} />
               ))}
             </div>
           ) : (
-            <div className='py-20 text-center'>
-              <p className='text-lg text-gray-600 dark:text-gray-400'>
+            <div className='py-8 text-center'>
+              <p className='text-sm text-gray-600 dark:text-gray-400'>
                 No articles found.
               </p>
             </div>

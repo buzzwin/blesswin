@@ -79,7 +79,13 @@ export default async function handler(
           if (!searchResponse.ok) {
             const errorData = await searchResponse.json().catch(() => ({}));
             const errorMessage = errorData.error?.message || `HTTP ${searchResponse.status}`;
+            const errorReason = errorData.error?.errors?.[0]?.reason || '';
             console.error(`YouTube API error: ${searchResponse.status}`, errorMessage);
+            
+            // Check for quota exceeded error
+            if (searchResponse.status === 403 && (errorMessage.includes('quota') || errorReason === 'quotaExceeded' || errorMessage.includes('exceeded'))) {
+              throw new Error('QUOTA_EXCEEDED: YouTube API daily quota has been exceeded. The quota resets at midnight Pacific Time. Please try again later.');
+            }
             
             // If API is blocked, throw a more specific error
             if (searchResponse.status === 403 && errorMessage.includes('blocked')) {
@@ -155,11 +161,33 @@ export default async function handler(
       .slice(0, videoLimit);
 
     console.log(`Returning ${sortedVideos.length} videos for category: ${category}`);
+    
+    // If no videos found and it's not a quota error, return empty array with success
+    if (sortedVideos.length === 0) {
+      res.status(200).json({ 
+        videos: [],
+        message: 'No videos found. This may be due to API quota limits or no recent videos matching the search criteria.'
+      });
+      return;
+    }
+    
     res.status(200).json({ videos: sortedVideos });
   } catch (error) {
     console.error('Error fetching YouTube videos:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unknown error occurred';
+    
+    // Return specific status code for quota errors
+    if (errorMessage.includes('QUOTA_EXCEEDED')) {
+      res.status(429).json({
+        error: errorMessage,
+        videos: []
+      });
+      return;
+    }
+    
     res.status(500).json({
-      error: error instanceof Error ? error.message : 'An unknown error occurred'
+      error: errorMessage,
+      videos: []
     });
   }
 }

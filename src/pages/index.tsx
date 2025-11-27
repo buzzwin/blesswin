@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
@@ -6,7 +7,8 @@ import {
   Users,
   Sparkles,
   BookOpen,
-  HandHeart
+  HandHeart,
+  Loader2
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
@@ -23,17 +25,40 @@ import Head from 'next/head';
 export default function Home(): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
+  const [navigating, setNavigating] = useState(false);
+
+  useEffect(() => {
+    const handleRouteChangeStart = (): void => {
+      setNavigating(true);
+    };
+    const handleRouteChangeComplete = (): void => {
+      setNavigating(false);
+    };
+    const handleRouteChangeError = (): void => {
+      setNavigating(false);
+    };
+
+    router.events.on('routeChangeStart', handleRouteChangeStart);
+    router.events.on('routeChangeComplete', handleRouteChangeComplete);
+    router.events.on('routeChangeError', handleRouteChangeError);
+
+    return () => {
+      router.events.off('routeChangeStart', handleRouteChangeStart);
+      router.events.off('routeChangeComplete', handleRouteChangeComplete);
+      router.events.off('routeChangeError', handleRouteChangeError);
+    };
+  }, [router]);
 
   const handleSignIn = (): void => {
     void router.push('/login');
   };
 
   const handleGetInvolved = (): void => {
-    void router.push('/login');
-  };
-
-  const handleSeeStories = (): void => {
-    void router.push('/blog');
+    if (user) {
+      void router.push('/home');
+    } else {
+      void router.push('/login');
+    }
   };
 
   const impactAreas = [
@@ -145,9 +170,6 @@ export default function Home(): JSX.Element {
         structuredData={structuredData}
       />
       <Head>
-        <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
-        <link href='https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet' />
         <script
           type='application/ld+json'
           dangerouslySetInnerHTML={{
@@ -176,12 +198,24 @@ export default function Home(): JSX.Element {
                   Get Involved
                   <ArrowRight className='ml-2 inline h-4 w-4' />
                 </button>
-                <button
-                  onClick={handleSeeStories}
-                  className='rounded-full border-2 border-gray-900 bg-white px-8 py-4 text-base font-semibold text-gray-900 transition-colors hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-900'
-                >
-                  See Real Stories
-                </button>
+                <Link href='/real-stories'>
+                  <a
+                    onClick={() => setNavigating(true)}
+                    className='inline-flex items-center justify-center rounded-full border-2 border-gray-900 bg-white px-8 py-4 text-base font-semibold text-gray-900 transition-all hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-900'
+                  >
+                    {navigating ? (
+                      <span className='flex items-center gap-2'>
+                        <Loader2 className='h-4 w-4 animate-spin' />
+                        Loading...
+                      </span>
+                    ) : (
+                      <>
+                        See Real Stories
+                        <ArrowRight className='ml-2 h-4 w-4' />
+                      </>
+                    )}
+                  </a>
+                </Link>
               </div>
             </div>
           </div>

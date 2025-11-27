@@ -10,6 +10,9 @@ export default function Document(): JSX.Element {
         
         {/* DNS Prefetch */}
         <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
+        
+        {/* Fonts */}
+        <link href='https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet' />
       </Head>
       <body>
         <Main />

@@ -1,0 +1,207 @@
+import { useState } from 'react';
+import Link from 'next/link';
+import { UserAvatar } from '@components/user/user-avatar';
+import { UserName } from '@components/user/user-name';
+import { UserUsername } from '@components/user/user-username';
+import { formatDate } from '@lib/date';
+import {
+  impactTagLabels,
+  impactTagColors,
+  effortLevelLabels,
+  effortLevelIcons,
+  rippleTypeLabels,
+  rippleTypeIcons,
+  type ImpactMomentWithUser,
+  type RippleType
+} from '@lib/types/impact-moment';
+import { MessageCircle, Share2, Sparkles } from 'lucide-react';
+import { cn } from '@lib/utils';
+import type { Timestamp } from 'firebase/firestore';
+
+interface ImpactMomentCardProps {
+  moment: ImpactMomentWithUser;
+  onRipple?: (momentId: string, rippleType: RippleType) => void;
+}
+
+export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): JSX.Element {
+  const [rippleMenuOpen, setRippleMenuOpen] = useState(false);
+
+  const totalRipples = moment.rippleCount || 
+    (moment.ripples.inspired.length +
+     moment.ripples.grateful.length +
+     moment.ripples.joined_you.length +
+     moment.ripples.sent_love.length);
+
+  const handleRipple = (rippleType: RippleType): void => {
+    setRippleMenuOpen(false);
+    onRipple?.(moment.id ?? '', rippleType);
+  };
+
+  return (
+    <article className='border-b border-gray-200 px-4 py-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800/50'>
+      <div className='flex gap-3'>
+        {/* User Avatar */}
+        <Link href={`/user/${moment.user.username}`}>
+          <a>
+            <UserAvatar
+              src={moment.user.photoURL}
+              alt={moment.user.name}
+              username={moment.user.username}
+            />
+          </a>
+        </Link>
+
+        {/* Content */}
+        <div className='flex-1 min-w-0'>
+          {/* Header */}
+          <div className='mb-2 flex items-center gap-2'>
+            <Link href={`/user/${moment.user.username}`}>
+              <a className='hover:underline'>
+                <UserName
+                  name={moment.user.name}
+                  username={moment.user.username}
+                  verified={moment.user.verified ?? false}
+                  className='font-semibold'
+                />
+              </a>
+            </Link>
+            <UserUsername username={moment.user.username} />
+            <span className='text-gray-500 dark:text-gray-400'>·</span>
+            <time className='text-sm text-gray-500 dark:text-gray-400'>
+              {moment.createdAt instanceof Date 
+                ? formatDate(moment.createdAt as unknown as Timestamp, 'tweet')
+                : formatDate(moment.createdAt, 'tweet')}
+            </time>
+          </div>
+
+          {/* Impact Moment Text */}
+          <p className='mb-3 whitespace-pre-wrap break-words text-gray-900 dark:text-white'>
+            {moment.text}
+          </p>
+
+          {/* Tags */}
+          <div className='mb-3 flex flex-wrap gap-2'>
+            {moment.tags.map((tag) => (
+              <span
+                key={tag}
+                className={cn(
+                  'rounded-full px-2.5 py-1 text-xs font-medium',
+                  impactTagColors[tag]
+                )}
+              >
+                {impactTagLabels[tag]}
+              </span>
+            ))}
+          </div>
+
+          {/* Effort Level */}
+          <div className='mb-3 flex items-center gap-2'>
+            <span className='text-lg'>{effortLevelIcons[moment.effortLevel]}</span>
+            <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+              {effortLevelLabels[moment.effortLevel]} Effort
+            </span>
+          </div>
+
+          {/* Mood Check-in */}
+          {moment.moodCheckIn && (
+            <div className='mb-3 rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20'>
+              <div className='mb-2 text-xs font-medium text-purple-700 dark:text-purple-300'>
+                Mood Check-in
+              </div>
+              <div className='flex items-center gap-4 text-sm'>
+                <div className='flex items-center gap-2'>
+                  <span className='text-gray-600 dark:text-gray-400'>Before:</span>
+                  <span className='font-semibold text-gray-900 dark:text-white'>
+                    {moment.moodCheckIn.before}/5
+                  </span>
+                </div>
+                <span className='text-gray-400'>→</span>
+                <div className='flex items-center gap-2'>
+                  <span className='text-gray-600 dark:text-gray-400'>After:</span>
+                  <span className='font-semibold text-green-600 dark:text-green-400'>
+                    {moment.moodCheckIn.after}/5
+                  </span>
+                </div>
+                {moment.moodCheckIn.after > moment.moodCheckIn.before && (
+                  <span className='ml-auto text-xs text-green-600 dark:text-green-400'>
+                    +{moment.moodCheckIn.after - moment.moodCheckIn.before} improvement
+                  </span>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Images */}
+          {moment.images && moment.images.length > 0 && (
+            <div className='mb-3 grid grid-cols-2 gap-2 rounded-lg overflow-hidden'>
+              {moment.images.slice(0, 4).map((imageUrl, index) => (
+                <img
+                  key={index}
+                  src={imageUrl}
+                  alt={`Impact moment image ${index + 1}`}
+                  className='h-48 w-full object-cover'
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className='relative flex items-center gap-6 pt-2'>
+            {/* Ripple Button */}
+            <div className='relative'>
+              <button
+                onClick={() => setRippleMenuOpen(!rippleMenuOpen)}
+                className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-purple-100 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400'
+              >
+                <Sparkles className='h-5 w-5' />
+                <span className='text-sm font-medium'>
+                  {totalRipples > 0 ? totalRipples : 'Ripple'}
+                </span>
+              </button>
+
+              {/* Ripple Menu */}
+              {rippleMenuOpen && (
+                <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
+                  <div className='p-2'>
+                    {(['inspired', 'grateful', 'joined_you', 'sent_love'] as RippleType[]).map(
+                      (rippleType) => (
+                        <button
+                          key={rippleType}
+                          onClick={() => handleRipple(rippleType)}
+                          className='w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
+                        >
+                          <span className='text-lg'>{rippleTypeIcons[rippleType]}</span>
+                          <span className='font-medium'>{rippleTypeLabels[rippleType]}</span>
+                          {moment.ripples[rippleType].length > 0 && (
+                            <span className='ml-auto text-xs text-gray-500'>
+                              {moment.ripples[rippleType].length}
+                            </span>
+                          )}
+                        </button>
+                      )
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Comment Button */}
+            <Link href={`/impact/${moment.id}`}>
+              <a className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'>
+                <MessageCircle className='h-5 w-5' />
+                <span className='text-sm font-medium'>Comment</span>
+              </a>
+            </Link>
+
+            {/* Share Button */}
+            <button className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'>
+              <Share2 className='h-5 w-5' />
+              <span className='text-sm font-medium'>Share</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+

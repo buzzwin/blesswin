@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { Play, Calendar, Eye, Loader2, Youtube } from 'lucide-react';
 
 interface YouTubeVideo {
@@ -49,15 +48,19 @@ export function YouTubeVideos({
         });
 
         const response = await fetch(`/api/youtube-videos?${params.toString()}`);
+        const data = await response.json();
 
         if (!response.ok) {
-          const errorData = await response.json().catch(() => ({}));
-          throw new Error(errorData.error || 'Failed to fetch videos');
+          throw new Error(data.error || 'Failed to fetch videos');
         }
 
-        const data = await response.json();
         console.log('YouTube videos response:', data);
         setVideos(data.videos || []);
+        
+        // If no videos and there's a message, set it as error for display
+        if (data.videos?.length === 0 && data.message) {
+          setError(data.message);
+        }
       } catch (err) {
         console.error('Error fetching YouTube videos:', err);
         setError(err instanceof Error ? err.message : 'Failed to load videos');
@@ -78,42 +81,87 @@ export function YouTubeVideos({
   }
 
   if (error) {
+    const isQuotaError = error.includes('QUOTA_EXCEEDED') || error.includes('quota');
+    const isNotEnabled = error.includes('not enabled') || error.includes('blocked');
+    const isMissingKey = error.includes('YouTube API key');
+    
     return (
-      <div className='py-12 text-center'>
-        <div className='mx-auto max-w-2xl rounded-lg border border-yellow-200 bg-yellow-50 p-6 dark:border-yellow-800 dark:bg-yellow-900/20'>
-          <p className='mb-4 font-semibold text-yellow-900 dark:text-yellow-200'>
-            {error.includes('not enabled') || error.includes('blocked')
+      <div className='py-8 text-center'>
+        <div className={`mx-auto max-w-2xl rounded-lg border p-6 ${
+          isQuotaError 
+            ? 'border-orange-200 bg-orange-50 dark:border-orange-800 dark:bg-orange-900/20'
+            : 'border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-900/20'
+        }`}>
+          <p className={`mb-4 font-semibold ${
+            isQuotaError
+              ? 'text-orange-900 dark:text-orange-200'
+              : 'text-yellow-900 dark:text-yellow-200'
+          }`}>
+            {isQuotaError
+              ? 'YouTube API Quota Exceeded'
+              : isNotEnabled
               ? 'YouTube Data API v3 Not Enabled'
-              : error.includes('YouTube API key')
+              : isMissingKey
               ? 'YouTube API Key Not Configured'
               : 'Unable to Load Videos'}
           </p>
-          <p className='mb-4 text-sm text-yellow-800 dark:text-yellow-300'>
-            {error.includes('not enabled') || error.includes('blocked')
+          <p className={`mb-4 text-sm ${
+            isQuotaError
+              ? 'text-orange-800 dark:text-orange-300'
+              : 'text-yellow-800 dark:text-yellow-300'
+          }`}>
+            {isQuotaError
+              ? 'The YouTube API daily quota has been exceeded. The quota resets at midnight Pacific Time (PST/PDT). Please try again later or consider requesting a quota increase in Google Cloud Console.'
+              : isNotEnabled
               ? 'The YouTube Data API v3 needs to be enabled in Google Cloud Console for your API key.'
-              : error.includes('YouTube API key')
+              : isMissingKey
               ? 'Please add NEXT_PUBLIC_YOUTUBE_API_KEY to your environment variables.'
               : error}
           </p>
-          <div className='text-xs text-yellow-700 dark:text-yellow-400'>
-            <p className='mb-2 font-medium'>To fix this:</p>
-            <ol className='list-inside list-decimal space-y-1 text-left'>
-              <li>Go to{' '}
-                <a
-                  href='https://console.cloud.google.com/apis/library/youtube.googleapis.com'
-                  target='_blank'
-                  rel='noopener noreferrer'
-                  className='underline hover:text-yellow-900 dark:hover:text-yellow-200'
-                >
-                  Google Cloud Console - YouTube Data API v3
-                </a>
-              </li>
-              <li>Select your project</li>
-              <li>Click &quot;Enable&quot; to enable the API</li>
-              <li>Wait a few minutes for the changes to propagate</li>
-              <li>Refresh this page</li>
-            </ol>
-          </div>
+          {!isQuotaError && (
+            <div className={`text-xs ${
+              isQuotaError
+                ? 'text-orange-700 dark:text-orange-400'
+                : 'text-yellow-700 dark:text-yellow-400'
+            }`}>
+              <p className='mb-2 font-medium'>To fix this:</p>
+              <ol className='list-inside list-decimal space-y-1 text-left'>
+                <li>Go to{' '}
+                  <a
+                    href='https://console.cloud.google.com/apis/library/youtube.googleapis.com'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='underline hover:text-yellow-900 dark:hover:text-yellow-200'
+                  >
+                    Google Cloud Console - YouTube Data API v3
+                  </a>
+                </li>
+                <li>Select your project</li>
+                <li>Click &quot;Enable&quot; to enable the API</li>
+                <li>Wait a few minutes for the changes to propagate</li>
+                <li>Refresh this page</li>
+              </ol>
+            </div>
+          )}
+          {isQuotaError && (
+            <div className='text-xs text-orange-700 dark:text-orange-400'>
+              <p className='mb-2 font-medium'>Options:</p>
+              <ul className='list-inside list-disc space-y-1 text-left'>
+                <li>Wait until midnight Pacific Time for the quota to reset</li>
+                <li>Request a quota increase in{' '}
+                  <a
+                    href='https://console.cloud.google.com/apis/api/youtube.googleapis.com/quotas'
+                    target='_blank'
+                    rel='noopener noreferrer'
+                    className='underline hover:text-orange-900 dark:hover:text-orange-200'
+                  >
+                    Google Cloud Console
+                  </a>
+                </li>
+                <li>Use a different YouTube API key with available quota</li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -121,9 +169,9 @@ export function YouTubeVideos({
 
   if (videos.length === 0) {
     return (
-      <div className='py-12 text-center'>
-        <p className='text-gray-600 dark:text-gray-400'>
-          No videos found. Please check your YouTube API configuration.
+      <div className='py-8 text-center'>
+        <p className='text-sm text-gray-600 dark:text-gray-400'>
+          No videos found at this time. This may be due to API quota limits or no recent videos matching the search criteria.
         </p>
       </div>
     );
@@ -165,15 +213,10 @@ export function YouTubeVideos({
 
   return (
     <div className='space-y-8'>
-      <div className='flex items-center justify-between'>
+      <div>
         <h3 className='text-2xl font-normal text-gray-900 dark:text-white md:text-3xl'>
           Trending Videos
         </h3>
-        <Link href='/videos'>
-          <a className='text-sm text-gray-600 underline dark:text-gray-400'>
-            View All
-          </a>
-        </Link>
       </div>
       <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
         {videos.map((video) => {

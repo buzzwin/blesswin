@@ -96,4 +96,18 @@ try {
   adminDb = null;
 }
 
-export { adminDb }; 
+export { adminDb };
+
+// Export admin app for auth verification
+import { getApp } from 'firebase-admin/app';
+let adminAppInstance: ReturnType<typeof getApp> | null = null;
+try {
+  const apps = getApps();
+  if (apps.length > 0) {
+    adminAppInstance = getApp();
+  }
+} catch {
+  adminAppInstance = null;
+}
+
+export const adminApp = adminAppInstance; 

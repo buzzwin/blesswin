@@ -1,6 +1,5 @@
 const footerLinks = [
   ['Blog', '/blog'],
-  ['Videos', '/videos'],
   ['Terms of Service', '/tos'],
   ['Privacy Policy', '/privacy'],
   ['Disclaimer', '/disclaimer'],

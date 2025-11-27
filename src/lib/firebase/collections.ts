@@ -8,6 +8,8 @@ import type { CollectionReference } from 'firebase/firestore';
 import type { Bookmark } from '@lib/types/bookmark';
 import type { Stats } from '@lib/types/stats';
 import type { Review } from '@lib/types/review';
+import { impactMomentConverter } from '@lib/types/impact-moment';
+import type { ImpactMoment } from '@lib/types/impact-moment';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -36,3 +38,5 @@ export const reviewsCollection = collection(db, 'reviews') as CollectionReferenc
 export const visitsCollection = collection(db, 'visits');
 
 export const recommendationsCollection = collection(db, 'ai_recommendations');
+
+export const impactMomentsCollection = collection(db, 'impact_moments').withConverter(impactMomentConverter);
