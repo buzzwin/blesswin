@@ -150,8 +150,8 @@ service cloud.firestore {
         && request.resource.data.rippleCount is int;
       allow update: if isSignedIn() && (
         resource.data.createdBy == request.auth.uid ||
-        // Allow updating ripples and rippleCount
-        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ripples', 'rippleCount'])
+        // Allow updating ripples, rippleCount, and joinedByUsers
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ripples', 'rippleCount', 'joinedByUsers'])
       );
       allow delete: if isSignedIn() && resource.data.createdBy == request.auth.uid;
 

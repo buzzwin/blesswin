@@ -28,6 +28,8 @@ export interface ImpactMoment {
   };
   rippleCount: number;
   userRipples?: string[]; // user IDs who have rippled this
+  joinedFromMomentId?: string; // ID of the original moment this was joined from
+  joinedByUsers?: string[]; // user IDs who have joined this moment
 }
 
 export interface ImpactMomentWithUser extends ImpactMoment {
@@ -84,7 +86,7 @@ export const rippleTypeIcons: Record<RippleType, string> = {
 
 export const impactMomentConverter: FirestoreDataConverter<ImpactMoment> = {
   toFirestore(moment) {
-    const { id, updatedAt, moodCheckIn, images, videoUrl, userRipples, ...requiredData } = moment;
+    const { id, updatedAt, moodCheckIn, images, videoUrl, userRipples, joinedFromMomentId, joinedByUsers, ...requiredData } = moment;
     const firestoreData: Record<string, unknown> = {
       ...requiredData,
       createdAt: moment.createdAt instanceof Date ? moment.createdAt : moment.createdAt
@@ -105,6 +107,12 @@ export const impactMomentConverter: FirestoreDataConverter<ImpactMoment> = {
     }
     if (userRipples !== undefined) {
       firestoreData.userRipples = userRipples;
+    }
+    if (joinedFromMomentId !== undefined) {
+      firestoreData.joinedFromMomentId = joinedFromMomentId;
+    }
+    if (joinedByUsers !== undefined) {
+      firestoreData.joinedByUsers = joinedByUsers;
     }
     
     return firestoreData;

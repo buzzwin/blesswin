@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import { query, orderBy, getDocs, doc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
+import { query, orderBy, getDocs, doc, updateDoc, arrayUnion, arrayRemove, increment, addDoc, serverTimestamp, where } from 'firebase/firestore';
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import { usersCollection } from '@lib/firebase/collections';
 import { ProtectedLayout } from '@components/layout/common-layout';
@@ -8,6 +8,7 @@ import { MainContainer } from '@components/home/main-container';
 import { MainHeader } from '@components/home/main-header';
 import { ImpactMomentInput } from '@components/impact/impact-moment-input';
 import { ImpactMomentCard } from '@components/impact/impact-moment-card';
+import { JoinMomentModal } from '@components/impact/join-moment-modal';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
@@ -16,7 +17,8 @@ import { useState, useEffect } from 'react';
 import { getDoc } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
-import type { ImpactMomentWithUser, RippleType } from '@lib/types/impact-moment';
+import { useModal } from '@lib/hooks/useModal';
+import type { ImpactMomentWithUser, RippleType, ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
@@ -24,6 +26,8 @@ export default function HomeFeed(): JSX.Element {
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
+  const [selectedMomentForJoin, setSelectedMomentForJoin] = useState<ImpactMomentWithUser | null>(null);
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -35,6 +39,22 @@ export default function HomeFeed(): JSX.Element {
       const momentsWithUsers = await Promise.all(
         snapshot.docs.map(async (docSnapshot) => {
           const momentData = { id: docSnapshot.id, ...docSnapshot.data() };
+          
+          // If joinedByUsers doesn't exist, query for it
+          if (!momentData.joinedByUsers && momentData.id) {
+            try {
+              const joinedSnapshot = await getDocs(
+                query(
+                  impactMomentsCollection,
+                  where('joinedFromMomentId', '==', momentData.id)
+                )
+              );
+              momentData.joinedByUsers = joinedSnapshot.docs.map(d => d.data().createdBy);
+            } catch (error) {
+              console.error('Error fetching joined users:', error);
+              momentData.joinedByUsers = [];
+            }
+          }
           
           // Fetch user data
           const userDoc = await getDoc(doc(usersCollection, momentData.createdBy));
@@ -80,6 +100,42 @@ export default function HomeFeed(): JSX.Element {
       return;
     }
 
+    // Special handling for "Joined You" - open modal instead
+    if (rippleType === 'joined_you') {
+      const moment = moments.find(m => m.id === momentId);
+      if (moment) {
+        try {
+          // Check if user already joined this moment
+          const existingJoined = await getDocs(
+            query(
+              impactMomentsCollection,
+              where('joinedFromMomentId', '==', momentId),
+              where('createdBy', '==', user.id)
+            )
+          );
+
+          if (!existingJoined.empty) {
+            const existing = existingJoined.docs[0].data();
+            const originalTextPreview = moment.text.substring(0, 50);
+            if (existing.text && existing.text.includes(originalTextPreview)) {
+              const confirmed = confirm('You already joined this action. Want to share a new version?');
+              if (!confirmed) return;
+            }
+          }
+
+          setSelectedMomentForJoin(moment);
+          openJoinModal();
+        } catch (error) {
+          console.error('Error checking existing joins:', error);
+          // Still allow joining even if check fails
+          setSelectedMomentForJoin(moment);
+          openJoinModal();
+        }
+      }
+      return;
+    }
+
+    // Regular ripple handling for other types
     try {
       const momentRef = doc(impactMomentsCollection, momentId);
       const momentDoc = await getDoc(momentRef);
@@ -128,6 +184,84 @@ export default function HomeFeed(): JSX.Element {
     } catch (error) {
       console.error('Error updating ripple:', error);
       toast.error('Failed to update ripple');
+    }
+  };
+
+  const handleJoinMoment = async (joinedMomentData: {
+    text: string;
+    tags: ImpactTag[];
+    effortLevel: EffortLevel;
+    moodCheckIn?: { before: number; after: number };
+    images?: string[];
+  }): Promise<void> => {
+    if (!user?.id || !selectedMomentForJoin?.id) {
+      toast.error('Unable to join action');
+      return;
+    }
+
+    try {
+      // Create the joined moment
+      const joinedMoment = {
+        text: joinedMomentData.text,
+        tags: joinedMomentData.tags,
+        effortLevel: joinedMomentData.effortLevel,
+        createdBy: user.id,
+        createdAt: serverTimestamp(),
+        ripples: {
+          inspired: [],
+          grateful: [],
+          joined_you: [],
+          sent_love: []
+        },
+        rippleCount: 0,
+        joinedFromMomentId: selectedMomentForJoin.id
+      };
+
+      // Add optional fields
+      if (joinedMomentData.moodCheckIn) {
+        (joinedMoment as any).moodCheckIn = joinedMomentData.moodCheckIn;
+      }
+      if (joinedMomentData.images && joinedMomentData.images.length > 0) {
+        (joinedMoment as any).images = joinedMomentData.images;
+      }
+
+      // Create the joined moment
+      await addDoc(impactMomentsCollection, joinedMoment as any);
+
+      // Update the original moment
+      const originalMomentRef = doc(impactMomentsCollection, selectedMomentForJoin.id);
+      const originalMomentDoc = await getDoc(originalMomentRef);
+      
+      if (originalMomentDoc.exists()) {
+        const originalData = originalMomentDoc.data();
+        const currentJoinedBy = originalData.joinedByUsers || [];
+        const currentJoinedYouRipples = originalData.ripples?.joined_you || [];
+        
+        // Add user to joinedByUsers if not already there
+        if (!currentJoinedBy.includes(user.id)) {
+          await updateDoc(originalMomentRef, {
+            joinedByUsers: arrayUnion(user.id),
+            'ripples.joined_you': arrayUnion(user.id),
+            rippleCount: (originalData.rippleCount || 0) + 1
+          });
+        } else {
+          // User already in list, just update ripple
+          if (!currentJoinedYouRipples.includes(user.id)) {
+            await updateDoc(originalMomentRef, {
+              'ripples.joined_you': arrayUnion(user.id),
+              rippleCount: (originalData.rippleCount || 0) + 1
+            });
+          }
+        }
+      }
+
+      // Refresh feed
+      await fetchMoments();
+      closeJoinModal();
+      setSelectedMomentForJoin(null);
+    } catch (error) {
+      console.error('Error joining moment:', error);
+      throw error;
     }
   };
 
@@ -189,6 +323,19 @@ export default function HomeFeed(): JSX.Element {
           </AnimatePresence>
         )}
       </section>
+
+      {/* Join Moment Modal */}
+      {selectedMomentForJoin && (
+        <JoinMomentModal
+          originalMoment={selectedMomentForJoin}
+          open={joinModalOpen}
+          closeModal={() => {
+            closeJoinModal();
+            setSelectedMomentForJoin(null);
+          }}
+          onJoin={handleJoinMoment}
+        />
+      )}
     </MainContainer>
   );
 }

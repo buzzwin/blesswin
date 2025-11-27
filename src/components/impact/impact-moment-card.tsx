@@ -1,5 +1,7 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { doc, getDoc } from 'firebase/firestore';
+import { impactMomentsCollection, usersCollection } from '@lib/firebase/collections';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
@@ -14,7 +16,7 @@ import {
   type ImpactMomentWithUser,
   type RippleType
 } from '@lib/types/impact-moment';
-import { MessageCircle, Share2, Sparkles } from 'lucide-react';
+import { MessageCircle, Share2, Sparkles, ArrowRight } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { toast } from 'react-hot-toast';
 import type { Timestamp } from 'firebase/firestore';
@@ -26,6 +28,49 @@ interface ImpactMomentCardProps {
 
 export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): JSX.Element {
   const [rippleMenuOpen, setRippleMenuOpen] = useState(false);
+  const [originalMoment, setOriginalMoment] = useState<ImpactMomentWithUser | null>(null);
+  const [loadingOriginal, setLoadingOriginal] = useState(false);
+
+  // Fetch original moment if this is a joined moment
+  useEffect(() => {
+    if (moment.joinedFromMomentId && !originalMoment) {
+      setLoadingOriginal(true);
+      const fetchOriginal = async (): Promise<void> => {
+        try {
+          const originalDoc = await getDoc(doc(impactMomentsCollection, moment.joinedFromMomentId));
+          if (originalDoc.exists()) {
+            const originalData = { id: originalDoc.id, ...originalDoc.data() };
+            const userDoc = await getDoc(doc(usersCollection, originalData.createdBy));
+            const userData = userDoc.exists() ? userDoc.data() : null;
+
+            setOriginalMoment({
+              ...originalData,
+              user: userData
+                ? {
+                    id: userData.id,
+                    name: userData.name,
+                    username: userData.username,
+                    photoURL: userData.photoURL,
+                    verified: userData.verified ?? false
+                  }
+                : {
+                    id: originalData.createdBy,
+                    name: 'Unknown User',
+                    username: 'unknown',
+                    photoURL: '',
+                    verified: false
+                  }
+            } as ImpactMomentWithUser);
+          }
+        } catch (error) {
+          console.error('Error fetching original moment:', error);
+        } finally {
+          setLoadingOriginal(false);
+        }
+      };
+      void fetchOriginal();
+    }
+  }, [moment.joinedFromMomentId, originalMoment]);
 
   const totalRipples = moment.rippleCount || 
     (moment.ripples.inspired.length +
@@ -54,6 +99,24 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
 
         {/* Content */}
         <div className='flex-1 min-w-0'>
+          {/* Joined Badge */}
+          {moment.joinedFromMomentId && (
+            <div className='mb-3 flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 dark:border-purple-800 dark:bg-purple-900/20'>
+              <span className='text-lg'>🌱</span>
+              <span className='text-sm font-medium text-purple-700 dark:text-purple-300'>
+                Joined {loadingOriginal ? '...' : originalMoment ? `@${originalMoment.user.username}` : 'this action'}
+              </span>
+              {originalMoment && (
+                <Link href={`/impact/${moment.joinedFromMomentId}`}>
+                  <a className='ml-auto flex items-center gap-1 text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200'>
+                    View original
+                    <ArrowRight className='h-3 w-3' />
+                  </a>
+                </Link>
+              )}
+            </div>
+          )}
+
           {/* Header */}
           <div className='mb-2 flex items-center gap-2'>
             <Link href={`/user/${moment.user.username}`}>
@@ -106,6 +169,22 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
               {effortLevelLabels[moment.effortLevel]} Effort
             </span>
           </div>
+
+          {/* See Who Joined Button (for original moments) */}
+          {!moment.joinedFromMomentId && (
+            <div className='mb-3'>
+              <Link href={`/impact/${moment.id}/chain`}>
+                <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
+                  <span>🌱</span>
+                  <span>
+                    See who joined this action
+                    {moment.joinedByUsers && moment.joinedByUsers.length > 0 && ` (${moment.joinedByUsers.length})`}
+                  </span>
+                  <ArrowRight className='h-4 w-4' />
+                </a>
+              </Link>
+            </div>
+          )}
 
           {/* Mood Check-in */}
           {moment.moodCheckIn && (
@@ -172,7 +251,12 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
                       (rippleType) => (
                         <button
                           key={rippleType}
-                          onClick={() => handleRipple(rippleType)}
+                          onClick={() => {
+                            setRippleMenuOpen(false);
+                            if (moment.id) {
+                              void onRipple?.(moment.id, rippleType);
+                            }
+                          }}
                           className='w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
                         >
                           <span className='text-lg'>{rippleTypeIcons[rippleType]}</span>
