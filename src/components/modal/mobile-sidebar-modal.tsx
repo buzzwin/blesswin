@@ -1,5 +1,6 @@
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import type { MouseEvent } from 'react';
 import {
   LogOut,
   Settings,
@@ -97,7 +98,7 @@ export function MobileSidebarModal({
   coverPhotoURL,
   closeModal
 }: MobileSidebarModalProps): JSX.Element {
-  const { signOut } = useAuth();
+  const { signOut, user } = useAuth();
   const router = useRouter();
   const {
     open: displayOpen,
@@ -113,6 +114,19 @@ export function MobileSidebarModal({
       void router.push('/');
     } catch (error) {
       // console.error('Logout error:', error);
+    }
+  };
+
+  const handleFeedClick = (e: MouseEvent<HTMLAnchorElement>): void => {
+    if (!user) {
+      e.preventDefault();
+      closeModal();
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('redirectAfterLogin', '/home');
+      }
+      void router.push('/login');
+    } else {
+      closeModal();
     }
   };
 
@@ -218,7 +232,7 @@ export function MobileSidebarModal({
             {navLinks.map((link) => (
               <Link href={link.href} key={link.href}>
                 <a
-                  onClick={closeModal}
+                  onClick={link.href === '/home' ? handleFeedClick : closeModal}
                   className={cn(
                     'flex items-center gap-4 rounded-xl px-4 py-3.5 transition-all hover:bg-gray-100 dark:hover:bg-gray-800',
                     'text-gray-900 dark:text-white'
