@@ -10,6 +10,8 @@ import type { Stats } from '@lib/types/stats';
 import type { Review } from '@lib/types/review';
 import { impactMomentConverter } from '@lib/types/impact-moment';
 import type { ImpactMoment } from '@lib/types/impact-moment';
+import { commentConverter } from '@lib/types/comment';
+import type { Comment } from '@lib/types/comment';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -40,3 +42,7 @@ export const visitsCollection = collection(db, 'visits');
 export const recommendationsCollection = collection(db, 'ai_recommendations');
 
 export const impactMomentsCollection = collection(db, 'impact_moments').withConverter(impactMomentConverter);
+
+export function impactMomentCommentsCollection(momentId: string): CollectionReference<Comment> {
+  return collection(db, `impact_moments/${momentId}/comments`).withConverter(commentConverter);
+}

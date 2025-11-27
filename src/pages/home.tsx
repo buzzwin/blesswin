@@ -1,5 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
-import { query, orderBy, getDocs } from 'firebase/firestore';
+import { query, orderBy, getDocs, doc, updateDoc, arrayUnion, arrayRemove, increment } from 'firebase/firestore';
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import { usersCollection } from '@lib/firebase/collections';
 import { ProtectedLayout } from '@components/layout/common-layout';
@@ -13,11 +13,14 @@ import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import { Sparkles } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { doc, getDoc } from 'firebase/firestore';
-import type { ImpactMomentWithUser } from '@lib/types/impact-moment';
+import { getDoc } from 'firebase/firestore';
+import { useAuth } from '@lib/context/auth-context';
+import { toast } from 'react-hot-toast';
+import type { ImpactMomentWithUser, RippleType } from '@lib/types/impact-moment';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
+  const { user } = useAuth();
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -71,11 +74,61 @@ export default function HomeFeed(): JSX.Element {
     void fetchMoments();
   }, []);
 
-  const handleRipple = async (momentId: string, rippleType: string): Promise<void> => {
-    // TODO: Implement ripple functionality
-    console.log('Ripple:', momentId, rippleType);
-    // Refresh moments after ripple
-    await fetchMoments();
+  const handleRipple = async (momentId: string, rippleType: RippleType): Promise<void> => {
+    if (!user?.id) {
+      toast.error('Please sign in to ripple impact moments');
+      return;
+    }
+
+    try {
+      const momentRef = doc(impactMomentsCollection, momentId);
+      const momentDoc = await getDoc(momentRef);
+      
+      if (!momentDoc.exists()) {
+        toast.error('Impact moment not found');
+        return;
+      }
+
+      const momentData = momentDoc.data();
+      const rippleKey = rippleType as keyof typeof momentData.ripples;
+      const currentRipples = momentData.ripples[rippleKey] || [];
+      const hasRippled = currentRipples.includes(user.id);
+
+      // Check if user has rippled in any other category
+      let wasRippledElsewhere = false;
+      const allRippleTypes: RippleType[] = ['inspired', 'grateful', 'joined_you', 'sent_love'];
+      for (const type of allRippleTypes) {
+        if (type !== rippleType && momentData.ripples[type]?.includes(user.id)) {
+          wasRippledElsewhere = true;
+          // Remove from other category
+          await updateDoc(momentRef, {
+            [`ripples.${type}`]: arrayRemove(user.id)
+          });
+        }
+      }
+
+      if (hasRippled) {
+        // Remove ripple
+        await updateDoc(momentRef, {
+          [`ripples.${rippleKey}`]: arrayRemove(user.id),
+          rippleCount: momentData.rippleCount > 0 ? momentData.rippleCount - 1 : 0
+        });
+        toast.success(`Removed ${rippleType} ripple`);
+      } else {
+        // Add ripple
+        await updateDoc(momentRef, {
+          [`ripples.${rippleKey}`]: arrayUnion(user.id),
+          rippleCount: momentData.rippleCount + (wasRippledElsewhere ? 0 : 1)
+        });
+        toast.success(`Added ${rippleType} ripple! ✨`);
+      }
+
+      // Refresh moments to show updated ripple counts
+      await fetchMoments();
+    } catch (error) {
+      console.error('Error updating ripple:', error);
+      toast.error('Failed to update ripple');
+    }
   };
 
   const handleMomentCreated = (): void => {

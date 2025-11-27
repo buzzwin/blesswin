@@ -14,9 +14,12 @@ const UNITS: Units = {
 };
 
 export function formatDate(
-  targetDate: Timestamp,
+  targetDate: Timestamp | null | undefined,
   mode: 'tweet' | 'message' | 'full' | 'joined'
 ): string {
+  if (!targetDate) {
+    return 'Just now';
+  }
   const date = targetDate.toDate();
 
   if (mode === 'full') return getFullTime(date);

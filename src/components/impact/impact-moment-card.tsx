@@ -16,6 +16,7 @@ import {
 } from '@lib/types/impact-moment';
 import { MessageCircle, Share2, Sparkles } from 'lucide-react';
 import { cn } from '@lib/utils';
+import { toast } from 'react-hot-toast';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -66,12 +67,16 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
               </a>
             </Link>
             <UserUsername username={moment.user.username} />
-            <span className='text-gray-500 dark:text-gray-400'>·</span>
-            <time className='text-sm text-gray-500 dark:text-gray-400'>
-              {moment.createdAt instanceof Date 
-                ? formatDate(moment.createdAt as unknown as Timestamp, 'tweet')
-                : formatDate(moment.createdAt, 'tweet')}
-            </time>
+            {moment.createdAt && (
+              <>
+                <span className='text-gray-500 dark:text-gray-400'>·</span>
+                <time className='text-sm text-gray-500 dark:text-gray-400'>
+                  {moment.createdAt instanceof Date 
+                    ? formatDate(moment.createdAt as unknown as Timestamp, 'tweet')
+                    : formatDate(moment.createdAt, 'tweet')}
+                </time>
+              </>
+            )}
           </div>
 
           {/* Impact Moment Text */}
@@ -194,7 +199,39 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
             </Link>
 
             {/* Share Button */}
-            <button className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'>
+            <button
+              onClick={async () => {
+                const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/home#moment-${moment.id}`;
+                const shareText = `${moment.user.name}: ${moment.text.substring(0, 100)}${moment.text.length > 100 ? '...' : ''}`;
+
+                if (navigator.share) {
+                  // Use Web Share API if available
+                  try {
+                    await navigator.share({
+                      title: 'Impact Moment on Buzzwin',
+                      text: shareText,
+                      url: shareUrl
+                    });
+                    toast.success('Shared! ✨');
+                  } catch (error) {
+                    // User cancelled or error occurred
+                    if (error instanceof Error && error.name !== 'AbortError') {
+                      console.error('Error sharing:', error);
+                    }
+                  }
+                } else {
+                  // Fallback: Copy to clipboard
+                  try {
+                    await navigator.clipboard.writeText(shareUrl);
+                    toast.success('Link copied to clipboard! 📋');
+                  } catch (error) {
+                    console.error('Error copying to clipboard:', error);
+                    toast.error('Failed to copy link');
+                  }
+                }
+              }}
+              className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'
+            >
               <Share2 className='h-5 w-5' />
               <span className='text-sm font-medium'>Share</span>
             </button>
