@@ -1,0 +1,133 @@
+/* Design System - Social Good Platform */
+
+/* Color Palette - Warm Neutrals, Earth Tones, Soft Sky Colors */
+:root {
+  /* Primary Colors */
+  --color-earth: #8B6F47;        /* Warm brown - earth */
+  --color-sage: #9CAF88;          /* Soft green - nature */
+  --color-sky: #A8D5E2;           /* Soft blue - sky */
+  --color-terracotta: #D4A574;    /* Warm orange - warmth */
+  
+  /* Neutrals */
+  --color-cream: #F7F5F3;         /* Warm off-white */
+  --color-charcoal: #2C2C2C;      /* Deep gray - text */
+  
+  /* Accent Colors */
+  --color-hope: #E8B86D;          /* Golden yellow - optimism */
+  --color-action: #C97D60;         /* Coral - action */
+  
+  /* Semantic Colors */
+  --color-success: #7FB069;
+  --color-info: #6B9BD2;
+  --color-warning: #F4A261;
+  --color-error: #E76F51;
+}
+
+/* Typography System */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap');
+
+/* Typography Scale */
+.text-display {
+  font-family: 'Fraunces', serif;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.text-heading {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.text-body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  line-height: 1.6;
+}
+
+.text-body-bold {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply rounded-full px-8 py-4 text-base font-semibold text-white transition-all duration-200;
+  background: linear-gradient(135deg, var(--color-action), var(--color-terracotta));
+  box-shadow: 0 4px 12px rgba(201, 125, 96, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(201, 125, 96, 0.4);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-secondary {
+  @apply rounded-full px-8 py-4 text-base font-semibold transition-all duration-200;
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+  border: 2px solid var(--color-charcoal);
+}
+
+.btn-secondary:hover {
+  background: var(--color-charcoal);
+  color: var(--color-cream);
+}
+
+/* Card Styles */
+.card-impact {
+  @apply rounded-2xl p-8 transition-all duration-200;
+  background: var(--color-cream);
+  border: 3px solid var(--color-charcoal);
+  box-shadow: 8px 8px 0px rgba(44, 44, 44, 0.1);
+}
+
+.card-impact:hover {
+  transform: translateY(-4px);
+  box-shadow: 12px 12px 0px rgba(44, 44, 44, 0.15);
+}
+
+.card-story {
+  @apply rounded-xl p-6 transition-all duration-200;
+  background: white;
+  border: 2px solid var(--color-charcoal);
+}
+
+.card-story:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px rgba(44, 44, 44, 0.1);
+}
+
+/* Utility Classes */
+.bg-warm-gradient {
+  background: linear-gradient(135deg, var(--color-cream) 0%, var(--color-sky) 100%);
+}
+
+.text-earth {
+  color: var(--color-earth);
+}
+
+.text-sage {
+  color: var(--color-sage);
+}
+
+.text-sky {
+  color: var(--color-sky);
+}
+
+.bg-earth {
+  background-color: var(--color-earth);
+}
+
+.bg-sage {
+  background-color: var(--color-sage);
+}
+
+.bg-sky {
+  background-color: var(--color-sky);
+}
+

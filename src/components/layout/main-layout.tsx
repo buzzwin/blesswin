@@ -15,7 +15,7 @@ const toastOptions: DefaultToastOptions = {
 
 export function MainLayout({ children }: { children: ReactNode }): JSX.Element {
   return (
-    <div className='flex w-full justify-center'>
+    <div className='w-full'>
       <SWRConfig value={{ fetcher: fetchJSON }}>{children}</SWRConfig>
       <Toaster
         position='bottom-center'

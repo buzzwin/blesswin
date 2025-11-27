@@ -36,10 +36,10 @@ export function AsideFooter(): JSX.Element {
           );
         })}
       </nav>
-      <p>© 2023 Buzzwin.</p>
-      <div className='mt-4 text-center text-sm text-gray-500'>
-        This site is powered by the TMDB API
-      </div>
+      <p className='text-xs sm:text-sm'>© 2023 Buzzwin.</p>
+      <p className='text-xs text-gray-500 dark:text-gray-400 sm:text-sm'>
+        A storytelling studio that amplifies good causes
+      </p>
     </footer>
   );
 }

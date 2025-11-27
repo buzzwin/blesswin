@@ -164,76 +164,43 @@ export function YouTubeVideos({
   };
 
   return (
-    <div className='space-y-4'>
-      <div className='mb-6 flex items-center justify-between gap-2'>
-        <div className='flex items-center gap-2'>
-          <Youtube className='h-5 w-5 text-gray-600 dark:text-gray-400' />
-          <h3 className='text-lg font-light text-gray-900 dark:text-white'>
-            Trending Videos
-          </h3>
-        </div>
+    <div className='space-y-8'>
+      <div className='flex items-center justify-between'>
+        <h3 className='text-2xl font-normal text-gray-900 dark:text-white md:text-3xl'>
+          Trending Videos
+        </h3>
         <Link href='/videos'>
-          <a className='text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
-            View All →
+          <a className='text-sm text-gray-600 underline dark:text-gray-400'>
+            View All
           </a>
         </Link>
       </div>
-      <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+      <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3'>
         {videos.map((video) => {
           const gradient = categoryColors[video.category] || categoryColors.meditation;
           const categoryLabel = categoryLabels[video.category] || 'Wellness';
 
           return (
-            <div
+            <button
               key={video.videoId}
               onClick={() => openVideo(video.videoId)}
-              className='group cursor-pointer rounded-lg border border-gray-200 bg-white transition-all hover:shadow-lg dark:border-gray-700 dark:bg-gray-800'
+              className='group w-full text-left transition-opacity hover:opacity-70'
             >
-              {/* Thumbnail */}
-              <div className='relative aspect-video overflow-hidden rounded-t-lg bg-gray-200 dark:bg-gray-700'>
+              <div className='relative mb-3 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700'>
                 <Image
                   src={video.thumbnail}
                   alt={video.title}
                   layout='fill'
                   objectFit='cover'
-                  className='transition-transform group-hover:scale-105'
                 />
-                <div className='absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100'>
-                  <div className='rounded-full bg-white/90 p-3 shadow-lg'>
-                    <Play className='h-6 w-6 text-gray-900' fill='currentColor' />
-                  </div>
-                </div>
-                <div className='absolute top-2 left-2'>
-                  <span
-                    className={`inline-block rounded-full bg-gradient-to-r ${gradient} px-2 py-0.5 text-xs font-medium text-white`}
-                  >
-                    {categoryLabel}
-                  </span>
-                </div>
               </div>
-
-              {/* Content */}
-              <div className='p-4'>
-                <h4 className='mb-2 line-clamp-2 text-sm font-semibold text-gray-900 dark:text-white'>
-                  {video.title}
-                </h4>
-                <p className='mb-3 line-clamp-2 text-xs text-gray-600 dark:text-gray-300'>
-                  {video.channelTitle}
-                </p>
-                <div className='flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
-                  {video.viewCount && (
-                    <div className='flex items-center gap-1'>
-                      <Eye className='h-3 w-3' />
-                      <span>{formatViewCount(video.viewCount)}</span>
-                    </div>
-                  )}
-                  <div className='flex items-center gap-1'>
-                    <Calendar className='h-3 w-3' />
-                    <span>{formatDate(video.publishedAt)}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
+              <h4 className='mb-1 line-clamp-2 text-base font-medium leading-snug text-gray-900 dark:text-white'>
+                {video.title}
+              </h4>
+              <p className='text-sm text-gray-600 dark:text-gray-400'>
+                {video.channelTitle}
+              </p>
+            </button>
           );
         })}
       </div>

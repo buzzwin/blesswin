@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Calendar, ExternalLink, Loader2, Sparkles } from 'lucide-react';
+import { Calendar, ExternalLink, Loader2 } from 'lucide-react';
 
 interface CurrentEvent {
   title: string;
@@ -105,14 +105,13 @@ export function CurrentEvents(): JSX.Element {
   };
 
   return (
-    <div className='space-y-4'>
-      <div className='mb-6 flex items-center gap-2'>
-        <Sparkles className='h-5 w-5 text-gray-600 dark:text-gray-400' />
-        <h3 className='text-lg font-light text-gray-900 dark:text-white'>
+    <div className='space-y-8'>
+      <div className='text-center'>
+        <h3 className='text-2xl font-normal text-gray-900 dark:text-white md:text-3xl'>
           Current Events
         </h3>
       </div>
-      <div className='space-y-3'>
+      <div className='space-y-6'>
         {events.map((event, idx) => {
           const gradient = categoryColors[event.category] || categoryColors.wellness;
           const categoryLabel = categoryLabels[event.category] || 'Wellness';
@@ -121,38 +120,17 @@ export function CurrentEvents(): JSX.Element {
 
           const content = (
             <>
-              <div className='mb-2 flex items-start justify-between gap-2'>
-                <div className='flex-1'>
-                  <div className='mb-1 flex items-center gap-2'>
-                    <span
-                      className={`inline-block rounded-full bg-gradient-to-r ${gradient} px-2 py-0.5 text-xs font-medium text-white`}
-                    >
-                      {categoryLabel}
-                    </span>
-                    <span className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
-                      <Calendar className='h-3 w-3' />
-                      {formatDate(event.date)}
-                    </span>
-                  </div>
-                  <h4 className='mb-1 text-sm font-semibold text-gray-900 dark:text-white'>
-                    {event.title}
-                  </h4>
-                </div>
-                {hasValidUrl && (
-                  <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
-                    <ExternalLink className='h-3 w-3' />
-                    <span>Link</span>
-                  </div>
-                )}
+              <div className='mb-2 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400'>
+                <span>{categoryLabel}</span>
+                <span>•</span>
+                <span>{formatDate(event.date)}</span>
               </div>
-              <p className='text-xs leading-relaxed text-gray-600 dark:text-gray-300'>
+              <h4 className='mb-2 text-lg font-medium leading-snug text-gray-900 dark:text-white md:text-xl'>
+                {event.title}
+              </h4>
+              <p className='text-base leading-relaxed text-gray-600 dark:text-gray-400'>
                 {event.description}
               </p>
-              {event.source && (
-                <p className='mt-2 text-xs text-gray-500 dark:text-gray-400'>
-                  Source: {event.source}
-                </p>
-              )}
             </>
           );
 
@@ -163,7 +141,7 @@ export function CurrentEvents(): JSX.Element {
                 href={event.url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='group block rounded-lg border border-gray-200 bg-white p-4 transition-all hover:border-gray-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
+                className='block border-b border-gray-200 pb-6 transition-opacity hover:opacity-70 dark:border-gray-700 last:border-0 last:pb-0'
               >
                 {content}
               </a>
@@ -173,7 +151,7 @@ export function CurrentEvents(): JSX.Element {
           return (
             <div
               key={idx}
-              className='group rounded-lg border border-gray-200 bg-white p-4 transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800'
+              className='border-b border-gray-200 pb-6 dark:border-gray-700 last:border-0 last:pb-0'
             >
               {content}
             </div>

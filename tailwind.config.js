@@ -13,7 +13,9 @@ module.exports = {
     extend: {
       fontFamily: {
         'twitter-chirp': ['TwitterChirp', 'sans-serif'],
-        'twitter-chirp-extended': ['TwitterChirpExtendedHeavy', 'sans-serif']
+        'twitter-chirp-extended': ['TwitterChirpExtendedHeavy', 'sans-serif'],
+        'display': ['Fraunces', 'serif'],
+        'body': ['Inter', 'sans-serif']
       },
       // prettier-ignore
       colors: {
@@ -74,6 +76,22 @@ module.exports = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
+        // Social Good Platform Colors
+        earth: '#8B6F47',
+        sage: '#9CAF88',
+        sky: '#A8D5E2',
+        terracotta: '#D4A574',
+        cream: '#F7F5F3',
+        charcoal: '#2C2C2C',
+        hope: '#E8B86D',
+        action: '#C97D60',
+      },
+      borderWidth: {
+        '3': '3px',
+      },
+      boxShadow: {
+        'brutal': '8px 8px 0px rgba(44, 44, 44, 0.1)',
+        'brutal-lg': '12px 12px 0px rgba(44, 44, 44, 0.15)',
       }
     }
   },

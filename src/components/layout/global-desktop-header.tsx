@@ -37,28 +37,28 @@ export function GlobalDesktopHeader(): JSX.Element {
       <div className='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
         {/* Logo and Brand */}
         <Link href='/'>
-          <a className='flex items-center gap-3'>
-            <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-gray-900 dark:bg-white'>
-              <LogoIcon className='h-4 w-4 text-white dark:text-gray-900' />
+          <a className='flex items-center gap-2 sm:gap-3'>
+            <div className='flex h-7 w-7 items-center justify-center rounded-lg bg-gray-900 dark:bg-white sm:h-8 sm:w-8'>
+              <LogoIcon className='h-3.5 w-3.5 text-white dark:text-gray-900 sm:h-4 sm:w-4' />
             </div>
-            <h1 className='text-lg font-semibold text-gray-900 dark:text-white'>
+            <h1 className='text-base font-semibold text-gray-900 dark:text-white sm:text-lg'>
               Buzzwin
             </h1>
           </a>
         </Link>
 
         {/* Navigation Links */}
-        <nav className='flex items-center gap-4'>
+        <nav className='flex items-center gap-2 sm:gap-4'>
           <Link href='/blog'>
-            <a className='flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
-              <BookOpen className='h-4 w-4' />
-              Blog
+            <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
+              <BookOpen className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+              <span className='hidden sm:inline'>Blog</span>
             </a>
           </Link>
           <Link href='/videos'>
-            <a className='flex items-center gap-2 text-sm font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
-              <Youtube className='h-4 w-4' />
-              Videos
+            <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
+              <Youtube className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+              <span className='hidden sm:inline'>Videos</span>
             </a>
           </Link>
         </nav>

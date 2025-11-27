@@ -1,9 +1,6 @@
-import { useState } from 'react';
 import { useRouter } from 'next/router';
-import { Flower2, Moon, Waves, Heart, ArrowRight } from 'lucide-react';
-import { Button } from '@components/ui/button-shadcn';
-import { WellnessChat, type WellnessAgentType } from './wellness-chat';
-import { hasAcceptedDisclaimer } from './disclaimer-modal';
+import { Flower2, Moon, Waves } from 'lucide-react';
+import type { WellnessAgentType } from './wellness-chat';
 
 interface WellnessAgentCardProps {
   agentType: WellnessAgentType;
@@ -11,7 +8,6 @@ interface WellnessAgentCardProps {
   description: string;
   icon: React.ElementType;
   gradient: string;
-  onLoginRequest?: () => void;
 }
 
 const agentIcons = {
@@ -25,66 +21,29 @@ export function WellnessAgentCard({
   title,
   description,
   icon: Icon,
-  gradient,
-  onLoginRequest
+  gradient
 }: WellnessAgentCardProps): JSX.Element {
-  const [showChat, setShowChat] = useState(false);
   const router = useRouter();
 
   return (
-    <>
-      <div className='group relative overflow-hidden rounded-2xl border border-gray-200 bg-white p-6 shadow-lg transition-all hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'>
-        {/* Gradient Background */}
-        <div className={`absolute inset-0 bg-gradient-to-br ${gradient} opacity-5 group-hover:opacity-10 transition-opacity`} />
-        
-        {/* Content */}
-        <div className='relative'>
-          {/* Icon */}
-          <div className={`mb-4 inline-flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br ${gradient} shadow-lg`}>
-            <Icon className='h-8 w-8 text-white' />
-          </div>
-
-          {/* Title */}
-          <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-            {title}
-          </h3>
-
-          {/* Description */}
-          <p className='mb-6 text-sm leading-relaxed text-gray-600 dark:text-gray-300'>
-            {description}
-          </p>
-
-          {/* CTA Button */}
-          <Button
-            onClick={() => {
-              // Navigate to the agent page (disclaimer modal will show if needed)
-              void router.push(`/${agentType}`);
-            }}
-            className={`w-full rounded-lg bg-gradient-to-r ${gradient} text-white shadow-md transition-all hover:scale-105 hover:shadow-lg`}
-          >
-            <span className='flex items-center gap-2'>
-              <Heart className='h-4 w-4' />
-              Start Your Journey
-              <ArrowRight className='h-4 w-4' />
-            </span>
-          </Button>
+    <button
+      onClick={() => {
+        void router.push(`/${agentType}`);
+      }}
+      className='group w-full text-left transition-opacity hover:opacity-80 active:opacity-70'
+    >
+      <div className='flex flex-col items-center text-center'>
+        <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br ${gradient} md:h-20 md:w-20`}>
+          <Icon className='h-8 w-8 text-white md:h-10 md:w-10' />
         </div>
+        <h3 className='mb-2 text-lg font-medium text-gray-900 dark:text-white md:text-xl'>
+          {title}
+        </h3>
+        <p className='text-sm leading-relaxed text-gray-600 dark:text-gray-400 md:text-base'>
+          {description}
+        </p>
       </div>
-
-      {/* Chat Modal */}
-      {showChat && (
-        <div className='fixed inset-0 z-50 flex items-center justify-center p-4 backdrop-blur-sm bg-black/50'>
-          <div className='relative h-full w-full max-w-2xl rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900'>
-            <WellnessChat
-              agentType={agentType}
-              onClose={() => setShowChat(false)}
-              className='h-full'
-              onLoginRequest={onLoginRequest}
-            />
-          </div>
-        </div>
-      )}
-    </>
+    </button>
   );
 }
 

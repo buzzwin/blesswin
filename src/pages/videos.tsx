@@ -39,24 +39,24 @@ export default function VideosPage(): JSX.Element {
       </Head>
 
       {/* Header */}
-      <SectionShell className='py-12'>
-        <div className='mx-auto max-w-6xl px-6'>
+      <SectionShell className='py-8 sm:py-12'>
+        <div className='mx-auto max-w-6xl px-4 sm:px-6'>
           <Link href='/'>
-            <a className='mb-6 inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
-              <ArrowLeft className='h-3.5 w-3.5' />
+            <a className='mb-4 inline-flex items-center gap-1.5 text-xs text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:mb-6 sm:text-sm'>
+              <ArrowLeft className='h-3 w-3 sm:h-3.5 sm:w-3.5' />
               <span>Back</span>
             </a>
           </Link>
 
-          <div className='mb-8 flex items-center gap-4'>
-            <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg'>
-              <Youtube className='h-8 w-8 text-white' />
+          <div className='mb-6 flex flex-col items-start gap-3 sm:mb-8 sm:flex-row sm:items-center sm:gap-4'>
+            <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-red-600 shadow-lg sm:h-16 sm:w-16 sm:rounded-2xl'>
+              <Youtube className='h-6 w-6 text-white sm:h-8 sm:w-8' />
             </div>
             <div>
-              <h1 className='mb-2 text-4xl font-light text-gray-900 dark:text-white'>
+              <h1 className='mb-1 text-2xl font-light text-gray-900 dark:text-white sm:mb-2 sm:text-3xl md:text-4xl'>
                 Trending Videos
               </h1>
-              <p className='text-lg font-light text-gray-600 dark:text-gray-300'>
+              <p className='text-sm font-light text-gray-600 dark:text-gray-300 sm:text-base md:text-lg'>
                 Yoga & Meditation videos from YouTube
               </p>
             </div>
@@ -107,8 +107,8 @@ export default function VideosPage(): JSX.Element {
       </SectionShell>
 
       {/* Videos Grid */}
-      <SectionShell className='py-12'>
-        <div className='mx-auto max-w-6xl px-6'>
+      <SectionShell className='py-8 sm:py-12'>
+        <div className='mx-auto max-w-6xl px-4 sm:px-6'>
           <YouTubeVideos category={selectedCategory} limit={12} />
         </div>
       </SectionShell>

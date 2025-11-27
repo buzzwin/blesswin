@@ -14,9 +14,9 @@ type SEOProps = {
 };
 
 const defaultTitle =
-  'Buzzwin - AI-Powered Wellness & Mindfulness Platform for World Peace';
+  'Buzzwin - A Storytelling Studio That Amplifies Good Causes';
 const defaultDescription =
-  'Discover AI pals that guide you through yoga, mindfulness, meditation, and harmony. Join our community promoting world peace, good thoughts, happiness, and positive vibes.';
+  'A storytelling studio that amplifies good causes. Discover wellness resources, AI-powered guidance, and inspiring content for yoga, meditation, and harmony.';
 const defaultImage = `${
   siteURL || 'https://Buzzwin.com'
 }/assets/wellness-og-image.jpg`;

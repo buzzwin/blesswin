@@ -25,15 +25,14 @@ export function SectionShell({
   return (
     <section
       className={cn(
-        'relative overflow-hidden transition-colors duration-200',
+        'relative w-full min-h-screen flex flex-col items-center justify-center transition-colors duration-200',
         variantStyles[variant],
         className
       )}
     >
-      {/* Subtle fade transitions */}
-      <div className='absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent dark:via-white/10' />
-      <div className='absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-gray-200 to-transparent dark:via-white/5' />
-      {children}
+      <div className='w-full'>
+        {children}
+      </div>
     </section>
   );
 }
