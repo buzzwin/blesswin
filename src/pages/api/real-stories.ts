@@ -1,31 +1,30 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { doc, getDoc, setDoc, serverTimestamp, Timestamp } from 'firebase/firestore';
 import { callGeminiAPI } from '@lib/api/gemini';
-
-interface RealStory {
-  title: string;
-  description: string;
-  location?: string;
-  date?: string | null;
-  source?: string;
-  url?: string;
-  category: 'community' | 'environment' | 'education' | 'health' | 'social-justice' | 'innovation';
-}
+import { realStoriesCacheCollection } from '@lib/firebase/collections';
+import type { RealStory, CachedRealStories } from '@lib/types/real-story';
 
 interface RealStoriesResponse {
   stories: RealStory[];
   error?: string;
+  cached?: boolean;
 }
 
-function createPrompt(monthsAgo: number): string {
-  const dateRangeText = monthsAgo === 3 
-    ? 'very recent, real stories (from the last 3 months)' 
-    : monthsAgo === 6
-    ? 'recent, real stories (from the last 6 months)'
-    : monthsAgo === 12
-    ? 'real stories (from the last year)'
-    : 'real stories (from recent years)';
+const CACHE_DURATION_DAYS = 15;
+const CACHE_DOC_ID = 'latest';
+
+function createOptimizedPrompt(): string {
+  const currentDate = new Date().toISOString().split('T')[0];
   
-  return `Find and share 10 ${dateRangeText} about people, communities, or organizations doing good in the world. ${monthsAgo <= 3 ? 'Prioritize stories from the current month and recent weeks.' : 'Prioritize the most recent stories available.'} Focus on:
+  return `Find and share 10 of the LATEST AVAILABLE real stories about people, communities, or organizations doing good in the world. 
+
+CRITICAL REQUIREMENTS:
+- Focus on stories from the MOST RECENT time period possible (prioritize current month, then recent weeks)
+- Only include stories that are verifiable and from credible sources
+- If you cannot find enough recent stories, include the most recent stories available (even if slightly older)
+- Prioritize stories with actual dates and sources
+
+Focus on these categories:
 - Community initiatives and grassroots movements
 - Environmental conservation and climate action
 - Education and mentorship programs
@@ -34,12 +33,12 @@ function createPrompt(monthsAgo: number): string {
 - Innovation for social good
 
 For each story, provide:
-- A compelling title
+- A compelling, specific title
 - A detailed description (2-3 sentences) of what they're doing and the impact
-- Location (city, country)
-- Date (when it happened or was reported) - MUST be a valid date in YYYY-MM-DD format. If you cannot find a specific date, use null instead of guessing.
-- Source (news outlet, organization name, etc.)
-- URL if available (only real, verifiable URLs)
+- Location (city, country) if available
+- Date (when it happened or was reported) - MUST be a valid date in YYYY-MM-DD format. Use null ONLY if you absolutely cannot find a specific date.
+- Source (news outlet, organization name, etc.) - REQUIRED
+- URL if available (only real, verifiable URLs from actual news sources)
 
 Return ONLY a valid JSON array with this structure:
 [
@@ -47,33 +46,33 @@ Return ONLY a valid JSON array with this structure:
     "title": "Story title",
     "description": "Detailed description of the story",
     "location": "City, Country",
-    "date": "2024-12-15" or null if date is unknown,
+    "date": "2024-12-15" or null if date is truly unknown,
     "source": "Source name",
     "url": "https://real-url.com/article" or null,
     "category": "community"
   }
 ]
 
-Categories should be one of: community, environment, education, health, social-justice, innovation.
+Categories must be one of: community, environment, education, health, social-justice, innovation.
 
 IMPORTANT:
-- You MUST return exactly 10 stories. If you cannot find enough stories from the specified time period, expand your search to include slightly older stories until you have 10 stories.
-- Use null for date if you cannot find a specific, verifiable date
-- Make sure all URLs are real and verifiable. Do not include placeholder URLs.
-- Prioritize the most current stories available within the time range.`;
+- You MUST return exactly 10 stories
+- Prioritize the MOST RECENT stories available - start with current month/week, then expand if needed
+- Use null for date ONLY if you cannot find a specific, verifiable date
+- Make sure all URLs are real and verifiable - do not include placeholder URLs
+- All stories must be real and verifiable from credible sources
+- Sort stories by date (most recent first) in your response
+
+Current date: ${currentDate}`;
 }
 
-function validateAndFilterStories(
-  stories: RealStory[],
-  maxMonthsAgo: number
-): RealStory[] {
+function validateAndFilterStories(stories: RealStory[]): RealStory[] {
   const now = new Date();
-  const cutoffDate = new Date(now.getFullYear(), now.getMonth() - maxMonthsAgo, now.getDate());
   
   return stories
     .filter((story) => {
       // Basic validation
-      if (!story.title || !story.description) return false;
+      if (!story.title || !story.description || !story.source) return false;
       
       // Validate date if provided
       if (story.date) {
@@ -81,22 +80,14 @@ function validateAndFilterStories(
           const storyDate = new Date(story.date);
           // Check if date is valid
           if (isNaN(storyDate.getTime())) {
-            // Invalid date, set to null
             story.date = null;
           } else {
-            // Check if date is within the allowed range
-            if (storyDate < cutoffDate) {
-              // Too old for current range, skip this story
-              return false;
-            }
             // Check if date is not in the future
             if (storyDate > now) {
-              // Future date, invalid
               story.date = null;
             }
           }
         } catch {
-          // Invalid date format, set to null
           story.date = null;
         }
       }
@@ -128,6 +119,83 @@ function validateAndFilterStories(
     });
 }
 
+async function getCachedStories(): Promise<RealStory[] | null> {
+  try {
+    const cacheDocRef = doc(realStoriesCacheCollection, CACHE_DOC_ID);
+    const cacheDoc = await getDoc(cacheDocRef);
+    
+    if (!cacheDoc.exists()) {
+      return null;
+    }
+    
+    const cacheData = cacheDoc.data() as CachedRealStories;
+    const fetchedAt = cacheData.fetchedAt instanceof Timestamp 
+      ? cacheData.fetchedAt.toDate() 
+      : new Date(cacheData.fetchedAt);
+    
+    const now = new Date();
+    const daysSinceFetch = (now.getTime() - fetchedAt.getTime()) / (1000 * 60 * 60 * 24);
+    
+    // If cache is older than 15 days, return null to trigger refresh
+    if (daysSinceFetch > CACHE_DURATION_DAYS) {
+      return null;
+    }
+    
+    return cacheData.stories || null;
+  } catch (error) {
+    console.error('Error reading cache:', error);
+    return null;
+  }
+}
+
+async function cacheStories(stories: RealStory[]): Promise<void> {
+  try {
+    const now = new Date();
+    const expiresAt = new Date(now.getTime() + CACHE_DURATION_DAYS * 24 * 60 * 60 * 1000);
+    
+    const cacheData: CachedRealStories = {
+      stories,
+      fetchedAt: serverTimestamp() as Timestamp,
+      expiresAt: Timestamp.fromDate(expiresAt)
+    };
+    
+    const cacheDocRef = doc(realStoriesCacheCollection, CACHE_DOC_ID);
+    await setDoc(cacheDocRef, cacheData);
+    
+    console.log(`Cached ${stories.length} stories`);
+  } catch (error) {
+    console.error('Error caching stories:', error);
+    // Don't throw - caching failure shouldn't break the API
+  }
+}
+
+async function fetchStoriesFromGemini(): Promise<RealStory[]> {
+  try {
+    const prompt = createOptimizedPrompt();
+    const response = await callGeminiAPI(prompt, 4096, 0.7);
+    
+    // Extract JSON from response
+    const jsonMatch = response.match(/\[[\s\S]*\]/);
+    if (!jsonMatch) {
+      throw new Error('No valid JSON array found in response');
+    }
+
+    const stories = JSON.parse(jsonMatch[0]) as RealStory[];
+    const validStories = validateAndFilterStories(stories);
+    
+    // Remove duplicates based on title
+    const uniqueStories = validStories.filter((story, index, self) =>
+      index === self.findIndex((s) => s.title.toLowerCase() === story.title.toLowerCase())
+    );
+    
+    // Return top 10 stories
+    return uniqueStories.slice(0, 10);
+  } catch (error) {
+    console.error('Error fetching stories from Gemini:', error);
+    throw error;
+  }
+}
+
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<RealStoriesResponse>
@@ -139,119 +207,52 @@ export default async function handler(
   }
 
   try {
-    const dateRanges = [3, 6, 12, 24]; // Try 3 months, 6 months, 1 year, 2 years
-    let allValidStories: RealStory[] = [];
-    let lastError: Error | null = null;
-
-    // Try each date range until we get at least 10 valid stories
-    for (const monthsAgo of dateRanges) {
-      try {
-        const prompt = createPrompt(monthsAgo);
-        const response = await callGeminiAPI(prompt);
-        
-        // Extract JSON from response
-        const jsonMatch = response.match(/\[[\s\S]*\]/);
-        if (!jsonMatch) {
-          throw new Error('No valid JSON array found in response');
-        }
-
-        const stories = JSON.parse(jsonMatch[0]) as RealStory[];
-        const validStories = validateAndFilterStories(stories, monthsAgo);
-        
-        // Add valid stories to our collection
-        allValidStories = [...allValidStories, ...validStories];
-        
-        // Remove duplicates based on title
-        const uniqueStories = allValidStories.filter((story, index, self) =>
-          index === self.findIndex((s) => s.title.toLowerCase() === story.title.toLowerCase())
-        );
-        
-        allValidStories = uniqueStories;
-        
-        // If we have at least 10 stories, we're done
-        if (allValidStories.length >= 10) {
-          break;
-        }
-      } catch (error) {
-        console.error(`Error fetching stories for ${monthsAgo} months range:`, error);
-        lastError = error instanceof Error ? error : new Error('Unknown error');
-        // Continue to next date range
-        continue;
-      }
+    // Check cache first
+    const cachedStories = await getCachedStories();
+    
+    if (cachedStories && cachedStories.length > 0) {
+      console.log(`Returning ${cachedStories.length} cached stories`);
+      return res.status(200).json({ 
+        stories: cachedStories,
+        cached: true
+      });
     }
-
-    // If we still don't have 10 stories, try one more time with a very broad prompt
-    if (allValidStories.length < 10) {
-      try {
-        const broadPrompt = `Find and share 10 real stories about people, communities, or organizations doing good in the world. These can be from any recent time period. Focus on:
-- Community initiatives and grassroots movements
-- Environmental conservation and climate action
-- Education and mentorship programs
-- Healthcare and wellness initiatives
-- Social justice and human rights work
-- Innovation for social good
-
-For each story, provide:
-- A compelling title
-- A detailed description (2-3 sentences) of what they're doing and the impact
-- Location (city, country)
-- Date (when it happened or was reported) - MUST be a valid date in YYYY-MM-DD format. If you cannot find a specific date, use null instead of guessing.
-- Source (news outlet, organization name, etc.)
-- URL if available (only real, verifiable URLs)
-
-Return ONLY a valid JSON array with this structure:
-[
-  {
-    "title": "Story title",
-    "description": "Detailed description of the story",
-    "location": "City, Country",
-    "date": "2024-12-15" or null if date is unknown,
-    "source": "Source name",
-    "url": "https://real-url.com/article" or null,
-    "category": "community"
-  }
-]
-
-Categories should be one of: community, environment, education, health, social-justice, innovation.
-
-IMPORTANT:
-- You MUST return exactly 10 stories.
-- Use null for date if you cannot find a specific, verifiable date
-- Make sure all URLs are real and verifiable. Do not include placeholder URLs.
-- Prioritize the most current stories available.`;
-
-        const response = await callGeminiAPI(broadPrompt);
-        const jsonMatch = response.match(/\[[\s\S]*\]/);
-        if (jsonMatch) {
-          const stories = JSON.parse(jsonMatch[0]) as RealStory[];
-          const validStories = validateAndFilterStories(stories, 60); // Allow up to 5 years
-          
-          // Add to collection and remove duplicates
-          allValidStories = [...allValidStories, ...validStories];
-          const uniqueStories = allValidStories.filter((story, index, self) =>
-            index === self.findIndex((s) => s.title.toLowerCase() === story.title.toLowerCase())
-          );
-          allValidStories = uniqueStories;
-        }
-      } catch (error) {
-        console.error('Error fetching stories with broad prompt:', error);
-      }
-    }
-
-    // Take the top 10 stories (sorted by date, most recent first)
-    const finalStories = allValidStories.slice(0, 10);
-
-    if (finalStories.length === 0 && lastError) {
-      throw lastError;
-    }
-
-    res.status(200).json({ stories: finalStories });
+    
+    // Cache is stale or doesn't exist - fetch from Gemini
+    console.log('Cache expired or missing, fetching from Gemini...');
+    const stories = await fetchStoriesFromGemini();
+    
+    // Cache the fetched stories
+    await cacheStories(stories);
+    
+    res.status(200).json({ 
+      stories,
+      cached: false
+    });
   } catch (error) {
     console.error('Error fetching real stories:', error);
+    
+    // Try to return cached stories even if stale as fallback
+    try {
+      const cacheDocRef = doc(realStoriesCacheCollection, CACHE_DOC_ID);
+      const cacheDoc = await getDoc(cacheDocRef);
+      if (cacheDoc.exists()) {
+        const cacheData = cacheDoc.data() as CachedRealStories;
+        if (cacheData.stories && cacheData.stories.length > 0) {
+          console.log('Returning stale cache as fallback');
+          return res.status(200).json({ 
+            stories: cacheData.stories,
+            cached: true
+          });
+        }
+      }
+    } catch (fallbackError) {
+      console.error('Error reading fallback cache:', fallbackError);
+    }
+    
     res.status(500).json({
       stories: [],
       error: error instanceof Error ? error.message : 'Failed to fetch stories'
     });
   }
 }
-

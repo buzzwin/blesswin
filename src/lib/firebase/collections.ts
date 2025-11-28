@@ -58,3 +58,5 @@ export function userRitualStateDoc(userId: string): DocumentReference<UserRitual
 export function ritualCompletionsCollection(userId: string): CollectionReference<RitualCompletion> {
   return collection(db, `users/${userId}/ritual_completions`).withConverter(ritualCompletionConverter);
 }
+
+export const realStoriesCacheCollection = collection(db, 'real_stories_cache');

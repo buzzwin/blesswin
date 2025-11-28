@@ -238,5 +238,12 @@ service cloud.firestore {
       allow update: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.userId == userId && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['sharedAsMomentId']));
       allow delete: if false; // Don't allow deletion
     }
+
+    // Real stories cache collection (public read, server-side write only)
+    match /real_stories_cache/{docId} {
+      allow read: if true; // Public read for cached stories
+      // Allow write only server-side (when auth is null - API routes)
+      allow write: if request.auth == null;
+    }
   }
 }
