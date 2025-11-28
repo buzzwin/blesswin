@@ -34,7 +34,11 @@ export function SimpleSocialShare({
 
   const handleCopyLink = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(url);
+      const siteLink = 'https://buzzwin.com';
+      const shareText = `${title} - ${description}`;
+      const hashtagString = hashtags.map((tag) => `#${tag}`).join(' ');
+      const fullText = `${shareText} ${hashtagString}\n\nVisit ${siteLink} to join the community 🌱\n${url}`;
+      await navigator.clipboard.writeText(fullText);
       setCopied(true);
       toast.success('Link copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
@@ -44,9 +48,10 @@ export function SimpleSocialShare({
   };
 
   const handleShare = (platform: string): void => {
+    const siteLink = 'https://buzzwin.com';
     const shareText = `${title} - ${description}`;
     const hashtagString = hashtags.map((tag) => `#${tag}`).join(' ');
-    const fullText = `${shareText} ${hashtagString} ${url}`;
+    const fullText = `${shareText} ${hashtagString}\n\nVisit ${siteLink} to join the community 🌱\n${url}`;
 
     let shareUrl = '';
 
@@ -59,17 +64,17 @@ export function SimpleSocialShare({
       case 'facebook':
         shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
           url
-        )}&quote=${encodeURIComponent(shareText)}`;
+        )}&quote=${encodeURIComponent(fullText)}`;
         break;
       case 'linkedin':
         shareUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
           url
-        )}`;
+        )}&summary=${encodeURIComponent(fullText)}`;
         break;
       case 'reddit':
         shareUrl = `https://reddit.com/submit?url=${encodeURIComponent(
           url
-        )}&title=${encodeURIComponent(shareText)}`;
+        )}&title=${encodeURIComponent(fullText)}`;
         break;
       case 'whatsapp':
         shareUrl = `https://wa.me/?text=${encodeURIComponent(fullText)}`;
@@ -77,7 +82,7 @@ export function SimpleSocialShare({
       case 'telegram':
         shareUrl = `https://t.me/share/url?url=${encodeURIComponent(
           url
-        )}&text=${encodeURIComponent(shareText)}`;
+        )}&text=${encodeURIComponent(fullText)}`;
         break;
       case 'email':
         shareUrl = `mailto:?subject=${encodeURIComponent(

@@ -42,7 +42,7 @@ export default async function handler(
 
     // Initialize user ritual state
     const userStateDoc = userRitualStateDoc(userId);
-    const initialState = {
+    const initialState: Record<string, unknown> = {
       userId,
       enabled: true,
       notificationPreferences: {
@@ -52,13 +52,12 @@ export default async function handler(
         morningTime: preferences.notifications.morningTime || '08:00',
         eveningTime: preferences.notifications.eveningTime || '19:00'
       },
-      preferredCategories: preferences.selectedTags || [],
+      preferredTags: preferences.selectedTags || [],
       currentStreak: 0,
       longestStreak: 0,
       totalCompleted: 0,
       completedThisWeek: 0,
       completedThisMonth: 0,
-      lastCompletedDate: null,
       onboardingCompleted: true,
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()

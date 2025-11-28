@@ -50,9 +50,14 @@ export function SocialShare({
     setIsClient(true);
   }, []);
 
+  const siteLink = 'https://buzzwin.com';
+  const shareText = `${title} - ${description}\n\nVisit ${siteLink} to join the community 🌱`;
+  const shareUrl = url;
+
   const handleCopyLink = async (): Promise<void> => {
     try {
-      await navigator.clipboard.writeText(url);
+      const fullText = `${shareText}\n${shareUrl}`;
+      await navigator.clipboard.writeText(fullText);
       setCopied(true);
       toast.success('Link copied to clipboard!');
       setTimeout(() => setCopied(false), 2000);
@@ -69,9 +74,6 @@ export function SocialShare({
       </div>
     );
   }
-
-  const shareText = `${title} - ${description}`;
-  const shareUrl = url;
 
   const sizeClasses = {
     sm: 'h-8 w-8',

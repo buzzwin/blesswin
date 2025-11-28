@@ -295,8 +295,10 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
             {/* Share Button */}
             <button
               onClick={async () => {
-                const shareUrl = `${typeof window !== 'undefined' ? window.location.origin : ''}/home#moment-${moment.id}`;
-                const shareText = `${moment.user.name}: ${moment.text.substring(0, 100)}${moment.text.length > 100 ? '...' : ''}`;
+                const siteOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://buzzwin.com';
+                const shareUrl = `${siteOrigin}/public/moment/${moment.id}`;
+                const momentText = `${moment.user.name}: ${moment.text.substring(0, 100)}${moment.text.length > 100 ? '...' : ''}`;
+                const shareText = `${momentText}\n\nVisit buzzwin.com to see more positive impact moments 🌱\n${shareUrl}`;
 
                 if (navigator.share) {
                   // Use Web Share API if available
@@ -316,7 +318,7 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
                 } else {
                   // Fallback: Copy to clipboard
                   try {
-                    await navigator.clipboard.writeText(shareUrl);
+                    await navigator.clipboard.writeText(shareText);
                     toast.success('Link copied to clipboard! 📋');
                   } catch (error) {
                     console.error('Error copying to clipboard:', error);

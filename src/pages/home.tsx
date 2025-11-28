@@ -10,6 +10,8 @@ import { ImpactMomentInput } from '@components/impact/impact-moment-input';
 import { ImpactMomentCard } from '@components/impact/impact-moment-card';
 import { JoinMomentModal } from '@components/impact/join-moment-modal';
 import { RitualsBanner } from '@components/rituals/rituals-banner';
+import { RitualStatsWidget } from '@components/rituals/ritual-stats-widget';
+import { RitualSettings } from '@components/rituals/ritual-settings';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
@@ -20,7 +22,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
 import { useModal } from '@lib/hooks/useModal';
 import type { ImpactMomentWithUser, RippleType, ImpactTag, EffortLevel } from '@lib/types/impact-moment';
-import type { RitualDefinition } from '@lib/types/ritual';
+import type { RitualDefinition, RitualStats } from '@lib/types/ritual';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
@@ -29,9 +31,12 @@ export default function HomeFeed(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
+  const { open: settingsModalOpen, openModal: openSettingsModal, closeModal: closeSettingsModal } = useModal();
   const [selectedMomentForJoin, setSelectedMomentForJoin] = useState<ImpactMomentWithUser | null>(null);
   const [todayRitual, setTodayRitual] = useState<RitualDefinition | null>(null);
   const [ritualCompleted, setRitualCompleted] = useState(false);
+  const [ritualStats, setRitualStats] = useState<RitualStats | null>(null);
+  const [ritualStatsLoading, setRitualStatsLoading] = useState(false);
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -119,6 +124,30 @@ export default function HomeFeed(): JSX.Element {
     };
 
     void fetchTodayRitual();
+  }, [user?.id]);
+
+  // Fetch ritual stats
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchRitualStats = async (): Promise<void> => {
+      setRitualStatsLoading(true);
+      try {
+        const response = await fetch(`/api/rituals/stats?userId=${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          if (data.stats) {
+            setRitualStats(data.stats);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching ritual stats:', error);
+      } finally {
+        setRitualStatsLoading(false);
+      }
+    };
+
+    void fetchRitualStats();
   }, [user?.id]);
 
   const handleRipple = async (momentId: string, rippleType: RippleType): Promise<void> => {
@@ -322,6 +351,15 @@ export default function HomeFeed(): JSX.Element {
         </div>
       </div>
 
+      {/* Ritual Stats Widget */}
+      <div className='border-b border-gray-200 px-4 py-4 dark:border-gray-700'>
+        <RitualStatsWidget
+          stats={ritualStats}
+          loading={ritualStatsLoading}
+          onSettingsClick={openSettingsModal}
+        />
+      </div>
+
       {/* Rituals Banner */}
       {todayRitual && !ritualCompleted && (
         <RitualsBanner
@@ -379,6 +417,12 @@ export default function HomeFeed(): JSX.Element {
           onJoin={handleJoinMoment}
         />
       )}
+
+      {/* Ritual Settings Modal */}
+      <RitualSettings
+        open={settingsModalOpen}
+        closeModal={closeSettingsModal}
+      />
     </MainContainer>
   );
 }

@@ -8,6 +8,7 @@ import { MainHeader } from '@components/home/main-header';
 import { RitualCard } from '@components/rituals/ritual-card';
 import { RitualsOnboarding } from '@components/rituals/rituals-onboarding';
 import { RitualCompleteModal } from '@components/rituals/ritual-complete-modal';
+import { RitualSettings } from '@components/rituals/ritual-settings';
 import { StreakVisualization } from '@components/rituals/streak-visualization';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
@@ -30,6 +31,7 @@ export default function RitualsPage(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [completingRitualId, setCompletingRitualId] = useState<string | null>(null);
   const { open: completeModalOpen, openModal: openCompleteModal, closeModal: closeCompleteModal } = useModal();
+  const { open: settingsModalOpen, openModal: openSettingsModal, closeModal: closeSettingsModal } = useModal();
   const [selectedRitual, setSelectedRitual] = useState<RitualDefinition | null>(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [ritualsEnabled, setRitualsEnabled] = useState(false);
@@ -357,19 +359,28 @@ export default function RitualsPage(): JSX.Element {
               Small actions, big impact
             </p>
           </div>
-          {stats && stats.currentStreak > 0 && (
-            <div className='flex items-center gap-2 rounded-lg bg-orange-50 px-4 py-2 dark:bg-orange-900/20'>
-              <Flame className='h-5 w-5 text-orange-500' />
-              <div>
-                <div className='text-lg font-bold text-orange-700 dark:text-orange-300'>
-                  {stats.currentStreak}
-                </div>
-                <div className='text-xs text-orange-600 dark:text-orange-400'>
-                  day streak
+          <div className='flex items-center gap-3'>
+            {stats && stats.currentStreak > 0 && (
+              <div className='flex items-center gap-2 rounded-lg bg-orange-50 px-4 py-2 dark:bg-orange-900/20'>
+                <Flame className='h-5 w-5 text-orange-500' />
+                <div>
+                  <div className='text-lg font-bold text-orange-700 dark:text-orange-300'>
+                    {stats.currentStreak}
+                  </div>
+                  <div className='text-xs text-orange-600 dark:text-orange-400'>
+                    day streak
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
+            <button
+              onClick={openSettingsModal}
+              className='rounded-full p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors'
+              aria-label='Settings'
+            >
+              <Settings className='h-5 w-5' />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -639,6 +650,12 @@ export default function RitualsPage(): JSX.Element {
           onComplete={handleShareComplete}
         />
       )}
+
+      {/* Settings Modal */}
+      <RitualSettings
+        open={settingsModalOpen}
+        closeModal={closeSettingsModal}
+      />
     </MainContainer>
   );
 }
