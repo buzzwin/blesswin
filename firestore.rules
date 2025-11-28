@@ -1,3 +1,15 @@
+// ============================================================================
+// Firestore Security Rules
+// ============================================================================
+// Version: 1.0.0
+// Last Updated: 2024-11-28
+// 
+// Version History:
+//   1.0.0 (2024-11-28) - Initial karma system rules
+//     - Added karma fields (karmaPoints, karmaBreakdown, lastKarmaUpdate) to users collection
+//     - Updated rules to allow server-side karma updates via API
+// ============================================================================
+
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {

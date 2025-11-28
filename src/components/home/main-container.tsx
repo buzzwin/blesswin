@@ -13,16 +13,18 @@ export function MainContainer({
   return (
     <main
       className={cn(
-        'flex min-h-screen w-full max-w-xl flex-col',
+        'flex min-h-screen w-full max-w-2xl flex-col mx-auto',
         'dark:bg-dark-background bg-main-background',
-        'border-x border-light-border dark:border-dark-border',
+        'border-x-0 sm:border-x border-light-border dark:border-dark-border',
         'transition-colors duration-200',
         'relative',
         'pb-96',
         className
       )}
     >
-      {children}
+      <div className='w-full px-4 sm:px-6'>
+        {children}
+      </div>
     </main>
   );
 }

@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import type { ImpactMoment } from '@lib/types/impact-moment';
+import { awardKarma } from '@lib/utils/karma-calculator';
 
 interface CreateImpactMomentRequest {
   text: string;
@@ -112,6 +113,40 @@ export default async function handler(
     }
 
     const docRef = await addDoc(impactMomentsCollection, impactMomentData as any);
+
+    // Award karma for creating impact moment
+    try {
+      // Determine which karma action to award
+      let karmaAction: 'impact_moment_created' | 'impact_moment_with_mood' | 'impact_moment_from_ritual';
+      
+      if (fromDailyRitual && ritualId) {
+        karmaAction = 'impact_moment_from_ritual';
+      } else if (moodCheckIn) {
+        karmaAction = 'impact_moment_with_mood';
+      } else {
+        karmaAction = 'impact_moment_created';
+      }
+
+      await awardKarma(userId, karmaAction);
+
+      // Check for impact moment milestones
+      const userMomentsQuery = query(
+        impactMomentsCollection,
+        where('createdBy', '==', userId)
+      );
+      const userMomentsSnapshot = await getDocs(userMomentsQuery);
+      const totalMoments = userMomentsSnapshot.size;
+
+      // Award milestone bonuses
+      if (totalMoments === 100) {
+        await awardKarma(userId, 'impact_milestone_100');
+      } else if (totalMoments === 500) {
+        await awardKarma(userId, 'impact_milestone_500');
+      }
+    } catch (karmaError) {
+      // Log karma error but don't fail the request
+      console.error('Error awarding karma for impact moment:', karmaError);
+    }
 
     res.status(201).json({
       success: true,

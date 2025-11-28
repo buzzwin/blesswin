@@ -11,6 +11,8 @@ import { CustomIcon } from '@components/ui/custom-icon';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
+import { UserKarmaBadge } from '@components/user/user-karma-badge';
+import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import { variants } from './more-settings';
 import type { User } from '@lib/types/user';
 
@@ -18,7 +20,7 @@ export function SidebarProfile(): JSX.Element {
   const { user, signOut } = useAuth();
   const { open, openModal, closeModal } = useModal();
 
-  const { name, username, verified, photoURL } = user as User;
+  const { name, username, verified, photoURL, karmaPoints = 0, karmaBreakdown = DEFAULT_KARMA_BREAKDOWN } = user as User;
 
   return (
     <>
@@ -58,6 +60,13 @@ export function SidebarProfile(): JSX.Element {
                 <div className='hidden truncate text-start leading-5 xl:block'>
                   <UserName name={name} className='start' verified={verified} />
                   <UserUsername username={username} disableLink />
+                  <div className='mt-1'>
+                    <UserKarmaBadge
+                      karmaPoints={karmaPoints}
+                      size='sm'
+                      className='text-xs'
+                    />
+                  </div>
                 </div>
               </div>
               <HeroIcon

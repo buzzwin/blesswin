@@ -1,76 +1,34 @@
-import { doc, query, where } from 'firebase/firestore';
-import { AnimatePresence } from 'framer-motion';
 import { useUser } from '@lib/context/user-context';
-import { useCollection } from '@lib/hooks/useCollection';
-import { useDocument } from '@lib/hooks/useDocument';
-import { tweetsCollection } from '@lib/firebase/collections';
-import { mergeData } from '@lib/merge';
 import { UserLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { UserDataLayout } from '@components/layout/user-data-layout';
 import { UserHomeLayout } from '@components/layout/user-home-layout';
-import { StatsEmpty } from '@components/tweet/stats-empty';
-import { Loading } from '@components/ui/loading';
-import { Tweet } from '@components/tweet/tweet';
+import { UserImpactMoments } from '@components/user/user-impact-moments';
 import type { ReactElement, ReactNode } from 'react';
+import type { RippleType } from '@lib/types/impact-moment';
 
-export default function UserTweets(): JSX.Element {
+export default function UserImpactMomentsPage(): JSX.Element {
   const { user } = useUser();
+  const { id } = user ?? {};
 
-  const { id, username, pinnedTweet } = user ?? {};
-
-  const { data: pinnedData } = useDocument(
-    doc(tweetsCollection, pinnedTweet ?? 'null'),
-    {
-      disabled: !pinnedTweet,
-      allowNull: true,
-      includeUser: true
-    }
-  );
-
-  const { data: ownerTweets, loading: ownerLoading } = useCollection(
-    query(
-      tweetsCollection,
-      where('createdBy', '==', id),
-      where('parent', '==', null)
-    ),
-    { includeUser: true, allowNull: true }
-  );
-
-  const { data: peopleTweets, loading: peopleLoading } = useCollection(
-    query(
-      tweetsCollection,
-      where('createdBy', '!=', id),
-      where('userRetweets', 'array-contains', id)
-    ),
-    { includeUser: true, allowNull: true }
-  );
-
-  const mergedTweets = mergeData(true, ownerTweets, peopleTweets);
+  const handleRipple = (momentId: string, rippleType: RippleType): void => {
+    // Ripple handling can be implemented here if needed
+    // For now, it's handled in the ImpactMomentCard component
+  };
 
   return (
     <section>
-      {ownerLoading ?? peopleLoading ? (
-        <Loading className='mt-5' />
-      ) : !mergedTweets ? (
-        <StatsEmpty
-          title={`Welcome @${username as string} to Buzzwin!`}
-          description='When ready, share your favorite shows and movies and they will show up here.'
-        />
+      {id ? (
+        <UserImpactMoments userId={id} onRipple={handleRipple} />
       ) : (
-        <AnimatePresence mode='popLayout'>
-          {pinnedData && (
-            <Tweet pinned {...pinnedData} key={`pinned-${pinnedData.id}`} />
-          )}
-          {mergedTweets.map((tweet) => (
-            <Tweet {...tweet} profile={user} key={tweet.id} />
-          ))}
-        </AnimatePresence>
+        <div className='mt-5 text-center text-gray-500 dark:text-gray-400'>
+          Loading user...
+        </div>
       )}
     </section>
   );
 }
 
-UserTweets.getLayout = (page: ReactElement): ReactNode => (
+UserImpactMomentsPage.getLayout = (page: ReactElement): ReactNode => (
   <ProtectedLayout>
     <UserLayout>
       <UserDataLayout>

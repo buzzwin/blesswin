@@ -84,7 +84,7 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
   };
 
   return (
-    <article className='border-b border-gray-200 px-4 py-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800/50'>
+    <article className='border-b border-gray-200 py-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800/50'>
       <div className='flex gap-3'>
         {/* User Avatar */}
         <Link href={`/user/${moment.user.username}`}>

@@ -9,10 +9,7 @@ type UserNavProps = {
 
 const allNavs = [
   [
-    { name: 'Buzz', path: '' },
-    // { name: 'Tweets & replies', path: 'with_replies' },
-    // { name: 'Media', path: 'media' },
-    { name: 'Boosts', path: 'likes' }
+    // Removed Buzz and Boosts tabs
   ],
   [
     { name: 'Fan', path: 'following' },
@@ -22,6 +19,11 @@ const allNavs = [
 
 export function UserNav({ follow }: UserNavProps): JSX.Element {
   const userNav = allNavs[+!!follow];
+
+  // Don't render nav if there are no tabs
+  if (userNav.length === 0) {
+    return <></>;
+  }
 
   return (
     <motion.nav

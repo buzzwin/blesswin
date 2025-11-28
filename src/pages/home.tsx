@@ -12,6 +12,8 @@ import { JoinMomentModal } from '@components/impact/join-moment-modal';
 import { RitualsBanner } from '@components/rituals/rituals-banner';
 import { RitualStatsWidget } from '@components/rituals/ritual-stats-widget';
 import { RitualSettings } from '@components/rituals/ritual-settings';
+import { UserKarmaDisplay } from '@components/user/user-karma-display';
+import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
@@ -37,6 +39,10 @@ export default function HomeFeed(): JSX.Element {
   const [ritualCompleted, setRitualCompleted] = useState(false);
   const [ritualStats, setRitualStats] = useState<RitualStats | null>(null);
   const [ritualStatsLoading, setRitualStatsLoading] = useState(false);
+  const [userKarma, setUserKarma] = useState<{
+    karmaPoints: number;
+    karmaBreakdown: typeof DEFAULT_KARMA_BREAKDOWN;
+  } | null>(null);
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -103,6 +109,12 @@ export default function HomeFeed(): JSX.Element {
     void fetchMoments();
   }, []);
 
+  // Fetch user karma
+  useEffect(() => {
+    if (!user?.id) return;
+    void fetchUserKarma();
+  }, [user?.id]);
+
   // Fetch today's ritual for banner
   useEffect(() => {
     if (!user?.id) return;
@@ -149,6 +161,24 @@ export default function HomeFeed(): JSX.Element {
 
     void fetchRitualStats();
   }, [user?.id]);
+
+  const fetchUserKarma = async (): Promise<void> => {
+    if (!user?.id) return;
+    try {
+      const response = await fetch(`/api/karma/${user.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success) {
+          setUserKarma({
+            karmaPoints: data.karmaPoints || 0,
+            karmaBreakdown: data.karmaBreakdown || DEFAULT_KARMA_BREAKDOWN
+          });
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching user karma:', error);
+    }
+  };
 
   const handleRipple = async (momentId: string, rippleType: RippleType): Promise<void> => {
     if (!user?.id) {
@@ -233,6 +263,24 @@ export default function HomeFeed(): JSX.Element {
           rippleCount: momentData.rippleCount + (wasRippledElsewhere ? 0 : 1)
         });
         toast.success(`Added ${rippleType} ripple! ✨`);
+
+        // Award karma to moment creator for receiving ripple (if not themselves)
+        const momentCreatorId = momentData.createdBy;
+        if (momentCreatorId && momentCreatorId !== user.id) {
+          try {
+            await fetch('/api/karma/award', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                userId: momentCreatorId,
+                action: 'ripple_received'
+              })
+            });
+          } catch (karmaError) {
+            console.error('Error awarding karma for ripple:', karmaError);
+            // Don't fail the ripple if karma fails
+          }
+        }
       }
 
       // Refresh moments to show updated ripple counts
@@ -282,11 +330,13 @@ export default function HomeFeed(): JSX.Element {
       }
 
       // Create the joined moment
-      await addDoc(impactMomentsCollection, joinedMoment as any);
+      const joinedMomentRef = await addDoc(impactMomentsCollection, joinedMoment as any);
 
       // Update the original moment
       const originalMomentRef = doc(impactMomentsCollection, selectedMomentForJoin.id);
       const originalMomentDoc = await getDoc(originalMomentRef);
+      
+      const originalCreatorId = selectedMomentForJoin.createdBy;
       
       if (originalMomentDoc.exists()) {
         const originalData = originalMomentDoc.data();
@@ -311,6 +361,37 @@ export default function HomeFeed(): JSX.Element {
         }
       }
 
+      // Award karma for "Joined You" actions
+      try {
+        // Award karma to user who joined
+        await fetch('/api/karma/award', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            userId: user.id,
+            action: 'joined_you_created'
+          })
+        });
+
+        // Award karma to original creator (if not themselves)
+        if (originalCreatorId && originalCreatorId !== user.id) {
+          await fetch('/api/karma/award', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              userId: originalCreatorId,
+              action: 'joined_you_received'
+            })
+          });
+        }
+      } catch (karmaError) {
+        console.error('Error awarding karma for joined action:', karmaError);
+        // Don't fail the join if karma fails
+      }
+
+      // Refresh karma display
+      void fetchUserKarma();
+
       // Refresh feed
       await fetchMoments();
       closeJoinModal();
@@ -334,7 +415,7 @@ export default function HomeFeed(): JSX.Element {
       <MainHeader title='Community Feed' useMobileSidebar />
       
       {/* Feed Description */}
-      <div className='border-b border-light-border px-4 py-3 dark:border-dark-border'>
+      <div className='border-b border-light-border py-3 dark:border-dark-border'>
         <div className='flex items-start gap-3'>
           <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
             <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
@@ -351,8 +432,22 @@ export default function HomeFeed(): JSX.Element {
         </div>
       </div>
 
+      {/* Karma Display */}
+      {userKarma && user?.id && (
+        <div className='border-b border-gray-200 py-4 dark:border-gray-700'>
+          <UserKarmaDisplay
+            karmaPoints={userKarma.karmaPoints}
+            karmaBreakdown={userKarma.karmaBreakdown}
+            userId={user.id}
+            compact={false}
+            showBreakdown={true}
+            showEncouragement={true}
+          />
+        </div>
+      )}
+
       {/* Ritual Stats Widget */}
-      <div className='border-b border-gray-200 px-4 py-4 dark:border-gray-700'>
+      <div className='border-b border-gray-200 py-4 dark:border-gray-700'>
         <RitualStatsWidget
           stats={ritualStats}
           loading={ritualStatsLoading}
@@ -376,7 +471,7 @@ export default function HomeFeed(): JSX.Element {
         />
       )}
 
-      <div className='px-4 py-4'>
+      <div className='py-4'>
         <ImpactMomentInput onSuccess={handleMomentCreated} />
       </div>
       

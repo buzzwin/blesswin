@@ -11,6 +11,8 @@
     "test": "jest --watch",
     "test:ci": "jest --ci",
     "test:stats": "node scripts/test-enhanced-stats.js",
+    "test:karma": "node scripts/test-karma-phase2.js",
+    "test:karma-integration": "node scripts/test-karma-phase3.js",
     "seed:rituals": "node scripts/seed-rituals.js",
     "prepare": "node -e \"try { if (!process.env.CI && !process.env.NETLIFY) require('husky').install() } catch (e) {}\""
   },

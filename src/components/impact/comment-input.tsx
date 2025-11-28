@@ -2,11 +2,8 @@ import { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
-import { impactMomentCommentsCollection } from '@lib/firebase/collections';
 import { UserAvatar } from '@components/user/user-avatar';
 import { Loader2 } from 'lucide-react';
-import type { Comment } from '@lib/types/comment';
 
 interface CommentInputProps {
   momentId: string;
@@ -51,15 +48,23 @@ export function CommentInput({
     setLoading(true);
 
     try {
-      // Create comment data - serverTimestamp() will be handled by Firestore
-      const commentData = {
-        text: text.trim(),
-        momentId,
-        createdBy: user.id,
-        createdAt: serverTimestamp()
-      };
+      // Create comment via API to handle karma tracking
+      const response = await fetch('/api/comments/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          momentId,
+          text: text.trim(),
+          userId: user.id
+        })
+      });
 
-      await addDoc(impactMomentCommentsCollection(momentId), commentData as any);
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to post comment');
+      }
 
       setText('');
       if (textareaRef.current) {

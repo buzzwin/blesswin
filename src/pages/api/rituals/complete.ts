@@ -3,6 +3,7 @@ import { getDoc, addDoc, updateDoc, setDoc, query, where, getDocs, serverTimesta
 import { userRitualStateDoc, ritualCompletionsCollection } from '@lib/firebase/collections';
 import { getTodayDateString, calculateStreak, calculateLongestStreak } from '@lib/utils/ritual-stats';
 import type { RitualCompletion, UserRitualState } from '@lib/types/ritual';
+import { awardKarma } from '@lib/utils/karma-calculator';
 
 interface CompleteRitualRequest {
   userId: string;
@@ -132,6 +133,22 @@ export default async function handler(
         updatedAt: serverTimestamp()
       };
       await setDoc(userStateDoc, initialState as any);
+    }
+
+    // Award karma for ritual completion
+    try {
+      const karmaAction = completedQuietly ? 'ritual_completed_quiet' : 'ritual_completed_shared';
+      await awardKarma(userId, karmaAction);
+
+      // Check for streak milestones
+      if (newStreak === 7) {
+        await awardKarma(userId, 'streak_milestone_7');
+      } else if (newStreak === 30) {
+        await awardKarma(userId, 'streak_milestone_30');
+      }
+    } catch (karmaError) {
+      // Log karma error but don't fail the request
+      console.error('Error awarding karma for ritual completion:', karmaError);
     }
 
     const completion: RitualCompletion = {

@@ -4,6 +4,8 @@ import { ToolTip } from '@components/ui/tooltip';
 import { UserName } from './user-name';
 import { UserFollowing } from './user-following';
 import { UserFollowStats } from './user-follow-stats';
+import { UserKarmaDisplay } from './user-karma-display';
+import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import type { IconName } from '@components/ui/hero-icon';
 import type { User } from '@lib/types/user';
 
@@ -19,6 +21,8 @@ type UserDetailsProps = Pick<
   | 'createdAt'
   | 'following'
   | 'followers'
+  | 'karmaPoints'
+  | 'karmaBreakdown'
 >;
 
 type DetailIcon = [string | null, IconName];
@@ -33,7 +37,9 @@ export function UserDetails({
   verified,
   createdAt,
   following,
-  followers
+  followers,
+  karmaPoints = 0,
+  karmaBreakdown = DEFAULT_KARMA_BREAKDOWN
 }: UserDetailsProps): JSX.Element {
   const detailIcons: Readonly<DetailIcon[]> = [
     [location, 'MapPinIcon'],
@@ -91,6 +97,16 @@ export function UserDetails({
         </div>
       </div>
       <UserFollowStats following={following} followers={followers} />
+      <div className='mt-3'>
+        <UserKarmaDisplay
+          karmaPoints={karmaPoints}
+          karmaBreakdown={karmaBreakdown}
+          userId={id}
+          compact={false}
+          showBreakdown={true}
+          showEncouragement={true}
+        />
+      </div>
     </>
   );
 }
