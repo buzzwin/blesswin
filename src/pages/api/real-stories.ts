@@ -119,16 +119,24 @@ function validateAndFilterStories(stories: RealStory[]): RealStory[] {
     });
 }
 
-async function getCachedStories(): Promise<RealStory[] | null> {
+async function getCachedStories(): Promise<{ stories: RealStory[]; isValid: boolean } | null> {
   try {
     const cacheDocRef = doc(realStoriesCacheCollection, CACHE_DOC_ID);
     const cacheDoc = await getDoc(cacheDocRef);
     
     if (!cacheDoc.exists()) {
+      console.log('[CACHE] No cache document found');
       return null;
     }
     
     const cacheData = cacheDoc.data() as CachedRealStories;
+    
+    // Check if we have stories
+    if (!cacheData.stories || cacheData.stories.length === 0) {
+      console.log('[CACHE] Cache exists but has no stories');
+      return null;
+    }
+    
     const fetchedAt = cacheData.fetchedAt instanceof Timestamp 
       ? cacheData.fetchedAt.toDate() 
       : new Date(cacheData.fetchedAt);
@@ -136,14 +144,18 @@ async function getCachedStories(): Promise<RealStory[] | null> {
     const now = new Date();
     const daysSinceFetch = (now.getTime() - fetchedAt.getTime()) / (1000 * 60 * 60 * 24);
     
-    // If cache is older than 15 days, return null to trigger refresh
-    if (daysSinceFetch > CACHE_DURATION_DAYS) {
+    // Strict check: cache is valid if it's less than 15 days old (not equal to or greater)
+    const isValid = daysSinceFetch < CACHE_DURATION_DAYS;
+    
+    if (!isValid) {
+      console.log(`[CACHE] Cache expired: ${daysSinceFetch.toFixed(2)} days old (limit: ${CACHE_DURATION_DAYS} days)`);
       return null;
     }
     
-    return cacheData.stories || null;
+    console.log(`[CACHE] Cache valid: ${daysSinceFetch.toFixed(2)} days old, returning ${cacheData.stories.length} stories`);
+    return { stories: cacheData.stories, isValid: true };
   } catch (error) {
-    console.error('Error reading cache:', error);
+    console.error('[CACHE] Error reading cache:', error);
     return null;
   }
 }
@@ -170,7 +182,16 @@ async function cacheStories(stories: RealStory[]): Promise<void> {
 }
 
 async function fetchStoriesFromGemini(): Promise<RealStory[]> {
+  // CRITICAL: This function should ONLY be called when cache is invalid/missing
+  // Double-check cache one more time as a safety guard (race condition protection)
+  const lastCacheCheck = await getCachedStories();
+  if (lastCacheCheck && lastCacheCheck.isValid && lastCacheCheck.stories.length > 0) {
+    console.log('[SAFETY] Cache became valid between checks - returning cached stories (NO GEMINI CALL)');
+    return lastCacheCheck.stories;
+  }
+  
   try {
+    console.log('[GEMINI] Making API call to Gemini (COST INCURRED)');
     const prompt = createOptimizedPrompt();
     const response = await callGeminiAPI(prompt, 4096, 0.7);
     
@@ -207,39 +228,43 @@ export default async function handler(
   }
 
   try {
-    // Check cache first
-    const cachedStories = await getCachedStories();
+    // STEP 1: Check cache first - CRITICAL: This must happen BEFORE any Gemini calls
+    const cacheResult = await getCachedStories();
     
-    if (cachedStories && cachedStories.length > 0) {
-      console.log(`Returning ${cachedStories.length} cached stories`);
+    // STEP 2: If valid cache exists, return immediately - NO GEMINI CALL
+    if (cacheResult && cacheResult.isValid && cacheResult.stories.length > 0) {
+      console.log(`[SUCCESS] Returning ${cacheResult.stories.length} cached stories (NO GEMINI CALL)`);
       return res.status(200).json({ 
-        stories: cachedStories,
+        stories: cacheResult.stories,
         cached: true
       });
     }
     
-    // Cache is stale or doesn't exist - fetch from Gemini
-    console.log('Cache expired or missing, fetching from Gemini...');
+    // STEP 3: Only if cache is invalid/missing, fetch from Gemini
+    // This is the ONLY place where Gemini should be called
+    console.log('[GEMINI] Cache invalid or missing - fetching from Gemini API (THIS INCURS COST)');
     const stories = await fetchStoriesFromGemini();
     
-    // Cache the fetched stories
+    // STEP 4: Cache the fetched stories for future requests
     await cacheStories(stories);
     
+    console.log(`[SUCCESS] Fetched ${stories.length} stories from Gemini and cached them`);
     res.status(200).json({ 
       stories,
       cached: false
     });
   } catch (error) {
-    console.error('Error fetching real stories:', error);
+    console.error('[ERROR] Error fetching real stories:', error);
     
-    // Try to return cached stories even if stale as fallback
+    // STEP 5: Fallback - try to return stale cache if Gemini fails
+    // This prevents complete failure but still avoids calling Gemini again
     try {
       const cacheDocRef = doc(realStoriesCacheCollection, CACHE_DOC_ID);
       const cacheDoc = await getDoc(cacheDocRef);
       if (cacheDoc.exists()) {
         const cacheData = cacheDoc.data() as CachedRealStories;
         if (cacheData.stories && cacheData.stories.length > 0) {
-          console.log('Returning stale cache as fallback');
+          console.log('[FALLBACK] Returning stale cache as fallback (NO GEMINI CALL)');
           return res.status(200).json({ 
             stories: cacheData.stories,
             cached: true
@@ -247,7 +272,7 @@ export default async function handler(
         }
       }
     } catch (fallbackError) {
-      console.error('Error reading fallback cache:', fallbackError);
+      console.error('[FALLBACK] Error reading fallback cache:', fallbackError);
     }
     
     res.status(500).json({
