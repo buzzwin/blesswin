@@ -28,6 +28,7 @@ import {
 } from '@lib/firebase/collections';
 import { getRandomId, getRandomInt } from '@lib/random';
 import { DefaultAvatar } from '@components/ui/default-avatar';
+import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import type { ReactNode } from 'react';
 import type { User as AuthUser } from 'firebase/auth';
 import type { WithFieldValue } from 'firebase/firestore';
@@ -219,7 +220,11 @@ export function AuthContextProvider({
           totalTweets: 0,
           totalPhotos: 0,
           pinnedTweet: null,
-          coverPhotoURL: null
+          coverPhotoURL: null,
+          // Initialize karma fields
+          karmaPoints: 0,
+          karmaBreakdown: DEFAULT_KARMA_BREAKDOWN,
+          lastKarmaUpdate: serverTimestamp()
         };
 
         const userStatsData: WithFieldValue<Stats> = {

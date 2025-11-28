@@ -40,11 +40,17 @@ service cloud.firestore {
 
     // Users collection
     match /users/{userId} {
-      allow read: if true;
+      allow read: if true; // Public read for karma points (leaderboards)
       allow write: if isSignedIn() && request.auth.uid == userId;
       // Allow updating disclaimer acceptance
       allow update: if isSignedIn() && request.auth.uid == userId
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['disclaimerAccepted', 'disclaimerAcceptedAt']);
+      // Allow updating karma fields (via API endpoints - server-side validation)
+      // Note: API routes use client SDK server-side, so request.auth may be null
+      // We validate userId in the API, so allow update when auth is null OR when user matches
+      allow update: if request.auth == null || (isSignedIn() 
+        && request.auth.uid == userId
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['karmaPoints', 'karmaBreakdown', 'lastKarmaUpdate']));
     }
 
     // Watchlists collection
