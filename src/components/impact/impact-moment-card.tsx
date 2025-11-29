@@ -264,26 +264,32 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
                 <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
                   <div className='p-2'>
                     {(['inspired', 'grateful', 'joined_you', 'sent_love'] as RippleType[]).map(
-                      (rippleType) => (
-                        <button
-                          key={rippleType}
-                          onClick={() => {
-                            setRippleMenuOpen(false);
-                            if (moment.id) {
-                              void onRipple?.(moment.id, rippleType);
-                            }
-                          }}
-                          className='w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
-                        >
-                          <span className='text-lg'>{rippleTypeIcons[rippleType]}</span>
-                          <span className='font-medium'>{rippleTypeLabels[rippleType]}</span>
-                          {moment.ripples[rippleType].length > 0 && (
-                            <span className='ml-auto text-xs text-gray-500'>
-                              {moment.ripples[rippleType].length}
-                            </span>
-                          )}
-                        </button>
-                      )
+                      (rippleType) => {
+                        // Don't show "Joined You" option for own moments
+                        if (rippleType === 'joined_you' && moment.createdBy === user?.id) {
+                          return null;
+                        }
+                        return (
+                          <button
+                            key={rippleType}
+                            onClick={() => {
+                              setRippleMenuOpen(false);
+                              if (moment.id) {
+                                void onRipple?.(moment.id, rippleType);
+                              }
+                            }}
+                            className='w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
+                          >
+                            <span className='text-lg'>{rippleTypeIcons[rippleType]}</span>
+                            <span className='font-medium'>{rippleTypeLabels[rippleType]}</span>
+                            {moment.ripples[rippleType].length > 0 && (
+                              <span className='ml-auto text-xs text-gray-500'>
+                                {moment.ripples[rippleType].length}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      }
                     )}
                   </div>
                 </div>
@@ -302,15 +308,17 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
             <button
               onClick={async () => {
                 const siteOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://buzzwin.com';
-                const shareUrl = `${siteOrigin}/public/moment/${moment.id}`;
+                // Default to chain URL to show social proof and enable easy joining
+                const shareUrl = `${siteOrigin}/impact/${moment.id}/chain`;
                 const momentText = `${moment.user.name}: ${moment.text.substring(0, 100)}${moment.text.length > 100 ? '...' : ''}`;
-                const shareText = `${momentText}\n\nVisit buzzwin.com to see more positive impact moments 🌱\n${shareUrl}`;
+                const joinCount = moment.joinedByUsers?.length || 0;
+                const shareText = `${momentText}\n\n${joinCount > 0 ? `${joinCount} ${joinCount === 1 ? 'person has' : 'people have'} joined this action! ` : ''}Join the chain of positive impact 🌱\n\n${shareUrl}`;
 
                 if (navigator.share) {
                   // Use Web Share API if available
                   try {
                     await navigator.share({
-                      title: 'Impact Moment on Buzzwin',
+                      title: 'Join This Action Chain on Buzzwin',
                       text: shareText,
                       url: shareUrl
                     });

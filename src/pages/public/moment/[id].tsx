@@ -1,20 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { doc, getDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
+import { doc, getDoc, query, orderBy, onSnapshot, addDoc, updateDoc, getDocs, where, serverTimestamp, arrayUnion } from 'firebase/firestore';
 import { impactMomentsCollection, usersCollection, impactMomentCommentsCollection } from '@lib/firebase/collections';
 import { useAuth } from '@lib/context/auth-context';
 import { PublicLayout } from '@components/layout/pub_layout';
 import { MainHeader } from '@components/home/main-header';
 import { ImpactMomentCard } from '@components/impact/impact-moment-card';
 import { CommentCard } from '@components/impact/comment-card';
+import { JoinMomentModal } from '@components/impact/join-moment-modal';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
-import { ArrowLeft, LogIn } from 'lucide-react';
+import { useModal } from '@lib/hooks/useModal';
+import { ArrowLeft, LogIn, Users, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
 import { siteURL } from '@lib/env';
 import type { ImpactMomentWithUser } from '@lib/types/impact-moment';
 import type { CommentWithUser } from '@lib/types/comment';
+import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 
 export default function PublicImpactMomentPage(): JSX.Element {
   const router = useRouter();
@@ -24,6 +27,8 @@ export default function PublicImpactMomentPage(): JSX.Element {
   const [comments, setComments] = useState<CommentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [commentsLoading, setCommentsLoading] = useState(true);
+  const [joinedCount, setJoinedCount] = useState(0);
+  const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -213,21 +218,98 @@ export default function PublicImpactMomentPage(): JSX.Element {
             />
           </div>
 
-          {/* Sign In CTA */}
-          <div className='mb-6 rounded-lg border border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20'>
-            <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
-              Join the Community
-            </h3>
-            <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
-              Sign in to comment, react, and share your own impact moments!
-            </p>
-            <Link href='/login'>
-              <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700'>
-                <LogIn className='h-5 w-5' />
-                Sign In to Join
-              </a>
-            </Link>
-          </div>
+          {/* View Chain Link */}
+          {!moment.joinedFromMomentId && (
+            <div className='mb-6'>
+              <Link href={`/impact/${moment.id}/chain`}>
+                <a className='flex items-center justify-between rounded-lg border border-purple-200 bg-purple-50 p-4 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'>
+                  <div className='flex items-center gap-3'>
+                    <Users className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                    <div>
+                      <div className='font-semibold text-purple-900 dark:text-purple-100'>
+                        View Action Chain
+                      </div>
+                      <div className='text-sm text-purple-700 dark:text-purple-300'>
+                        {joinedCount === 0 
+                          ? 'No one has joined yet'
+                          : `${joinedCount} ${joinedCount === 1 ? 'person has' : 'people have'} joined this action`
+                        }
+                      </div>
+                    </div>
+                  </div>
+                  <ArrowRight className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                </a>
+              </Link>
+            </div>
+          )}
+
+          {/* Join This Action Button (only if not the creator) */}
+          {moment.createdBy !== user?.id && !moment.joinedFromMomentId && (
+            <div className='mb-6'>
+              {user ? (
+                <button
+                  onClick={() => {
+                    // Check if user already joined
+                    const checkExistingJoin = async (): Promise<void> => {
+                      try {
+                        const existingJoined = await getDocs(
+                          query(
+                            impactMomentsCollection,
+                            where('joinedFromMomentId', '==', moment.id),
+                            where('createdBy', '==', user.id)
+                          )
+                        );
+
+                        if (!existingJoined.empty) {
+                          const confirmed = confirm('You already joined this action. Want to share a new version?');
+                          if (!confirmed) return;
+                        }
+
+                        openJoinModal();
+                      } catch (error) {
+                        console.error('Error checking existing joins:', error);
+                        openJoinModal();
+                      }
+                    };
+                    void checkExistingJoin();
+                  }}
+                  className='w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 text-base font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'
+                >
+                  <span className='flex items-center justify-center gap-2'>
+                    <span>🌱</span>
+                    Join This Action
+                  </span>
+                </button>
+              ) : (
+                <Link href={`/login?redirect=/public/moment/${moment.id}`}>
+                  <a className='block w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 text-center text-base font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'>
+                    <span className='flex items-center justify-center gap-2'>
+                      <LogIn className='h-5 w-5' />
+                      Sign In to Join This Action
+                    </span>
+                  </a>
+                </Link>
+              )}
+            </div>
+          )}
+
+          {/* Sign In CTA (if not authenticated) */}
+          {!user && (
+            <div className='mb-6 rounded-lg border border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20'>
+              <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
+                Join the Community
+              </h3>
+              <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+                Sign in to comment, react, and share your own impact moments!
+              </p>
+              <Link href={`/login?redirect=/public/moment/${moment.id}`}>
+                <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700'>
+                  <LogIn className='h-5 w-5' />
+                  Sign In to Join
+                </a>
+              </Link>
+            </div>
+          )}
 
           {/* Comments List */}
           <div>
@@ -255,6 +337,121 @@ export default function PublicImpactMomentPage(): JSX.Element {
             )}
           </div>
         </div>
+
+        {/* Join Moment Modal */}
+        {moment && moment.createdBy !== user?.id && (
+          <JoinMomentModal
+            originalMoment={moment}
+            open={joinModalOpen}
+            closeModal={closeJoinModal}
+            onJoin={async (joinedMomentData: {
+              text: string;
+              tags: ImpactTag[];
+              effortLevel: EffortLevel;
+              moodCheckIn?: { before: number; after: number };
+              images?: string[];
+            }) => {
+              if (!user?.id || !moment.id) {
+                toast.error('Unable to join action');
+                return;
+              }
+
+              try {
+                // Create the joined moment
+                const joinedMoment = {
+                  text: joinedMomentData.text,
+                  tags: joinedMomentData.tags,
+                  effortLevel: joinedMomentData.effortLevel,
+                  createdBy: user.id,
+                  createdAt: serverTimestamp(),
+                  ripples: {
+                    inspired: [],
+                    grateful: [],
+                    joined_you: [],
+                    sent_love: []
+                  },
+                  rippleCount: 0,
+                  joinedFromMomentId: moment.id
+                };
+
+                // Add optional fields
+                if (joinedMomentData.moodCheckIn) {
+                  (joinedMoment as any).moodCheckIn = joinedMomentData.moodCheckIn;
+                }
+                if (joinedMomentData.images && joinedMomentData.images.length > 0) {
+                  (joinedMoment as any).images = joinedMomentData.images;
+                }
+
+                // Create the joined moment
+                await addDoc(impactMomentsCollection, joinedMoment as any);
+
+                // Update the original moment
+                const originalMomentRef = doc(impactMomentsCollection, moment.id);
+                const originalMomentDoc = await getDoc(originalMomentRef);
+                
+                if (originalMomentDoc.exists()) {
+                  const originalData = originalMomentDoc.data();
+                  const currentJoinedBy = originalData.joinedByUsers || [];
+                  const currentJoinedYouRipples = originalData.ripples?.joined_you || [];
+                  
+                  // Add user to joinedByUsers if not already there
+                  if (!currentJoinedBy.includes(user.id)) {
+                    await updateDoc(originalMomentRef, {
+                      joinedByUsers: arrayUnion(user.id),
+                      'ripples.joined_you': arrayUnion(user.id),
+                      rippleCount: (originalData.rippleCount || 0) + 1
+                    });
+                  } else {
+                    // User already in list, just update ripple
+                    if (!currentJoinedYouRipples.includes(user.id)) {
+                      await updateDoc(originalMomentRef, {
+                        'ripples.joined_you': arrayUnion(user.id),
+                        rippleCount: (originalData.rippleCount || 0) + 1
+                      });
+                    }
+                  }
+                }
+
+                // Award karma for "Joined You" actions
+                try {
+                  // Award karma to user who joined
+                  await fetch('/api/karma/award', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                      userId: user.id,
+                      action: 'joined_action'
+                    })
+                  });
+
+                  // Award karma to original creator
+                  const originalCreatorId = moment.createdBy;
+                  if (originalCreatorId && originalCreatorId !== user.id) {
+                    await fetch('/api/karma/award', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        userId: originalCreatorId,
+                        action: 'action_joined'
+                      })
+                    });
+                  }
+                } catch (karmaError) {
+                  console.error('Error awarding karma:', karmaError);
+                }
+
+                toast.success('You joined this action! 🌱');
+                closeJoinModal();
+                
+                // Redirect to chain page to see the join
+                void router.push(`/impact/${moment.id}/chain`);
+              } catch (error) {
+                console.error('Error joining action:', error);
+                toast.error('Failed to join action');
+              }
+            }}
+          />
+        )}
       </PublicLayout>
     </>
   );

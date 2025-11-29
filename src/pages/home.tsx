@@ -1,4 +1,5 @@
 import { AnimatePresence } from 'framer-motion';
+import { useRouter } from 'next/router';
 import { query, orderBy, getDocs, doc, updateDoc, arrayUnion, arrayRemove, increment, addDoc, serverTimestamp, where } from 'firebase/firestore';
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import { usersCollection } from '@lib/firebase/collections';
@@ -30,6 +31,7 @@ import type { RealStory } from '@lib/types/real-story';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
+  const router = useRouter();
   const { user } = useAuth();
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -214,6 +216,12 @@ export default function HomeFeed(): JSX.Element {
     if (rippleType === 'joined_you') {
       const moment = moments.find(m => m.id === momentId);
       if (moment) {
+        // Don't allow users to join their own actions
+        if (moment.createdBy === user.id) {
+          toast.error('You cannot join your own action');
+          return;
+        }
+
         try {
           // Check if user already joined this moment
           const existingJoined = await getDocs(
@@ -322,10 +330,15 @@ export default function HomeFeed(): JSX.Element {
     moodCheckIn?: { before: number; after: number };
     images?: string[];
   }): Promise<void> => {
-    if (!user?.id || !selectedMomentForJoin?.id) {
+    if (!user?.id || !selectedMomentForJoin) {
       toast.error('Unable to join action');
       return;
     }
+
+    // Save the moment ID and creator ID before clearing state
+    // After the null check above, selectedMomentForJoin is guaranteed to be non-null
+    const momentId = selectedMomentForJoin.id;
+    const originalCreatorId = selectedMomentForJoin.createdBy;
 
     try {
       // Create the joined moment
@@ -342,7 +355,7 @@ export default function HomeFeed(): JSX.Element {
           sent_love: []
         },
         rippleCount: 0,
-        joinedFromMomentId: selectedMomentForJoin.id
+        joinedFromMomentId: momentId
       };
 
       // Add optional fields
@@ -357,10 +370,8 @@ export default function HomeFeed(): JSX.Element {
       const joinedMomentRef = await addDoc(impactMomentsCollection, joinedMoment as any);
 
       // Update the original moment
-      const originalMomentRef = doc(impactMomentsCollection, selectedMomentForJoin.id);
+      const originalMomentRef = doc(impactMomentsCollection, momentId);
       const originalMomentDoc = await getDoc(originalMomentRef);
-      
-      const originalCreatorId = selectedMomentForJoin.createdBy;
       
       if (originalMomentDoc.exists()) {
         const originalData = originalMomentDoc.data();
@@ -416,10 +427,16 @@ export default function HomeFeed(): JSX.Element {
       // Refresh karma display
       void fetchUserKarma();
 
-      // Refresh feed
-      await fetchMoments();
+      // Redirect to chain page to see the join
       closeJoinModal();
       setSelectedMomentForJoin(null);
+      
+      if (momentId) {
+        void router.push(`/impact/${momentId}/chain`);
+      } else {
+        // Fallback: refresh moments if no ID
+        await fetchMoments();
+      }
     } catch (error) {
       console.error('Error joining moment:', error);
       throw error;

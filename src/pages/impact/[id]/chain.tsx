@@ -215,8 +215,14 @@ export default function ChainViewPage(): JSX.Element {
             </h2>
             <p className='text-sm text-gray-600 dark:text-gray-400'>
               {joinedMoments.length === 0 
-                ? 'No one has joined this action yet. Be the first!'
-                : `${joinedMoments.length} ${joinedMoments.length === 1 ? 'person has' : 'people have'} joined this action`
+                ? (originalMoment.createdBy === user?.id
+                    ? 'No one has joined your action yet. Share it to inspire others!'
+                    : 'No one has joined this action yet. Be the first!'
+                  )
+                : (originalMoment.createdBy === user?.id
+                    ? `${joinedMoments.length} ${joinedMoments.length === 1 ? 'person has' : 'people have'} joined your action!`
+                    : `${joinedMoments.length} ${joinedMoments.length === 1 ? 'person has' : 'people have'} joined this action`
+                  )
               }
             </p>
           </div>
@@ -268,25 +274,35 @@ export default function ChainViewPage(): JSX.Element {
             <div className='mb-6 rounded-lg border border-gray-200 bg-white p-12 text-center dark:border-gray-700 dark:bg-gray-800'>
               <div className='mb-4 text-6xl'>🌱</div>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
-                Start the Chain
+                {originalMoment.createdBy === user?.id 
+                  ? 'Share Your Action'
+                  : 'Start the Chain'
+                }
               </h3>
               <p className='mb-6 text-sm text-gray-600 dark:text-gray-400'>
-                Be the first to join this action and create a ripple of positive impact!
+                {originalMoment.createdBy === user?.id
+                  ? 'Share this action with others to inspire them to join!'
+                  : 'Be the first to join this action and create a ripple of positive impact!'
+                }
               </p>
-              {user ? (
-                <Link href={`/impact/${id}`}>
-                  <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700'>
-                    Join This Action
-                    <ArrowLeft className='h-4 w-4 rotate-180' />
-                  </a>
-                </Link>
-              ) : (
-                <Link href={`/login?redirect=/impact/${id}`}>
-                  <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700'>
-                    <LogIn className='h-5 w-5' />
-                    Sign In to Join
-                  </a>
-                </Link>
+              {originalMoment.createdBy !== user?.id && (
+                <>
+                  {user ? (
+                    <Link href={`/impact/${id}`}>
+                      <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700'>
+                        Join This Action
+                        <ArrowLeft className='h-4 w-4 rotate-180' />
+                      </a>
+                    </Link>
+                  ) : (
+                    <Link href={`/login?redirect=/impact/${id}`}>
+                      <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700'>
+                        <LogIn className='h-5 w-5' />
+                        Sign In to Join
+                      </a>
+                    </Link>
+                  )}
+                </>
               )}
             </div>
           )}
