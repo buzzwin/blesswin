@@ -61,6 +61,12 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
+    href: '/story-bookmarks',
+    linkName: 'Bookmarks',
+    iconName: 'bookmark',
+    disabled: false
+  },
+  {
     href: '/rituals',
     linkName: 'Rituals',
     iconName: 'calendar',

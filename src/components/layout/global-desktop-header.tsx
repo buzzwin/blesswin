@@ -9,7 +9,8 @@ import {
   LogOut,
   BookOpen,
   Heart,
-  Calendar
+  Calendar,
+  Bookmark
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import LogoIcon from '@components/ui/logo';
@@ -82,6 +83,14 @@ export function GlobalDesktopHeader(): JSX.Element {
               <span className='hidden sm:inline'>Stories</span>
             </a>
           </Link>
+          {user && (
+            <Link href='/story-bookmarks'>
+              <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
+                <Bookmark className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+                <span className='hidden sm:inline'>Bookmarks</span>
+              </a>
+            </Link>
+          )}
           <Link href='/rituals'>
             <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
               <Calendar className='h-3.5 w-3.5 sm:h-4 sm:w-4' />

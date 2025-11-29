@@ -5,8 +5,7 @@ import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { getImagesData } from '@lib/validation';
 import { UserAvatar } from '@components/user/user-avatar';
-import { addDoc, serverTimestamp } from 'firebase/firestore';
-import { impactMomentsCollection } from '@lib/firebase/collections';
+// Removed direct Firestore import - now using API endpoint
 import { 
   impactTagLabels, 
   impactTagColors, 
@@ -33,18 +32,28 @@ interface ImpactMomentInputProps {
   onSuccess?: () => void;
   onCancel?: () => void;
   defaultExpanded?: boolean;
+  initialText?: string;
+  initialTags?: ImpactTag[];
+  initialEffortLevel?: EffortLevel;
+  storyId?: string;
+  storyTitle?: string;
 }
 
 export function ImpactMomentInput({
   onSuccess,
   onCancel,
-  defaultExpanded = false
+  defaultExpanded = false,
+  initialText = '',
+  initialTags = [],
+  initialEffortLevel,
+  storyId,
+  storyTitle
 }: ImpactMomentInputProps): JSX.Element {
   const { user } = useAuth();
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
-  const [text, setText] = useState('');
-  const [selectedTags, setSelectedTags] = useState<ImpactTag[]>([]);
-  const [effortLevel, setEffortLevel] = useState<EffortLevel | null>(null);
+  const [text, setText] = useState(initialText);
+  const [selectedTags, setSelectedTags] = useState<ImpactTag[]>(initialTags);
+  const [effortLevel, setEffortLevel] = useState<EffortLevel | null>(initialEffortLevel || null);
   const [moodBefore, setMoodBefore] = useState<number | null>(null);
   const [moodAfter, setMoodAfter] = useState<number | null>(null);
   const [selectedImages, setSelectedImages] = useState<FilesWithId>([]);
@@ -326,35 +335,38 @@ export function ImpactMomentInput({
       // TODO: Implement image upload to Firebase Storage
       // For now, we'll store the file references
 
-      const impactMomentData: Omit<ImpactMoment, 'id'> = {
-        text: text.trim(),
-        tags: selectedTags,
-        effortLevel,
-        moodCheckIn: moodBefore !== null && moodAfter !== null 
-          ? { before: moodBefore, after: moodAfter }
-          : undefined,
-        images: imageUrls.length > 0 ? imageUrls : undefined,
-        createdBy: user?.id ?? '',
-        createdAt: new Date(),
-        ripples: {
-          inspired: [],
-          grateful: [],
-          joined_you: [],
-          sent_love: []
-        },
-        rippleCount: 0
-      };
-
       if (!user?.id) {
         toast.error('Please sign in to share impact moments');
         return;
       }
 
-      // Write directly to Firestore so security rules are enforced
-      await addDoc(impactMomentsCollection, {
-        ...impactMomentData,
-        createdAt: serverTimestamp()
-      } as any);
+      // Use API endpoint to create impact moment (supports story tracking and karma)
+      const response = await fetch('/api/impact-moments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          text: text.trim(),
+          tags: selectedTags,
+          effortLevel,
+          moodCheckIn: moodBefore !== null && moodAfter !== null 
+            ? { before: moodBefore, after: moodAfter }
+            : undefined,
+          images: imageUrls.length > 0 ? imageUrls : undefined,
+          userId: user.id,
+          ...(storyId && storyTitle ? {
+            fromRealStory: true,
+            storyId: storyId,
+            storyTitle: storyTitle
+          } : {})
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to create impact moment');
+      }
 
       // Reset form
       setText('');

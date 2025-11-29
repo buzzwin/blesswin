@@ -3,6 +3,7 @@ import { userConverter } from '@lib/types/user';
 import { tweetConverter } from '@lib/types/tweet';
 import { bookmarkConverter, watchlistConverter } from '@lib/types/bookmark';
 import { statsConverter } from '@lib/types/stats';
+import { storyBookmarkConverter, storyCollectionConverter } from '@lib/types/story-bookmark';
 import { db } from './app';
 import type { CollectionReference, DocumentReference } from 'firebase/firestore';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -14,6 +15,7 @@ import { commentConverter } from '@lib/types/comment';
 import type { Comment } from '@lib/types/comment';
 import { ritualDefinitionConverter, userRitualStateConverter, ritualCompletionConverter } from '@lib/types/ritual';
 import type { RitualDefinition, UserRitualState, RitualCompletion } from '@lib/types/ritual';
+import type { StoryBookmark, StoryCollection } from '@lib/types/story-bookmark';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -60,3 +62,12 @@ export function ritualCompletionsCollection(userId: string): CollectionReference
 }
 
 export const realStoriesCacheCollection = collection(db, 'real_stories_cache');
+export const storyReactionsCollection = collection(db, 'story_reactions');
+
+export function userStoryBookmarksCollection(userId: string): CollectionReference<StoryBookmark> {
+  return collection(db, `users/${userId}/story_bookmarks`).withConverter(storyBookmarkConverter);
+}
+
+export function userStoryCollectionsCollection(userId: string): CollectionReference<StoryCollection> {
+  return collection(db, `users/${userId}/story_collections`).withConverter(storyCollectionConverter);
+}

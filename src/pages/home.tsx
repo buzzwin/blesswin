@@ -13,6 +13,7 @@ import { RitualsBanner } from '@components/rituals/rituals-banner';
 import { RitualStatsWidget } from '@components/rituals/ritual-stats-widget';
 import { RitualSettings } from '@components/rituals/ritual-settings';
 import { UserKarmaDisplay } from '@components/user/user-karma-display';
+import { StoryFeedCard } from '@components/stories/story-feed-card';
 import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
@@ -25,6 +26,7 @@ import { toast } from 'react-hot-toast';
 import { useModal } from '@lib/hooks/useModal';
 import type { ImpactMomentWithUser, RippleType, ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 import type { RitualDefinition, RitualStats } from '@lib/types/ritual';
+import type { RealStory } from '@lib/types/real-story';
 import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
@@ -43,6 +45,8 @@ export default function HomeFeed(): JSX.Element {
     karmaPoints: number;
     karmaBreakdown: typeof DEFAULT_KARMA_BREAKDOWN;
   } | null>(null);
+  const [featuredStories, setFeaturedStories] = useState<RealStory[]>([]);
+  const [storiesLoading, setStoriesLoading] = useState(false);
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -107,7 +111,27 @@ export default function HomeFeed(): JSX.Element {
 
   useEffect(() => {
     void fetchMoments();
+    void fetchFeaturedStories();
   }, []);
+
+  // Fetch featured stories for feed
+  const fetchFeaturedStories = async (): Promise<void> => {
+    try {
+      setStoriesLoading(true);
+      const response = await fetch('/api/real-stories');
+      if (response.ok) {
+        const data = await response.json();
+        if (data.stories && Array.isArray(data.stories)) {
+          // Take top 2-3 stories to feature in feed
+          setFeaturedStories(data.stories.slice(0, 3));
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching featured stories:', error);
+    } finally {
+      setStoriesLoading(false);
+    }
+  };
 
   // Fetch user karma
   useEffect(() => {
@@ -478,7 +502,7 @@ export default function HomeFeed(): JSX.Element {
       <section>
         {loading ? (
           <Loading className='mt-5' />
-        ) : moments.length === 0 ? (
+        ) : moments.length === 0 && featuredStories.length === 0 ? (
           <StatsEmpty
             title='Welcome to the Impact Feed!'
             description="Be the first to share an Impact Moment! Share a small good deed you did today - whether it's cooking a healthy meal, picking up trash, or calling an old friend."
@@ -489,13 +513,49 @@ export default function HomeFeed(): JSX.Element {
           />
         ) : (
           <AnimatePresence mode='popLayout'>
-            {moments.map((moment) => (
-              <ImpactMomentCard
-                key={moment.id}
-                moment={moment}
-                onRipple={handleRipple}
-              />
-            ))}
+            {(() => {
+              // Interleave stories with moments: show 1 story after every 3-4 moments
+              const feedItems: Array<{ type: 'moment' | 'story'; data: ImpactMomentWithUser | RealStory; index: number }> = [];
+              let storyIndex = 0;
+              
+              moments.forEach((moment, momentIndex) => {
+                // Add moment
+                feedItems.push({ type: 'moment', data: moment, index: momentIndex });
+                
+                // Add a story after every 3 moments (at positions 3, 7, 11, etc.)
+                if ((momentIndex + 1) % 4 === 0 && storyIndex < featuredStories.length) {
+                  feedItems.push({ type: 'story', data: featuredStories[storyIndex], index: storyIndex });
+                  storyIndex++;
+                }
+              });
+              
+              // Add remaining stories at the end if any
+              while (storyIndex < featuredStories.length) {
+                feedItems.push({ type: 'story', data: featuredStories[storyIndex], index: storyIndex });
+                storyIndex++;
+              }
+              
+              return feedItems.map((item, idx) => {
+                if (item.type === 'story') {
+                  return (
+                    <StoryFeedCard
+                      key={`story-${item.index}`}
+                      story={item.data as RealStory}
+                      index={item.index}
+                    />
+                  );
+                } else {
+                  const moment = item.data as ImpactMomentWithUser;
+                  return (
+                    <ImpactMomentCard
+                      key={moment.id || `moment-${idx}`}
+                      moment={moment}
+                      onRipple={handleRipple}
+                    />
+                  );
+                }
+              });
+            })()}
           </AnimatePresence>
         )}
       </section>

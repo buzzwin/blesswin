@@ -18,6 +18,9 @@ interface CreateImpactMomentRequest {
   fromDailyRitual?: boolean;
   ritualId?: string;
   ritualTitle?: string;
+  fromRealStory?: boolean;
+  storyId?: string;
+  storyTitle?: string;
 }
 
 export default async function handler(
@@ -31,7 +34,7 @@ export default async function handler(
   }
 
   try {
-    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, fromDailyRitual, ritualId, ritualTitle } = req.body as CreateImpactMomentRequest;
+    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle } = req.body as CreateImpactMomentRequest;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized. User ID required.' });
@@ -100,6 +103,17 @@ export default async function handler(
     if (ritualTitle !== undefined) {
       impactMomentData.ritualTitle = ritualTitle;
     }
+    
+    // Add story-related fields if provided
+    if (fromRealStory !== undefined) {
+      impactMomentData.fromRealStory = fromRealStory;
+    }
+    if (storyId !== undefined) {
+      impactMomentData.storyId = storyId;
+    }
+    if (storyTitle !== undefined) {
+      impactMomentData.storyTitle = storyTitle;
+    }
 
     // Only include optional fields if they have values
     if (moodCheckIn) {
@@ -117,6 +131,7 @@ export default async function handler(
     // Award karma for creating impact moment
     try {
       // Determine which karma action to award
+      // Story-inspired moments get bonus karma (same as ritual-inspired)
       let karmaAction: 'impact_moment_created' | 'impact_moment_with_mood' | 'impact_moment_from_ritual';
       
       if (fromDailyRitual && ritualId) {
@@ -125,6 +140,11 @@ export default async function handler(
         karmaAction = 'impact_moment_with_mood';
       } else {
         karmaAction = 'impact_moment_created';
+      }
+      
+      // Award bonus karma for story-inspired moments (same as ritual bonus)
+      if (fromRealStory && storyId) {
+        karmaAction = 'impact_moment_from_ritual'; // Use same bonus as ritual-inspired
       }
 
       await awardKarma(userId, karmaAction);
