@@ -16,9 +16,11 @@ import {
   type ImpactMomentWithUser,
   type RippleType
 } from '@lib/types/impact-moment';
-import { MessageCircle, Share2, Sparkles, ArrowRight } from 'lucide-react';
+import { MessageCircle, Share2, Sparkles, ArrowRight, Edit2, Trash2 } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
+import { EditMomentModal } from './edit-moment-modal';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -27,9 +29,13 @@ interface ImpactMomentCardProps {
 }
 
 export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): JSX.Element {
+  const { user } = useAuth();
   const [rippleMenuOpen, setRippleMenuOpen] = useState(false);
   const [originalMoment, setOriginalMoment] = useState<ImpactMomentWithUser | null>(null);
   const [loadingOriginal, setLoadingOriginal] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const isOwner = user?.id === moment.createdBy;
 
   // Fetch original moment if this is a joined moment
   useEffect(() => {
@@ -331,9 +337,78 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
               <Share2 className='h-5 w-5' />
               <span className='text-sm font-medium'>Share</span>
             </button>
+
+            {/* Edit & Delete Buttons (Owner Only) */}
+            {isOwner && (
+              <>
+                <button
+                  onClick={() => setEditModalOpen(true)}
+                  className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'
+                >
+                  <Edit2 className='h-5 w-5' />
+                  <span className='text-sm font-medium'>Edit</span>
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!window.confirm('Are you sure you want to delete this impact moment? This action cannot be undone.')) {
+                      return;
+                    }
+
+                    if (!user?.id || !moment.id) {
+                      toast.error('Unable to delete moment');
+                      return;
+                    }
+
+                    setDeleting(true);
+                    try {
+                      const response = await fetch(`/api/impact-moments/${moment.id}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: user.id })
+                      });
+
+                      const data = await response.json();
+
+                      if (response.ok) {
+                        toast.success('Impact moment deleted successfully');
+                        // Reload the page to refresh the feed
+                        if (typeof window !== 'undefined') {
+                          window.location.reload();
+                        }
+                      } else {
+                        throw new Error(data.error || 'Failed to delete impact moment');
+                      }
+                    } catch (error) {
+                      console.error('Error deleting impact moment:', error);
+                      toast.error(error instanceof Error ? error.message : 'Failed to delete impact moment');
+                    } finally {
+                      setDeleting(false);
+                    }
+                  }}
+                  disabled={deleting}
+                  className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-red-100 hover:text-red-600 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400'
+                >
+                  <Trash2 className='h-5 w-5' />
+                  <span className='text-sm font-medium'>{deleting ? 'Deleting...' : 'Delete'}</span>
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Edit Modal */}
+      <EditMomentModal
+        moment={moment}
+        open={editModalOpen}
+        closeModal={() => setEditModalOpen(false)}
+        onSuccess={() => {
+          // Reload the page to refresh the feed
+          if (typeof window !== 'undefined') {
+            window.location.reload();
+          }
+        }}
+      />
     </article>
   );
 }

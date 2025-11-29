@@ -9,13 +9,14 @@ import { RitualCard } from '@components/rituals/ritual-card';
 import { RitualsOnboarding } from '@components/rituals/rituals-onboarding';
 import { RitualCompleteModal } from '@components/rituals/ritual-complete-modal';
 import { RitualSettings } from '@components/rituals/ritual-settings';
+import { RitualFormModal } from '@components/rituals/ritual-form-modal';
 import { StreakVisualization } from '@components/rituals/streak-visualization';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import { useModal } from '@lib/hooks/useModal';
 import { toast } from 'react-hot-toast';
-import { Flame, Settings, Calendar } from 'lucide-react';
+import { Flame, Settings, Calendar, Plus, Edit2 } from 'lucide-react';
 import Link from 'next/link';
 import type { RitualDefinition, TodayRituals, RitualStats, RitualCompletion } from '@lib/types/ritual';
 import type { ImpactTag } from '@lib/types/impact-moment';
@@ -32,7 +33,9 @@ export default function RitualsPage(): JSX.Element {
   const [completingRitualId, setCompletingRitualId] = useState<string | null>(null);
   const { open: completeModalOpen, openModal: openCompleteModal, closeModal: closeCompleteModal } = useModal();
   const { open: settingsModalOpen, openModal: openSettingsModal, closeModal: closeSettingsModal } = useModal();
+  const { open: ritualFormModalOpen, openModal: openRitualFormModal, closeModal: closeRitualFormModal } = useModal();
   const [selectedRitual, setSelectedRitual] = useState<RitualDefinition | null>(null);
+  const [editingRitual, setEditingRitual] = useState<RitualDefinition | null>(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [ritualsEnabled, setRitualsEnabled] = useState(false);
 
@@ -435,9 +438,21 @@ export default function RitualsPage(): JSX.Element {
         <div className='space-y-6 px-4 py-6'>
           {/* Today's Rituals Section */}
           <div>
-            <h3 className='mb-4 text-lg font-semibold text-gray-900 dark:text-white'>
-              Today's Rituals
-            </h3>
+            <div className='mb-4 flex items-center justify-between'>
+              <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+                Today's Rituals
+              </h3>
+              <button
+                onClick={() => {
+                  setEditingRitual(null);
+                  openRitualFormModal();
+                }}
+                className='flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'
+              >
+                <Plus className='h-4 w-4' />
+                New Ritual
+              </button>
+            </div>
             <div className='space-y-4'>
               {/* Global Ritual */}
               {todayRituals.globalRitual && (
@@ -452,17 +467,35 @@ export default function RitualsPage(): JSX.Element {
               )}
 
               {/* Personalized Rituals */}
-              {todayRituals.personalizedRituals.map((ritual) => (
-                <RitualCard
-                  key={ritual.id}
-                  ritual={ritual}
-                  isGlobal={false}
-                  completed={ritual.completed || false}
-                  onCompleteQuietly={() => handleCompleteQuietly(ritual.id || '')}
-                  onCompleteAndShare={() => handleCompleteAndShare(ritual)}
-                  loading={completingRitualId === ritual.id}
-                />
-              ))}
+              {todayRituals.personalizedRituals.map((ritual) => {
+                // Check if this is a custom ritual (has createdBy field matching current user)
+                const isCustomRitual = (ritual as any).createdBy === user?.id;
+                
+                return (
+                  <div key={ritual.id} className='relative'>
+                    <RitualCard
+                      ritual={ritual}
+                      isGlobal={false}
+                      completed={ritual.completed || false}
+                      onCompleteQuietly={() => handleCompleteQuietly(ritual.id || '')}
+                      onCompleteAndShare={() => handleCompleteAndShare(ritual)}
+                      loading={completingRitualId === ritual.id}
+                    />
+                    {isCustomRitual && (
+                      <button
+                        onClick={() => {
+                          setEditingRitual(ritual);
+                          openRitualFormModal();
+                        }}
+                        className='absolute right-4 top-4 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+                        aria-label='Edit ritual'
+                      >
+                        <Edit2 className='h-4 w-4' />
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
 
@@ -655,6 +688,30 @@ export default function RitualsPage(): JSX.Element {
       <RitualSettings
         open={settingsModalOpen}
         closeModal={closeSettingsModal}
+      />
+
+      {/* Ritual Form Modal */}
+      <RitualFormModal
+        open={ritualFormModalOpen}
+        closeModal={() => {
+          closeRitualFormModal();
+          setEditingRitual(null);
+        }}
+        ritual={editingRitual || undefined}
+        onSuccess={async () => {
+          // Refresh rituals after create/update
+          if (user?.id) {
+            try {
+              const response = await fetch(`/api/rituals/today?userId=${user.id}`);
+              if (response.ok) {
+                const data = await response.json();
+                setTodayRituals(data.rituals);
+              }
+            } catch (error) {
+              console.error('Error refreshing rituals:', error);
+            }
+          }
+        }}
       />
     </MainContainer>
   );

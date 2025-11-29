@@ -5,11 +5,9 @@ import { ArrowLeft, ExternalLink, Calendar, MapPin, Loader2, Sparkles } from 'lu
 import { SEO } from '@components/common/seo';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
-import { StoryReactions } from '@components/stories/story-reactions';
+import { StoryActionFlow } from '@components/stories/story-action-flow';
 import { StoryBookmarkButton } from '@components/stories/story-bookmark-button';
 import { StoryShareButton } from '@components/stories/story-share-button';
-import { StoryInspirationModal } from '@components/stories/story-inspiration-modal';
-import { useModal } from '@lib/hooks/useModal';
 import { siteURL } from '@lib/env';
 import Head from 'next/head';
 import type { RealStory } from '@lib/types/real-story';
@@ -69,8 +67,6 @@ export default function StoryPage(): JSX.Element {
   const [story, setStory] = useState<RealStory | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const { open: inspirationModalOpen, openModal: openInspirationModal, closeModal: closeInspirationModal } = useModal();
-  const [selectedStory, setSelectedStory] = useState<RealStory | null>(null);
 
   useEffect(() => {
     async function fetchStory() {
@@ -243,22 +239,9 @@ export default function StoryPage(): JSX.Element {
 
             {/* Action Buttons */}
             <div className='mb-6 flex flex-wrap items-center gap-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
-              <StoryReactions
-                storyId={story.title}
-                storyTitle={story.title}
-              />
+              <StoryActionFlow story={story} />
               <StoryBookmarkButton story={story} />
               <StoryShareButton story={story} />
-              <button
-                onClick={() => {
-                  setSelectedStory(story);
-                  openInspirationModal();
-                }}
-                className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-base font-semibold text-white transition-all hover:from-purple-700 hover:to-pink-700 hover:shadow-lg'
-              >
-                <Sparkles className='h-5 w-5' />
-                Get Inspired
-              </button>
               {hasValidUrl && (
                 <a
                   href={story.url}
@@ -275,20 +258,6 @@ export default function StoryPage(): JSX.Element {
         </div>
       </SectionShell>
 
-      {/* Story Inspiration Modal */}
-      {selectedStory && (
-        <StoryInspirationModal
-          story={selectedStory}
-          open={inspirationModalOpen}
-          closeModal={() => {
-            closeInspirationModal();
-            setSelectedStory(null);
-          }}
-          onSuccess={() => {
-            // Optionally refresh or show success message
-          }}
-        />
-      )}
     </HomeLayout>
   );
 }

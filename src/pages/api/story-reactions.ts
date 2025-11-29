@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { doc, getDoc, setDoc, updateDoc, arrayUnion, arrayRemove, serverTimestamp } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { storyReactionsCollection } from '@lib/firebase/collections';
 import { awardKarma } from '@lib/utils/karma-calculator';
 import type { StoryReactionType } from '@lib/types/story-reaction';
@@ -46,7 +46,7 @@ export default async function handler(
       return;
     }
 
-    const validReactionTypes: StoryReactionType[] = ['inspired', 'want_to_try', 'sharing', 'matters_to_me'];
+    const validReactionTypes: StoryReactionType[] = ['inspired', 'matters_to_me'];
     if (!reactionType || !validReactionTypes.includes(reactionType)) {
       res.status(400).json({ success: false, error: 'Valid reaction type is required' });
       return;
@@ -58,8 +58,6 @@ export default async function handler(
 
     let currentReactions: {
       inspired: string[];
-      want_to_try: string[];
-      sharing: string[];
       matters_to_me: string[];
       reactionCount: number;
     };
@@ -68,8 +66,6 @@ export default async function handler(
       const data = reactionDoc.data();
       currentReactions = {
         inspired: data.inspired || [],
-        want_to_try: data.want_to_try || [],
-        sharing: data.sharing || [],
         matters_to_me: data.matters_to_me || [],
         reactionCount: data.reactionCount || 0
       };
@@ -77,8 +73,6 @@ export default async function handler(
       // Initialize new reaction document
       currentReactions = {
         inspired: [],
-        want_to_try: [],
-        sharing: [],
         matters_to_me: [],
         reactionCount: 0
       };
@@ -89,7 +83,7 @@ export default async function handler(
     const hasReacted = currentReactionUsers.includes(userId);
 
     // Check if user has reacted with a different type
-    const allReactionTypes: StoryReactionType[] = ['inspired', 'want_to_try', 'sharing', 'matters_to_me'];
+    const allReactionTypes: StoryReactionType[] = ['inspired', 'matters_to_me'];
     let wasReactedElsewhere = false;
     for (const type of allReactionTypes) {
       if (type !== reactionType && currentReactions[type]?.includes(userId)) {

@@ -41,9 +41,8 @@ export default async function handler(
       res.status(200).json({
         success: true,
         reactions: {
+          storyId: storyId,
           inspired: [],
-          want_to_try: [],
-          sharing: [],
           matters_to_me: [],
           reactionCount: 0
         }
@@ -53,11 +52,12 @@ export default async function handler(
 
     const data = reactionDoc.data();
     const reactions: StoryReactions = {
+      storyId: data.storyId || storyId,
       inspired: data.inspired || [],
-      want_to_try: data.want_to_try || [],
-      sharing: data.sharing || [],
       matters_to_me: data.matters_to_me || [],
-      reactionCount: data.reactionCount || 0
+      reactionCount: data.reactionCount || 0,
+      createdAt: data.createdAt,
+      updatedAt: data.updatedAt
     };
 
     res.status(200).json({

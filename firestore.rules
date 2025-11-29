@@ -169,12 +169,15 @@ service cloud.firestore {
         && request.resource.data.effortLevel in ['tiny', 'medium', 'deep']
         && request.resource.data.ripples is map
         && request.resource.data.rippleCount is int);
-      allow update: if isSignedIn() && (
+      // Allow update when auth is null (server-side API) OR when user is the owner
+      // Also allow updating ripples, rippleCount, and joinedByUsers for ripple reactions
+      allow update: if request.auth == null || (isSignedIn() && (
         resource.data.createdBy == request.auth.uid ||
         // Allow updating ripples, rippleCount, and joinedByUsers
         request.resource.data.diff(resource.data).affectedKeys().hasOnly(['ripples', 'rippleCount', 'joinedByUsers'])
-      );
-      allow delete: if isSignedIn() && resource.data.createdBy == request.auth.uid;
+      ));
+      // Allow delete when auth is null (server-side API) OR when user is the owner
+      allow delete: if request.auth == null || (isSignedIn() && resource.data.createdBy == request.auth.uid);
 
       // Comments subcollection
       match /comments/{commentId} {
@@ -218,6 +221,14 @@ service cloud.firestore {
         && request.auth.uid == userId 
         && stateId == userId);
       allow delete: if false; // Don't allow deletion, only updates
+    }
+
+    // User custom rituals subcollection
+    match /users/{userId}/custom_rituals/{ritualId} {
+      allow read: if (isSignedIn() && request.auth.uid == userId) || request.auth == null;
+      allow create: if request.auth == null || (isSignedIn() && request.auth.uid == userId);
+      allow update: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.createdBy == request.auth.uid);
+      allow delete: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.createdBy == request.auth.uid);
     }
 
     // User ritual completions subcollection

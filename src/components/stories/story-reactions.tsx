@@ -31,9 +31,8 @@ interface StoryReactionsProps {
 export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryReactionsProps): JSX.Element {
   const { user } = useAuth();
   const [reactions, setReactions] = useState<StoryReactions>({
+    storyId: storyId,
     inspired: [],
-    want_to_try: [],
-    sharing: [],
     matters_to_me: [],
     reactionCount: 0
   });
@@ -50,11 +49,15 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
       try {
         const response = await fetch(`/api/story-reactions/${encodeURIComponent(storyId)}`);
         if (response.ok) {
-          const data = await response.json();
-          if (data.success && data.reactions) {
-            setReactions(data.reactions);
-            onReactionChange?.(data.reactions);
-          }
+        const data = await response.json();
+        if (data.success && data.reactions) {
+          const reactionsData: StoryReactions = {
+            ...data.reactions,
+            storyId: data.reactions.storyId || storyId
+          };
+          setReactions(reactionsData);
+          onReactionChange?.(reactionsData);
+        }
         }
       } catch (error) {
         console.error('Error fetching story reactions:', error);
@@ -108,7 +111,7 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
         toast.success(`Removed ${storyReactionLabels[reactionType]}`);
       } else {
         // Remove from other reaction types if user switched
-        const allReactionTypes: StoryReactionType[] = ['inspired', 'want_to_try', 'sharing', 'matters_to_me'];
+        const allReactionTypes: StoryReactionType[] = ['inspired', 'matters_to_me'];
         let wasReactedElsewhere = false;
         for (const type of allReactionTypes) {
           if (type !== reactionType && updatedReactions[type].includes(user.id)) {
@@ -135,9 +138,9 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
     }
   };
 
-  const getUserReaction = (): StoryReactionType | null => {
-    if (!user?.id) return null;
-    const allReactionTypes: StoryReactionType[] = ['inspired', 'want_to_try', 'sharing', 'matters_to_me'];
+    const getUserReaction = (): StoryReactionType | null => {
+      if (!user?.id) return null;
+      const allReactionTypes: StoryReactionType[] = ['inspired', 'matters_to_me'];
     for (const type of allReactionTypes) {
       if (reactions[type].includes(user.id)) {
         return type;
@@ -192,7 +195,7 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
           className='absolute left-0 top-full z-10 mt-2 w-56 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'
         >
           <div className='p-2'>
-            {(['inspired', 'want_to_try', 'sharing', 'matters_to_me'] as StoryReactionType[]).map(
+            {(['inspired', 'matters_to_me'] as StoryReactionType[]).map(
               (reactionType) => {
                 const isActive = reactions[reactionType].includes(user?.id || '');
                 return (

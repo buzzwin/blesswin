@@ -5,11 +5,9 @@ import { ArrowLeft, ExternalLink, Calendar, MapPin, Loader2, Sparkles, Bookmark 
 import { SEO } from '@components/common/seo';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
-import { StoryInspirationModal } from '@components/stories/story-inspiration-modal';
-import { StoryReactions } from '@components/stories/story-reactions';
+import { StoryActionFlow } from '@components/stories/story-action-flow';
 import { StoryBookmarkButton } from '@components/stories/story-bookmark-button';
 import { StoryShareButton } from '@components/stories/story-share-button';
-import { useModal } from '@lib/hooks/useModal';
 import { useAuth } from '@lib/context/auth-context';
 import { query, getDocs, orderBy } from 'firebase/firestore';
 import { userStoryBookmarksCollection } from '@lib/firebase/collections';
@@ -47,8 +45,6 @@ export default function RealStoriesPage(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'my'>('all');
-  const { open: inspirationModalOpen, openModal: openInspirationModal, closeModal: closeInspirationModal } = useModal();
-  const [selectedStory, setSelectedStory] = useState<RealStory | null>(null);
 
   // Fetch all stories
   useEffect(() => {
@@ -371,28 +367,14 @@ export default function RealStoriesPage(): JSX.Element {
                       </>
                     )}
 
-                    {/* Action Buttons - Separate from clickable content */}
+                    {/* Action Buttons */}
                     <div 
                       className='mt-4 flex flex-wrap items-center gap-3'
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <StoryReactions
-                        storyId={story.title}
-                        storyTitle={story.title}
-                      />
+                      <StoryActionFlow story={story} />
                       <StoryBookmarkButton story={story} />
                       <StoryShareButton story={story} />
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setSelectedStory(story);
-                          openInspirationModal();
-                        }}
-                        className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 text-base font-semibold text-white transition-all hover:from-purple-700 hover:to-pink-700 hover:shadow-lg'
-                      >
-                        <Sparkles className='h-5 w-5' />
-                        Get Inspired
-                      </button>
                       {hasValidUrl && (
                         <a
                           href={story.url}
@@ -414,20 +396,6 @@ export default function RealStoriesPage(): JSX.Element {
         </div>
       </SectionShell>
 
-      {/* Story Inspiration Modal */}
-      {selectedStory && (
-        <StoryInspirationModal
-          story={selectedStory}
-          open={inspirationModalOpen}
-          closeModal={() => {
-            closeInspirationModal();
-            setSelectedStory(null);
-          }}
-          onSuccess={() => {
-            // Optionally refresh or show success message
-          }}
-        />
-      )}
     </HomeLayout>
   );
 }

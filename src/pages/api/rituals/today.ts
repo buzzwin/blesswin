@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getDoc, query, where, getDocs, setDoc, serverTimestamp, doc } from 'firebase/firestore';
+import { getDoc, query, where, getDocs, setDoc, serverTimestamp, doc, collection } from 'firebase/firestore';
 import { ritualsCollection, userRitualStateDoc, impactMomentsCollection, ritualCompletionsCollection } from '@lib/firebase/collections';
+import { db } from '@lib/firebase/app';
 import { getGlobalRituals, getPersonalizedRitualsByTag } from '@lib/data/ritual-definitions';
 import type { RitualDefinition, TodayRituals } from '@lib/types/ritual';
 import type { ImpactTag } from '@lib/types/impact-moment';
@@ -196,6 +197,14 @@ export default async function handler(
     // Get today's rituals
     const globalRitual = await getTodaysGlobalRitual();
     const personalizedRituals = await getPersonalizedRituals(userId);
+    
+    // Get user's custom rituals
+    const customRitualsCollection = collection(db, 'users', userId, 'custom_rituals');
+    const customRitualsSnapshot = await getDocs(customRitualsCollection);
+    const customRituals: RitualDefinition[] = customRitualsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      ...doc.data()
+    } as RitualDefinition));
 
     // Debug logging
     console.log('[Rituals API]', {
@@ -217,13 +226,16 @@ export default async function handler(
       todayCompletionsSnapshot.docs.map(doc => doc.data().ritualId)
     );
 
+    // Combine personalized and custom rituals
+    const allPersonalizedRituals = [...personalizedRituals, ...customRituals];
+
     // Mark rituals as completed if they were completed today
     const todayRituals: TodayRituals = {
       globalRitual: globalRitual ? {
         ...globalRitual,
         completed: completedRitualIds.has(globalRitual.id || '')
       } : null,
-      personalizedRituals: personalizedRituals.map(ritual => ({
+      personalizedRituals: allPersonalizedRituals.map(ritual => ({
         ...ritual,
         completed: completedRitualIds.has(ritual.id || '')
       })),

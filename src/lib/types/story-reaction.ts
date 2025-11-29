@@ -1,4 +1,4 @@
-export type StoryReactionType = 'inspired' | 'want_to_try' | 'sharing' | 'matters_to_me';
+export type StoryReactionType = 'inspired' | 'matters_to_me';
 
 export interface StoryReaction {
   storyId: string; // Story identifier (title or hash)
@@ -8,31 +8,26 @@ export interface StoryReaction {
 }
 
 export interface StoryReactions {
-  inspired: string[]; // user IDs
-  want_to_try: string[];
-  sharing: string[];
-  matters_to_me: string[];
-  reactionCount: number;
+  storyId: string; // Identifier for the story (e.g., title)
+  inspired: string[]; // Array of user IDs who reacted 'inspired'
+  matters_to_me: string[]; // Array of user IDs who reacted 'matters_to_me'
+  reactionCount: number; // Total count of unique reactions
+  createdAt?: Date | FirebaseFirestore.Timestamp;
+  updatedAt?: Date | FirebaseFirestore.Timestamp;
 }
 
 export const storyReactionLabels: Record<StoryReactionType, string> = {
   inspired: 'Inspired by this story',
-  want_to_try: 'Want to try this',
-  sharing: 'Sharing with my community',
   matters_to_me: 'This matters to me'
 };
 
 export const storyReactionIcons: Record<StoryReactionType, string> = {
   inspired: '✨',
-  want_to_try: '🎯',
-  sharing: '📢',
   matters_to_me: '💚'
 };
 
 export const storyReactionColors: Record<StoryReactionType, string> = {
   inspired: 'text-purple-600 dark:text-purple-400',
-  want_to_try: 'text-blue-600 dark:text-blue-400',
-  sharing: 'text-green-600 dark:text-green-400',
   matters_to_me: 'text-pink-600 dark:text-pink-400'
 };
 

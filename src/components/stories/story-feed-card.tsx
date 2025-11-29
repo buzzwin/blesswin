@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import { ExternalLink, Calendar, MapPin, Sparkles } from 'lucide-react';
-import { StoryReactions } from './story-reactions';
-import { StoryInspirationModal } from './story-inspiration-modal';
+import { StoryActionFlow } from './story-action-flow';
 import { StoryBookmarkButton } from './story-bookmark-button';
 import { StoryShareButton } from './story-share-button';
-import { useModal } from '@lib/hooks/useModal';
 import type { RealStory } from '@lib/types/real-story';
 
 interface StoryFeedCardProps {
@@ -64,8 +62,6 @@ const isValidUrl = (url?: string): boolean => {
 
 export function StoryFeedCard({ story, index }: StoryFeedCardProps): JSX.Element {
   const router = useRouter();
-  const { open: inspirationModalOpen, openModal: openInspirationModal, closeModal: closeInspirationModal } = useModal();
-  const [selectedStory, setSelectedStory] = useState<RealStory | null>(null);
   
   const hasValidUrl = isValidUrl(story.url);
   const categoryColor = categoryColors[story.category] || categoryColors.community;
@@ -138,23 +134,9 @@ export function StoryFeedCard({ story, index }: StoryFeedCardProps): JSX.Element
             className='flex flex-wrap items-center gap-2'
             onClick={(e) => e.stopPropagation()}
           >
-            <StoryReactions
-              storyId={story.title}
-              storyTitle={story.title}
-            />
+            <StoryActionFlow story={story} />
             <StoryBookmarkButton story={story} />
             <StoryShareButton story={story} />
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setSelectedStory(story);
-                openInspirationModal();
-              }}
-              className='inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-all hover:from-purple-700 hover:to-pink-700 hover:shadow-lg'
-            >
-              <Sparkles className='h-4 w-4' />
-              Get Inspired
-            </button>
             {hasValidUrl && (
               <a
                 href={story.url}
@@ -170,21 +152,6 @@ export function StoryFeedCard({ story, index }: StoryFeedCardProps): JSX.Element
           </div>
         </div>
       </article>
-
-      {/* Story Inspiration Modal */}
-      {selectedStory && (
-        <StoryInspirationModal
-          story={selectedStory}
-          open={inspirationModalOpen}
-          closeModal={() => {
-            closeInspirationModal();
-            setSelectedStory(null);
-          }}
-          onSuccess={() => {
-            // Optionally refresh feed
-          }}
-        />
-      )}
     </>
   );
 }
