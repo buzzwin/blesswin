@@ -212,6 +212,82 @@ export default function Home(): JSX.Element {
       {/* Daily Rituals Section */}
       <DailyRitualsSection user={user} onSignIn={handleSignIn} />
 
+      {/* Wellness AI Pals Section */}
+      <SectionShell variant='dark'>
+        <div className='mx-auto w-full max-w-6xl px-6'>
+          <div className='mb-12 text-center'>
+            <h2 className='mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl'>
+              Your Wellness Journey
+            </h2>
+            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
+              Personalized AI companions to guide you through yoga, meditation, and harmony practices.
+            </p>
+          </div>
+
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
+            {/* Yoga Card */}
+            <button
+              onClick={() => void router.push('/yoga')}
+              className='group rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-green-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
+            >
+              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg'>
+                <span className='text-3xl'>🧘</span>
+              </div>
+              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
+                Yoga AI Pal
+              </h3>
+              <p className='mb-4 text-gray-600 dark:text-gray-300'>
+                Discover personalized yoga poses, sequences, and breathing techniques.
+              </p>
+              <span className='inline-flex items-center gap-2 text-green-600 transition-transform group-hover:translate-x-1 dark:text-green-400'>
+                Start Practice
+                <ArrowRight className='h-4 w-4' />
+              </span>
+            </button>
+
+            {/* Meditation Card */}
+            <button
+              onClick={() => void router.push('/meditation')}
+              className='group rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
+            >
+              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-lg'>
+                <span className='text-3xl'>🧘‍♀️</span>
+              </div>
+              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
+                Meditation AI Pal
+              </h3>
+              <p className='mb-4 text-gray-600 dark:text-gray-300'>
+                Deepen your meditation practice and cultivate present-moment awareness.
+              </p>
+              <span className='inline-flex items-center gap-2 text-purple-600 transition-transform group-hover:translate-x-1 dark:text-purple-400'>
+                Begin Meditation
+                <ArrowRight className='h-4 w-4' />
+              </span>
+            </button>
+
+            {/* Harmony Card */}
+            <button
+              onClick={() => void router.push('/harmony')}
+              className='group rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-teal-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
+            >
+              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 shadow-lg'>
+                <span className='text-3xl'>☮️</span>
+              </div>
+              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
+                Harmony AI Pal
+              </h3>
+              <p className='mb-4 text-gray-600 dark:text-gray-300'>
+                Find balance and inner peace through personalized guidance.
+              </p>
+              <span className='inline-flex items-center gap-2 text-teal-600 transition-transform group-hover:translate-x-1 dark:text-teal-400'>
+                Find Harmony
+                <ArrowRight className='h-4 w-4' />
+              </span>
+            </button>
+          </div>
+        </div>
+      </SectionShell>
+
       {/* YouTube Videos Section - Full Screen */}
       <SectionShell variant='dark'>
         <div className='mx-auto w-full max-w-5xl px-6'>

@@ -23,6 +23,42 @@ export type NavLink = {
 
 const getNavLinks = (username: string): Readonly<NavLink[]> => [
   {
+    href: '/home',
+    linkName: 'Home',
+    iconName: 'HomeIcon',
+    disabled: false
+  },
+  {
+    href: '/rituals',
+    linkName: 'Rituals',
+    iconName: 'CalendarIcon',
+    disabled: false
+  },
+  {
+    href: '/real-stories',
+    linkName: 'Stories',
+    iconName: 'BookOpenIcon',
+    disabled: false
+  },
+  {
+    href: '/bookmarks',
+    linkName: 'Bookmarks',
+    iconName: 'BookmarkIcon',
+    disabled: false
+  },
+  {
+    href: '/people',
+    linkName: 'Discover',
+    iconName: 'UsersIcon',
+    disabled: false
+  },
+  {
+    href: '/settings',
+    linkName: 'Settings',
+    iconName: 'CogIcon',
+    disabled: false
+  },
+  {
     href: `/user/${username}`,
     linkName: 'Profile',
     iconName: 'UserIcon',
