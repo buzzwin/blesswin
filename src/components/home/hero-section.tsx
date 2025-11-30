@@ -15,7 +15,7 @@ export function HeroSection({
   navigating
 }: HeroSectionProps): JSX.Element {
   return (
-    <SectionShell className='relative overflow-hidden bg-gradient-to-br from-cream via-white to-sky/10'>
+    <SectionShell className='relative overflow-hidden bg-gradient-to-br from-cream via-white to-sky/10 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900'>
       {/* Decorative background elements */}
       <div className='absolute inset-0 overflow-hidden'>
         <div className='absolute -top-40 -right-40 h-80 w-80 rounded-full bg-sky/20 blur-3xl' />

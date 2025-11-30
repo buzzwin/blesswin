@@ -7,13 +7,14 @@ import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
 import { WellnessChat } from '@components/wellness/wellness-chat';
 import { WellnessContentGrid } from '@components/wellness/wellness-content-grid';
+import { Loading } from '@components/ui/loading';
 import {
   DisclaimerModal,
   hasAcceptedDisclaimer,
   setDisclaimerAccepted
 } from '@components/wellness/disclaimer-modal';
 import { siteURL } from '@lib/env';
-import Head from 'next/head';
+import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 
 export default function YogaPage(): JSX.Element {
@@ -24,23 +25,47 @@ export default function YogaPage(): JSX.Element {
   const [isChecking, setIsChecking] = useState(true);
 
   useEffect(() => {
+    if (!user?.id) {
+      setIsChecking(false);
+      return;
+    }
+
+    let cancelled = false;
+
     async function checkAcceptance() {
       setIsChecking(true);
-      const accepted = await hasAcceptedDisclaimer(user?.id);
-      if (accepted) {
-        setDisclaimerAcceptedState(true);
-        setShowContent(true);
+      try {
+        const accepted = await hasAcceptedDisclaimer(user?.id);
+        if (!cancelled) {
+          setDisclaimerAcceptedState(accepted);
+          setShowContent(accepted);
+          setIsChecking(false);
+        }
+      } catch (error) {
+        console.error('Error checking disclaimer:', error);
+        if (!cancelled) {
+          setIsChecking(false);
+          toast.error('Failed to load. Please refresh the page.');
+        }
       }
-      setIsChecking(false);
     }
 
     void checkAcceptance();
+
+    return () => {
+      cancelled = true;
+    };
   }, [user?.id]);
 
   const handleAcceptDisclaimer = async (): Promise<void> => {
-    await setDisclaimerAccepted(user?.id);
-    setDisclaimerAcceptedState(true);
-    setShowContent(true);
+    try {
+      await setDisclaimerAccepted(user?.id);
+      setDisclaimerAcceptedState(true);
+      setShowContent(true);
+    } catch (error) {
+      console.error('Error accepting disclaimer:', error);
+      toast.error('Failed to save acceptance. Please try again.');
+    }
   };
 
   const handleSignIn = (): void => {
@@ -65,12 +90,6 @@ export default function YogaPage(): JSX.Element {
         image={`${siteURL || 'https://Buzzwin.com'}/assets/og-yoga.jpg`}
         structuredData={structuredData}
       />
-      <Head>
-        <script
-          type='application/ld+json'
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
-        />
-      </Head>
 
       {/* Disclaimer Modal */}
       {!isChecking && !disclaimerAccepted && (
@@ -82,9 +101,12 @@ export default function YogaPage(): JSX.Element {
 
       {/* Loading State */}
       {isChecking && (
-        <div className='flex min-h-screen items-center justify-center'>
+        <div className='flex min-h-[400px] items-center justify-center'>
           <div className='text-center'>
-            <p className='text-gray-600 dark:text-gray-400'>Loading...</p>
+            <Loading size='lg' />
+            <p className='mt-4 text-sm text-gray-600 dark:text-gray-400'>
+              Preparing your AI companion...
+            </p>
           </div>
         </div>
       )}
@@ -127,7 +149,7 @@ export default function YogaPage(): JSX.Element {
               <div className='overflow-hidden rounded-2xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-900'>
                 <WellnessChat
                   agentType='yoga'
-                  className='min-h-[600px]'
+                  className='min-h-[400px] sm:min-h-[500px] lg:min-h-[600px]'
                   onLoginRequest={handleSignIn}
                   userId={user?.id}
                 />
@@ -143,11 +165,24 @@ export default function YogaPage(): JSX.Element {
           </SectionShell>
         </>
       ) : !isChecking ? (
-        <div className='flex min-h-screen items-center justify-center'>
-          <div className='text-center'>
-            <p className='text-gray-600 dark:text-gray-400'>
-              Please accept the disclaimer to continue.
+        <div className='flex min-h-screen items-center justify-center px-4'>
+          <div className='max-w-md text-center'>
+            <div className='mb-4 text-5xl'>🧘</div>
+            <h2 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
+              Disclaimer Required
+            </h2>
+            <p className='mb-6 text-gray-600 dark:text-gray-400'>
+              To use the Yoga AI Pal, please review and accept our wellness disclaimer.
             </p>
+            <button
+              onClick={() => {
+                setDisclaimerAcceptedState(false);
+                setShowContent(false);
+              }}
+              className='rounded-lg bg-gradient-to-r from-green-500 to-emerald-600 px-6 py-3 font-semibold text-white transition-all hover:from-green-600 hover:to-emerald-700 hover:shadow-lg'
+            >
+              Review Disclaimer
+            </button>
           </div>
         </div>
       ) : null}

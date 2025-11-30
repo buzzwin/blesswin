@@ -38,10 +38,10 @@ export default function JustLogin(): JSX.Element {
   return (
     <div className='space-y-6'>
       <div className='space-y-3'>
-        <h2 className='text-2xl font-bold text-white'>
+        <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
           {isSignUp ? 'Create your account' : 'Welcome back'}
         </h2>
-        <p className='text-gray-300'>
+        <p className='text-gray-600 dark:text-gray-300'>
           Connect with other TV and movie enthusiasts, share your thoughts, and
           discover new content.
         </p>
@@ -118,10 +118,10 @@ export default function JustLogin(): JSX.Element {
 
         <div className='relative'>
           <div className='absolute inset-0 flex items-center'>
-            <div className='w-full border-t border-gray-600'></div>
+            <div className='w-full border-t border-gray-300 dark:border-gray-600'></div>
           </div>
           <div className='relative flex justify-center'>
-            <span className='bg-[#1a1f35] px-2 text-sm text-gray-400'>
+            <span className='bg-white dark:bg-gray-800 px-2 text-sm text-gray-600 dark:text-gray-400'>
               or continue with
             </span>
           </div>
@@ -132,8 +132,9 @@ export default function JustLogin(): JSX.Element {
           className={cn(
             'flex items-center justify-center gap-2',
             'w-full rounded-lg px-4 py-2.5',
-            'bg-white text-gray-900',
-            'hover:bg-gray-100',
+            'bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+            'border border-gray-300 dark:border-gray-600',
+            'hover:bg-gray-100 dark:hover:bg-gray-700',
             'transition-colors duration-200',
             'font-medium'
           )}
