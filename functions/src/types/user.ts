@@ -1,5 +1,6 @@
 import type { Theme, Accent } from './theme';
-import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
+import type { Timestamp } from 'firebase-admin/firestore';
+import type { FirestoreDataConverter } from 'firebase/firestore';
 
 export interface KarmaBreakdown {
   impactMoments: number;
@@ -32,6 +33,12 @@ export type User = {
   karmaPoints?: number;
   karmaBreakdown?: KarmaBreakdown;
   lastKarmaUpdate?: Timestamp | Date;
+  // Email preferences
+  emailPreferences?: {
+    joinedAction?: boolean;
+    ritualReminders?: boolean;
+    weeklySummary?: boolean;
+  };
 };
 
 export type EditableData = Extract<

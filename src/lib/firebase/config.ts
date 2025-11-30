@@ -11,8 +11,16 @@ const config = {
 type Config = typeof config;
 
 export function getFirebaseConfig(): Config {
-  if (Object.values(config).some((value) => !value))
-    throw new Error('Firebase config is not set or incomplete');
+  // Check if any required values are missing
+  const missingValues = Object.entries(config)
+    .filter(([key, value]) => !value)
+    .map(([key]) => key);
+  
+  if (missingValues.length > 0) {
+    const errorMessage = `Firebase config is incomplete. Missing: ${missingValues.join(', ')}. ` +
+      `Please set these environment variables in .env.local: ${missingValues.map(k => `NEXT_PUBLIC_${k.toUpperCase()}`).join(', ')}`;
+    throw new Error(errorMessage);
+  }
 
   return config;
 }

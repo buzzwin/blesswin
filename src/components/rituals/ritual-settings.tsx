@@ -3,7 +3,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { Modal } from '@components/modal/modal';
 import { useModal } from '@lib/hooks/useModal';
 import { toast } from 'react-hot-toast';
-import { Settings, Bell, Moon, Sun, Clock } from 'lucide-react';
+import { Settings, Bell, Moon, Sun, Clock, Mail } from 'lucide-react';
 import { getDoc } from 'firebase/firestore';
 import { userRitualStateDoc } from '@lib/firebase/collections';
 import type { UserRitualState } from '@lib/types/ritual';
@@ -65,6 +65,7 @@ export function RitualSettings({
         body: JSON.stringify({
           userId: user.id,
           notificationPreferences: settings.notificationPreferences,
+          emailPreferences: settings.emailPreferences,
           preferredCategories: settings.preferredTags || []
         })
       });
@@ -90,6 +91,17 @@ export function RitualSettings({
       ...settings,
       notificationPreferences: {
         ...settings.notificationPreferences,
+        [key]: value
+      }
+    });
+  };
+
+  const updateEmailPref = (key: 'joinedAction' | 'ritualReminders' | 'weeklySummary', value: boolean): void => {
+    if (!settings) return;
+    setSettings({
+      ...settings,
+      emailPreferences: {
+        ...(settings.emailPreferences || {}),
         [key]: value
       }
     });
@@ -282,6 +294,88 @@ export function RitualSettings({
                   className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent'
                 />
               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Email Preferences */}
+        <div className='space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700'>
+          <div className='flex items-center gap-2'>
+            <Mail className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+              Email Notifications
+            </h3>
+          </div>
+          <p className='text-sm text-gray-600 dark:text-gray-400'>
+            Choose which emails you'd like to receive from Buzzwin
+          </p>
+
+          {/* Joined Action Email */}
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+            <div className='flex items-center justify-between'>
+              <div className='flex-1'>
+                <div className='flex items-center gap-2 mb-1'>
+                  <span className='font-medium text-gray-900 dark:text-white'>Someone Joined Your Action</span>
+                </div>
+                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  Get notified when someone joins your impact moment
+                </p>
+              </div>
+              <label className='relative inline-flex items-center cursor-pointer ml-4'>
+                <input
+                  type='checkbox'
+                  checked={settings.emailPreferences?.joinedAction !== false}
+                  onChange={(e) => updateEmailPref('joinedAction', e.target.checked)}
+                  className='sr-only peer'
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+              </label>
+            </div>
+          </div>
+
+          {/* Ritual Reminders Email */}
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+            <div className='flex items-center justify-between'>
+              <div className='flex-1'>
+                <div className='flex items-center gap-2 mb-1'>
+                  <span className='font-medium text-gray-900 dark:text-white'>Daily Ritual Reminders</span>
+                </div>
+                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  Receive email reminders for your daily rituals
+                </p>
+              </div>
+              <label className='relative inline-flex items-center cursor-pointer ml-4'>
+                <input
+                  type='checkbox'
+                  checked={settings.emailPreferences?.ritualReminders !== false}
+                  onChange={(e) => updateEmailPref('ritualReminders', e.target.checked)}
+                  className='sr-only peer'
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+              </label>
+            </div>
+          </div>
+
+          {/* Weekly Summary Email */}
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+            <div className='flex items-center justify-between'>
+              <div className='flex-1'>
+                <div className='flex items-center gap-2 mb-1'>
+                  <span className='font-medium text-gray-900 dark:text-white'>Weekly Progress Summary</span>
+                </div>
+                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  Get a weekly digest of your progress and activity
+                </p>
+              </div>
+              <label className='relative inline-flex items-center cursor-pointer ml-4'>
+                <input
+                  type='checkbox'
+                  checked={settings.emailPreferences?.weeklySummary !== false}
+                  onChange={(e) => updateEmailPref('weeklySummary', e.target.checked)}
+                  className='sr-only peer'
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+              </label>
             </div>
           </div>
         </div>

@@ -83,6 +83,12 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     linkName: 'Profile',
     iconName: 'user',
     disabled: false
+  },
+  {
+    href: '/settings',
+    linkName: 'Settings',
+    iconName: 'settings',
+    disabled: false
   }
 ];
 
@@ -161,6 +167,8 @@ export function MobileSidebarModal({
         return <Bookmark className='h-6 w-6' />;
       case 'user':
         return <UserIcon className='h-6 w-6' />;
+      case 'settings':
+        return <Settings className='h-6 w-6' />;
       default:
         return <Sparkles className='h-6 w-6' />;
     }
@@ -267,11 +275,22 @@ export function MobileSidebarModal({
 
           {/* Settings Section */}
           <div className='space-y-2'>
+            <Link href='/settings'>
+              <a
+                onClick={closeModal}
+                className='flex w-full items-center gap-4 rounded-xl px-4 py-3.5 transition-all hover:bg-gray-100 dark:hover:bg-gray-800'
+              >
+                <Settings className='h-6 w-6 text-gray-600 dark:text-gray-400' />
+                <span className='font-medium text-gray-900 dark:text-white'>
+                  Settings
+                </span>
+              </a>
+            </Link>
             <button
               onClick={displayOpenModal}
               className='flex w-full items-center gap-4 rounded-xl px-4 py-3.5 transition-all hover:bg-gray-100 dark:hover:bg-gray-800'
             >
-              <Settings className='h-6 w-6 text-gray-600 dark:text-gray-400' />
+              <Moon className='h-6 w-6 text-gray-600 dark:text-gray-400' />
               <span className='font-medium text-gray-900 dark:text-white'>
                 Display
               </span>

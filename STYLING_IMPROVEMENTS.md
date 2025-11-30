@@ -6,17 +6,20 @@ This document outlines the styling improvements made to the Buzzwin home page, i
 
 ## New Components Created
 
-### 1. BuzzwinLanding Component (`src/components/home/buzzwin-landing.tsx`)
+### 1. Home Page Components (`src/components/home/`)
 
-A modern landing page component that features:
+The home page has been refactored into modular components:
 
-- **Gradient Background**: Purple to black gradient for a premium look
-- **Animated Elements**: Smooth animations using Framer Motion
-- **Interactive Demo Cards**: Rotating showcase of popular shows
-- **Modern Action Buttons**: Large, colorful swipe action buttons
-- **Feature Highlights**: Three-column feature showcase
-- **Statistics Section**: User engagement metrics
-- **Responsive Design**: Mobile-first approach with desktop enhancements
+- **HeroSection** (`hero-section.tsx`): Main landing area with "Get Involved" CTA.
+- **RippleSystem** (`ripple-system.tsx`): Explains the "How Ripples Work" concept with interactive examples.
+- **RealStoriesSection** (`real-stories-section.tsx`): Showcases featured stories and impact highlights.
+- **DailyRitualsSection** (`daily-rituals-section.tsx`): Displays daily wellness rituals and streak tracking features.
+- **ImpactCard** (`impact-card.tsx`): Reusable card for "What We Do" section.
+
+These components feature:
+- **Gradient Backgrounds**: Premium look with purple/black themes
+- **Responsive Design**: Mobile-first approach
+- **Interactive Elements**: Hover effects and smooth transitions
 
 ### 2. Enhanced Swipe Interface
 

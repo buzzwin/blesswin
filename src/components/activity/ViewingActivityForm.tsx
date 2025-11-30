@@ -273,52 +273,6 @@ const ViewingActivityForm = ({
           isExpanded ? 'space-y-4 p-4' : 'p-1'
         )}
       >
-        {/* Search Input */}
-        <div className='relative'>
-          <div
-            className={cn(
-              'relative flex items-center',
-              'rounded-xl',
-              'bg-white dark:bg-gray-800',
-              'border border-gray-200 dark:border-gray-700',
-              'transition-all duration-200',
-              'hover:border-emerald-500 dark:hover:border-emerald-500',
-              'focus-within:border-emerald-500 dark:focus-within:border-emerald-500',
-              'focus-within:ring-2 focus-within:ring-emerald-500/20',
-              isExpanded ? '' : 'shadow-sm'
-            )}
-          >
-            <HeroIcon
-              iconName='MagnifyingGlassIcon'
-              className={cn(
-                'ml-3 h-5 w-5',
-                'text-gray-400 dark:text-gray-500',
-                'transition-colors duration-200'
-              )}
-            />
-            <input
-              className={cn(
-                'w-full',
-                'px-3 py-2',
-                'bg-transparent',
-                'text-gray-900 dark:text-gray-100',
-                'placeholder-gray-500 dark:placeholder-gray-400',
-                'focus:outline-none',
-                'text-sm'
-              )}
-              type='text'
-              placeholder='Search movies and TV shows...'
-              value={searchText}
-              onChange={handleInputChange}
-            />
-            {loading && (
-              <div className='absolute right-3'>
-                <SpinnerComponent />
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* Expanded Content */}
         {isExpanded && (
           <div

@@ -21,6 +21,7 @@ import { cn } from '@lib/utils';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { EditMomentModal } from './edit-moment-modal';
+import { ActionShareModal } from './action-share-modal';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -34,6 +35,7 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
   const [originalMoment, setOriginalMoment] = useState<ImpactMomentWithUser | null>(null);
   const [loadingOriginal, setLoadingOriginal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const isOwner = user?.id === moment.createdBy;
 
@@ -306,40 +308,7 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
 
             {/* Share Button */}
             <button
-              onClick={async () => {
-                const siteOrigin = typeof window !== 'undefined' ? window.location.origin : 'https://buzzwin.com';
-                // Default to chain URL to show social proof and enable easy joining
-                const shareUrl = `${siteOrigin}/impact/${moment.id}/chain`;
-                const momentText = `${moment.user.name}: ${moment.text.substring(0, 100)}${moment.text.length > 100 ? '...' : ''}`;
-                const joinCount = moment.joinedByUsers?.length || 0;
-                const shareText = `${momentText}\n\n${joinCount > 0 ? `${joinCount} ${joinCount === 1 ? 'person has' : 'people have'} joined this action! ` : ''}Join the chain of positive impact 🌱\n\n${shareUrl}`;
-
-                if (navigator.share) {
-                  // Use Web Share API if available
-                  try {
-                    await navigator.share({
-                      title: 'Join This Action Chain on Buzzwin',
-                      text: shareText,
-                      url: shareUrl
-                    });
-                    toast.success('Shared! ✨');
-                  } catch (error) {
-                    // User cancelled or error occurred
-                    if (error instanceof Error && error.name !== 'AbortError') {
-                      console.error('Error sharing:', error);
-                    }
-                  }
-                } else {
-                  // Fallback: Copy to clipboard
-                  try {
-                    await navigator.clipboard.writeText(shareText);
-                    toast.success('Link copied to clipboard! 📋');
-                  } catch (error) {
-                    console.error('Error copying to clipboard:', error);
-                    toast.error('Failed to copy link');
-                  }
-                }
-              }}
+              onClick={() => setShareModalOpen(true)}
               className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'
             >
               <Share2 className='h-5 w-5' />
@@ -416,6 +385,13 @@ export function ImpactMomentCard({ moment, onRipple }: ImpactMomentCardProps): J
             window.location.reload();
           }
         }}
+      />
+
+      {/* Share Modal */}
+      <ActionShareModal
+        moment={moment}
+        open={shareModalOpen}
+        closeModal={() => setShareModalOpen(false)}
       />
     </article>
   );

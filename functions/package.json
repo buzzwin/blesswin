@@ -10,7 +10,7 @@
     "logs": "firebase functions:log"
   },
   "engines": {
-    "node": "16"
+    "node": "20"
   },
   "main": "lib/index.js",
   "dependencies": {
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.6",
+    "dotenv": "^16.6.1",
     "typescript": "^4.6.4"
   },
   "private": true

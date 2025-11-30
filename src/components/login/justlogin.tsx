@@ -4,6 +4,7 @@ import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import { useAuth } from '@lib/context/auth-context';
 import { GoogleIcon } from '@components/ui/google-icon';
+import { LoadingDots } from '@components/ui/loading';
 
 export default function JustLogin(): JSX.Element {
   const { signInWithGoogle, signInWithEmail, createUserWithEmail } = useAuth();
@@ -106,7 +107,7 @@ export default function JustLogin(): JSX.Element {
             )}
           >
             {loading ? (
-              <div className='h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent' />
+              <LoadingDots size='sm' />
             ) : isSignUp ? (
               'Sign Up'
             ) : (

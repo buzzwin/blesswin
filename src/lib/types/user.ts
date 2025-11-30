@@ -25,6 +25,12 @@ export type User = {
   karmaPoints?: number; // Total karma points (default: 0)
   karmaBreakdown?: KarmaBreakdown; // Breakdown by category
   lastKarmaUpdate?: Timestamp | Date; // Last time karma was updated
+  // Email preferences
+  emailPreferences?: {
+    joinedAction?: boolean; // Notify when someone joins your action
+    ritualReminders?: boolean; // Daily ritual reminder emails
+    weeklySummary?: boolean; // Weekly progress summary emails
+  };
 };
 
 export type EditableData = Extract<

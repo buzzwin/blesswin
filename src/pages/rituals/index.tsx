@@ -10,6 +10,7 @@ import { RitualsOnboarding } from '@components/rituals/rituals-onboarding';
 import { RitualCompleteModal } from '@components/rituals/ritual-complete-modal';
 import { RitualSettings } from '@components/rituals/ritual-settings';
 import { RitualFormModal } from '@components/rituals/ritual-form-modal';
+import { RitualShareModal } from '@components/rituals/ritual-share-modal';
 import { StreakVisualization } from '@components/rituals/streak-visualization';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
@@ -34,8 +35,10 @@ export default function RitualsPage(): JSX.Element {
   const { open: completeModalOpen, openModal: openCompleteModal, closeModal: closeCompleteModal } = useModal();
   const { open: settingsModalOpen, openModal: openSettingsModal, closeModal: closeSettingsModal } = useModal();
   const { open: ritualFormModalOpen, openModal: openRitualFormModal, closeModal: closeRitualFormModal } = useModal();
+  const { open: shareModalOpen, openModal: openShareModal, closeModal: closeShareModal } = useModal();
   const [selectedRitual, setSelectedRitual] = useState<RitualDefinition | null>(null);
   const [editingRitual, setEditingRitual] = useState<RitualDefinition | null>(null);
+  const [sharingRitual, setSharingRitual] = useState<RitualDefinition | null>(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [ritualsEnabled, setRitualsEnabled] = useState(false);
 
@@ -208,6 +211,11 @@ export default function RitualsPage(): JSX.Element {
   const handleCompleteAndShare = (ritual: RitualDefinition): void => {
     setSelectedRitual(ritual);
     openCompleteModal();
+  };
+
+  const handleShareRitual = (ritual: RitualDefinition): void => {
+    setSharingRitual(ritual);
+    openShareModal();
   };
 
   const handleShareComplete = async (momentId?: string): Promise<void> => {
@@ -462,6 +470,7 @@ export default function RitualsPage(): JSX.Element {
                   completed={todayRituals.globalRitual.completed || false}
                   onCompleteQuietly={() => handleCompleteQuietly(todayRituals.globalRitual!.id || '')}
                   onCompleteAndShare={() => handleCompleteAndShare(todayRituals.globalRitual!)}
+                  onShareRitual={() => handleShareRitual(todayRituals.globalRitual!)}
                   loading={completingRitualId === todayRituals.globalRitual.id}
                 />
               )}
@@ -479,6 +488,7 @@ export default function RitualsPage(): JSX.Element {
                       completed={ritual.completed || false}
                       onCompleteQuietly={() => handleCompleteQuietly(ritual.id || '')}
                       onCompleteAndShare={() => handleCompleteAndShare(ritual)}
+                      onShareRitual={() => handleShareRitual(ritual)}
                       loading={completingRitualId === ritual.id}
                     />
                     {isCustomRitual && (
@@ -681,6 +691,18 @@ export default function RitualsPage(): JSX.Element {
             setSelectedRitual(null);
           }}
           onComplete={handleShareComplete}
+        />
+      )}
+
+      {/* Share Modal */}
+      {sharingRitual && (
+        <RitualShareModal
+          ritual={sharingRitual}
+          open={shareModalOpen}
+          closeModal={() => {
+            closeShareModal();
+            setSharingRitual(null);
+          }}
         />
       )}
 

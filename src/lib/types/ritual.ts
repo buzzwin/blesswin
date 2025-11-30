@@ -34,6 +34,11 @@ export interface UserRitualState {
     quietHoursStart?: string; // e.g., "22:00"
     quietHoursEnd?: string; // e.g., "07:00"
   };
+  emailPreferences?: {
+    joinedAction?: boolean;
+    ritualReminders?: boolean;
+    weeklySummary?: boolean;
+  };
   currentStreak: number;
   longestStreak: number;
   totalCompleted: number;

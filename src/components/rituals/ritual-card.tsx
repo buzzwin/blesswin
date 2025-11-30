@@ -8,7 +8,7 @@ import {
   effortLevelIcons 
 } from '@lib/types/impact-moment';
 import type { RitualDefinition } from '@lib/types/ritual';
-import { Check, X, Sparkles } from 'lucide-react';
+import { Check, X, Sparkles, Share2 } from 'lucide-react';
 
 interface RitualCardProps {
   ritual: RitualDefinition;
@@ -18,6 +18,7 @@ interface RitualCardProps {
   onCompleteQuietly?: () => void;
   onCompleteAndShare?: () => void;
   onShare?: () => void;
+  onShareRitual?: () => void;
   loading?: boolean;
 }
 
@@ -29,6 +30,7 @@ export function RitualCard({
   onCompleteQuietly,
   onCompleteAndShare,
   onShare,
+  onShareRitual,
   loading = false
 }: RitualCardProps): JSX.Element {
   const [showActions, setShowActions] = useState(!completed);
@@ -51,12 +53,27 @@ export function RitualCard({
         )}>
           {isGlobal ? 'Global Ritual of the Day' : 'Recommended for You'}
         </span>
-        {completed && (
-          <div className='flex items-center gap-1 text-sm text-green-600 dark:text-green-400'>
-            <Check className='h-4 w-4' />
-            <span>Completed</span>
-          </div>
-        )}
+        <div className='flex items-center gap-2'>
+          {onShareRitual && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onShareRitual();
+              }}
+              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+              aria-label='Share ritual'
+              title='Share ritual'
+            >
+              <Share2 className='h-4 w-4' />
+            </button>
+          )}
+          {completed && (
+            <div className='flex items-center gap-1 text-sm text-green-600 dark:text-green-400'>
+              <Check className='h-4 w-4' />
+              <span>Completed</span>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Icon and Title */}

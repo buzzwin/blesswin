@@ -15,6 +15,11 @@ interface UpdateSettingsRequest {
     quietHoursStart?: string;
     quietHoursEnd?: string;
   };
+  emailPreferences?: {
+    joinedAction?: boolean;
+    ritualReminders?: boolean;
+    weeklySummary?: boolean;
+  };
   preferredCategories?: string[];
   enabled?: boolean;
 }
@@ -35,7 +40,7 @@ export default async function handler(
   }
 
   try {
-    const { userId, notificationPreferences, preferredCategories, enabled } = req.body as UpdateSettingsRequest;
+    const { userId, notificationPreferences, emailPreferences, preferredCategories, enabled } = req.body as UpdateSettingsRequest;
 
     if (!userId || typeof userId !== 'string') {
       res.status(400).json({ success: false, error: 'User ID is required' });
@@ -60,6 +65,14 @@ export default async function handler(
       updates.notificationPreferences = {
         ...(currentState?.notificationPreferences || {}),
         ...notificationPreferences
+      };
+    }
+
+    // Update email preferences if provided
+    if (emailPreferences) {
+      updates.emailPreferences = {
+        ...(currentState?.emailPreferences || {}),
+        ...emailPreferences
       };
     }
 

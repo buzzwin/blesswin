@@ -1,27 +1,24 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 import {
   Heart,
-  ArrowRight,
   Users,
   Sparkles,
   BookOpen,
   HandHeart,
-  Loader2,
-  Calendar,
-  Flame,
-  TrendingUp
+  ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
-import { Button } from '@components/ui/button-shadcn';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
 import { ImpactCard } from '@components/home/impact-card';
-import { StoryCard } from '@components/home/story-card';
 import { CurrentEvents } from '@components/home/current-events';
 import { YouTubeVideos } from '@components/home/youtube-videos';
+import { HeroSection } from '@components/home/hero-section';
+import { RippleSystem } from '@components/home/ripple-system';
+import { RealStoriesSection } from '@components/home/real-stories-section';
+import { DailyRitualsSection } from '@components/home/daily-rituals-section';
 import { siteURL } from '@lib/env';
 import Head from 'next/head';
 
@@ -99,27 +96,6 @@ export default function Home(): JSX.Element {
     }
   ];
 
-  const featuredStories = [
-    {
-      title: 'How One Community Transformed Their Neighborhood',
-      excerpt: 'A small group of neighbors came together to create a community garden, bringing fresh food and hope to their area.',
-      author: 'Sarah Chen',
-      href: '/blog'
-    },
-    {
-      title: 'The Power of Small Acts of Kindness',
-      excerpt: 'Discover how simple gestures can create ripple effects of positivity and change.',
-      author: 'Marcus Johnson',
-      href: '/blog'
-    },
-    {
-      title: 'Finding Purpose Through Service',
-      excerpt: 'One person\'s journey from feeling lost to finding meaning through helping others.',
-      author: 'Elena Rodriguez',
-      href: '/blog'
-    }
-  ];
-
   // Structured data for SEO
   const structuredData = {
     '@context': 'https://schema.org',
@@ -185,63 +161,27 @@ export default function Home(): JSX.Element {
         />
       </Head>
 
-      {/* Hero Section - Full Screen */}
-      <SectionShell className='bg-gradient-to-br from-cream to-sky/20'>
-        <div className='mx-auto w-full max-w-4xl px-6'>
-          <div className='text-center'>
-              <h1 className='mb-6 text-4xl font-bold leading-[1.2] text-gray-900 dark:text-white md:text-5xl lg:text-6xl'>
-                Empowering people.{' '}
-                <span className='text-action'>One small action</span> at a time.
-              </h1>
-              <p className='mx-auto mb-12 max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300 md:text-xl lg:text-2xl'>
-                We amplify stories of creativity, kindness, and community impact. 
-                Join us in building a more hopeful world.
-              </p>
-              <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
-                <button
-                  onClick={handleGetInvolved}
-                  className='rounded-full bg-action px-8 py-4 text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80'
-                >
-                  Get Involved
-                  <ArrowRight className='ml-2 inline h-4 w-4' />
-                </button>
-                <Link href='/real-stories'>
-                  <a
-                    onClick={() => setNavigating(true)}
-                    className='inline-flex items-center justify-center rounded-full border-2 border-gray-900 bg-white px-8 py-4 text-base font-semibold text-gray-900 transition-all hover:bg-gray-900 hover:text-white dark:border-gray-200 dark:bg-gray-800 dark:text-gray-100 dark:hover:bg-gray-200 dark:hover:text-gray-900'
-                  >
-                    {navigating ? (
-                      <span className='flex items-center gap-2'>
-                        <Loader2 className='h-4 w-4 animate-spin' />
-                        Loading...
-                      </span>
-                    ) : (
-                      <>
-                        See Real Stories
-                        <ArrowRight className='ml-2 h-4 w-4' />
-                      </>
-                    )}
-                  </a>
-                </Link>
-              </div>
-            </div>
-          </div>
-      </SectionShell>
+      {/* Hero Section */}
+      <HeroSection
+        onGetInvolved={handleGetInvolved}
+        onSeeRealStories={() => setNavigating(true)}
+        navigating={navigating}
+      />
 
       {/* What We Do Section - Full Screen */}
       <SectionShell>
         <div className='mx-auto w-full max-w-6xl px-6'>
-          <div className='mb-12 text-center'>
-            <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
+          <div className='mb-16 text-center'>
+            <h2 className='mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl'>
               What We Do
             </h2>
-            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
+            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
               We believe in the power of small actions to create big change. 
-              Here's how we're making a difference.
+              Here&apos;s how we&apos;re making a difference.
             </p>
           </div>
 
-          <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4'>
+          <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
             {impactAreas.map((area, index) => (
               <ImpactCard
                 key={index}
@@ -256,234 +196,11 @@ export default function Home(): JSX.Element {
         </div>
       </SectionShell>
 
-      {/* Ripple System Section - Full Screen */}
-      <SectionShell variant='dark'>
-        <div className='mx-auto w-full max-w-6xl px-6'>
-          <div className='mb-12 text-center'>
-            <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
-              How Ripples Work
-            </h2>
-            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
-              We don't just "like" posts here. We create ripples of real action.
-            </p>
-          </div>
+      {/* Ripple System Section */}
+      <RippleSystem user={user} />
 
-          <div className='grid grid-cols-1 gap-8 md:grid-cols-2'>
-            {/* Reactions */}
-            <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
-                  <span className='text-2xl'>✨</span>
-                </div>
-                <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
-                  Simple Reactions
-                </h3>
-              </div>
-              <p className='mb-4 text-gray-600 dark:text-gray-400'>
-                Show your appreciation with quick reactions:
-              </p>
-              <ul className='space-y-2 text-sm text-gray-700 dark:text-gray-300'>
-                <li className='flex items-center gap-2'>
-                  <span>✨</span>
-                  <span><strong>Inspired</strong> - This moved you</span>
-                </li>
-                <li className='flex items-center gap-2'>
-                  <span>🙏</span>
-                  <span><strong>Grateful</strong> - You're thankful</span>
-                </li>
-                <li className='flex items-center gap-2'>
-                  <span>💚</span>
-                  <span><strong>Sent Love</strong> - You care</span>
-                </li>
-              </ul>
-            </div>
-
-            {/* Joined You */}
-            <div className='rounded-xl border-2 border-purple-300 bg-purple-50 p-6 dark:border-purple-700 dark:bg-purple-900/20'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-purple-200 dark:bg-purple-800'>
-                  <span className='text-2xl'>🌱</span>
-                </div>
-                <h3 className='text-xl font-bold text-purple-900 dark:text-purple-100'>
-                  Joined You
-                </h3>
-              </div>
-              <p className='mb-4 text-purple-800 dark:text-purple-200'>
-                <strong>This is different.</strong> When you click "Joined You", you're not just reacting—you're committing to do the same action yourself.
-              </p>
-              <ul className='space-y-2 text-sm text-purple-700 dark:text-purple-300'>
-                <li className='flex items-start gap-2'>
-                  <span className='mt-0.5'>✓</span>
-                  <span>Creates your own impact moment</span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='mt-0.5'>✓</span>
-                  <span>Links to the original action</span>
-                </li>
-                <li className='flex items-start gap-2'>
-                  <span className='mt-0.5'>✓</span>
-                  <span>Builds visible chains of impact</span>
-                </li>
-              </ul>
-              <div className='mt-4 rounded-lg bg-white/50 p-3 dark:bg-gray-800/50'>
-                <p className='text-xs font-medium text-purple-900 dark:text-purple-100'>
-                  💡 Example: Someone posts "Cooked a healthy meal for my family". You click "Joined You" and share your own version. Now there's a chain showing how this action spread!
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Chain Visualization */}
-          <div className='mt-12 rounded-xl border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800'>
-            <h3 className='mb-6 text-center text-xl font-bold text-gray-900 dark:text-white'>
-              See the Chain in Action
-            </h3>
-            <div className='flex flex-col items-center gap-4'>
-              {/* Original */}
-              <div className='w-full max-w-md rounded-lg border-2 border-purple-300 bg-purple-50 p-4 dark:border-purple-700 dark:bg-purple-900/20'>
-                <div className='mb-2 text-xs font-semibold uppercase text-purple-600 dark:text-purple-400'>
-                  Original Action
-                </div>
-                <p className='text-sm text-purple-900 dark:text-purple-100'>
-                  "Cooked a healthy meal for my family"
-                </p>
-              </div>
-              
-              {/* Connector */}
-              <div className='h-8 w-0.5 bg-purple-200 dark:bg-purple-800' />
-              
-              {/* Joined 1 */}
-              <div className='w-full max-w-md rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900'>
-                <div className='mb-2 flex items-center gap-2'>
-                  <span className='text-xs'>🌱</span>
-                  <span className='text-xs font-semibold text-purple-600 dark:text-purple-400'>
-                    Joined @originaluser
-                  </span>
-                </div>
-                <p className='text-sm text-gray-900 dark:text-white'>
-                  "I joined @originaluser in: Made a nutritious dinner tonight"
-                </p>
-              </div>
-
-              {/* Connector */}
-              <div className='h-8 w-0.5 bg-purple-200 dark:bg-purple-800' />
-
-              {/* Joined 2 */}
-              <div className='w-full max-w-md rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-900'>
-                <div className='mb-2 flex items-center gap-2'>
-                  <span className='text-xs'>🌱</span>
-                  <span className='text-xs font-semibold text-purple-600 dark:text-purple-400'>
-                    Joined @originaluser
-                  </span>
-                </div>
-                <p className='text-sm text-gray-900 dark:text-white'>
-                  "I also cooked healthy! Made a big batch of soup"
-                </p>
-              </div>
-
-              <div className='mt-4 text-center'>
-                <p className='text-sm font-semibold text-gray-700 dark:text-gray-300'>
-                  Impact is spreading! 🌱
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {user && (
-            <div className='mt-8 text-center'>
-              <Link href='/home'>
-                <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700'>
-                  Start Creating Ripples
-                  <ArrowRight className='h-4 w-4' />
-                </a>
-              </Link>
-            </div>
-          )}
-        </div>
-      </SectionShell>
-
-      {/* Real Stories Section - Full Screen */}
-      <SectionShell variant='dark'>
-        <div className='mx-auto w-full max-w-6xl px-6'>
-          <div className='mb-12 text-center'>
-            <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-              <Sparkles className='h-8 w-8 text-purple-600 dark:text-purple-400' />
-            </div>
-            <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
-              Real Stories, Real Impact
-            </h2>
-            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
-              Discover inspiring stories of people creating positive change. Get inspired and turn that inspiration into action.
-            </p>
-          </div>
-
-          <div className='grid grid-cols-1 gap-8 md:grid-cols-3'>
-            {featuredStories.map((story, index) => (
-              <StoryCard
-                key={index}
-                title={story.title}
-                excerpt={story.excerpt}
-                author={story.author}
-                href={story.href}
-              />
-            ))}
-          </div>
-
-          {/* Feature Highlights */}
-          <div className='mt-12 grid grid-cols-1 gap-6 md:grid-cols-2'>
-            {/* Get Inspired Feature */}
-            <div className='rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-6 dark:border-purple-800 dark:from-purple-900/20 dark:to-pink-900/20'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600'>
-                  <Sparkles className='h-6 w-6 text-white' />
-                </div>
-                <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
-                  Get Inspired & Take Action
-                </h3>
-              </div>
-              <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                Every story has a "Get Inspired" button. Click it to create an Impact Moment and share how the story motivates you to make a difference. Turn inspiration into action and earn bonus karma points!
-              </p>
-              <Link href='/real-stories'>
-                <a className='inline-flex items-center gap-2 text-sm font-semibold text-purple-700 hover:underline dark:text-purple-300'>
-                  Explore Stories
-                  <ArrowRight className='h-4 w-4' />
-                </a>
-              </Link>
-            </div>
-
-            {/* Story Reactions Feature */}
-            <div className='rounded-xl border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 p-6 dark:border-blue-800 dark:from-blue-900/20 dark:to-indigo-900/20'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-600 to-indigo-600'>
-                  <span className='text-2xl'>✨</span>
-                </div>
-                <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
-                  React & Engage
-                </h3>
-              </div>
-              <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                Show your appreciation with story reactions: Inspired ✨, Want to Try 🎯, Sharing 📢, or This Matters to Me 💚. See how many people were moved by each story and build community around positive change.
-              </p>
-              <Link href='/real-stories'>
-                <a className='inline-flex items-center gap-2 text-sm font-semibold text-blue-700 hover:underline dark:text-blue-300'>
-                  See Reactions
-                  <ArrowRight className='h-4 w-4' />
-                </a>
-              </Link>
-            </div>
-          </div>
-
-          <div className='mt-8 text-center'>
-            <Link href='/real-stories'>
-              <a className='inline-flex items-center gap-2 text-base font-semibold text-action hover:underline'>
-                View All Stories
-                <ArrowRight className='h-4 w-4' />
-              </a>
-            </Link>
-          </div>
-        </div>
-      </SectionShell>
+      {/* Real Stories Section */}
+      <RealStoriesSection />
 
       {/* Current Events Section - Full Screen */}
       <SectionShell>
@@ -492,113 +209,8 @@ export default function Home(): JSX.Element {
         </div>
       </SectionShell>
 
-      {/* Daily Rituals Section - Full Screen */}
-      <SectionShell>
-        <div className='mx-auto w-full max-w-6xl px-6'>
-          <div className='mb-12 text-center'>
-            <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-              <Calendar className='h-8 w-8 text-purple-600 dark:text-purple-400' />
-            </div>
-            <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
-              Daily Rituals for Wellness
-            </h2>
-            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
-              Build positive habits with small, daily actions. Track your progress, build streaks, and create lasting change.
-            </p>
-          </div>
-
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
-            {/* Feature 1: Daily Prompts */}
-            <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
-                  <span className='text-2xl'>🌱</span>
-                </div>
-                <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
-                  Daily Prompts
-                </h3>
-              </div>
-              <p className='text-gray-600 dark:text-gray-400'>
-                Receive personalized daily rituals tailored to your interests and goals. From meditation to acts of kindness.
-              </p>
-            </div>
-
-            {/* Feature 2: Streak Tracking */}
-            <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-orange-100 dark:bg-orange-900/30'>
-                  <Flame className='h-6 w-6 text-orange-600 dark:text-orange-400' />
-                </div>
-                <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
-                  Streak Tracking
-                </h3>
-              </div>
-              <p className='text-gray-600 dark:text-gray-400'>
-                Build momentum with visual streak tracking. Watch your daily practice grow and celebrate milestones along the way.
-              </p>
-            </div>
-
-            {/* Feature 3: Personalized Suggestions */}
-            <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-              <div className='mb-4 flex items-center gap-3'>
-                <div className='flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30'>
-                  <TrendingUp className='h-6 w-6 text-green-600 dark:text-green-400' />
-                </div>
-                <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
-                  AI-Powered Suggestions
-                </h3>
-              </div>
-              <p className='text-gray-600 dark:text-gray-400'>
-                Get smart recommendations based on your activity and preferences. Our AI learns what works best for you.
-              </p>
-            </div>
-          </div>
-
-          {/* Example Rituals */}
-          <div className='mt-12 rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-8 dark:border-purple-800 dark:from-purple-900/20 dark:to-pink-900/20'>
-            <h3 className='mb-6 text-center text-xl font-bold text-gray-900 dark:text-white'>
-              Examples of Daily Rituals
-            </h3>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-              <div className='rounded-lg border border-purple-200 bg-white p-4 dark:border-purple-800 dark:bg-gray-800'>
-                <div className='mb-2 text-2xl'>🧘</div>
-                <h4 className='mb-1 font-semibold text-gray-900 dark:text-white'>Meditate for 3 Minutes</h4>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>Quick mindfulness practice</p>
-              </div>
-              <div className='rounded-lg border border-purple-200 bg-white p-4 dark:border-purple-800 dark:bg-gray-800'>
-                <div className='mb-2 text-2xl'>📞</div>
-                <h4 className='mb-1 font-semibold text-gray-900 dark:text-white'>Call a Friend</h4>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>Strengthen relationships</p>
-              </div>
-              <div className='rounded-lg border border-purple-200 bg-white p-4 dark:border-purple-800 dark:bg-gray-800'>
-                <div className='mb-2 text-2xl'>🌿</div>
-                <h4 className='mb-1 font-semibold text-gray-900 dark:text-white'>Take 5 Deep Breaths</h4>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>Reset and center yourself</p>
-              </div>
-            </div>
-          </div>
-
-          {/* CTA */}
-          <div className='mt-8 text-center'>
-            {user ? (
-              <Link href='/rituals'>
-                <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-8 py-4 text-base font-semibold text-white transition-colors hover:bg-purple-700'>
-                  View Your Rituals
-                  <ArrowRight className='h-4 w-4' />
-                </a>
-              </Link>
-            ) : (
-              <button
-                onClick={handleSignIn}
-                className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-8 py-4 text-base font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80'
-              >
-                Start Your Ritual Journey
-                <ArrowRight className='h-4 w-4' />
-              </button>
-            )}
-          </div>
-        </div>
-      </SectionShell>
+      {/* Daily Rituals Section */}
+      <DailyRitualsSection user={user} onSignIn={handleSignIn} />
 
       {/* YouTube Videos Section - Full Screen */}
       <SectionShell variant='dark'>
@@ -609,23 +221,33 @@ export default function Home(): JSX.Element {
 
       {/* Final CTA Section - Full Screen */}
       {!user && (
-        <SectionShell>
-          <div className='mx-auto w-full max-w-3xl px-6 text-center'>
-            <div className='mb-8 inline-flex h-16 w-16 items-center justify-center rounded-full bg-action text-white'>
-              <Heart className='h-8 w-8' />
+        <SectionShell className='relative overflow-hidden bg-gradient-to-br from-action/5 via-hope/5 to-sky/5'>
+          {/* Decorative elements */}
+          <div className='absolute inset-0 overflow-hidden'>
+            <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-gradient-to-r from-action/10 to-hope/10 blur-3xl' />
+          </div>
+
+          <div className='relative mx-auto w-full max-w-3xl px-6 text-center'>
+            <div className='mb-8 inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-action to-hope shadow-lg shadow-action/25'>
+              <Heart className='h-10 w-10 text-white' />
             </div>
-            <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
+            
+            <h2 className='mb-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl'>
               Ready to Make a Difference?
             </h2>
-            <p className='mb-10 text-lg leading-relaxed text-gray-700 dark:text-gray-300 md:text-xl'>
+            
+            <p className='mb-10 text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
               Join our community of changemakers. Together, we can create a more hopeful, 
               connected, and compassionate world.
             </p>
+            
             <button
               onClick={handleSignIn}
-              className='rounded-full bg-action px-10 py-5 text-lg font-semibold text-white transition-opacity hover:opacity-90 active:opacity-80'
+              className='group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-action to-hope px-10 py-5 text-lg font-semibold text-white shadow-xl shadow-action/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-action/40 active:scale-95'
             >
-              Get Started Today
+              <span className='relative z-10'>Get Started Today</span>
+              <ArrowRight className='relative z-10 h-5 w-5 transition-transform group-hover:translate-x-1' />
+              <div className='absolute inset-0 bg-gradient-to-r from-hope to-action opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
             </button>
           </div>
         </SectionShell>
