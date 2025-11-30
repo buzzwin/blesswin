@@ -62,6 +62,7 @@ export default function YogaPage(): JSX.Element {
         title='Yoga AI Pal - AI-Powered Yoga Practice | Buzzwin'
         description='Discover personalized yoga poses, sequences, and breathing techniques with your Yoga AI Pal. Find your flow and cultivate inner peace through mindful movement.'
         keywords='yoga, yoga poses, yoga sequences, pranayama, yoga for beginners, yoga practice, mindful movement'
+        image={`${siteURL || 'https://Buzzwin.com'}/assets/og-yoga.jpg`}
         structuredData={structuredData}
       />
       <Head>

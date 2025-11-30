@@ -60,8 +60,9 @@ export default function HarmonyPage(): JSX.Element {
     <HomeLayout>
       <SEO
         title='Harmony AI Pal - Find Balance & Inner Peace | Buzzwin'
-        description='Find balance and harmony in all aspects of life with your Harmony AI Pal.'
-        keywords='harmony, inner peace, world peace, balance'
+        description='Discover balance and harmony in all aspects of life with personalized AI guidance. Learn conflict resolution, emotional balance, stress management, and mindful living practices for inner peace.'
+        keywords='harmony, inner peace, world peace, balance, conflict resolution, emotional balance, stress management, mindful living, peaceful relationships, inner harmony practices, emotional wellness, mental balance'
+        image={`${siteURL || 'https://Buzzwin.com'}/assets/og-harmony.jpg`}
         structuredData={structuredData}
       />
       <Head>

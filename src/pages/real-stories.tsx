@@ -162,10 +162,28 @@ export default function RealStoriesPage(): JSX.Element {
 
   const structuredData = {
     '@context': 'https://schema.org',
-    '@type': 'WebPage',
+    '@type': 'CollectionPage',
     name: 'Real Stories of Good | Buzzwin',
     description: 'Inspiring real stories of people and communities making a positive impact in the world.',
-    url: `${siteURL || 'https://Buzzwin.com'}/real-stories`
+    url: `${siteURL || 'https://Buzzwin.com'}/real-stories`,
+    mainEntity: {
+      '@type': 'ItemList',
+      itemListElement: stories.slice(0, 10).map((story, index) => ({
+        '@type': 'ListItem',
+        position: index + 1,
+        item: {
+          '@type': 'Article',
+          headline: story.title,
+          description: story.description,
+          url: story.url || `${siteURL || 'https://Buzzwin.com'}/real-stories#${story.title.toLowerCase().replace(/\s+/g, '-')}`,
+          datePublished: story.date || new Date().toISOString(),
+          author: {
+            '@type': 'Organization',
+            name: story.source || 'Buzzwin'
+          }
+        }
+      }))
+    }
   };
 
   return (
@@ -174,6 +192,7 @@ export default function RealStoriesPage(): JSX.Element {
         title='Real Stories of Good | Buzzwin'
         description='Discover inspiring real stories of people and communities making a positive impact in the world.'
         keywords='real stories, social good, community impact, positive change, inspiring stories, people doing good'
+        image={`${siteURL || 'https://Buzzwin.com'}/assets/og-stories.jpg`}
         structuredData={structuredData}
       />
       <Head>

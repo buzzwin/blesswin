@@ -1,0 +1,51 @@
+# Robots.txt for Buzzwin
+# https://buzzwin.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Disallow private/authenticated pages
+Disallow: /api/
+Disallow: /settings
+Disallow: /bookmarks
+Disallow: /home
+Disallow: /story-bookmarks
+Disallow: /watchlists
+Disallow: /watchlist/
+Disallow: /people
+Disallow: /reviews
+Disallow: /swipe
+Disallow: /trivia
+Disallow: /videos
+Disallow: /delete
+Disallow: /verify-email
+Disallow: /forgot-password
+
+# Disallow user-specific pages (require auth)
+Disallow: /user/*/followers
+Disallow: /user/*/following
+Disallow: /user/*/likes
+Disallow: /user/*/media
+Disallow: /user/*/reviews
+Disallow: /user/*/with_replies
+
+# Disallow authenticated impact pages
+Disallow: /impact/*/chain
+Disallow: /rituals/create
+
+# Allow public pages
+Allow: /yoga
+Allow: /meditation
+Allow: /harmony
+Allow: /real-stories
+Allow: /blog
+Allow: /login
+Allow: /tos
+Allow: /privacy
+Allow: /disclaimer
+
+# Allow public impact moments
+Allow: /public/moment/
+
+# Sitemap
+Sitemap: https://buzzwin.com/sitemap.xml

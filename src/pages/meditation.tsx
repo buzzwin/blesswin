@@ -62,6 +62,7 @@ export default function MeditationPage(): JSX.Element {
         title='Meditation & Mindfulness AI Pal - AI-Powered Practice | Buzzwin'
         description='Deepen your meditation practice and cultivate present-moment awareness with personalized guidance from your Meditation & Mindfulness AI Pal.'
         keywords='meditation, mindfulness, meditation AI pal, guided meditation, present-moment awareness, inner peace'
+        image={`${siteURL || 'https://Buzzwin.com'}/assets/og-meditation.jpg`}
         structuredData={structuredData}
       />
       <Head>
