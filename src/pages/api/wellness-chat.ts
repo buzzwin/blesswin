@@ -92,12 +92,21 @@ Your communication style:
 - Focused on promoting peace, harmony, and well-being
 - Emphasize the connection between body, mind, and spirit
 
-Always promote:
-- World peace through inner peace
-- Self-compassion and acceptance
-- Mindful movement
 - The healing power of yoga
-- Positive energy and good vibes`,
+- Positive energy and good vibes
+
+IMPORTANT: You must respond in valid JSON format with the following structure:
+{
+  "message": "Your conversational response here...",
+  "ritualSuggestion": { // Optional, include ONLY if you are suggesting a specific actionable ritual
+    "title": "Short title of ritual",
+    "description": "Brief description",
+    "tags": ["mind", "body"], // Choose from: mind, body, relationships, nature, community
+    "effortLevel": "tiny", // Choose from: tiny, medium, deep
+    "suggestedTimeOfDay": "morning", // Choose from: morning, afternoon, evening, anytime
+    "durationEstimate": "5 minutes"
+  }
+}`,
 
     context: 'yoga practice, poses, sequences, breathing techniques, flexibility, strength, stress relief, mindfulness through movement'
   },
@@ -131,15 +140,20 @@ Your communication style:
 - Encouraging without being pushy
 - Focused on real-world application
 
-Always promote:
-- Inner peace leading to world peace
-- Self-discovery and awareness
-- Mental clarity and emotional balance
-- Compassion and loving-kindness
-- Positive transformation and good vibes
-- Peace through present-moment awareness
-- Reducing stress and anxiety through mindfulness
-- Finding joy in simple moments`,
+- Finding joy in simple moments
+
+IMPORTANT: You must respond in valid JSON format with the following structure:
+{
+  "message": "Your conversational response here...",
+  "ritualSuggestion": { // Optional, include ONLY if you are suggesting a specific actionable ritual
+    "title": "Short title of ritual",
+    "description": "Brief description",
+    "tags": ["mind"], // Choose from: mind, body, relationships, nature, community
+    "effortLevel": "tiny", // Choose from: tiny, medium, deep
+    "suggestedTimeOfDay": "morning", // Choose from: morning, afternoon, evening, anytime
+    "durationEstimate": "5 minutes"
+  }
+}`,
 
     context: 'meditation techniques, guided meditation, inner peace, mental clarity, stress relief, spiritual growth, self-awareness, mindfulness practices, present-moment awareness, mindful breathing, body scan meditations, mindful eating, daily mindfulness, compassion'
   },
@@ -163,14 +177,21 @@ Your communication style:
 - Encouraging peace and understanding
 - Emphasizing the interconnectedness of all beings
 
-Always promote:
-- World peace through individual peace
-- Good thoughts and positive energy
-- Happiness and well-being
-- Harmony in relationships
-- Compassion and understanding
 - The power of collective positive intention
-- Spreading love and light`,
+- Spreading love and light
+
+IMPORTANT: You must respond in valid JSON format with the following structure:
+{
+  "message": "Your conversational response here...",
+  "ritualSuggestion": { // Optional, include ONLY if you are suggesting a specific actionable ritual
+    "title": "Short title of ritual",
+    "description": "Brief description",
+    "tags": ["relationships"], // Choose from: mind, body, relationships, nature, community
+    "effortLevel": "tiny", // Choose from: tiny, medium, deep
+    "suggestedTimeOfDay": "anytime", // Choose from: morning, afternoon, evening, anytime
+    "durationEstimate": "5 minutes"
+  }
+}`,
 
     context: 'harmony, balance, inner peace, world peace, positive energy, good vibes, spiritual growth, peaceful living, compassion'
   }
@@ -197,7 +218,7 @@ export default async function handler(
     }
 
     const lastMessage = messages[messages.length - 1];
-    
+
     if (lastMessage.role !== 'user') {
       return res.status(400).json({ error: 'Last message must be from user' });
     }
@@ -223,18 +244,35 @@ ${conversationContext}
 
 User: ${lastMessage.content}
 
-Respond as a compassionate ${agentType === 'yoga' ? 'Yoga AI Pal' : agentType === 'meditation' ? 'Meditation & Mindfulness AI Pal' : 'Harmony AI Pal'} would. Be helpful, encouraging, and focused on promoting peace, well-being, and positive energy. Keep responses conversational and practical, typically 2-4 sentences unless the user asks for detailed instructions.`;
+Respond as a compassionate ${agentType === 'yoga' ? 'Yoga AI Pal' : agentType === 'meditation' ? 'Meditation & Mindfulness AI Pal' : 'Harmony AI Pal'} would. Be helpful, encouraging, and focused on promoting peace, well-being, and positive energy. Keep responses conversational and practical, typically 2-4 sentences unless the user asks for detailed instructions.
 
-    const response = await callGeminiAPI(prompt, 500, 0.8);
+CRITICAL: Output ONLY valid JSON. Do not include markdown formatting like \`\`\`json.`;
+
+    const response = await callGeminiAPI(prompt, 1000, 0.7);
+
+    // Parse the JSON response
+    let parsedResponse;
+    try {
+      // Clean up potential markdown formatting if the model ignores instructions
+      const cleanResponse = response.replace(/```json/g, '').replace(/```/g, '').trim();
+      parsedResponse = JSON.parse(cleanResponse);
+    } catch (e) {
+      console.error('Failed to parse JSON response:', response);
+      // Fallback for non-JSON response
+      parsedResponse = {
+        message: response
+      };
+    }
 
     res.status(200).json({
-      message: response,
+      message: parsedResponse.message,
+      ritualSuggestion: parsedResponse.ritualSuggestion,
       agentType
     });
   } catch (error) {
     console.error('Wellness Chat API Error:', error);
-    res.status(500).json({ 
-      error: error instanceof Error ? error.message : 'Failed to generate response' 
+    res.status(500).json({
+      error: error instanceof Error ? error.message : 'Failed to generate response'
     });
   }
 }

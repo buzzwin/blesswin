@@ -20,7 +20,7 @@ export function MobileSidebar(): JSX.Element {
   const { user } = useAuth();
   const { open, openModal, closeModal } = useModal();
 
-  // Ensure we have a valid user object with all required properties
+  // Pass user data if available, otherwise null/undefined
   const userData = user
     ? {
         name: user.name ?? 'User',
@@ -31,15 +31,7 @@ export function MobileSidebar(): JSX.Element {
         followers: user.followers ?? [],
         coverPhotoURL: user.coverPhotoURL ?? ''
       }
-    : {
-        name: 'Guest',
-        username: 'guest',
-        verified: false,
-        photoURL: '',
-        following: [],
-        followers: [],
-        coverPhotoURL: ''
-      };
+    : undefined;
 
   return (
     <>

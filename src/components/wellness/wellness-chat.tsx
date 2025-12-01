@@ -3,6 +3,10 @@ import Link from 'next/link';
 import { Heart, Send, X, Moon, Flower2, Waves } from 'lucide-react';
 import { Button } from '@components/ui/button-shadcn';
 
+import { RitualFormModal } from '@components/rituals/ritual-form-modal';
+import type { RitualDefinition } from '@lib/types/ritual';
+import { Plus } from 'lucide-react';
+
 export type WellnessAgentType = 'yoga' | 'meditation' | 'harmony';
 
 interface Message {
@@ -10,6 +14,7 @@ interface Message {
   role: 'user' | 'agent';
   content: string;
   agentType?: WellnessAgentType;
+  ritualSuggestion?: Partial<RitualDefinition>;
 }
 
 interface WellnessChatProps {
@@ -83,6 +88,8 @@ export function WellnessChat({
   const [messages, setMessages] = useState<Message[]>(initialMessages);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showRitualModal, setShowRitualModal] = useState(false);
+  const [selectedRitual, setSelectedRitual] = useState<Partial<RitualDefinition> | undefined>(undefined);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -130,7 +137,8 @@ export function WellnessChat({
         id: (Date.now() + 1).toString(),
         role: 'agent',
         agentType,
-        content: data.message || 'I\'m here to support your wellness journey. How can I help you further?'
+        content: data.message || 'I\'m here to support your wellness journey. How can I help you further?',
+        ritualSuggestion: data.ritualSuggestion
       };
 
       setMessages((prev) => [...prev, agentMessage]);
@@ -201,29 +209,47 @@ export function WellnessChat({
             )}
 
             <div
-              className={`max-w-[80%] flex-1 rounded-2xl p-4 ${
+              className={`group relative max-w-[85%] flex-1 rounded-2xl p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
                 message.role === 'user'
-                  ? 'border border-gray-200 bg-gray-50 dark:border-white/20 dark:bg-white/10'
-                  : `border border-opacity-30 bg-gradient-to-br ${config.color} bg-opacity-10 dark:bg-opacity-20`
+                  ? 'border border-gray-100 bg-white text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'
+                  : `border border-transparent bg-gradient-to-br ${config.color.replace('from-', 'from-').replace(' to-', '/10 to-').replace('to-', '')}/5 to-white/50 dark:to-gray-900/50`
               }`}
             >
               {message.role === 'agent' && (
-                <div className='mb-1 flex items-center gap-2'>
-                  <span className='text-[10px] font-semibold uppercase tracking-wide text-gray-700 dark:text-white'>
+                <div className='mb-2 flex items-center gap-2 border-b border-gray-100 pb-2 dark:border-gray-700/50'>
+                  <span className={`text-xs font-bold uppercase tracking-wider bg-gradient-to-r ${config.color} bg-clip-text text-transparent`}>
                     {config.name}
                   </span>
                 </div>
               )}
 
-              <p
-                className={`text-sm leading-relaxed ${
+              <div
+                className={`prose prose-sm max-w-none leading-relaxed ${
                   message.role === 'user'
-                    ? 'text-gray-900 dark:text-white'
-                    : 'text-gray-900 dark:text-white'
+                    ? 'text-gray-700 dark:text-gray-200'
+                    : 'text-gray-800 dark:text-gray-100'
                 }`}
               >
-                {message.content}
-              </p>
+                {message.content.split('\n').map((line, i) => (
+                  <p key={i} className='mb-1 last:mb-0'>
+                    {line}
+                  </p>
+                ))}
+              </div>
+
+
+              {message.ritualSuggestion && (
+                <button
+                  onClick={() => {
+                    setSelectedRitual(message.ritualSuggestion);
+                    setShowRitualModal(true);
+                  }}
+                  className={`mt-3 flex items-center gap-1.5 rounded-lg border border-${config.color.split('-')[1]}-200 bg-${config.color.split('-')[1]}-50 px-3 py-1.5 text-xs font-semibold text-${config.color.split('-')[1]}-700 transition-colors hover:bg-${config.color.split('-')[1]}-100 dark:border-${config.color.split('-')[1]}-800 dark:bg-${config.color.split('-')[1]}-900/30 dark:text-${config.color.split('-')[1]}-300 dark:hover:bg-${config.color.split('-')[1]}-900/50`}
+                >
+                  <Plus className='h-3.5 w-3.5' />
+                  Create Ritual
+                </button>
+              )}
             </div>
 
             {message.role === 'user' && (
@@ -258,7 +284,10 @@ export function WellnessChat({
 
       {/* Suggestions */}
       {messages.length === 1 && (
-        <div className='border-t border-gray-200 p-4 dark:border-gray-700'>
+        <div className='border-t border-gray-100 bg-gray-50/50 p-4 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50'>
+          <p className='mb-3 text-xs font-medium text-gray-500 dark:text-gray-400'>
+            Suggested topics:
+          </p>
           <div className='flex flex-wrap gap-2'>
             {config.suggestions.map((suggestion, idx) => (
               <button
@@ -269,7 +298,7 @@ export function WellnessChat({
                     void handleSend();
                   }, 100);
                 }}
-                className='rounded-lg border border-gray-300 bg-white px-3 py-1.5 text-xs font-medium text-gray-700 transition-all hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700'
+                className={`rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-600 shadow-sm transition-all hover:-translate-y-0.5 hover:border-${config.color.split('-')[1]}-200 hover:text-${config.color.split('-')[1]}-600 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-${config.color.split('-')[1]}-500 dark:hover:text-${config.color.split('-')[1]}-400`}
               >
                 {suggestion}
               </button>
@@ -353,6 +382,19 @@ export function WellnessChat({
           </div>
         )}
       </div>
+
+      {/* Ritual Creation Modal */}
+      {showRitualModal && (
+        <RitualFormModal
+          open={showRitualModal}
+          closeModal={() => setShowRitualModal(false)}
+          ritual={selectedRitual as RitualDefinition}
+          onSuccess={() => {
+            setShowRitualModal(false);
+            // Optional: Add a system message confirming creation
+          }}
+        />
+      )}
     </div>
   );
 }

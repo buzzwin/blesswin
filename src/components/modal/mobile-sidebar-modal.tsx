@@ -116,7 +116,7 @@ export function MobileSidebarModal({
   followers,
   coverPhotoURL,
   closeModal
-}: MobileSidebarModalProps): JSX.Element {
+}: Partial<MobileSidebarModalProps> & { closeModal: () => void }): JSX.Element {
   const { signOut, user } = useAuth();
   const router = useRouter();
   const {
@@ -124,7 +124,15 @@ export function MobileSidebarModal({
     openModal: displayOpenModal,
     closeModal: displayCloseModal
   } = useModal();
-  const navLinks = getNavLinks(username);
+  
+  const allNavLinks = getNavLinks(username || 'guest');
+  
+  // Filter links for unauthenticated users
+  const navLinks = user 
+    ? allNavLinks 
+    : allNavLinks.filter(link => 
+        ['/', '/home', '/blog', '/real-stories', '/rituals', '/watchlists'].includes(link.href)
+      );
 
   const handleLogout = async (): Promise<void> => {
     try {
@@ -212,41 +220,60 @@ export function MobileSidebarModal({
 
         {/* User Profile Section */}
         <div className='border-b border-gray-200 bg-gradient-to-br from-purple-50 to-pink-50 px-4 py-6 dark:border-gray-700 dark:from-purple-900/20 dark:to-pink-900/20'>
-          <div className='flex items-center gap-4'>
-            <UserAvatar
-              className='h-16 w-16 ring-4 ring-white dark:ring-gray-800'
-              username={username}
-              src={photoURL}
-              alt={name}
-            />
-            <div className='flex-1'>
-              <UserName
-                name={name}
-                username={username}
-                verified={verified}
-                className='text-lg font-bold text-gray-900 dark:text-white'
-              />
-              <UserUsername username={username} />
+          {user ? (
+            <>
+              <div className='flex items-center gap-4'>
+                <UserAvatar
+                  className='h-16 w-16 ring-4 ring-white dark:ring-gray-800'
+                  username={username || 'user'}
+                  src={photoURL || ''}
+                  alt={name || 'User'}
+                />
+                <div className='flex-1'>
+                  <UserName
+                    name={name || 'User'}
+                    username={username || 'user'}
+                    verified={verified || false}
+                    className='text-lg font-bold text-gray-900 dark:text-white'
+                  />
+                  <UserUsername username={username || 'user'} />
+                </div>
+              </div>
+              <div className='mt-4 flex gap-6'>
+                <div className='text-center'>
+                  <div className='text-2xl font-bold text-gray-900 dark:text-white'>
+                    {following?.length ?? 0}
+                  </div>
+                  <div className='text-sm text-gray-600 dark:text-gray-400'>
+                    Following
+                  </div>
+                </div>
+                <div className='text-center'>
+                  <div className='text-2xl font-bold text-gray-900 dark:text-white'>
+                    {followers?.length ?? 0}
+                  </div>
+                  <div className='text-sm text-gray-600 dark:text-gray-400'>
+                    Followers
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <div className='flex flex-col items-center justify-center text-center'>
+              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
+                Welcome to Blesswin
+              </h3>
+              <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+                Join our community to track your wellness journey.
+              </p>
+              <Button
+                onClick={(e) => handleFeedClick(e as any)}
+                className='w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 font-bold text-white shadow-lg transition-all hover:opacity-90'
+              >
+                Log In / Sign Up
+              </Button>
             </div>
-          </div>
-          <div className='mt-4 flex gap-6'>
-            <div className='text-center'>
-              <div className='text-2xl font-bold text-gray-900 dark:text-white'>
-                {following?.length ?? 0}
-              </div>
-              <div className='text-sm text-gray-600 dark:text-gray-400'>
-                Following
-              </div>
-            </div>
-            <div className='text-center'>
-              <div className='text-2xl font-bold text-gray-900 dark:text-white'>
-                {followers?.length ?? 0}
-              </div>
-              <div className='text-sm text-gray-600 dark:text-gray-400'>
-                Followers
-              </div>
-            </div>
-          </div>
+          )}
         </div>
 
         {/* Navigation Links */}
@@ -298,15 +325,25 @@ export function MobileSidebarModal({
           </div>
         </div>
 
-        {/* Sign Out Button */}
+        {/* Sign Out / Log In Button */}
         <div className='border-t border-gray-200 px-4 py-4 dark:border-gray-700'>
-          <button
-            onClick={handleLogout}
-            className='flex w-full items-center justify-center gap-3 rounded-xl bg-red-50 px-4 py-3.5 font-semibold text-red-600 transition-all hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
-          >
-            <LogOut className='h-5 w-5' />
-            Sign Out
-          </button>
+          {user ? (
+            <button
+              onClick={handleLogout}
+              className='flex w-full items-center justify-center gap-3 rounded-xl bg-red-50 px-4 py-3.5 font-semibold text-red-600 transition-all hover:bg-red-100 dark:bg-red-900/20 dark:text-red-400 dark:hover:bg-red-900/30'
+            >
+              <LogOut className='h-5 w-5' />
+              Sign Out
+            </button>
+          ) : (
+            <button
+              onClick={(e) => handleFeedClick(e as any)}
+              className='flex w-full items-center justify-center gap-3 rounded-xl bg-gray-100 px-4 py-3.5 font-semibold text-gray-900 transition-all hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700'
+            >
+              <LogOut className='h-5 w-5 rotate-180' />
+              Log In
+            </button>
+          )}
         </div>
       </div>
     </>
