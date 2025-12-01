@@ -38,10 +38,10 @@ export function GlobalMobileHeader(): JSX.Element {
         <div className='flex items-center gap-2'>
           {/* Social Share - Temporarily disabled */}
           {/* <SocialShare
-            title='Check out Buzzwin - Rate Shows & Movies'
-            description='Discover and rate your favorite shows and movies with AI-powered recommendations!'
+            title='Check out Buzzwin - Wellness & Good Deeds'
+            description='Join a community focused on wellness, positive actions, and inspiring others to do good!'
             url={typeof window !== 'undefined' ? window.location.origin : ''}
-            hashtags={['Buzzwin', 'Movies', 'TVShows', 'Recommendations']}
+            hashtags={['Buzzwin', 'Wellness', 'GoodDeeds', 'PositiveImpact']}
             showTitle={false}
             size='sm'
             variant='minimal'

@@ -45,7 +45,7 @@ export default function Home(): JSX.Element {
     mediaData?: MediaCard
   ): Promise<void> => {
     if (!user?.id) {
-      toast.error('Please sign in to rate shows and movies');
+      toast.error('Please sign in to share wellness practices and good deeds');
       return;
     }
 
@@ -88,7 +88,7 @@ export default function Home(): JSX.Element {
 
   return (
     <HomeLayout>
-      <SEO title='Buzzwin - Rate Shows & Movies' />
+      <SEO title='Buzzwin - Wellness & Good Deeds' />
 
       {/* Clean Minimal Design */}
       <div className='min-h-screen bg-white dark:bg-gray-900'>
@@ -101,12 +101,12 @@ export default function Home(): JSX.Element {
               </div>
             </div>
             <h1 className='mb-4 text-4xl font-bold text-gray-900 dark:text-white md:text-5xl'>
-              {user ? 'Rate Shows & Movies' : 'Discover What to Watch'}
+              {user ? 'Wellness & Good Deeds' : 'Discover Wellness Practices'}
             </h1>
             <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400'>
               {user
-                ? 'Swipe to rate and get personalized recommendations powered by AI'
-                : 'Join thousands of users discovering and rating the best shows and movies!'}
+                ? 'Share wellness practices and good deeds to inspire others'
+                : 'Join thousands of users sharing wellness practices and positive actions!'}
             </p>
           </div>
 
@@ -237,7 +237,7 @@ export default function Home(): JSX.Element {
               <div className='sticky top-8'>
                 <div className='mb-8 text-center'>
                   <h2 className='mb-4 text-2xl font-semibold text-gray-900 dark:text-white'>
-                    {user ? 'Rate Shows & Movies' : 'Trending Shows & Movies'}
+                    {user ? 'Wellness & Good Deeds' : 'Trending Wellness Practices'}
                   </h2>
 
                   {user ? (
@@ -263,8 +263,8 @@ export default function Home(): JSX.Element {
                     </div>
                   ) : (
                     <p className='text-gray-600 dark:text-gray-400'>
-                      Discover what&apos;s trending right now. Sign in to rate
-                      and get personalized recommendations!
+                      Discover what&apos;s trending right now. Sign in to share
+                      your wellness journey and inspire others!
                     </p>
                   )}
                 </div>
@@ -289,8 +289,8 @@ export default function Home(): JSX.Element {
                         Get Personalized Recommendations
                       </h3>
                       <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
-                        Sign in to rate shows and get AI-powered recommendations
-                        tailored just for you!
+                        Sign in to share wellness practices and get personalized
+                        recommendations tailored just for you!
                       </p>
                       <Button
                         onClick={handleSignIn}

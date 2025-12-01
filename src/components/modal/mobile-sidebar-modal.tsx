@@ -73,12 +73,6 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
-    href: '/watchlists',
-    linkName: 'Watchlists',
-    iconName: 'bookmark',
-    disabled: false
-  },
-  {
     href: `/user/${username}`,
     linkName: 'Profile',
     iconName: 'user',
@@ -131,7 +125,7 @@ export function MobileSidebarModal({
   const navLinks = user 
     ? allNavLinks 
     : allNavLinks.filter(link => 
-        ['/', '/home', '/blog', '/real-stories', '/rituals', '/watchlists'].includes(link.href)
+        ['/', '/home', '/blog', '/real-stories', '/rituals'].includes(link.href)
       );
 
   const handleLogout = async (): Promise<void> => {
@@ -261,7 +255,7 @@ export function MobileSidebarModal({
           ) : (
             <div className='flex flex-col items-center justify-center text-center'>
               <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-                Welcome to Blesswin
+                Welcome to Buzzwin
               </h3>
               <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
                 Join our community to track your wellness journey.

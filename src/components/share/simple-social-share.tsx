@@ -16,10 +16,10 @@ interface SimpleSocialShareProps {
 }
 
 export function SimpleSocialShare({
-  title = 'Check out Buzzwin - Rate Shows & Movies',
-  description = 'Discover and rate your favorite shows and movies with AI-powered recommendations!',
+  title = 'Check out Buzzwin - Wellness & Good Deeds',
+  description = 'Join a community focused on wellness, positive actions, and inspiring others to do good!',
   url = typeof window !== 'undefined' ? window.location.href : '',
-  hashtags = ['Buzzwin', 'Movies', 'TVShows', 'Recommendations'],
+  hashtags = ['Buzzwin', 'Wellness', 'GoodDeeds', 'PositiveImpact'],
   className = '',
   showTitle = true,
   size = 'md',
@@ -184,7 +184,7 @@ export function SimpleSocialShare({
             Share Buzzwin
           </h3>
           <p className='text-sm text-gray-600 dark:text-gray-400'>
-            Help others discover great shows and movies
+            Help others discover wellness and positive actions
           </p>
         </div>
       )}

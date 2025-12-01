@@ -80,7 +80,7 @@ export function AchievementSystem({
     {
       id: 'streak_starter',
       title: 'Streak Starter',
-      description: 'Rate shows for 3 consecutive days',
+      description: 'Share wellness practices for 3 consecutive days',
       icon: <Zap className='h-6 w-6' />,
       points: 25,
       unlocked: false,
@@ -92,7 +92,7 @@ export function AchievementSystem({
     {
       id: 'streak_master',
       title: 'Streak Master',
-      description: 'Rate shows for 7 consecutive days',
+      description: 'Share wellness practices for 7 consecutive days',
       icon: <Flame className='h-6 w-6' />,
       points: 75,
       unlocked: false,
@@ -318,13 +318,13 @@ export function AchievementSystem({
       <div className='flex justify-center space-x-4'>
         <Button
           onClick={() =>
-            toast.success('Keep rating shows to unlock more achievements!')
+            toast.success('Keep sharing wellness practices to unlock more achievements!')
           }
           size='sm'
           className='rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-white hover:from-purple-700 hover:to-pink-700'
         >
           <Star className='mr-2 h-4 w-4' />
-          Rate Shows
+          Share Wellness
         </Button>
         <Button
           onClick={() => toast.success('Share your achievements with friends!')}

@@ -119,14 +119,14 @@ export default async function handler(
           const lovedTitles = loved.map((r) => r.title).join(', ');
           const hatedTitles = hated.map((r) => r.title).join(', ');
           
-          userContext = `\n\nUser's Taste Profile (from ${ratings.length} ratings):
-- Loved shows/movies: ${lovedTitles || 'None yet'}
-- Disliked shows/movies: ${hatedTitles || 'None yet'}
-- Total ratings: ${ratings.length}
+          userContext = `\n\nUser's Wellness Profile (from ${ratings.length} activities):
+- Loved practices/deeds: ${lovedTitles || 'None yet'}
+- Practices they didn't enjoy: ${hatedTitles || 'None yet'}
+- Total activities: ${ratings.length}
 
-Use this to provide personalized recommendations that match their taste.`;
+Use this to provide personalized wellness recommendations that match their journey.`;
         } else {
-          userContext = '\n\nThe user has no ratings yet. Ask about their preferences to understand their taste.';
+          userContext = '\n\nThe user has no wellness activities yet. Ask about their wellness goals and preferences to understand their journey.';
         }
       } catch (error) {
         console.error('Error fetching user ratings:', error);
@@ -142,23 +142,21 @@ Use this to provide personalized recommendations that match their taste.`;
     const currentYear = new Date().getFullYear();
     const recentYears = `${currentYear - 3}-${currentYear}`;
 
-    const prompt = `You are ${curatorName}, an AI entertainment curator focused on finding the perfect show or movie for users.${userId ? ' You have access to the user\'s rating history and taste preferences.' : ''}
+    const prompt = `You are ${curatorName}, an AI wellness and positive action curator focused on helping users improve their wellbeing and do good deeds.${userId ? ' You have access to the user\'s wellness journey and preferences.' : ''}
 
 ${curatorName === 'CineWolf-93' 
-  ? 'Your personality: Confident, playful, protective of your human. You have a win streak of 7 and a 95% match rate. You\'re competitive but fun. You specialize in finding dark, smart thrillers, psychological dramas, and edge-of-seat content. Keep responses short (1-3 sentences max). Always focus on recommending specific shows or movies based on what the user wants.' 
-  : 'Your personality: Slightly snobbish, thinks mainstream picks are "mid". You debate with CineWolf-93 and push for more nuanced, critically-acclaimed content. Keep responses short (1-3 sentences max). Always focus on recommending specific shows or movies.'}
+  ? 'Your personality: Confident, playful, supportive of your human. You have a win streak of 7 and a 95% match rate. You\'re encouraging but fun. You specialize in finding practical wellness practices, mindfulness activities, and impactful good deeds. Keep responses short (1-3 sentences max). Always focus on recommending specific wellness practices or good deeds based on what the user wants.' 
+  : 'Your personality: Thoughtful and holistic, thinks mainstream wellness is "basic". You debate with CineWolf-93 and push for more nuanced, deeply transformative wellness practices. Keep responses short (1-3 sentences max). Always focus on recommending specific wellness practices or good deeds.'}
 
-CRITICAL: Prioritize RECENT content from ${recentYears} unless the user explicitly asks for older shows/movies. Default to suggesting recent productions unless they mention "classic", "old", "vintage", or specific older years.
+Your goal: Help the user find their next wellness practice or good deed. Ask about:
+- Current mood/energy level (energetic, calm, stressed, motivated)
+- Wellness goals (physical health, mental health, spiritual growth, community impact)
+- Time available (quick 5-minute practices vs longer rituals)
+- Interests and values
+- Wellness practices or good deeds they've enjoyed before
+${userId ? '- Reference their wellness journey to suggest similar practices they\'ll love' : ''}
 
-Your goal: Help the user find their next perfect watch. Ask about:
-- Mood/tone (dark, light, funny, serious)
-- Genre preferences (thriller, drama, comedy, sci-fi)
-- Length (quick episodes vs binge-worthy series)
-- Themes they enjoy
-- Shows/movies they've loved before
-${userId ? '- Reference their rating history to suggest similar content they\'ll love' : ''}
-
-After your response, suggest 3 specific show/movie titles (one per line, formatted as "• [Title] ([Year])" - focus on ${recentYears} unless user asked for older content).
+After your response, suggest 3 specific wellness practices or good deeds (one per line, formatted as "• [Practice/Deed]").
 
 ${userContext}
 
@@ -167,7 +165,7 @@ ${conversationContext}
 
 User: ${lastMessage.content}
 
-Respond as ${curatorName} would - short, in-character, and focused on finding the perfect show or movie recommendation. ${userId && userContext ? 'Reference their taste profile and rating history when relevant.' : ''} If the user mentions preferences, suggest specific shows or movies. Be conversational, not formal.`;
+Respond as ${curatorName} would - short, in-character, and focused on finding the perfect wellness practice or good deed. ${userId && userContext ? 'Reference their wellness profile and activity history when relevant.' : ''} If the user mentions preferences, suggest specific wellness practices or good deeds. Be conversational, not formal.`;
 
     const response = await callGeminiAPI(prompt, 300, 0.8);
 
@@ -186,7 +184,7 @@ Respond as ${curatorName} would - short, in-character, and focused on finding th
 
     // Generate default suggestions if none were extracted
     const defaultSuggestions = suggestions.length === 0 
-      ? ['Dark thrillers from 2024', 'Popular sci-fi series', 'Comedy shows under 30 min']
+      ? ['5-minute morning meditation', 'Evening gratitude practice', 'Random act of kindness']
       : suggestions;
 
     res.status(200).json({

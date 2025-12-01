@@ -9,7 +9,7 @@ interface DisclaimerModalProps {
   onDecline?: () => void;
 }
 
-const DISCLAIMER_STORAGE_KEY = 'blesswin_disclaimer_accepted';
+const DISCLAIMER_STORAGE_KEY = 'buzzwin_disclaimer_accepted';
 
 // Check disclaimer acceptance (database first, then localStorage fallback)
 export async function hasAcceptedDisclaimer(userId?: string): Promise<boolean> {

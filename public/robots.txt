@@ -10,8 +10,6 @@ Disallow: /settings
 Disallow: /bookmarks
 Disallow: /home
 Disallow: /story-bookmarks
-Disallow: /watchlists
-Disallow: /watchlist/
 Disallow: /people
 Disallow: /reviews
 Disallow: /swipe

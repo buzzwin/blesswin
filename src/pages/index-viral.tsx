@@ -54,7 +54,7 @@ export default function ViralHome(): JSX.Element {
     mediaData?: MediaCard
   ): Promise<void> => {
     if (!user?.id) {
-      toast.error('Please sign in to rate shows and movies');
+      toast.error('Please sign in to share wellness practices and good deeds');
       return;
     }
 

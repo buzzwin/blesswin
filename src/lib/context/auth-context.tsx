@@ -86,6 +86,11 @@ export function AuthContextProvider({
   useEffect(() => {
     const handleRedirectResult = async (): Promise<void> => {
       try {
+        // Add a small delay for iOS Safari to ensure redirect is ready
+        if (typeof window !== 'undefined' && isMobileDevice()) {
+          await new Promise((resolve) => setTimeout(resolve, 100));
+        }
+
         const result = await getRedirectResult(auth);
         if (result && result.user) {
           setLoading(true); // Set loading state during redirect handling
@@ -164,13 +169,34 @@ export function AuthContextProvider({
           toast.success('Successfully signed in!');
 
           // Redirect to the stored path or default to home
+          // Use replace instead of href for better iOS Safari compatibility
           if (redirectPath && typeof window !== 'undefined') {
             sessionStorage.removeItem('redirectAfterLogin');
-            window.location.href = redirectPath;
+            // Use replace to avoid adding to history, better for redirects
+            window.location.replace(redirectPath);
+          } else if (typeof window !== 'undefined') {
+            // Default redirect to home if no specific path
+            window.location.replace('/home');
           }
         }
       } catch (error) {
-        toast.error('Failed to complete sign in');
+        const firebaseError = error as FirebaseError;
+        console.error('Redirect result error:', firebaseError);
+
+        // More specific error handling for iOS Safari
+        if (firebaseError.code === 'auth/network-request-failed') {
+          toast.error(
+            'Network error. Please check your connection and try again.'
+          );
+        } else if (
+          firebaseError.code === 'auth/popup-closed-by-user' ||
+          firebaseError.code === 'auth/cancelled-popup-request'
+        ) {
+          // User cancelled, don't show error
+          return;
+        } else {
+          toast.error('Failed to complete sign in. Please try again.');
+        }
         setError(error as Error);
         setLoading(false);
       }
@@ -266,9 +292,9 @@ export function AuthContextProvider({
 
           if (redirectPath && typeof window !== 'undefined') {
             sessionStorage.removeItem('redirectAfterLogin');
-            // Use router for client-side navigation
+            // Use replace for better iOS Safari compatibility
             setTimeout(() => {
-              window.location.href = redirectPath;
+              window.location.replace(redirectPath);
             }, 500);
           }
         });
@@ -309,20 +335,38 @@ export function AuthContextProvider({
     try {
       const provider = new GoogleAuthProvider();
 
+      // Add custom parameters for better mobile support
+      provider.setCustomParameters({
+        prompt: 'select_account'
+      });
+
       // Use redirect for mobile devices, popup for desktop
       if (isMobileDevice()) {
+        // Store current URL for redirect back
+        if (typeof window !== 'undefined') {
+          const currentPath = window.location.pathname + window.location.search;
+          if (currentPath !== '/login') {
+            sessionStorage.setItem('redirectAfterLogin', currentPath);
+          }
+        }
         await signInWithRedirect(auth, provider);
         // Don't show success message yet as user will be redirected
+        // The redirect will be handled by handleRedirectResult
       } else {
         await signInWithPopup(auth, provider);
         toast.success('Successfully signed in with Google!');
       }
     } catch (error) {
       const firebaseError = error as FirebaseError;
-      if (firebaseError.code === 'auth/popup-closed-by-user') {
+      if (
+        firebaseError.code === 'auth/popup-closed-by-user' ||
+        firebaseError.code === 'auth/cancelled-popup-request'
+      ) {
         toast.error('Sign in cancelled');
+      } else if (firebaseError.code === 'auth/network-request-failed') {
+        toast.error('Network error. Please check your connection.');
       } else {
-        toast.error('Failed to sign in with Google');
+        toast.error('Failed to sign in with Google. Please try again.');
       }
       setError(error as Error);
     }
@@ -344,18 +388,31 @@ export function AuthContextProvider({
 
       // Use redirect for mobile devices, popup for desktop
       if (isMobileDevice()) {
+        // Store current URL for redirect back
+        if (typeof window !== 'undefined') {
+          const currentPath = window.location.pathname + window.location.search;
+          if (currentPath !== '/login') {
+            sessionStorage.setItem('redirectAfterLogin', currentPath);
+          }
+        }
         await signInWithRedirect(auth, provider);
         // Don't show success message yet as user will be redirected
+        // The redirect will be handled by handleRedirectResult
       } else {
         await signInWithPopup(auth, provider);
         toast.success('Successfully signed in with Facebook!');
       }
     } catch (error) {
       const firebaseError = error as FirebaseError;
-      if (firebaseError.code === 'auth/popup-closed-by-user') {
+      if (
+        firebaseError.code === 'auth/popup-closed-by-user' ||
+        firebaseError.code === 'auth/cancelled-popup-request'
+      ) {
         toast.error('Sign in cancelled');
+      } else if (firebaseError.code === 'auth/network-request-failed') {
+        toast.error('Network error. Please check your connection.');
       } else {
-        toast.error('Failed to sign in with Facebook');
+        toast.error('Failed to sign in with Facebook. Please try again.');
       }
       setError(error as Error);
     }

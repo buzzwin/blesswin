@@ -515,13 +515,12 @@ export function SwipeInterface({
 
               {/* Title */}
               <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-                Sign In to Rate Shows!
+                Sign In to Join the Wellness Journey!
               </h3>
 
               {/* Description */}
               <p className='mb-6 text-sm text-gray-600 dark:text-gray-300'>
-                Join thousands of users who are rating and discovering amazing
-                shows and movies. Your ratings help others find great content!
+                Join thousands of users who are sharing wellness practices and good deeds. Your actions inspire others to do good!
               </p>
 
               {/* Benefits */}
@@ -529,7 +528,7 @@ export function SwipeInterface({
                 <div className='flex items-center gap-2'>
                   <Heart className='h-4 w-4 text-red-500' />
                   <span className='text-sm text-gray-600 dark:text-gray-300'>
-                    Rate shows you love or hate
+                    Share wellness practices you love
                   </span>
                 </div>
                 <div className='flex items-center gap-2'>

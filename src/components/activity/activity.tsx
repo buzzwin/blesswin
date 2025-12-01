@@ -44,62 +44,10 @@ const ActivityFeed: React.FC = () => {
   }, [nextSlide, prevSlide]);
 
   useEffect(() => {
-    const fetchTMDBData = async () => {
-      try {
-        const titles = [
-          'Inception',
-          'Stranger Things',
-          'The Dark Knight',
-          'Breaking Bad',
-          'Game of Thrones',
-          'The Shawshank Redemption',
-          'The Last Kingdom',
-          'The White Lotus'
-        ];
-
-        const results = await Promise.all(
-          titles.map(async (title) => {
-            const response = await axios.get<TMDBResponse>(
-              `https://api.themoviedb.org/3/search/multi?api_key=0af4f0642998fa986fe260078ab69ab6&query=${encodeURIComponent(
-                title
-              )}&page=1`
-            );
-            return response.data.results[0];
-          })
-        );
-
-        const updatedActivities = results
-          .filter(
-            (result): result is TMDBResult => result.media_type !== 'person'
-          )
-          .map((result) => {
-            const mediaType =
-              result.media_type === 'tv' ? ('tv' as const) : ('movie' as const);
-
-            return {
-              tmdbId: result.id.toString(),
-              title: result.title ?? result.name ?? '',
-              poster_path: result.poster_path ?? '',
-              mediaType,
-              status: 'is watching',
-              review: result.overview ?? '',
-              overview: result.overview ?? '',
-              username: 'demo_user',
-              photoURL: 'default-avatar',
-              network: '',
-              releaseDate: result.release_date ?? result.first_air_date ?? ''
-            };
-          });
-
-        setActivities(updatedActivities);
-        setLoading(false);
-      } catch (error) {
-        // console.error('Error fetching TMDB data:', error);
-        setLoading(false);
-      }
-    };
-
-    void fetchTMDBData();
+    // Activity feed now focuses on wellness and good deeds
+    // TMDB movie/show fetching has been removed
+    setActivities([]);
+    setLoading(false);
   }, []);
 
   useEffect(() => {

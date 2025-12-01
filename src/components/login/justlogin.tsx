@@ -42,8 +42,8 @@ export default function JustLogin(): JSX.Element {
           {isSignUp ? 'Create your account' : 'Welcome back'}
         </h2>
         <p className='text-gray-600 dark:text-gray-300'>
-          Connect with other TV and movie enthusiasts, share your thoughts, and
-          discover new content.
+          Connect with others on their wellness journey, share your positive
+          actions, and inspire others to do good.
         </p>
       </div>
 
@@ -121,7 +121,7 @@ export default function JustLogin(): JSX.Element {
             <div className='w-full border-t border-gray-300 dark:border-gray-600'></div>
           </div>
           <div className='relative flex justify-center'>
-            <span className='bg-white dark:bg-gray-800 px-2 text-sm text-gray-600 dark:text-gray-400'>
+            <span className='bg-white px-2 text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-400'>
               or continue with
             </span>
           </div>
@@ -129,16 +129,32 @@ export default function JustLogin(): JSX.Element {
 
         {/* Google Sign In */}
         <button
+          type='button'
           className={cn(
             'flex items-center justify-center gap-2',
             'w-full rounded-lg px-4 py-2.5',
-            'bg-white dark:bg-gray-800 text-gray-900 dark:text-white',
+            'bg-white text-gray-900 dark:bg-gray-800 dark:text-white',
             'border border-gray-300 dark:border-gray-600',
             'hover:bg-gray-100 dark:hover:bg-gray-700',
+            'active:bg-gray-200 dark:active:bg-gray-600',
             'transition-colors duration-200',
-            'font-medium'
+            'font-medium',
+            'touch-manipulation', // Better touch handling on iOS
+            'cursor-pointer',
+            'select-none' // Prevent text selection on tap
           )}
-          onClick={signInWithGoogle}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            void signInWithGoogle();
+          }}
+          onTouchStart={(e) => {
+            // Ensure touch events work properly on iOS
+            e.currentTarget.style.opacity = '0.8';
+          }}
+          onTouchEnd={(e) => {
+            e.currentTarget.style.opacity = '1';
+          }}
         >
           <GoogleIcon className='h-5 w-5' />
           Continue with Google
