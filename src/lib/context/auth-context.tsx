@@ -82,6 +82,32 @@ export function AuthContextProvider({
     );
   };
 
+  // Check if sessionStorage is accessible (iOS Safari may block it)
+  const isSessionStorageAvailable = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const testKey = '__sessionStorage_test__';
+      sessionStorage.setItem(testKey, 'test');
+      sessionStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
+  // Check if localStorage is accessible
+  const isLocalStorageAvailable = (): boolean => {
+    if (typeof window === 'undefined') return false;
+    try {
+      const testKey = '__localStorage_test__';
+      localStorage.setItem(testKey, 'test');
+      localStorage.removeItem(testKey);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  };
+
   // Handle redirect result
   useEffect(() => {
     const handleRedirectResult = async (): Promise<void> => {
@@ -95,12 +121,21 @@ export function AuthContextProvider({
         if (result && result.user) {
           setLoading(true); // Set loading state during redirect handling
 
-          // Check for redirect path
-          const redirectPath =
-            typeof window !== 'undefined'
-              ? sessionStorage.getItem('redirectAfterLogin') ||
-                new URLSearchParams(window.location.search).get('redirect')
-              : null;
+          // Check for redirect path (try sessionStorage first, then localStorage)
+          let redirectPath: string | null = null;
+          if (typeof window !== 'undefined') {
+            try {
+              redirectPath =
+                sessionStorage.getItem('redirectAfterLogin') ||
+                localStorage.getItem('redirectAfterLogin') ||
+                new URLSearchParams(window.location.search).get('redirect');
+            } catch (e) {
+              // Storage not accessible, try URL params only
+              redirectPath = new URLSearchParams(window.location.search).get(
+                'redirect'
+              );
+            }
+          }
           const authUser = result.user;
           const { uid, displayName, photoURL } = authUser;
 
@@ -171,7 +206,13 @@ export function AuthContextProvider({
           // Redirect to the stored path or default to home
           // Use replace instead of href for better iOS Safari compatibility
           if (redirectPath && typeof window !== 'undefined') {
-            sessionStorage.removeItem('redirectAfterLogin');
+            // Clean up both storage locations
+            try {
+              sessionStorage.removeItem('redirectAfterLogin');
+              localStorage.removeItem('redirectAfterLogin');
+            } catch (e) {
+              // Storage not accessible, continue anyway
+            }
             // Use replace to avoid adding to history, better for redirects
             window.location.replace(redirectPath);
           } else if (typeof window !== 'undefined') {
@@ -184,7 +225,25 @@ export function AuthContextProvider({
         console.error('Redirect result error:', firebaseError);
 
         // More specific error handling for iOS Safari
-        if (firebaseError.code === 'auth/network-request-failed') {
+        if (
+          firebaseError.message?.includes('missing initial state') ||
+          firebaseError.code === 'auth/argument-error'
+        ) {
+          // iOS Safari sessionStorage issue
+          toast.error(
+            'Storage access issue detected. Please try signing in again or use email/password login.',
+            { duration: 6000 }
+          );
+          // Clear any stale redirect state
+          if (typeof window !== 'undefined') {
+            try {
+              sessionStorage.removeItem('redirectAfterLogin');
+              localStorage.removeItem('redirectAfterLogin');
+            } catch (e) {
+              // Ignore storage errors
+            }
+          }
+        } else if (firebaseError.code === 'auth/network-request-failed') {
           toast.error(
             'Network error. Please check your connection and try again.'
           );
@@ -284,17 +343,31 @@ export function AuthContextProvider({
       if (authUser) {
         void manageUser(authUser).then(() => {
           // Check for redirect path after successful login (for email/password login)
-          const redirectPath =
-            typeof window !== 'undefined'
-              ? sessionStorage.getItem('redirectAfterLogin') ||
-                new URLSearchParams(window.location.search).get('redirect')
-              : null;
+          let redirectPath: string | null = null;
+          if (typeof window !== 'undefined') {
+            try {
+              redirectPath =
+                sessionStorage.getItem('redirectAfterLogin') ||
+                localStorage.getItem('redirectAfterLogin') ||
+                new URLSearchParams(window.location.search).get('redirect');
+            } catch (e) {
+              redirectPath = new URLSearchParams(window.location.search).get(
+                'redirect'
+              );
+            }
+          }
 
           if (redirectPath && typeof window !== 'undefined') {
-            sessionStorage.removeItem('redirectAfterLogin');
+            // Clean up both storage locations
+            try {
+              sessionStorage.removeItem('redirectAfterLogin');
+              localStorage.removeItem('redirectAfterLogin');
+            } catch (e) {
+              // Storage not accessible, continue anyway
+            }
             // Use replace for better iOS Safari compatibility
             setTimeout(() => {
-              window.location.replace(redirectPath);
+              window.location.replace(redirectPath as string);
             }, 500);
           }
         });
@@ -340,19 +413,56 @@ export function AuthContextProvider({
         prompt: 'select_account'
       });
 
-      // Use redirect for mobile devices, popup for desktop
-      if (isMobileDevice()) {
+      const isMobile = isMobileDevice();
+      const sessionStorageAvailable = isSessionStorageAvailable();
+      const localStorageAvailable = isLocalStorageAvailable();
+
+      // For iOS Safari, if sessionStorage is blocked, use popup instead
+      // This avoids the "missing initial state" error
+      if (isMobile && !sessionStorageAvailable) {
+        // iOS Safari with blocked sessionStorage - use popup
+        try {
+          await signInWithPopup(auth, provider);
+          toast.success('Successfully signed in with Google!');
+          return;
+        } catch (popupError) {
+          const popupFirebaseError = popupError as FirebaseError;
+          if (
+            popupFirebaseError.code === 'auth/popup-blocked' ||
+            popupFirebaseError.code === 'auth/popup-closed-by-user'
+          ) {
+            // Popup blocked or closed, suggest email/password
+            toast.error(
+              'Popup blocked. Please use email/password login or enable popups.',
+              { duration: 5000 }
+            );
+            return;
+          }
+          throw popupError;
+        }
+      }
+
+      // Use redirect for mobile devices (when sessionStorage is available), popup for desktop
+      if (isMobile && sessionStorageAvailable) {
         // Store current URL for redirect back
         if (typeof window !== 'undefined') {
           const currentPath = window.location.pathname + window.location.search;
           if (currentPath !== '/login') {
-            sessionStorage.setItem('redirectAfterLogin', currentPath);
+            // Try sessionStorage first, fallback to localStorage
+            try {
+              sessionStorage.setItem('redirectAfterLogin', currentPath);
+            } catch (e) {
+              if (localStorageAvailable) {
+                localStorage.setItem('redirectAfterLogin', currentPath);
+              }
+            }
           }
         }
         await signInWithRedirect(auth, provider);
         // Don't show success message yet as user will be redirected
         // The redirect will be handled by handleRedirectResult
       } else {
+        // Desktop or mobile with popup fallback
         await signInWithPopup(auth, provider);
         toast.success('Successfully signed in with Google!');
       }
@@ -363,8 +473,22 @@ export function AuthContextProvider({
         firebaseError.code === 'auth/cancelled-popup-request'
       ) {
         toast.error('Sign in cancelled');
+      } else if (firebaseError.code === 'auth/popup-blocked') {
+        toast.error(
+          'Popup blocked. Please enable popups or use email/password login.',
+          { duration: 5000 }
+        );
       } else if (firebaseError.code === 'auth/network-request-failed') {
         toast.error('Network error. Please check your connection.');
+      } else if (
+        firebaseError.message?.includes('missing initial state') ||
+        firebaseError.code === 'auth/argument-error'
+      ) {
+        // iOS Safari sessionStorage issue - suggest popup or email
+        toast.error(
+          'Storage issue detected. Please try email/password login or enable popups.',
+          { duration: 5000 }
+        );
       } else {
         toast.error('Failed to sign in with Google. Please try again.');
       }
@@ -386,19 +510,54 @@ export function AuthContextProvider({
     try {
       const provider = new FacebookAuthProvider();
 
-      // Use redirect for mobile devices, popup for desktop
-      if (isMobileDevice()) {
+      const isMobile = isMobileDevice();
+      const sessionStorageAvailable = isSessionStorageAvailable();
+      const localStorageAvailable = isLocalStorageAvailable();
+
+      // For iOS Safari, if sessionStorage is blocked, use popup instead
+      if (isMobile && !sessionStorageAvailable) {
+        // iOS Safari with blocked sessionStorage - use popup
+        try {
+          await signInWithPopup(auth, provider);
+          toast.success('Successfully signed in with Facebook!');
+          return;
+        } catch (popupError) {
+          const popupFirebaseError = popupError as FirebaseError;
+          if (
+            popupFirebaseError.code === 'auth/popup-blocked' ||
+            popupFirebaseError.code === 'auth/popup-closed-by-user'
+          ) {
+            toast.error(
+              'Popup blocked. Please use email/password login or enable popups.',
+              { duration: 5000 }
+            );
+            return;
+          }
+          throw popupError;
+        }
+      }
+
+      // Use redirect for mobile devices (when sessionStorage is available), popup for desktop
+      if (isMobile && sessionStorageAvailable) {
         // Store current URL for redirect back
         if (typeof window !== 'undefined') {
           const currentPath = window.location.pathname + window.location.search;
           if (currentPath !== '/login') {
-            sessionStorage.setItem('redirectAfterLogin', currentPath);
+            // Try sessionStorage first, fallback to localStorage
+            try {
+              sessionStorage.setItem('redirectAfterLogin', currentPath);
+            } catch (e) {
+              if (localStorageAvailable) {
+                localStorage.setItem('redirectAfterLogin', currentPath);
+              }
+            }
           }
         }
         await signInWithRedirect(auth, provider);
         // Don't show success message yet as user will be redirected
         // The redirect will be handled by handleRedirectResult
       } else {
+        // Desktop or mobile with popup fallback
         await signInWithPopup(auth, provider);
         toast.success('Successfully signed in with Facebook!');
       }
@@ -409,8 +568,22 @@ export function AuthContextProvider({
         firebaseError.code === 'auth/cancelled-popup-request'
       ) {
         toast.error('Sign in cancelled');
+      } else if (firebaseError.code === 'auth/popup-blocked') {
+        toast.error(
+          'Popup blocked. Please enable popups or use email/password login.',
+          { duration: 5000 }
+        );
       } else if (firebaseError.code === 'auth/network-request-failed') {
         toast.error('Network error. Please check your connection.');
+      } else if (
+        firebaseError.message?.includes('missing initial state') ||
+        firebaseError.code === 'auth/argument-error'
+      ) {
+        // iOS Safari sessionStorage issue - suggest popup or email
+        toast.error(
+          'Storage issue detected. Please try email/password login or enable popups.',
+          { duration: 5000 }
+        );
       } else {
         toast.error('Failed to sign in with Facebook. Please try again.');
       }
