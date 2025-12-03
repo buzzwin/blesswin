@@ -237,7 +237,7 @@ export default function ChainViewPage(): JSX.Element {
         description='See how positive actions inspire others to join'
       >
         <MainHeader title='Action Chain' />
-        <div className='px-4 py-8 mx-auto max-w-2xl'>
+        <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
           <Loading className='mt-5' />
         </div>
       </PublicLayout>
@@ -251,14 +251,14 @@ export default function ChainViewPage(): JSX.Element {
         description='The action chain you are looking for could not be found'
       >
         <MainHeader title='Action Chain' />
-        <div className='px-4 py-8 mx-auto max-w-2xl'>
-          <div className='p-8 text-center bg-white rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800'>
+        <div className='mx-auto max-w-2xl px-4 py-8'>
+          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
             <p className='mb-4 text-gray-600 dark:text-gray-400'>
               Impact moment not found
             </p>
             <Link href='/'>
-              <a className='inline-flex gap-2 items-center text-purple-600 hover:text-purple-700 dark:text-purple-400'>
-                <ArrowLeft className='w-4 h-4' />
+              <a className='inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+                <ArrowLeft className='h-4 w-4' />
                 Back to Home
               </a>
             </Link>
@@ -283,19 +283,19 @@ export default function ChainViewPage(): JSX.Element {
       ogImage={userPhotoURL || undefined}
       ogUrl={publicUrl}
     >
-      <div className='px-4 py-8 mx-auto max-w-2xl'>
+      <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
         {/* Back Button */}
         <div className='mb-4'>
           <Link href={`/impact/${id}`}>
-            <a className='inline-flex gap-2 items-center text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
-              <ArrowLeft className='w-4 h-4' />
+            <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+              <ArrowLeft className='h-4 w-4' />
               Back to Moment
             </a>
           </Link>
         </div>
 
         {/* Chain Header */}
-        <div className='p-6 mb-6 text-center bg-white rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800'>
+        <div className='mb-6 rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-gray-700 dark:bg-gray-800'>
           <h2 className='mb-2 text-2xl font-bold text-gray-900 dark:text-white'>
             Action Chain
           </h2>
@@ -315,8 +315,8 @@ export default function ChainViewPage(): JSX.Element {
         </div>
 
         {/* Original Moment */}
-        <div className='p-4 mb-6 bg-purple-50 rounded-lg border-2 border-purple-300 dark:border-purple-700 dark:bg-purple-900/20'>
-          <div className='mb-3 text-xs font-semibold tracking-wide text-purple-600 uppercase dark:text-purple-400'>
+        <div className='mb-6 rounded-lg border-2 border-purple-300 bg-purple-50 p-4 dark:border-purple-700 dark:bg-purple-900/20'>
+          <div className='mb-3 text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400'>
             Original Action
           </div>
           <ImpactMomentCard
@@ -332,7 +332,7 @@ export default function ChainViewPage(): JSX.Element {
         {/* Joined Moments */}
         {joinedMoments.length > 0 && (
           <div className='mb-6'>
-            <div className='mb-4 text-xs font-semibold tracking-wide text-gray-600 uppercase dark:text-gray-400'>
+            <div className='mb-4 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-400'>
               Joined Actions ({joinedMoments.length})
             </div>
             <div className='space-y-4'>
@@ -358,7 +358,7 @@ export default function ChainViewPage(): JSX.Element {
 
         {/* Empty State */}
         {joinedMoments.length === 0 && (
-          <div className='p-6 mb-6 bg-white rounded-lg border border-gray-200 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
             <div className='text-center'>
               <div className='mb-4 text-6xl'>🌱</div>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
@@ -376,13 +376,13 @@ export default function ChainViewPage(): JSX.Element {
             {/* Email Share Form (for creator only) */}
             {originalMoment.createdBy === user?.id && (
               <div
-                className='pt-6 mt-6 space-y-4 border-t border-gray-200 dark:border-gray-700'
+                className='mt-6 space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700'
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
                 style={{ position: 'relative', zIndex: 10 }}
               >
-                <div className='flex gap-2 items-center'>
-                  <Mail className='w-5 h-5 text-green-600 dark:text-green-400' />
+                <div className='flex items-center gap-2'>
+                  <Mail className='h-5 w-5 text-green-600 dark:text-green-400' />
                   <h4 className='text-base font-semibold text-gray-900 dark:text-white'>
                     Share via Email
                   </h4>
@@ -395,7 +395,7 @@ export default function ChainViewPage(): JSX.Element {
                   onMouseDown={(e) => e.stopPropagation()}
                 >
                   <div>
-                    <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
                       Friend's Email <span className='text-red-500'>*</span>
                     </label>
                     <input
@@ -425,7 +425,7 @@ export default function ChainViewPage(): JSX.Element {
                     />
                   </div>
                   <div>
-                    <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
                       Friend's Name{' '}
                       <span className='text-xs text-gray-400'>(Optional)</span>
                     </label>
@@ -455,7 +455,7 @@ export default function ChainViewPage(): JSX.Element {
                     />
                   </div>
                   <div>
-                    <label className='block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
                       Personal Message{' '}
                       <span className='text-xs text-gray-400'>(Optional)</span>
                     </label>
@@ -489,16 +489,16 @@ export default function ChainViewPage(): JSX.Element {
                   <button
                     type='submit'
                     disabled={sendingEmail || !friendEmail}
-                    className='px-4 py-2 w-full font-semibold text-white bg-green-600 rounded-full hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50'
+                    className='w-full rounded-full bg-green-600 px-4 py-2 font-semibold text-white transition-colors hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-green-600 dark:hover:bg-green-700'
                   >
                     {sendingEmail ? (
                       <>
-                        <span className='inline-block mr-2 w-4 h-4 rounded-full border-2 border-white animate-spin border-t-transparent' />
+                        <span className='mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent' />
                         Sending...
                       </>
                     ) : (
                       <>
-                        <Send className='mr-2 w-4 h-4' />
+                        <Send className='mr-2 h-4 w-4' />
                         Send Email
                       </>
                     )}
@@ -506,9 +506,9 @@ export default function ChainViewPage(): JSX.Element {
                 </form>
 
                 {/* Social Share */}
-                <div className='pt-6 mt-6 space-y-3 border-t border-gray-200 dark:border-gray-700'>
-                  <div className='flex gap-2 items-center'>
-                    <Share2 className='w-5 h-5 text-green-600 dark:text-green-400' />
+                <div className='mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
+                  <div className='flex items-center gap-2'>
+                    <Share2 className='h-5 w-5 text-green-600 dark:text-green-400' />
                     <h4 className='text-base font-semibold text-gray-900 dark:text-white'>
                       Share on Social Media
                     </h4>
@@ -537,15 +537,15 @@ export default function ChainViewPage(): JSX.Element {
               <>
                 {user ? (
                   <Link href={`/impact/${id}`}>
-                    <a className='inline-flex gap-2 items-center px-6 py-3 text-sm font-semibold text-white bg-purple-600 rounded-full hover:bg-purple-700'>
+                    <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
                       Join This Action
-                      <ArrowLeft className='w-4 h-4 rotate-180' />
+                      <ArrowLeft className='h-4 w-4 rotate-180' />
                     </a>
                   </Link>
                 ) : (
                   <Link href={`/login?redirect=/impact/${id}`}>
-                    <a className='inline-flex gap-2 items-center px-6 py-3 text-sm font-semibold text-white bg-purple-600 rounded-full hover:bg-purple-700'>
-                      <LogIn className='w-5 h-5' />
+                    <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
+                      <LogIn className='h-5 w-5' />
                       Sign In to Join
                     </a>
                   </Link>
@@ -557,7 +557,7 @@ export default function ChainViewPage(): JSX.Element {
 
         {/* Sign In CTA (if not authenticated) */}
         {!user && (
-          <div className='p-6 text-center bg-purple-50 rounded-lg border border-purple-200 dark:border-purple-800 dark:bg-purple-900/20'>
+          <div className='rounded-lg border border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20'>
             <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
               Join the Community
             </h3>
@@ -566,8 +566,8 @@ export default function ChainViewPage(): JSX.Element {
               moments!
             </p>
             <Link href={`/login?redirect=/impact/${id}/chain`}>
-              <a className='inline-flex gap-2 items-center px-6 py-3 text-base font-semibold text-white bg-purple-600 rounded-full transition-colors hover:bg-purple-700'>
-                <LogIn className='w-5 h-5' />
+              <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
+                <LogIn className='h-5 w-5' />
                 Sign In to Join
               </a>
             </Link>
