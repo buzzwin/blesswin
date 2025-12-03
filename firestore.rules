@@ -78,6 +78,18 @@ service cloud.firestore {
       allow write: if isOwner(userId);
     }
 
+    // User stats subcollection
+    match /users/{userId}/stats/{statsId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // User bookmarks subcollection
+    match /users/{userId}/bookmarks/{bookmarkId} {
+      allow read: if isSignedIn() && request.auth.uid == userId;
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+
     // Ratings collection for Tinder-style app
     match /ratings/{ratingId} {
       allow read: if true;

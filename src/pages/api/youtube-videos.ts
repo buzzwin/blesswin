@@ -160,7 +160,6 @@ export default async function handler(
       })
       .slice(0, videoLimit);
 
-    console.log(`Returning ${sortedVideos.length} videos for category: ${category}`);
     
     // If no videos found and it's not a quota error, return empty array with success
     if (sortedVideos.length === 0) {

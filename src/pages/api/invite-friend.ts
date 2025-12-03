@@ -165,12 +165,6 @@ This invitation was sent by ${userName}. If you didn't expect this email, you ca
     // Remove spaces from app password (Gmail app passwords are 16 chars without spaces)
     const cleanPassword = emailPassword.replace(/\s/g, '');
 
-    console.log('Sending invite email:', {
-      to: friendEmail,
-      from: emailApi,
-      passwordLength: cleanPassword.length
-    });
-
     // Create transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -183,7 +177,6 @@ This invitation was sent by ${userName}. If you didn't expect this email, you ca
     // Verify connection first
     try {
       await transporter.verify();
-      console.log('Email server connection verified');
     } catch (verifyError) {
       console.error('Email server verification failed:', verifyError);
       res.status(500).json({
@@ -202,8 +195,6 @@ This invitation was sent by ${userName}. If you didn't expect this email, you ca
         html: inviteHtml,
         text: inviteText
       });
-
-      console.log('Email sent successfully:', info.messageId);
 
       res.status(200).json({
         success: true,

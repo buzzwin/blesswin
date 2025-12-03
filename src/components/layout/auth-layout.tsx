@@ -1,34 +1,21 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { useAuth } from '@lib/context/auth-context';
-import { sleep } from '@lib/utils';
 import { Placeholder } from '@components/common/placeholder';
 import type { ReactNode } from 'react';
 
 export function AuthLayout({ children }: { children: ReactNode }): JSX.Element {
-  const [pending, setPending] = useState(true);
-
   const { user, loading } = useAuth();
-  const { replace } = useRouter();
+  const router = useRouter();
 
   useEffect(() => {
-    const checkLogin = async (): Promise<void> => {
-      setPending(true);
+    // If user is authenticated and on login page, redirect to home
+    if (user && router.pathname === '/login') {
+      router.replace('/home');
+    }
+  }, [user, router]);
 
-      if (user) {
-        await sleep(500);
-        void replace('/home');
-      } else if (!loading) {
-        await sleep(500);
-        setPending(false);
-      }
-    };
-
-    void checkLogin();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [user, loading]);
-
-  if (loading ?? pending) return <Placeholder />;
+  if (loading) return <Placeholder />;
 
   return <>{children}</>;
 }

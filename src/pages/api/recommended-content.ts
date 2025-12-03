@@ -25,7 +25,6 @@ export default async function handler(
 
   try {
     const { userId } = req.body;
-    console.log('Recommended content API called with userId:', userId);
 
     // Handle anonymous users
     if (!userId) {
@@ -35,14 +34,12 @@ export default async function handler(
 
     // For authenticated users, fetch their ratings
     const ratings = await getUserRatings(userId as string);
-    console.log('User ratings count:', ratings.length);
     
     // Create a set of already-rated items to exclude them
     const ratedItems = new Set<string>();
     ratings.forEach(rating => {
       ratedItems.add(`${rating.tmdbId}-${rating.mediaType}`);
     });
-    console.log('Already-rated items to exclude:', ratedItems.size);
     
     // Generate AI recommendations using Gemini
     // For users with no ratings, suggest popular content
@@ -102,9 +99,7 @@ Return ONLY a valid JSON object with this exact structure:
   ]
 }`;
 
-    console.log('Calling Gemini API with prompt length:', fullPrompt.length);
     const content = await callGeminiAPI(fullPrompt, 1500, 0.7);
-    console.log('Gemini API response length:', content?.length || 0);
 
     if (!content || typeof content !== 'string') {
       throw new Error('No content received from Gemini API');
@@ -134,12 +129,9 @@ Return ONLY a valid JSON object with this exact structure:
       return isFromTargetYear && isNotRated;
     });
 
-    console.log(`Filtered content: ${filteredContent.length} out of ${parsedResponse.content.length} are from ${targetYears.join(' or ')} and not already rated`);
-    
     // If filtered content is empty, try to be less restrictive - allow items from a wider year range
     let finalContent = filteredContent;
     if (filteredContent.length === 0 && parsedResponse.content.length > 0) {
-      console.log('No content after filtering, trying less restrictive year range...');
       const expandedYears = [currentYear, currentYear - 1, currentYear - 2];
       finalContent = parsedResponse.content.filter(item => {
         const year = item.releaseDate ? new Date(item.releaseDate).getFullYear() : null;
@@ -147,7 +139,6 @@ Return ONLY a valid JSON object with this exact structure:
         const isNotRated = !ratedItems.has(`${item.tmdbId}-${item.mediaType}`);
         return isFromExpandedYear && isNotRated;
       });
-      console.log(`Expanded year range content: ${finalContent.length} items`);
     }
 
     res.status(200).json({

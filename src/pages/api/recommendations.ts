@@ -13,7 +13,6 @@ async function getPosterPathFromTMDB(title: string, mediaType: 'movie' | 'tv', y
   
   // Check cache first
   if (posterCache.has(cacheKey)) {
-    console.log(`Using cached poster for ${title}`);
     const cached = posterCache.get(cacheKey);
     return (cached as string) || '/api/placeholder/154/231';
   }
@@ -21,7 +20,6 @@ async function getPosterPathFromTMDB(title: string, mediaType: 'movie' | 'tv', y
   const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
   
   if (!TMDB_API_KEY) {
-    console.log('TMDB API key not found, using fallback poster');
     return '/api/placeholder/154/231';
   }
 
@@ -39,14 +37,12 @@ async function getPosterPathFromTMDB(title: string, mediaType: 'movie' | 'tv', y
     if (data.results && data.results.length > 0) {
       const result = data.results[0];
       if (result.poster_path) {
-        console.log(`Found TMDB poster for ${title}: ${result.poster_path}`);
         // Cache the result
         posterCache.set(cacheKey, result.poster_path);
         return result.poster_path as string;
       }
     }
     
-    console.log(`No poster found for ${title} on TMDB`);
     // Cache the fallback result too
     posterCache.set(cacheKey, '/api/placeholder/154/231');
     return '/api/placeholder/154/231';
@@ -90,7 +86,6 @@ export default async function handler(
   }
 
   const { userId } = req.body;
-  console.log('Recommendations API called with userId:', userId);
 
   // Handle anonymous users
   if (!userId) {
@@ -103,14 +98,12 @@ export default async function handler(
 
   // Fetch user's ratings
   const ratings = await getUserRatings(userId as string);
-  console.log('User ratings count:', ratings.length);
 
   // Create a set of already-rated items to exclude them
   const ratedItems = new Set<string>();
   ratings.forEach(rating => {
     ratedItems.add(`${rating.tmdbId}-${rating.mediaType}`);
   });
-  console.log('Already-rated items to exclude:', ratedItems.size);
 
   // Fetch dismissed recommendations (gracefully handle if Admin SDK not available)
   let dismissedRecommendations = new Set<string>();
@@ -121,19 +114,14 @@ export default async function handler(
         .where('userId', '==', userId)
         .get();
       
-      dismissedSnapshot.forEach((doc) => {
+        dismissedSnapshot.forEach((doc) => {
         const data = doc.data();
         dismissedRecommendations.add(`${data.tmdbId}-${data.mediaType}`);
       });
-      
-      console.log('Dismissed recommendations count:', dismissedRecommendations.size);
     } catch (error) {
       // If Admin SDK not configured, continue without filtering dismissed recommendations
-      console.warn('Could not fetch dismissed recommendations (Admin SDK not configured):', error instanceof Error ? error.message : 'Unknown error');
       dismissedRecommendations = new Set<string>();
     }
-  } else {
-    console.warn('Admin SDK not available, skipping dismissed recommendations filter');
   }
 
   // Generate AI recommendations using Gemini
@@ -242,9 +230,7 @@ Return ONLY a valid JSON object with REAL TMDB data:
   }
 }`;
 
-    console.log('Calling Gemini API with prompt length:', prompt.length);
     const content = await callGeminiAPI(prompt, 1000, 0.7);
-    console.log('Gemini API response length:', content?.length || 0);
 
     if (!content || typeof content !== 'string') {
       throw new Error('No content received from Gemini API');
@@ -271,16 +257,12 @@ Return ONLY a valid JSON object with REAL TMDB data:
       return year === targetYear;
     });
 
-    console.log(`Filtered recommendations: ${filteredRecommendations.length} out of ${parsedResponse.recommendations.length} are from ${targetYear}`);
-
     // Filter out dismissed recommendations and already-rated items
     const nonDismissedRecommendations = filteredRecommendations.filter(rec => {
       const isDismissed = dismissedRecommendations.has(`${rec.tmdbId}-${rec.mediaType}`);
       const isRated = ratedItems.has(`${rec.tmdbId}-${rec.mediaType}`);
       return !isDismissed && !isRated;
     });
-    
-    console.log(`Filtered out ${filteredRecommendations.length - nonDismissedRecommendations.length} dismissed/rated recommendations`);
 
     // Add real poster paths to recommendations using TMDB API
     const recommendationsWithPosters = await Promise.all(
@@ -308,7 +290,6 @@ Return ONLY a valid JSON object with REAL TMDB data:
         targetYear,
         'ai_generated'
       );
-      console.log('AI recommendations saved to Firestore with session ID:', sessionId);
     } catch (error) {
       console.error('Failed to save recommendations to Firestore:', error);
       // Continue without failing the API call
@@ -379,7 +360,6 @@ Return ONLY a valid JSON object with REAL TMDB data:
         targetYear,
         'fallback'
       );
-      console.log('Fallback recommendations saved to Firestore with session ID:', sessionId);
     } catch (error) {
       console.error('Failed to save fallback recommendations to Firestore:', error);
       // Continue without failing the API call

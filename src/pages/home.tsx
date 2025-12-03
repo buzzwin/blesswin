@@ -116,11 +116,11 @@ export default function HomeFeed(): JSX.Element {
     void fetchFeaturedStories();
   }, []);
 
-  // Fetch featured stories for feed
+  // Fetch featured stories for feed - CACHE ONLY (no Gemini calls)
   const fetchFeaturedStories = async (): Promise<void> => {
     try {
       setStoriesLoading(true);
-      const response = await fetch('/api/real-stories');
+      const response = await fetch('/api/real-stories?cacheOnly=true');
       if (response.ok) {
         const data = await response.json();
         if (data.stories && Array.isArray(data.stories)) {
@@ -456,7 +456,7 @@ export default function HomeFeed(): JSX.Element {
       <MainHeader title='Community Feed' useMobileSidebar />
       
       {/* Feed Description */}
-      <div className='border-b border-light-border py-3 dark:border-dark-border'>
+      <div className='border-b border-light-border py-2 dark:border-dark-border'>
         <div className='flex items-start gap-3'>
           <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
             <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
@@ -475,7 +475,7 @@ export default function HomeFeed(): JSX.Element {
 
       {/* Karma Display */}
       {userKarma && user?.id && (
-        <div className='border-b border-gray-200 py-4 dark:border-gray-700'>
+        <div className='border-b border-gray-200 py-2 dark:border-gray-700'>
           <UserKarmaDisplay
             karmaPoints={userKarma.karmaPoints}
             karmaBreakdown={userKarma.karmaBreakdown}
@@ -488,7 +488,7 @@ export default function HomeFeed(): JSX.Element {
       )}
 
       {/* Ritual Stats Widget */}
-      <div className='border-b border-gray-200 py-4 dark:border-gray-700'>
+      <div className='border-b border-gray-200 py-2 dark:border-gray-700'>
         <RitualStatsWidget
           stats={ritualStats}
           loading={ritualStatsLoading}
@@ -512,7 +512,7 @@ export default function HomeFeed(): JSX.Element {
         />
       )}
 
-      <div className='py-4'>
+      <div className='py-2'>
         <ImpactMomentInput onSuccess={handleMomentCreated} />
       </div>
       

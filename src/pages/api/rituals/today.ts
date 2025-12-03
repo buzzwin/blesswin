@@ -206,15 +206,6 @@ export default async function handler(
       ...doc.data()
     } as RitualDefinition));
 
-    // Debug logging
-    console.log('[Rituals API]', {
-      userId,
-      hasGlobalRitual: !!globalRitual,
-      globalRitualTitle: globalRitual?.title,
-      personalizedCount: personalizedRituals.length,
-      personalizedTitles: personalizedRituals.map(r => r.title)
-    });
-
     // Check completion status for each ritual
     const today = getTodayDateString();
     const todayCompletionsQuery = query(
@@ -241,11 +232,6 @@ export default async function handler(
       })),
       date: today
     };
-
-    console.log('[Rituals API] Returning:', {
-      hasGlobalRitual: !!todayRituals.globalRitual,
-      personalizedCount: todayRituals.personalizedRituals.length
-    });
 
     res.status(200).json({ rituals: todayRituals });
   } catch (error) {

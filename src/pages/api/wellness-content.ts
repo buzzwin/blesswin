@@ -49,7 +49,6 @@ async function searchTMDBWellnessContent(
   limit = 20
 ): Promise<Array<TMDBMovie | TMDBTVShow>> {
   if (!TMDB_API_KEY) {
-    console.warn('TMDB API key not found');
     return [];
   }
 
@@ -197,7 +196,6 @@ Only include content that is genuinely related to wellness, holistic health, yog
 
 Limit to the top ${contentLimit} most relevant wellness content items.`;
 
-    console.log('Calling Gemini API to analyze wellness content...');
     const geminiResponse = await callGeminiAPI(prompt, 4096, 0.7);
 
     if (!geminiResponse || typeof geminiResponse !== 'string') {

@@ -55,7 +55,6 @@ Important guidelines:
 
 Current date: ${currentDate}`;
 
-    console.log('Calling Gemini API to fetch current events...');
     const geminiResponse = await callGeminiAPI(prompt, 4096, 0.7);
 
     if (!geminiResponse || typeof geminiResponse !== 'string') {

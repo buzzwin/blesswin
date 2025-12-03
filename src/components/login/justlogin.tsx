@@ -13,6 +13,7 @@ export default function JustLogin(): JSX.Element {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
 
+
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -143,17 +144,17 @@ export default function JustLogin(): JSX.Element {
             'cursor-pointer',
             'select-none' // Prevent text selection on tap
           )}
-          onClick={(e) => {
+          onClick={async (e) => {
             e.preventDefault();
             e.stopPropagation();
-            void signInWithGoogle();
-          }}
-          onTouchStart={(e) => {
-            // Ensure touch events work properly on iOS
-            e.currentTarget.style.opacity = '0.8';
-          }}
-          onTouchEnd={(e) => {
-            e.currentTarget.style.opacity = '1';
+            setLoading(true);
+            try {
+              await signInWithGoogle();
+            } catch (error) {
+              // Error handling is done in signInWithGoogle
+            } finally {
+              setLoading(false);
+            }
           }}
         >
           <GoogleIcon className='h-5 w-5' />

@@ -253,12 +253,6 @@ This action was shared by ${userName}. If you didn't expect this email, you can 
     // Remove spaces from app password
     const cleanPassword = emailPassword.replace(/\s/g, '');
 
-    console.log('Sending action share email:', {
-      to: friendEmail,
-      from: emailApi,
-      momentId: req.body.momentId
-    });
-
     // Create transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -271,7 +265,6 @@ This action was shared by ${userName}. If you didn't expect this email, you can 
     // Verify connection first
     try {
       await transporter.verify();
-      console.log('Email server connection verified');
     } catch (verifyError) {
       console.error('Email server verification failed:', verifyError);
       res.status(500).json({
@@ -290,8 +283,6 @@ This action was shared by ${userName}. If you didn't expect this email, you can 
         html: shareHtml,
         text: shareText
       });
-
-      console.log('Action share email sent successfully:', info.messageId);
 
       res.status(200).json({
         success: true,

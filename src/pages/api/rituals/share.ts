@@ -233,12 +233,6 @@ This ritual was shared by ${userName}. If you didn't expect this email, you can 
     // Remove spaces from app password
     const cleanPassword = emailPassword.replace(/\s/g, '');
 
-    console.log('Sending ritual share email:', {
-      to: friendEmail,
-      from: emailApi,
-      ritualTitle
-    });
-
     // Create transporter
     const transporter = nodemailer.createTransport({
       service: 'gmail',
@@ -251,7 +245,6 @@ This ritual was shared by ${userName}. If you didn't expect this email, you can 
     // Verify connection first
     try {
       await transporter.verify();
-      console.log('Email server connection verified');
     } catch (verifyError) {
       console.error('Email server verification failed:', verifyError);
       res.status(500).json({
@@ -270,8 +263,6 @@ This ritual was shared by ${userName}. If you didn't expect this email, you can 
         html: shareHtml,
         text: shareText
       });
-
-      console.log('Ritual share email sent successfully:', info.messageId);
 
       res.status(200).json({
         success: true,
