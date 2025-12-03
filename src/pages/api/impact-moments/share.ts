@@ -81,7 +81,7 @@ export default async function handler(
     const user = userDoc.data();
     const userName = user.name || user.username || 'a friend';
     const siteURL = process.env.NEXT_PUBLIC_SITE_URL || 'https://buzzwin.com';
-    const chainUrl = `${siteURL}/impact/${req.body.momentId}/chain`;
+    const rippleUrl = `${siteURL}/impact/${req.body.momentId}/ripple`;
 
     // Prepare email content
     const shareSubject = `${userName} shared an action with you 🌱`;
@@ -167,8 +167,8 @@ export default async function handler(
                       ${joinCount > 0 ? `
                         <div style="margin: 20px 0; padding: 15px; background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
                           <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.6;">
-                            <strong>🌟 ${joinCount} ${joinCount === 1 ? 'person has' : 'people have'} joined this action!</strong><br>
-                            Be part of the chain of positive impact!
+                            <strong>🌟 ${joinCount} ${joinCount === 1 ? 'ripple' : 'ripples'}</strong><br>
+                            Be part of the ripple of positive impact!
                           </p>
                         </div>
                       ` : ''}
@@ -184,7 +184,7 @@ export default async function handler(
                       <table role="presentation" style="width: 100%; margin: 30px 0;">
                         <tr>
                           <td style="text-align: center;">
-                            <a href="${chainUrl}"
+                            <a href="${rippleUrl}"
                                style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
                               Join This Action 🌱
                             </a>
@@ -193,7 +193,7 @@ export default async function handler(
                       </table>
 
                       <p style="margin: 20px 0 0; color: #666666; font-size: 14px; line-height: 1.6; text-align: center;">
-                        Or copy this link: <a href="${chainUrl}" style="color: #22c55e; text-decoration: none;">${chainUrl}</a>
+                        Or copy this link: <a href="${rippleUrl}" style="color: #22c55e; text-decoration: none;">${rippleUrl}</a>
                       </p>
                     </td>
                   </tr>
@@ -229,7 +229,7 @@ Tags: ${tagsDisplay}
 Effort Level: ${effortDisplay}
 ${joinCount > 0 ? `\n🌟 ${joinCount} ${joinCount === 1 ? 'person has' : 'people have'} joined this action!` : ''}
 
-Join this action: ${chainUrl}
+Join this action: ${rippleUrl}
 
 What is Buzzwin?
 A storytelling studio that amplifies good causes. Share your impact moments, discover inspiring real stories, practice daily rituals, and join a community of do-gooders making positive change.

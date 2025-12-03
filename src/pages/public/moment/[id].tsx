@@ -1,7 +1,23 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { doc, getDoc, query, orderBy, onSnapshot, addDoc, updateDoc, getDocs, where, serverTimestamp, arrayUnion } from 'firebase/firestore';
-import { impactMomentsCollection, usersCollection, impactMomentCommentsCollection } from '@lib/firebase/collections';
+import {
+  doc,
+  getDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  addDoc,
+  updateDoc,
+  getDocs,
+  where,
+  serverTimestamp,
+  arrayUnion
+} from 'firebase/firestore';
+import {
+  impactMomentsCollection,
+  usersCollection,
+  impactMomentCommentsCollection
+} from '@lib/firebase/collections';
 import { useAuth } from '@lib/context/auth-context';
 import { PublicLayout } from '@components/layout/pub_layout';
 import { MainHeader } from '@components/home/main-header';
@@ -28,7 +44,11 @@ export default function PublicImpactMomentPage(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [commentsLoading, setCommentsLoading] = useState(true);
   const [joinedCount, setJoinedCount] = useState(0);
-  const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
+  const {
+    open: joinModalOpen,
+    openModal: openJoinModal,
+    closeModal: closeJoinModal
+  } = useModal();
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -36,7 +56,7 @@ export default function PublicImpactMomentPage(): JSX.Element {
     const fetchMoment = async (): Promise<void> => {
       try {
         const momentDoc = await getDoc(doc(impactMomentsCollection, id));
-        
+
         if (!momentDoc.exists()) {
           toast.error('Impact moment not found');
           void router.push('/');
@@ -44,9 +64,11 @@ export default function PublicImpactMomentPage(): JSX.Element {
         }
 
         const momentData = { id: momentDoc.id, ...momentDoc.data() };
-        
+
         // Fetch user data
-        const userDoc = await getDoc(doc(usersCollection, momentData.createdBy));
+        const userDoc = await getDoc(
+          doc(usersCollection, momentData.createdBy)
+        );
         const userData = userDoc.exists() ? userDoc.data() : null;
 
         setMoment({
@@ -95,9 +117,11 @@ export default function PublicImpactMomentPage(): JSX.Element {
             const commentsWithUsers = await Promise.all(
               snapshot.docs.map(async (commentDoc) => {
                 const commentData = { id: commentDoc.id, ...commentDoc.data() };
-                
+
                 // Fetch user data
-                const userDoc = await getDoc(doc(usersCollection, commentData.createdBy));
+                const userDoc = await getDoc(
+                  doc(usersCollection, commentData.createdBy)
+                );
                 const userData = userDoc.exists() ? userDoc.data() : null;
 
                 return {
@@ -177,11 +201,13 @@ export default function PublicImpactMomentPage(): JSX.Element {
     );
   }
 
-  const publicUrl = `${siteURL || 'https://buzzwin.com'}/public/moment/${moment.id}`;
+  const publicUrl = `${siteURL || 'https://buzzwin.com'}/public/moment/${
+    moment.id
+  }`;
 
   return (
     <>
-      <SEO 
+      <SEO
         title={`Impact Moment by ${moment.user.name} - Buzzwin`}
         description={moment.text.substring(0, 160)}
         image={moment.user.photoURL || undefined}
@@ -193,7 +219,7 @@ export default function PublicImpactMomentPage(): JSX.Element {
         ogUrl={publicUrl}
       >
         <MainHeader title='Impact Moment' />
-        
+
         <div className='mx-auto max-w-2xl px-4 py-8'>
           {/* Back Button */}
           <div className='mb-4'>
@@ -207,33 +233,36 @@ export default function PublicImpactMomentPage(): JSX.Element {
 
           {/* Impact Moment */}
           <div className='mb-6'>
-            <ImpactMomentCard 
+            <ImpactMomentCard
               moment={moment}
               onRipple={() => {
                 // Redirect to login if user tries to interact and is not authenticated
                 if (!user) {
-                  void router.push(`/login?redirect=/public/moment/${moment.id}`);
+                  void router.push(
+                    `/login?redirect=/public/moment/${moment.id}`
+                  );
                 }
               }}
             />
           </div>
 
-          {/* View Chain Link */}
+          {/* View Ripple Link */}
           {!moment.joinedFromMomentId && (
             <div className='mb-6'>
-              <Link href={`/impact/${moment.id}/chain`}>
+              <Link href={`/impact/${moment.id}/ripple`}>
                 <a className='flex items-center justify-between rounded-lg border border-purple-200 bg-purple-50 p-4 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'>
                   <div className='flex items-center gap-3'>
                     <Users className='h-5 w-5 text-purple-600 dark:text-purple-400' />
                     <div>
                       <div className='font-semibold text-purple-900 dark:text-purple-100'>
-                        View Action Chain
+                        View Ripple
                       </div>
                       <div className='text-sm text-purple-700 dark:text-purple-300'>
-                        {joinedCount === 0 
-                          ? 'No one has joined yet'
-                          : `${joinedCount} ${joinedCount === 1 ? 'person has' : 'people have'} joined this action`
-                        }
+                        {joinedCount === 0
+                          ? 'No ripples yet'
+                          : `${joinedCount} ${
+                              joinedCount === 1 ? 'ripple' : 'ripples'
+                            }`}
                       </div>
                     </div>
                   </div>
@@ -247,41 +276,16 @@ export default function PublicImpactMomentPage(): JSX.Element {
           {moment.createdBy !== user?.id && !moment.joinedFromMomentId && (
             <div className='mb-6'>
               {user ? (
-                <button
-                  onClick={() => {
-                    // Check if user already joined
-                    const checkExistingJoin = async (): Promise<void> => {
-                      try {
-                        const existingJoined = await getDocs(
-                          query(
-                            impactMomentsCollection,
-                            where('joinedFromMomentId', '==', moment.id),
-                            where('createdBy', '==', user.id)
-                          )
-                        );
-
-                        if (!existingJoined.empty) {
-                          const confirmed = confirm('You already joined this action. Want to share a new version?');
-                          if (!confirmed) return;
-                        }
-
-                        openJoinModal();
-                      } catch (error) {
-                        console.error('Error checking existing joins:', error);
-                        openJoinModal();
-                      }
-                    };
-                    void checkExistingJoin();
-                  }}
-                  className='w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 text-base font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'
-                >
-                  <span className='flex items-center justify-center gap-2'>
-                    <span>🌱</span>
-                    Join This Action
-                  </span>
-                </button>
+                <Link href={`/impact/${moment.id}/join`}>
+                  <a className='block w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 text-center text-base font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'>
+                    <span className='flex items-center justify-center gap-2'>
+                      <span>🌱</span>
+                      Join This Action
+                    </span>
+                  </a>
+                </Link>
               ) : (
-                <Link href={`/login?redirect=/public/moment/${moment.id}`}>
+                <Link href={`/login?redirect=/impact/${moment.id}/join`}>
                   <a className='block w-full rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-4 text-center text-base font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'>
                     <span className='flex items-center justify-center gap-2'>
                       <LogIn className='h-5 w-5' />
@@ -376,9 +380,13 @@ export default function PublicImpactMomentPage(): JSX.Element {
 
                 // Add optional fields
                 if (joinedMomentData.moodCheckIn) {
-                  (joinedMoment as any).moodCheckIn = joinedMomentData.moodCheckIn;
+                  (joinedMoment as any).moodCheckIn =
+                    joinedMomentData.moodCheckIn;
                 }
-                if (joinedMomentData.images && joinedMomentData.images.length > 0) {
+                if (
+                  joinedMomentData.images &&
+                  joinedMomentData.images.length > 0
+                ) {
                   (joinedMoment as any).images = joinedMomentData.images;
                 }
 
@@ -386,14 +394,18 @@ export default function PublicImpactMomentPage(): JSX.Element {
                 await addDoc(impactMomentsCollection, joinedMoment as any);
 
                 // Update the original moment
-                const originalMomentRef = doc(impactMomentsCollection, moment.id);
+                const originalMomentRef = doc(
+                  impactMomentsCollection,
+                  moment.id
+                );
                 const originalMomentDoc = await getDoc(originalMomentRef);
-                
+
                 if (originalMomentDoc.exists()) {
                   const originalData = originalMomentDoc.data();
                   const currentJoinedBy = originalData.joinedByUsers || [];
-                  const currentJoinedYouRipples = originalData.ripples?.joined_you || [];
-                  
+                  const currentJoinedYouRipples =
+                    originalData.ripples?.joined_you || [];
+
                   // Add user to joinedByUsers if not already there
                   if (!currentJoinedBy.includes(user.id)) {
                     await updateDoc(originalMomentRef, {
@@ -442,9 +454,9 @@ export default function PublicImpactMomentPage(): JSX.Element {
 
                 toast.success('You joined this action! 🌱');
                 closeJoinModal();
-                
-                // Redirect to chain page to see the join
-                void router.push(`/impact/${moment.id}/chain`);
+
+                // Redirect to ripple page to see the join
+                void router.push(`/impact/${moment.id}/ripple`);
               } catch (error) {
                 console.error('Error joining action:', error);
                 toast.error('Failed to join action');
@@ -456,4 +468,3 @@ export default function PublicImpactMomentPage(): JSX.Element {
     </>
   );
 }
-

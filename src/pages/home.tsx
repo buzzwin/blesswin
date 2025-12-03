@@ -1,6 +1,18 @@
 import { AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/router';
-import { query, orderBy, getDocs, doc, updateDoc, arrayUnion, arrayRemove, increment, addDoc, serverTimestamp, where } from 'firebase/firestore';
+import {
+  query,
+  orderBy,
+  getDocs,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+  increment,
+  addDoc,
+  serverTimestamp,
+  where
+} from 'firebase/firestore';
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import { usersCollection } from '@lib/firebase/collections';
 import { ProtectedLayout } from '@components/layout/common-layout';
@@ -25,7 +37,12 @@ import { getDoc } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
 import { useModal } from '@lib/hooks/useModal';
-import type { ImpactMomentWithUser, RippleType, ImpactTag, EffortLevel } from '@lib/types/impact-moment';
+import type {
+  ImpactMomentWithUser,
+  RippleType,
+  ImpactTag,
+  EffortLevel
+} from '@lib/types/impact-moment';
 import type { RitualDefinition, RitualStats } from '@lib/types/ritual';
 import type { RealStory } from '@lib/types/real-story';
 import type { ReactElement, ReactNode } from 'react';
@@ -36,9 +53,18 @@ export default function HomeFeed(): JSX.Element {
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
-  const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
-  const { open: settingsModalOpen, openModal: openSettingsModal, closeModal: closeSettingsModal } = useModal();
-  const [selectedMomentForJoin, setSelectedMomentForJoin] = useState<ImpactMomentWithUser | null>(null);
+  const {
+    open: joinModalOpen,
+    openModal: openJoinModal,
+    closeModal: closeJoinModal
+  } = useModal();
+  const {
+    open: settingsModalOpen,
+    openModal: openSettingsModal,
+    closeModal: closeSettingsModal
+  } = useModal();
+  const [selectedMomentForJoin, setSelectedMomentForJoin] =
+    useState<ImpactMomentWithUser | null>(null);
   const [todayRitual, setTodayRitual] = useState<RitualDefinition | null>(null);
   const [ritualCompleted, setRitualCompleted] = useState(false);
   const [ritualStats, setRitualStats] = useState<RitualStats | null>(null);
@@ -60,7 +86,7 @@ export default function HomeFeed(): JSX.Element {
       const momentsWithUsers = await Promise.all(
         snapshot.docs.map(async (docSnapshot) => {
           const momentData = { id: docSnapshot.id, ...docSnapshot.data() };
-          
+
           // If joinedByUsers doesn't exist, query for it
           if (!momentData.joinedByUsers && momentData.id) {
             try {
@@ -70,15 +96,19 @@ export default function HomeFeed(): JSX.Element {
                   where('joinedFromMomentId', '==', momentData.id)
                 )
               );
-              momentData.joinedByUsers = joinedSnapshot.docs.map(d => d.data().createdBy);
+              momentData.joinedByUsers = joinedSnapshot.docs.map(
+                (d) => d.data().createdBy
+              );
             } catch (error) {
               console.error('Error fetching joined users:', error);
               momentData.joinedByUsers = [];
             }
           }
-          
+
           // Fetch user data
-          const userDoc = await getDoc(doc(usersCollection, momentData.createdBy));
+          const userDoc = await getDoc(
+            doc(usersCollection, momentData.createdBy)
+          );
           const userData = userDoc.exists() ? userDoc.data() : null;
 
           return {
@@ -157,7 +187,7 @@ export default function HomeFeed(): JSX.Element {
           }
         }
       } catch (error) {
-        console.error('Error fetching today\'s ritual:', error);
+        console.error("Error fetching today's ritual:", error);
       }
     };
 
@@ -206,58 +236,28 @@ export default function HomeFeed(): JSX.Element {
     }
   };
 
-  const handleRipple = async (momentId: string, rippleType: RippleType): Promise<void> => {
+  const handleRipple = async (
+    momentId: string,
+    rippleType: RippleType
+  ): Promise<void> => {
     if (!user?.id) {
-      toast.error('Please sign in to ripple impact moments');
+      toast.error('Please sign in to react to impact moments');
       return;
     }
 
-    // Special handling for "Joined You" - open modal instead
+    // Only handle reactions: inspired, grateful, sent_love
+    // Join is handled separately via "Join This Action" button
     if (rippleType === 'joined_you') {
-      const moment = moments.find(m => m.id === momentId);
-      if (moment) {
-        // Don't allow users to join their own actions
-        if (moment.createdBy === user.id) {
-          toast.error('You cannot join your own action');
-          return;
-        }
-
-        try {
-          // Check if user already joined this moment
-          const existingJoined = await getDocs(
-            query(
-              impactMomentsCollection,
-              where('joinedFromMomentId', '==', momentId),
-              where('createdBy', '==', user.id)
-            )
-          );
-
-          if (!existingJoined.empty) {
-            const existing = existingJoined.docs[0].data();
-            const originalTextPreview = moment.text.substring(0, 50);
-            if (existing.text && existing.text.includes(originalTextPreview)) {
-              const confirmed = confirm('You already joined this action. Want to share a new version?');
-              if (!confirmed) return;
-            }
-          }
-
-          setSelectedMomentForJoin(moment);
-          openJoinModal();
-        } catch (error) {
-          console.error('Error checking existing joins:', error);
-          // Still allow joining even if check fails
-          setSelectedMomentForJoin(moment);
-          openJoinModal();
-        }
-      }
+      // This should not happen, but if it does, redirect to join page
+      void router.push(`/impact/${momentId}/join`);
       return;
     }
 
-    // Regular ripple handling for other types
+    // Regular reaction handling
     try {
       const momentRef = doc(impactMomentsCollection, momentId);
       const momentDoc = await getDoc(momentRef);
-      
+
       if (!momentDoc.exists()) {
         toast.error('Impact moment not found');
         return;
@@ -268,12 +268,15 @@ export default function HomeFeed(): JSX.Element {
       const currentRipples = momentData.ripples[rippleKey] || [];
       const hasRippled = currentRipples.includes(user.id);
 
-      // Check if user has rippled in any other category
-      let wasRippledElsewhere = false;
-      const allRippleTypes: RippleType[] = ['inspired', 'grateful', 'joined_you', 'sent_love'];
-      for (const type of allRippleTypes) {
-        if (type !== rippleType && momentData.ripples[type]?.includes(user.id)) {
-          wasRippledElsewhere = true;
+      // Check if user has reacted in any other category
+      let wasReactedElsewhere = false;
+      const reactionTypes: RippleType[] = ['inspired', 'grateful', 'sent_love'];
+      for (const type of reactionTypes) {
+        if (
+          type !== rippleType &&
+          momentData.ripples[type]?.includes(user.id)
+        ) {
+          wasReactedElsewhere = true;
           // Remove from other category
           await updateDoc(momentRef, {
             [`ripples.${type}`]: arrayRemove(user.id)
@@ -282,21 +285,19 @@ export default function HomeFeed(): JSX.Element {
       }
 
       if (hasRippled) {
-        // Remove ripple
+        // Remove reaction
         await updateDoc(momentRef, {
-          [`ripples.${rippleKey}`]: arrayRemove(user.id),
-          rippleCount: momentData.rippleCount > 0 ? momentData.rippleCount - 1 : 0
+          [`ripples.${rippleKey}`]: arrayRemove(user.id)
         });
-        toast.success(`Removed ${rippleType} ripple`);
+        toast.success(`Removed ${rippleType} reaction`);
       } else {
-        // Add ripple
+        // Add reaction
         await updateDoc(momentRef, {
-          [`ripples.${rippleKey}`]: arrayUnion(user.id),
-          rippleCount: momentData.rippleCount + (wasRippledElsewhere ? 0 : 1)
+          [`ripples.${rippleKey}`]: arrayUnion(user.id)
         });
-        toast.success(`Added ${rippleType} ripple! ✨`);
+        toast.success(`Added ${rippleType} reaction! ✨`);
 
-        // Award karma to moment creator for receiving ripple (if not themselves)
+        // Award karma to moment creator for receiving reaction (if not themselves)
         const momentCreatorId = momentData.createdBy;
         if (momentCreatorId && momentCreatorId !== user.id) {
           try {
@@ -305,12 +306,12 @@ export default function HomeFeed(): JSX.Element {
               headers: { 'Content-Type': 'application/json' },
               body: JSON.stringify({
                 userId: momentCreatorId,
-                action: 'ripple_received'
+                action: 'reaction_received'
               })
             });
           } catch (karmaError) {
-            console.error('Error awarding karma for ripple:', karmaError);
-            // Don't fail the ripple if karma fails
+            console.error('Error awarding karma for reaction:', karmaError);
+            // Don't fail the reaction if karma fails
           }
         }
       }
@@ -367,17 +368,20 @@ export default function HomeFeed(): JSX.Element {
       }
 
       // Create the joined moment
-      const joinedMomentRef = await addDoc(impactMomentsCollection, joinedMoment as any);
+      const joinedMomentRef = await addDoc(
+        impactMomentsCollection,
+        joinedMoment as any
+      );
 
       // Update the original moment
       const originalMomentRef = doc(impactMomentsCollection, momentId);
       const originalMomentDoc = await getDoc(originalMomentRef);
-      
+
       if (originalMomentDoc.exists()) {
         const originalData = originalMomentDoc.data();
         const currentJoinedBy = originalData.joinedByUsers || [];
         const currentJoinedYouRipples = originalData.ripples?.joined_you || [];
-        
+
         // Add user to joinedByUsers if not already there
         if (!currentJoinedBy.includes(user.id)) {
           await updateDoc(originalMomentRef, {
@@ -427,12 +431,12 @@ export default function HomeFeed(): JSX.Element {
       // Refresh karma display
       void fetchUserKarma();
 
-      // Redirect to chain page to see the join
+      // Redirect to ripple page to see the join
       closeJoinModal();
       setSelectedMomentForJoin(null);
-      
+
       if (momentId) {
-        void router.push(`/impact/${momentId}/chain`);
+        void router.push(`/impact/${momentId}/ripple`);
       } else {
         // Fallback: refresh moments if no ID
         await fetchMoments();
@@ -449,12 +453,12 @@ export default function HomeFeed(): JSX.Element {
 
   return (
     <MainContainer>
-      <SEO 
+      <SEO
         title='Community Feed - Stories of Good / Buzzwin'
         description='A social feed amplifying stories of creativity, kindness, and community impact. Share meditation insights, yoga practices, and positive news from do-gooders around the world.'
       />
       <MainHeader title='Community Feed' useMobileSidebar />
-      
+
       {/* Feed Description */}
       <div className='border-b border-light-border py-2 dark:border-dark-border'>
         <div className='flex items-start gap-3'>
@@ -466,8 +470,9 @@ export default function HomeFeed(): JSX.Element {
               Amplify Stories of Good
             </h3>
             <p className='text-xs text-gray-600 dark:text-gray-400'>
-              Share meditation insights, yoga practices, acts of kindness, and community impact stories. 
-              Together we're building a more hopeful world.
+              Share meditation insights, yoga practices, acts of kindness, and
+              community impact stories. Together we're building a more hopeful
+              world.
             </p>
           </div>
         </div>
@@ -515,7 +520,7 @@ export default function HomeFeed(): JSX.Element {
       <div className='py-2'>
         <ImpactMomentInput onSuccess={handleMomentCreated} />
       </div>
-      
+
       <section>
         {loading ? (
           <Loading className='mt-5' />
@@ -523,8 +528,8 @@ export default function HomeFeed(): JSX.Element {
           <StatsEmpty
             title='Welcome to the Impact Feed!'
             description="Be the first to share an Impact Moment! Share a small good deed you did today - whether it's cooking a healthy meal, picking up trash, or calling an old friend."
-            imageData={{ 
-              src: '/assets/no-buzz.png', 
+            imageData={{
+              src: '/assets/no-buzz.png',
               alt: 'No impact moments yet'
             }}
           />
@@ -532,26 +537,45 @@ export default function HomeFeed(): JSX.Element {
           <AnimatePresence mode='popLayout'>
             {(() => {
               // Interleave stories with moments: show 1 story after every 3-4 moments
-              const feedItems: Array<{ type: 'moment' | 'story'; data: ImpactMomentWithUser | RealStory; index: number }> = [];
+              const feedItems: Array<{
+                type: 'moment' | 'story';
+                data: ImpactMomentWithUser | RealStory;
+                index: number;
+              }> = [];
               let storyIndex = 0;
-              
+
               moments.forEach((moment, momentIndex) => {
                 // Add moment
-                feedItems.push({ type: 'moment', data: moment, index: momentIndex });
-                
+                feedItems.push({
+                  type: 'moment',
+                  data: moment,
+                  index: momentIndex
+                });
+
                 // Add a story after every 3 moments (at positions 3, 7, 11, etc.)
-                if ((momentIndex + 1) % 4 === 0 && storyIndex < featuredStories.length) {
-                  feedItems.push({ type: 'story', data: featuredStories[storyIndex], index: storyIndex });
+                if (
+                  (momentIndex + 1) % 4 === 0 &&
+                  storyIndex < featuredStories.length
+                ) {
+                  feedItems.push({
+                    type: 'story',
+                    data: featuredStories[storyIndex],
+                    index: storyIndex
+                  });
                   storyIndex++;
                 }
               });
-              
+
               // Add remaining stories at the end if any
               while (storyIndex < featuredStories.length) {
-                feedItems.push({ type: 'story', data: featuredStories[storyIndex], index: storyIndex });
+                feedItems.push({
+                  type: 'story',
+                  data: featuredStories[storyIndex],
+                  index: storyIndex
+                });
                 storyIndex++;
               }
-              
+
               return feedItems.map((item, idx) => {
                 if (item.type === 'story') {
                   return (
@@ -604,4 +628,3 @@ HomeFeed.getLayout = (page: ReactElement): ReactNode => (
     <MainLayout>{page}</MainLayout>
   </ProtectedLayout>
 );
-

@@ -13,7 +13,7 @@ interface JoinedActionEmailData {
 export async function sendJoinedActionEmail(data: JoinedActionEmailData): Promise<void> {
   const { originalCreatorEmail, originalCreatorName, joinerName, joinerUsername, momentText, momentId, joinCount } = data;
   
-  const chainUrl = `https://buzzwin.com/impact/${momentId}/chain`;
+  const rippleUrl = `https://buzzwin.com/impact/${momentId}/ripple`;
   const previewText = momentText.length > 150 ? momentText.substring(0, 150) + '...' : momentText;
   
   const content = `
@@ -47,13 +47,13 @@ export async function sendJoinedActionEmail(data: JoinedActionEmailData): Promis
     </p>
   `;
   
-  const html = getEmailTemplate(content, 'See Who Joined', chainUrl);
+  const html = getEmailTemplate(content, 'See Who Joined', rippleUrl);
   
   await sendEmail({
     to: originalCreatorEmail,
     subject: `🌱 ${joinerName} joined your action on Buzzwin`,
     html,
-    text: `${joinerName} (@${joinerUsername}) just joined your action: "${previewText}". See who joined: ${chainUrl}`
+    text: `${joinerName} (@${joinerUsername}) just joined your action: "${previewText}". See the ripple: ${rippleUrl}`
   });
 }
 

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 import {
   Heart,
   Users,
@@ -25,7 +26,7 @@ import Head from 'next/head';
 export default function Home(): JSX.Element {
   const router = useRouter();
   const [navigating, setNavigating] = useState(false);
-  
+
   // Use auth hook - must be called unconditionally
   // The AuthContextProvider wraps all pages in _app.tsx
   const authContext = useAuth();
@@ -68,28 +69,32 @@ export default function Home(): JSX.Element {
   const impactAreas = [
     {
       title: 'Amplify Stories',
-      description: 'We share authentic human stories that inspire action and create meaningful connections.',
+      description:
+        'We share authentic human stories that inspire action and create meaningful connections.',
       icon: <BookOpen className='h-6 w-6' />,
       color: 'earth' as const,
       onClick: () => void router.push('/blog')
     },
     {
       title: 'Build Community',
-      description: 'Connect with like-minded individuals committed to making a positive impact.',
+      description:
+        'Connect with like-minded individuals committed to making a positive impact.',
       icon: <Users className='h-6 w-6' />,
       color: 'sage' as const,
       onClick: () => void router.push('/login')
     },
     {
       title: 'Inspire Action',
-      description: 'Turn inspiration into action with tools and resources for meaningful change.',
+      description:
+        'Turn inspiration into action with tools and resources for meaningful change.',
       icon: <Sparkles className='h-6 w-6' />,
       color: 'sky' as const,
       onClick: () => void router.push('/login')
     },
     {
       title: 'Support Wellness',
-      description: 'Promote mental health, mindfulness, and holistic well-being for all.',
+      description:
+        'Promote mental health, mindfulness, and holistic well-being for all.',
       icon: <HandHeart className='h-6 w-6' />,
       color: 'terracotta' as const,
       onClick: () => void router.push('/yoga')
@@ -101,8 +106,7 @@ export default function Home(): JSX.Element {
     '@context': 'https://schema.org',
     '@type': 'WebSite',
     name: 'Buzzwin',
-    description:
-      'A storytelling studio that amplifies good causes',
+    description: 'A storytelling studio that amplifies good causes',
     url: siteURL || 'https://Buzzwin.com',
     potentialAction: {
       '@type': 'SearchAction',
@@ -132,8 +136,7 @@ export default function Home(): JSX.Element {
     '@context': 'https://schema.org',
     '@type': 'Organization',
     name: 'Buzzwin',
-    description:
-      'A storytelling studio that amplifies good causes',
+    description: 'A storytelling studio that amplifies good causes',
     url: siteURL || 'https://Buzzwin.com',
     logo: `${siteURL || 'https://Buzzwin.com'}/logo192.png`,
     sameAs: [],
@@ -176,7 +179,7 @@ export default function Home(): JSX.Element {
               What We Do
             </h2>
             <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
-              We believe in the power of small actions to create big change. 
+              We believe in the power of small actions to create big change.
               Here&apos;s how we&apos;re making a difference.
             </p>
           </div>
@@ -199,6 +202,21 @@ export default function Home(): JSX.Element {
       {/* Ripple System Section */}
       <RippleSystem user={user} />
 
+      {/* How It Works Link */}
+      <SectionShell>
+        <div className='mx-auto w-full max-w-4xl px-6 text-center'>
+          <p className='mb-4 text-lg text-gray-600 dark:text-gray-300'>
+            Want to learn more about how reactions, joining, and ripples work?
+          </p>
+          <Link href='/how-it-works'>
+            <a className='inline-flex items-center gap-2 rounded-full border-2 border-purple-600 px-6 py-3 text-base font-semibold text-purple-600 transition-colors hover:bg-purple-50 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900/20'>
+              Learn How It Works
+              <ArrowRight className='h-5 w-5' />
+            </a>
+          </Link>
+        </div>
+      </SectionShell>
+
       {/* Real Stories Section */}
       <RealStoriesSection />
 
@@ -220,7 +238,8 @@ export default function Home(): JSX.Element {
               Your Wellness Journey
             </h2>
             <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
-              Personalized AI companions to guide you through yoga, meditation, and harmony practices.
+              Personalized AI companions to guide you through yoga, meditation,
+              and harmony practices.
             </p>
           </div>
 
@@ -237,7 +256,8 @@ export default function Home(): JSX.Element {
                 Yoga AI Pal
               </h3>
               <p className='mb-4 text-gray-600 dark:text-gray-300'>
-                Discover personalized yoga poses, sequences, and breathing techniques.
+                Discover personalized yoga poses, sequences, and breathing
+                techniques.
               </p>
               <span className='inline-flex items-center gap-2 text-green-600 transition-transform group-hover:translate-x-1 dark:text-green-400'>
                 Start Practice
@@ -257,7 +277,8 @@ export default function Home(): JSX.Element {
                 Meditation AI Pal
               </h3>
               <p className='mb-4 text-gray-600 dark:text-gray-300'>
-                Deepen your meditation practice and cultivate present-moment awareness.
+                Deepen your meditation practice and cultivate present-moment
+                awareness.
               </p>
               <span className='inline-flex items-center gap-2 text-purple-600 transition-transform group-hover:translate-x-1 dark:text-purple-400'>
                 Begin Meditation
@@ -300,23 +321,23 @@ export default function Home(): JSX.Element {
         <SectionShell className='relative overflow-hidden bg-gradient-to-br from-action/5 via-hope/5 to-sky/5'>
           {/* Decorative elements */}
           <div className='absolute inset-0 overflow-hidden'>
-            <div className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-gradient-to-r from-action/10 to-hope/10 blur-3xl' />
+            <div className='absolute top-1/2 left-1/2 h-96 w-96 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-action/10 to-hope/10 blur-3xl' />
           </div>
 
           <div className='relative mx-auto w-full max-w-3xl px-6 text-center'>
             <div className='mb-8 inline-flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-action to-hope shadow-lg shadow-action/25'>
               <Heart className='h-10 w-10 text-white' />
             </div>
-            
+
             <h2 className='mb-6 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl'>
               Ready to Make a Difference?
             </h2>
-            
+
             <p className='mb-10 text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
-              Join our community of changemakers. Together, we can create a more hopeful, 
-              connected, and compassionate world.
+              Join our community of changemakers. Together, we can create a more
+              hopeful, connected, and compassionate world.
             </p>
-            
+
             <button
               onClick={handleSignIn}
               className='group relative inline-flex items-center gap-2 overflow-hidden rounded-full bg-gradient-to-r from-action to-hope px-10 py-5 text-lg font-semibold text-white shadow-xl shadow-action/30 transition-all duration-300 hover:scale-105 hover:shadow-2xl hover:shadow-action/40 active:scale-95'

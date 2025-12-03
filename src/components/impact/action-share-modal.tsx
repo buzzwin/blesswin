@@ -28,17 +28,23 @@ export function ActionShareModal({
   const [copied, setCopied] = useState(false);
 
   const siteURL = process.env.NEXT_PUBLIC_SITE_URL || 'https://buzzwin.com';
-  const chainUrl = `${siteURL}/impact/${moment.id}/chain`;
+  const rippleUrl = `${siteURL}/impact/${moment.id}/ripple`;
   const publicUrl = `${siteURL}/public/moment/${moment.id}`;
-  
+
   const joinCount = moment.joinedByUsers?.length || 0;
-  const shareText = `${moment.text.substring(0, 150)}${moment.text.length > 150 ? '...' : ''}`;
+  const shareText = `${moment.text.substring(0, 150)}${
+    moment.text.length > 150 ? '...' : ''
+  }`;
   const shareTitle = `Join This Action: ${moment.user.name}'s Impact Moment`;
-  const shareDescription = `${shareText}${joinCount > 0 ? `\n\n${joinCount} ${joinCount === 1 ? 'person has' : 'people have'} joined this action!` : ''}\n\nJoin the chain of positive impact 🌱`;
+  const shareDescription = `${shareText}${
+    joinCount > 0
+      ? `\n\n${joinCount} ${joinCount === 1 ? 'ripple' : 'ripples'}`
+      : ''
+  }\n\nJoin the ripple of positive impact 🌱`;
 
   const handleEmailShare = async (): Promise<void> => {
     if (!friendEmail) {
-      toast.error('Please enter your friend\'s email address.');
+      toast.error("Please enter your friend's email address.");
       return;
     }
 
@@ -76,7 +82,9 @@ export function ActionShareModal({
       setMessage('');
     } catch (error) {
       console.error('Error sharing action:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to share action');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to share action'
+      );
     } finally {
       setSending(false);
     }
@@ -84,7 +92,7 @@ export function ActionShareModal({
 
   const handleCopyLink = async (): Promise<void> => {
     try {
-      const fullText = `${shareDescription}\n\n${chainUrl}`;
+      const fullText = `${shareDescription}\n\n${rippleUrl}`;
       await navigator.clipboard.writeText(fullText);
       setCopied(true);
       toast.success('Link copied to clipboard!');
@@ -110,7 +118,7 @@ export function ActionShareModal({
               <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
                 🌱 Share Your Action
               </h2>
-              <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
                 Share this action with others to inspire them to join!
               </p>
             </div>
@@ -125,12 +133,12 @@ export function ActionShareModal({
               {moment.user.name}'s Action
             </h3>
           </div>
-          <p className='text-sm text-green-800 dark:text-green-200 line-clamp-3'>
+          <p className='line-clamp-3 text-sm text-green-800 dark:text-green-200'>
             {moment.text}
           </p>
           {joinCount > 0 && (
             <div className='mt-2 text-xs font-medium text-green-700 dark:text-green-300'>
-              {joinCount} {joinCount === 1 ? 'person has' : 'people have'} joined this action!
+              {joinCount} {joinCount === 1 ? 'ripple' : 'ripples'}
             </div>
           )}
         </div>
@@ -146,11 +154,11 @@ export function ActionShareModal({
 
           {/* Friend Email */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
               Friend&apos;s Email <span className='text-red-500'>*</span>
             </label>
             <div className='relative'>
-              <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+              <div className='pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3'>
                 <Mail className='h-5 w-5 text-gray-400' />
               </div>
               <Input
@@ -166,8 +174,9 @@ export function ActionShareModal({
 
           {/* Friend Name */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-              Friend&apos;s Name <span className='text-gray-400 text-xs'>(Optional)</span>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Friend&apos;s Name{' '}
+              <span className='text-xs text-gray-400'>(Optional)</span>
             </label>
             <Input
               type='text'
@@ -179,13 +188,16 @@ export function ActionShareModal({
 
           {/* Personal Message */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
-              Personal Message <span className='text-gray-400 text-xs'>(Optional)</span>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Personal Message{' '}
+              <span className='text-xs text-gray-400'>(Optional)</span>
             </label>
             <Textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder={`Hi${friendName ? ` ${friendName}` : ''}! I thought you'd love to join this action...`}
+              placeholder={`Hi${
+                friendName ? ` ${friendName}` : ''
+              }! I thought you'd love to join this action...`}
               rows={3}
             />
           </div>
@@ -193,7 +205,7 @@ export function ActionShareModal({
           <Button
             onClick={handleEmailShare}
             disabled={sending || !friendEmail}
-            className='w-full rounded-full bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
+            className='w-full rounded-full bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700 disabled:cursor-not-allowed disabled:opacity-50'
           >
             {sending ? 'Sending...' : 'Send Email'}
           </Button>
@@ -211,8 +223,8 @@ export function ActionShareModal({
           <SimpleSocialShare
             title={shareTitle}
             description={shareDescription}
-            url={chainUrl}
-            hashtags={['PositiveImpact', 'JoinTheChain', 'Buzzwin', 'DoGood']}
+            url={rippleUrl}
+            hashtags={['PositiveImpact', 'JoinTheRipple', 'Buzzwin', 'DoGood']}
             variant='compact'
             showTitle={false}
           />
@@ -248,4 +260,3 @@ export function ActionShareModal({
     </Modal>
   );
 }
-

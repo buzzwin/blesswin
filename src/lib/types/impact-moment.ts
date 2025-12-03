@@ -21,15 +21,16 @@ export interface ImpactMoment {
   createdAt: Timestamp | Date;
   updatedAt?: Timestamp | Date;
   ripples: {
-    inspired: string[]; // user IDs
-    grateful: string[];
-    joined_you: string[];
-    sent_love: string[];
+    // Reactions (emotional feedback) - NOT ripples
+    inspired: string[]; // user IDs who reacted with "Inspired"
+    grateful: string[]; // user IDs who reacted with "Grateful"
+    joined_you: string[]; // DEPRECATED: Use joinedByUsers instead. Kept for backward compatibility.
+    sent_love: string[]; // user IDs who reacted with "Sent Love"
   };
-  rippleCount: number;
-  userRipples?: string[]; // user IDs who have rippled this
-  joinedFromMomentId?: string; // ID of the original moment this was joined from
-  joinedByUsers?: string[]; // user IDs who have joined this moment
+  rippleCount: number; // DEPRECATED: Legacy field. Use joinedByUsers.length for ripple count (chain participation).
+  userRipples?: string[]; // DEPRECATED: Legacy field for user IDs who have reacted
+  joinedFromMomentId?: string; // ID of the original moment this was joined from (creates a ripple in the chain)
+  joinedByUsers?: string[]; // user IDs who have joined this moment (creates ripples in the chain)
   fromDailyRitual?: boolean; // Whether this Impact Moment was created from a Daily Ritual
   ritualId?: string; // ID of the ritual that inspired this moment
   ritualTitle?: string; // Title of the ritual (for display)

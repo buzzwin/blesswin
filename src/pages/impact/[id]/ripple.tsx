@@ -25,7 +25,7 @@ import { siteURL } from '@lib/env';
 import { SimpleSocialShare } from '@components/share/simple-social-share';
 import type { ImpactMomentWithUser } from '@lib/types/impact-moment';
 
-export default function ChainViewPage(): JSX.Element {
+export default function RippleViewPage(): JSX.Element {
   const router = useRouter();
   const { user } = useAuth();
   const { id } = router.query;
@@ -43,7 +43,7 @@ export default function ChainViewPage(): JSX.Element {
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
 
-    const fetchChain = async (): Promise<void> => {
+    const fetchRipple = async (): Promise<void> => {
       try {
         setLoading(true);
 
@@ -162,14 +162,14 @@ export default function ChainViewPage(): JSX.Element {
 
         setJoinedMoments(joinedWithUsers);
       } catch (error) {
-        console.error('Error fetching chain:', error);
-        toast.error('Failed to load chain');
+        console.error('Error fetching ripple:', error);
+        toast.error('Failed to load ripple');
       } finally {
         setLoading(false);
       }
     };
 
-    void fetchChain();
+    void fetchRipple();
   }, [id, router]);
 
   const handleEmailShare = async (e?: React.FormEvent): Promise<void> => {
@@ -233,10 +233,10 @@ export default function ChainViewPage(): JSX.Element {
   if (loading) {
     return (
       <PublicLayout
-        title='Action Chain - Buzzwin'
+        title='Ripple - Buzzwin'
         description='See how positive actions inspire others to join'
       >
-        <MainHeader title='Action Chain' />
+        <MainHeader title='Ripple' />
         <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
           <Loading className='mt-5' />
         </div>
@@ -247,10 +247,10 @@ export default function ChainViewPage(): JSX.Element {
   if (!originalMoment) {
     return (
       <PublicLayout
-        title='Action Chain Not Found - Buzzwin'
-        description='The action chain you are looking for could not be found'
+        title='Ripple Not Found - Buzzwin'
+        description='The ripple you are looking for could not be found'
       >
-        <MainHeader title='Action Chain' />
+        <MainHeader title='Ripple' />
         <div className='mx-auto max-w-2xl px-4 py-8'>
           <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
             <p className='mb-4 text-gray-600 dark:text-gray-400'>
@@ -268,13 +268,13 @@ export default function ChainViewPage(): JSX.Element {
     );
   }
 
-  const publicUrl = `${siteURL || 'https://buzzwin.com'}/impact/${id}/chain`;
+  const publicUrl = `${siteURL || 'https://buzzwin.com'}/impact/${id}/ripple`;
   const userName = originalMoment.user.name;
   const userPhotoURL = originalMoment.user.photoURL;
-  const seoTitle = `Action Chain - ${userName}'s Impact / Buzzwin`;
+  const seoTitle = `Ripple - ${userName}'s Impact / Buzzwin`;
   const seoDescription = `See how ${userName}'s positive action inspired ${
     joinedMoments.length
-  } ${joinedMoments.length === 1 ? 'person' : 'people'} to join`;
+  } ${joinedMoments.length === 1 ? 'ripple' : 'ripples'}`;
 
   return (
     <PublicLayout
@@ -294,23 +294,23 @@ export default function ChainViewPage(): JSX.Element {
           </Link>
         </div>
 
-        {/* Chain Header */}
+        {/* Ripple Header */}
         <div className='mb-6 rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-gray-700 dark:bg-gray-800'>
           <h2 className='mb-2 text-2xl font-bold text-gray-900 dark:text-white'>
-            Action Chain
+            Ripple
           </h2>
           <p className='text-sm text-gray-600 dark:text-gray-400'>
             {joinedMoments.length === 0
               ? originalMoment.createdBy === user?.id
-                ? 'No one has joined your action yet. Share it to inspire others!'
-                : 'No one has joined this action yet. Be the first!'
+                ? 'No ripples yet. Share it to inspire others!'
+                : 'No ripples yet. Be the first!'
               : originalMoment.createdBy === user?.id
               ? `${joinedMoments.length} ${
-                  joinedMoments.length === 1 ? 'person has' : 'people have'
-                } joined your action!`
+                  joinedMoments.length === 1 ? 'ripple' : 'ripples'
+                }`
               : `${joinedMoments.length} ${
-                  joinedMoments.length === 1 ? 'person has' : 'people have'
-                } joined this action`}
+                  joinedMoments.length === 1 ? 'ripple' : 'ripples'
+                }`}
           </p>
         </div>
 
@@ -323,7 +323,7 @@ export default function ChainViewPage(): JSX.Element {
             moment={originalMoment}
             onRipple={() => {
               if (!user) {
-                void router.push(`/login?redirect=/impact/${id}/chain`);
+                void router.push(`/login?redirect=/impact/${id}/ripple`);
               }
             }}
           />
@@ -364,7 +364,7 @@ export default function ChainViewPage(): JSX.Element {
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
                 {originalMoment.createdBy === user?.id
                   ? 'Share Your Action'
-                  : 'Start the Chain'}
+                  : 'Start the Ripple'}
               </h3>
               <p className='mb-6 text-sm text-gray-600 dark:text-gray-400'>
                 {originalMoment.createdBy === user?.id
@@ -517,11 +517,11 @@ export default function ChainViewPage(): JSX.Element {
                     title={`Join This Action: ${originalMoment.user.name}'s Impact Moment`}
                     description={`${originalMoment.text.substring(0, 150)}${
                       originalMoment.text.length > 150 ? '...' : ''
-                    }\n\nJoin the chain of positive impact 🌱`}
+                    }\n\nJoin the ripple of positive impact 🌱`}
                     url={publicUrl}
                     hashtags={[
                       'PositiveImpact',
-                      'JoinTheChain',
+                      'JoinTheRipple',
                       'Buzzwin',
                       'DoGood'
                     ]}
@@ -536,14 +536,14 @@ export default function ChainViewPage(): JSX.Element {
             {originalMoment.createdBy !== user?.id && (
               <>
                 {user ? (
-                  <Link href={`/impact/${id}`}>
+                  <Link href={`/impact/${id}/join`}>
                     <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
                       Join This Action
                       <ArrowLeft className='h-4 w-4 rotate-180' />
                     </a>
                   </Link>
                 ) : (
-                  <Link href={`/login?redirect=/impact/${id}`}>
+                  <Link href={`/login?redirect=/impact/${id}/join`}>
                     <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
                       <LogIn className='h-5 w-5' />
                       Sign In to Join
@@ -565,7 +565,7 @@ export default function ChainViewPage(): JSX.Element {
               Sign in to join actions, comment, and share your own impact
               moments!
             </p>
-            <Link href={`/login?redirect=/impact/${id}/chain`}>
+            <Link href={`/login?redirect=/impact/${id}/ripple`}>
               <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
                 <LogIn className='h-5 w-5' />
                 Sign In to Join
