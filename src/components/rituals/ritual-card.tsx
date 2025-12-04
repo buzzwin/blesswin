@@ -1,6 +1,9 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+import { toast } from 'react-hot-toast';
 import { cn } from '@lib/utils';
+import { useAuth } from '@lib/context/auth-context';
 import { 
   impactTagLabels, 
   impactTagColors, 
@@ -8,18 +11,20 @@ import {
   effortLevelIcons 
 } from '@lib/types/impact-moment';
 import type { RitualDefinition } from '@lib/types/ritual';
-import { Check, X, Sparkles, Share2 } from 'lucide-react';
+import { Check, X, Sparkles, Share2, Users, ArrowRight } from 'lucide-react';
+import { calculateRitualRipples } from '@lib/utils/ripple-calculation';
 
 interface RitualCardProps {
   ritual: RitualDefinition;
   isGlobal?: boolean;
   completed?: boolean;
   completedAt?: string;
-  onCompleteQuietly?: () => void;
   onCompleteAndShare?: () => void;
   onShare?: () => void;
   onShareRitual?: () => void;
   loading?: boolean;
+  showJoinButton?: boolean; // Whether to show join button
+  ritualScope?: 'global' | 'personalized'; // Scope for joining
 }
 
 export function RitualCard({
@@ -27,13 +32,77 @@ export function RitualCard({
   isGlobal = false,
   completed = false,
   completedAt,
-  onCompleteQuietly,
   onCompleteAndShare,
   onShare,
   onShareRitual,
-  loading = false
+  loading = false,
+  showJoinButton = false,
+  ritualScope
 }: RitualCardProps): JSX.Element {
+  const { user } = useAuth();
+  const router = useRouter();
   const [showActions, setShowActions] = useState(!completed);
+  const [rippleCount, setRippleCount] = useState(ritual.rippleCount || 0);
+  const [joining, setJoining] = useState(false);
+  const [hasJoined, setHasJoined] = useState(
+    ritual.joinedByUsers?.includes(user?.id || '') || false
+  );
+
+  // Calculate ripple count on mount
+  useEffect(() => {
+    if (ritual.id) {
+      calculateRitualRipples(ritual).then(count => {
+        setRippleCount(count);
+      }).catch(err => {
+        console.error('Error calculating ripple count:', err);
+      });
+    }
+  }, [ritual]);
+
+  const handleJoinRitual = async (): Promise<void> => {
+    if (!user?.id || !ritual.id) {
+      toast.error('Please sign in to join rituals');
+      return;
+    }
+
+    if (hasJoined) {
+      toast.success('You have already joined this ritual');
+      return;
+    }
+
+    setJoining(true);
+
+    try {
+      const response = await fetch('/api/rituals/join', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          ritualId: ritual.id,
+          ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized')
+        })
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to join ritual');
+      }
+
+      setHasJoined(true);
+      setRippleCount(prev => prev + 1);
+      toast.success('You joined this ritual! 🌱');
+      
+      // Refresh the page to show updated state
+      router.reload();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to join ritual';
+      toast.error(message);
+    } finally {
+      setJoining(false);
+    }
+  };
 
   return (
     <div className={cn(
@@ -113,6 +182,21 @@ export function RitualCard({
         <span>{ritual.durationEstimate}</span>
       </div>
 
+      {/* Ripple Count */}
+      {rippleCount > 0 && (
+        <div className='mb-4'>
+          <Link href={`/rituals/${ritual.id}/ripples`}>
+            <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
+              <Users className='h-4 w-4' />
+              <span>
+                {rippleCount} {rippleCount === 1 ? 'ripple' : 'ripples'}
+              </span>
+              <ArrowRight className='h-3 w-3' />
+            </a>
+          </Link>
+        </div>
+      )}
+
       {/* Completion Status */}
       {completed && completedAt && (
         <div className='mb-4 rounded-lg bg-green-50 p-3 text-sm text-green-700 dark:bg-green-900/20 dark:text-green-300'>
@@ -120,26 +204,44 @@ export function RitualCard({
         </div>
       )}
 
+      {/* Join Ritual Button */}
+      {showJoinButton && !completed && user && !hasJoined && (
+        <div className='mb-3'>
+          <button
+            onClick={handleJoinRitual}
+            disabled={joining}
+            className={cn(
+              'w-full rounded-lg bg-purple-600 px-4 py-2.5 text-sm font-semibold text-white',
+              'transition-colors hover:bg-purple-700',
+              'flex items-center justify-center gap-2',
+              joining && 'opacity-50 cursor-not-allowed'
+            )}
+          >
+            {joining ? (
+              <>
+                <Sparkles className='h-4 w-4 animate-spin' />
+                Joining...
+              </>
+            ) : (
+              <>
+                <Users className='h-4 w-4' />
+                Join Ritual
+              </>
+            )}
+          </button>
+        </div>
+      )}
+
+      {/* Joined Indicator */}
+      {hasJoined && (
+        <div className='mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm font-medium text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300'>
+          ✓ You joined this ritual
+        </div>
+      )}
+
       {/* Action Buttons */}
       {showActions && !completed && (
         <div className='flex gap-2'>
-          {onCompleteQuietly && (
-            <button
-              onClick={() => {
-                onCompleteQuietly();
-                setShowActions(false);
-              }}
-              disabled={loading}
-              className={cn(
-                'flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-semibold',
-                'text-gray-700 transition-colors hover:bg-gray-50',
-                'dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700',
-                loading && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              {loading ? 'Completing...' : 'Complete Quietly'}
-            </button>
-          )}
           {onCompleteAndShare && (
             <button
               onClick={() => {
@@ -148,12 +250,23 @@ export function RitualCard({
               }}
               disabled={loading}
               className={cn(
-                'flex-1 rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white',
+                'w-full rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white',
                 'transition-colors hover:bg-purple-700',
+                'flex items-center justify-center gap-2',
                 loading && 'opacity-50 cursor-not-allowed'
               )}
             >
-              {loading ? 'Completing...' : 'Complete & Share'}
+              {loading ? (
+                <>
+                  <Sparkles className='h-4 w-4 animate-spin' />
+                  Completing...
+                </>
+              ) : (
+                <>
+                  <span>🌱</span>
+                  Complete & Share
+                </>
+              )}
             </button>
           )}
         </div>

@@ -468,10 +468,11 @@ export default function RitualsPage(): JSX.Element {
                   ritual={todayRituals.globalRitual}
                   isGlobal
                   completed={todayRituals.globalRitual.completed || false}
-                  onCompleteQuietly={() => handleCompleteQuietly(todayRituals.globalRitual!.id || '')}
                   onCompleteAndShare={() => handleCompleteAndShare(todayRituals.globalRitual!)}
                   onShareRitual={() => handleShareRitual(todayRituals.globalRitual!)}
                   loading={completingRitualId === todayRituals.globalRitual.id}
+                  showJoinButton={true}
+                  ritualScope='global'
                 />
               )}
 
@@ -486,10 +487,11 @@ export default function RitualsPage(): JSX.Element {
                       ritual={ritual}
                       isGlobal={false}
                       completed={ritual.completed || false}
-                      onCompleteQuietly={() => handleCompleteQuietly(ritual.id || '')}
                       onCompleteAndShare={() => handleCompleteAndShare(ritual)}
                       onShareRitual={() => handleShareRitual(ritual)}
                       loading={completingRitualId === ritual.id}
+                      showJoinButton={!isCustomRitual}
+                      ritualScope={isCustomRitual ? undefined : 'personalized'}
                     />
                     {isCustomRitual && (
                       <button

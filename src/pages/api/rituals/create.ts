@@ -14,6 +14,7 @@ interface CreateRitualRequest {
   durationEstimate: string;
   storyId?: string;
   storyTitle?: string;
+  createdFromMomentId?: string; // If ritual was created from an impact moment
 }
 
 interface CreateRitualResponse {
@@ -37,7 +38,7 @@ export default async function handler(
   }
 
   try {
-    const { userId, title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, storyId, storyTitle } = req.body as CreateRitualRequest;
+    const { userId, title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, storyId, storyTitle, createdFromMomentId } = req.body as CreateRitualRequest;
 
     if (!userId || typeof userId !== 'string') {
       res.status(401).json({ success: false, error: 'Unauthorized. User ID required.' });
@@ -87,7 +88,10 @@ export default async function handler(
       createdBy: userId,
       fromRealStory: storyId ? true : false,
       storyId: storyId || null,
-      storyTitle: storyTitle || null
+      storyTitle: storyTitle || null,
+      joinedByUsers: [], // Initialize empty
+      rippleCount: 0, // Initialize to 0
+      ...(createdFromMomentId && { createdFromMomentId })
     };
 
     const docRef = await addDoc(userCustomRitualsCollection(userId), ritualDoc);

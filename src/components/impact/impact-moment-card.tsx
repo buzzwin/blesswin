@@ -32,6 +32,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { EditMomentModal } from './edit-moment-modal';
 import { ActionShareModal } from './action-share-modal';
+import { CreateRitualFromMomentModal } from '@components/modal/create-ritual-from-moment-modal';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -50,6 +51,7 @@ export function ImpactMomentCard({
   const [loadingOriginal, setLoadingOriginal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
+  const [createRitualModalOpen, setCreateRitualModalOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const isOwner = user?.id === moment.createdBy;
 
@@ -308,83 +310,98 @@ export function ImpactMomentCard({
           )}
 
           {/* Actions */}
-          <div className='relative flex items-center gap-6 pt-2'>
-            {/* React Button (Reactions) */}
-            <div className='relative'>
-              <button
-                onClick={() => setRippleMenuOpen(!rippleMenuOpen)}
-                className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-purple-100 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400'
-              >
-                <Sparkles className='h-5 w-5' />
-                <span className='text-sm font-medium'>
-                  {reactionCount > 0 ? reactionCount : 'React'}
-                </span>
-              </button>
-
-              {/* Reactions Menu */}
-              {rippleMenuOpen && (
-                <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
-                  <div className='border-b border-gray-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:text-gray-400'>
-                    Reactions
-                  </div>
-                  <div className='p-2'>
-                    {(
-                      ['inspired', 'grateful', 'sent_love'] as RippleType[]
-                    ).map((rippleType) => (
-                      <button
-                        key={rippleType}
-                        onClick={() => {
-                          setRippleMenuOpen(false);
-                          if (moment.id) {
-                            void onRipple?.(moment.id, rippleType);
-                          }
-                        }}
-                        className='flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
-                      >
-                        <span className='text-lg'>
-                          {rippleTypeIcons[rippleType]}
-                        </span>
-                        <span className='font-medium'>
-                          {rippleTypeLabels[rippleType]}
-                        </span>
-                        {moment.ripples[rippleType].length > 0 && (
-                          <span className='ml-auto text-xs text-gray-500'>
-                            {moment.ripples[rippleType].length}
-                          </span>
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Join This Action Button (for non-creators and non-joined moments) */}
+          <div className='relative flex flex-col gap-3 pt-2'>
+            {/* Primary Actions: Do this once & Make this recurring */}
             {moment.createdBy !== user?.id && !moment.joinedFromMomentId && (
-              <Link href={`/impact/${moment.id}/join`}>
-                <a className='group flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-green-700 transition-colors hover:bg-green-100 dark:text-green-400 dark:hover:bg-green-900/30'>
-                  <span>🌱</span>
-                  <span>Join This Action</span>
-                </a>
-              </Link>
+              <div className='flex gap-2'>
+                {/* Do this once - Join Action */}
+                <Link href={`/impact/${moment.id}/join`}>
+                  <a className='flex-1 flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600'>
+                    <span>🌱</span>
+                    <span>Do this once</span>
+                  </a>
+                </Link>
+                
+                {/* Make this recurring - Create Ritual */}
+                <button
+                  onClick={() => setCreateRitualModalOpen(true)}
+                  className='flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-400 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'
+                >
+                  <span>🔄</span>
+                  <span>Make this recurring</span>
+                </button>
+              </div>
             )}
 
-            {/* Comment Button */}
-            <Link href={`/impact/${moment.id}`}>
-              <a className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'>
-                <MessageCircle className='h-5 w-5' />
-                <span className='text-sm font-medium'>Comment</span>
-              </a>
-            </Link>
+            {/* Secondary Actions: Reactions, Comment, Share */}
+            <div className='flex items-center gap-4'>
+              {/* React Button (Reactions) */}
+              <div className='relative'>
+                <button
+                  onClick={() => setRippleMenuOpen(!rippleMenuOpen)}
+                  className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-purple-100 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400'
+                >
+                  <Sparkles className='h-5 w-5' />
+                  <span className='text-sm font-medium'>
+                    {reactionCount > 0 ? reactionCount : 'React'}
+                  </span>
+                </button>
 
-            {/* Share Button */}
-            <button
-              onClick={() => setShareModalOpen(true)}
-              className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'
-            >
-              <Share2 className='h-5 w-5' />
-              <span className='text-sm font-medium'>Share</span>
-            </button>
+                {/* Reactions Menu */}
+                {rippleMenuOpen && (
+                  <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
+                    <div className='border-b border-gray-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:text-gray-400'>
+                      Reactions
+                    </div>
+                    <div className='p-2'>
+                      {(
+                        ['inspired', 'grateful', 'sent_love'] as RippleType[]
+                      ).map((rippleType) => (
+                        <button
+                          key={rippleType}
+                          onClick={() => {
+                            setRippleMenuOpen(false);
+                            if (moment.id) {
+                              void onRipple?.(moment.id, rippleType);
+                            }
+                          }}
+                          className='flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
+                        >
+                          <span className='text-lg'>
+                            {rippleTypeIcons[rippleType]}
+                          </span>
+                          <span className='font-medium'>
+                            {rippleTypeLabels[rippleType]}
+                          </span>
+                          {moment.ripples[rippleType].length > 0 && (
+                            <span className='ml-auto text-xs text-gray-500'>
+                              {moment.ripples[rippleType].length}
+                            </span>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Comment Button */}
+              <Link href={`/impact/${moment.id}`}>
+                <a className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'>
+                  <MessageCircle className='h-5 w-5' />
+                  <span className='text-sm font-medium'>Comment</span>
+                </a>
+              </Link>
+
+              {/* Share Button */}
+              <button
+                onClick={() => setShareModalOpen(true)}
+                className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'
+              >
+                <Share2 className='h-5 w-5' />
+                <span className='text-sm font-medium'>Share</span>
+              </button>
+            </div>
 
             {/* Edit & Delete Buttons (Owner Only) */}
             {isOwner && (
@@ -479,6 +496,20 @@ export function ImpactMomentCard({
         open={shareModalOpen}
         closeModal={() => setShareModalOpen(false)}
       />
+
+      {/* Create Ritual from Moment Modal */}
+      {user && (
+        <CreateRitualFromMomentModal
+          moment={moment}
+          open={createRitualModalOpen}
+          closeModal={() => setCreateRitualModalOpen(false)}
+          onSuccess={(ritualId) => {
+            toast.success('Ritual created! Check your rituals page 🌱');
+            // Optionally navigate to rituals page
+            // router.push('/rituals');
+          }}
+        />
+      )}
     </article>
   );
 }

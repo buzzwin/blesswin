@@ -19,6 +19,10 @@ export interface RitualDefinition {
   usageCount?: number; // How many times assigned
   completionRate?: number; // Percentage completion rate
   completed?: boolean; // Whether this ritual was completed today (client-side only)
+  // Ripple system fields
+  joinedByUsers?: string[]; // User IDs who have joined/subscribed to this ritual
+  rippleCount?: number; // Calculated total ripples (joined users + sum of moment ripples)
+  createdFromMomentId?: string; // Source impact moment ID (if ritual was created from a moment)
 }
 
 export interface UserRitualState {
@@ -93,7 +97,7 @@ export interface RitualStats {
 
 export const ritualDefinitionConverter: FirestoreDataConverter<RitualDefinition> = {
   toFirestore(ritual) {
-    const { id, createdAt, usageCount, completionRate, icon, ...requiredData } = ritual;
+    const { id, createdAt, usageCount, completionRate, icon, joinedByUsers, rippleCount, createdFromMomentId, ...requiredData } = ritual;
     const firestoreData: Record<string, unknown> = {
       ...requiredData
     };
@@ -109,6 +113,15 @@ export const ritualDefinitionConverter: FirestoreDataConverter<RitualDefinition>
     }
     if (icon !== undefined) {
       firestoreData.icon = icon;
+    }
+    if (joinedByUsers !== undefined) {
+      firestoreData.joinedByUsers = joinedByUsers;
+    }
+    if (rippleCount !== undefined) {
+      firestoreData.rippleCount = rippleCount;
+    }
+    if (createdFromMomentId !== undefined) {
+      firestoreData.createdFromMomentId = createdFromMomentId;
     }
 
     return firestoreData;
