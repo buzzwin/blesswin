@@ -211,10 +211,20 @@ service cloud.firestore {
       allow write: if isSignedIn() && request.auth.uid == userId;
     }
 
-    // Rituals collection (public read, admin write)
+    // Rituals collection (public read, admin write, but allow join/leave updates)
     match /rituals/{ritualId} {
       allow read: if true; // Public read for ritual definitions
-      allow create, update, delete: if false; // Admin only (handled server-side)
+      allow create, delete: if false; // Admin only (handled server-side)
+      // Allow updates when auth is null (server-side API) OR when updating join/leave fields
+      // Users can join/leave rituals by updating joinedByUsers and rippleCount
+      allow update: if request.auth == null || (
+        isSignedIn() && (
+          // Allow updating joinedByUsers and rippleCount for join/leave functionality
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['joinedByUsers', 'rippleCount']) ||
+          // Allow server-side updates to other fields (admin operations)
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usageCount', 'completionRate', 'updatedAt'])
+        )
+      );
     }
 
     // User ritual state subcollection (single document per user)

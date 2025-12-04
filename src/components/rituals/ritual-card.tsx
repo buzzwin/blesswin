@@ -25,6 +25,8 @@ interface RitualCardProps {
   loading?: boolean;
   showJoinButton?: boolean; // Whether to show join button
   ritualScope?: 'global' | 'personalized'; // Scope for joining
+  onJoinSuccess?: () => void; // Callback when join succeeds
+  onLeaveSuccess?: () => void; // Callback when leave succeeds
 }
 
 export function RitualCard({
@@ -37,16 +39,25 @@ export function RitualCard({
   onShareRitual,
   loading = false,
   showJoinButton = false,
-  ritualScope
+  ritualScope,
+  onJoinSuccess,
+  onLeaveSuccess
 }: RitualCardProps): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
   const [showActions, setShowActions] = useState(!completed);
   const [rippleCount, setRippleCount] = useState(ritual.rippleCount || 0);
   const [joining, setJoining] = useState(false);
+  const [leaving, setLeaving] = useState(false);
   const [hasJoined, setHasJoined] = useState(
     ritual.joinedByUsers?.includes(user?.id || '') || false
   );
+
+  // Update hasJoined when ritual or user changes
+  useEffect(() => {
+    const isJoined = ritual.joinedByUsers?.includes(user?.id || '') || false;
+    setHasJoined(isJoined);
+  }, [ritual.joinedByUsers, user?.id]);
 
   // Calculate ripple count on mount
   useEffect(() => {
@@ -60,47 +71,147 @@ export function RitualCard({
   }, [ritual]);
 
   const handleJoinRitual = async (): Promise<void> => {
+    console.log('🔵 Join Ritual Clicked:', {
+      userId: user?.id,
+      ritualId: ritual.id,
+      ritualTitle: ritual.title,
+      ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized'),
+      hasJoined,
+      isGlobal
+    });
+
     if (!user?.id || !ritual.id) {
+      console.error('❌ Cannot join: Missing user ID or ritual ID');
       toast.error('Please sign in to join rituals');
       return;
     }
 
     if (hasJoined) {
+      console.log('⚠️ Already joined this ritual');
       toast.success('You have already joined this ritual');
       return;
     }
 
     setJoining(true);
+    console.log('⏳ Sending join request...');
 
     try {
+      const requestBody = {
+        userId: user.id,
+        ritualId: ritual.id,
+        ritualTitle: ritual.title, // Include title for fallback lookup when ID is hardcoded
+        ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized')
+      };
+      
+      console.log('📤 Join Request Body:', requestBody);
+
       const response = await fetch('/api/rituals/join', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          userId: user.id,
-          ritualId: ritual.id,
-          ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized')
-        })
+        body: JSON.stringify(requestBody)
       });
+
+      console.log('📥 Join Response Status:', response.status, response.statusText);
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('❌ Join Failed:', errorData);
         throw new Error(errorData.error || 'Failed to join ritual');
       }
+
+      const successData = await response.json();
+      console.log('✅ Join Success:', successData);
 
       setHasJoined(true);
       setRippleCount(prev => prev + 1);
       toast.success('You joined this ritual! 🌱');
       
-      // Refresh the page to show updated state
-      router.reload();
+      // Notify parent to refetch data
+      if (onJoinSuccess) {
+        onJoinSuccess();
+      }
     } catch (error) {
+      console.error('❌ Join Error:', error);
       const message = error instanceof Error ? error.message : 'Failed to join ritual';
       toast.error(message);
     } finally {
       setJoining(false);
+    }
+  };
+
+  const handleLeaveRitual = async (): Promise<void> => {
+    console.log('🔴 Leave Ritual Clicked:', {
+      userId: user?.id,
+      ritualId: ritual.id,
+      ritualTitle: ritual.title,
+      ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized'),
+      hasJoined
+    });
+
+    if (!user?.id || !ritual.id) {
+      console.error('❌ Cannot leave: Missing user ID or ritual ID');
+      toast.error('Please sign in to leave rituals');
+      return;
+    }
+
+    if (!hasJoined) {
+      console.log('⚠️ Not joined to this ritual');
+      toast.error('You are not joined to this ritual');
+      return;
+    }
+
+    // Confirm before leaving
+    if (!window.confirm('Are you sure you want to leave this ritual? You can always join again later.')) {
+      return;
+    }
+
+    setLeaving(true);
+    console.log('⏳ Sending leave request...');
+
+    try {
+      const requestBody = {
+        userId: user.id,
+        ritualId: ritual.id,
+        ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized')
+      };
+      
+      console.log('📤 Leave Request Body:', requestBody);
+
+      const response = await fetch('/api/rituals/leave', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      console.log('📥 Leave Response Status:', response.status, response.statusText);
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error('❌ Leave Failed:', errorData);
+        throw new Error(errorData.error || 'Failed to leave ritual');
+      }
+
+      const successData = await response.json();
+      console.log('✅ Leave Success:', successData);
+
+      setHasJoined(false);
+      setRippleCount(prev => Math.max(prev - 1, 0));
+      toast.success('You left this ritual');
+      
+      // Notify parent to refetch data
+      if (onLeaveSuccess) {
+        onLeaveSuccess();
+      }
+    } catch (error) {
+      console.error('❌ Leave Error:', error);
+      const message = error instanceof Error ? error.message : 'Failed to leave ritual';
+      toast.error(message);
+    } finally {
+      setLeaving(false);
     }
   };
 
@@ -232,10 +343,36 @@ export function RitualCard({
         </div>
       )}
 
-      {/* Joined Indicator */}
+      {/* Joined Indicator and Leave Button */}
       {hasJoined && (
-        <div className='mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm font-medium text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300'>
-          ✓ You joined this ritual
+        <div className='mb-3 space-y-2'>
+          <div className='rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm font-medium text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300'>
+            ✓ You joined this ritual
+          </div>
+          {user && (
+            <button
+              onClick={handleLeaveRitual}
+              disabled={leaving}
+              className={cn(
+                'w-full rounded-lg border-2 border-red-300 bg-white px-4 py-2.5 text-sm font-semibold text-red-600',
+                'transition-colors hover:bg-red-50 dark:border-red-700 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20',
+                'flex items-center justify-center gap-2',
+                leaving && 'opacity-50 cursor-not-allowed'
+              )}
+            >
+              {leaving ? (
+                <>
+                  <Sparkles className='h-4 w-4 animate-spin' />
+                  Leaving...
+                </>
+              ) : (
+                <>
+                  <X className='h-4 w-4' />
+                  Leave Ritual
+                </>
+              )}
+            </button>
+          )}
         </div>
       )}
 

@@ -63,21 +63,32 @@ async function getUserPreferredTags(userId: string): Promise<ImpactTag[]> {
 
 /**
  * Get or assign today's global ritual
+ * Only uses Firestore rituals - no hardcoded fallback
  */
 async function getTodaysGlobalRitual(): Promise<RitualDefinition | null> {
   const today = getTodayDateString();
   
-  // For now, we'll use a simple rotation based on day of year
-  // In production, you might want to store assigned rituals in Firestore
-  const globalRituals = getGlobalRituals();
-  if (globalRituals.length === 0) {
+  // Only get from Firestore - no hardcoded fallback
+  const ritualsSnapshot = await getDocs(ritualsCollection);
+  const firestoreRituals = ritualsSnapshot.docs
+    .map(doc => {
+      const data = doc.data();
+      // Remove any id field from document data to ensure we use the Firestore document ID
+      const { id: _, ...dataWithoutId } = data;
+      return {
+        id: doc.id, // Use Firestore document ID, not any id field in the document
+        ...dataWithoutId
+      } as RitualDefinition;
+    })
+    .filter(r => r.scope === 'global');
+  
+  if (firestoreRituals.length === 0) {
     return null;
   }
 
   // Use day of year to rotate rituals consistently
   const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000);
-  const selectedRitual = globalRituals[dayOfYear % globalRituals.length];
-
+  const selectedRitual = firestoreRituals[dayOfYear % firestoreRituals.length];
   return selectedRitual;
 }
 
@@ -86,15 +97,32 @@ async function getTodaysGlobalRitual(): Promise<RitualDefinition | null> {
  */
 async function getPersonalizedRituals(userId: string): Promise<RitualDefinition[]> {
   try {
+    // First, try to get from Firestore
+        const ritualsSnapshot = await getDocs(ritualsCollection);
+        const firestoreRituals = ritualsSnapshot.docs
+          .map(doc => {
+            const data = doc.data();
+            // Remove any id field from document data to ensure we use the Firestore document ID
+            const { id: _, ...dataWithoutId } = data;
+            return {
+              id: doc.id, // Use Firestore document ID, not any id field in the document
+              ...dataWithoutId
+            } as RitualDefinition;
+          })
+          .filter(r => r.scope === 'personalized');
+    
     // Use AI personalization API (call functions directly)
     const personalizeModule = await import('./personalize');
-    const { getAllRitualDefinitions } = await import('@lib/data/ritual-definitions');
     
     const userPatterns = await personalizeModule.analyzeUserPatterns(userId);
     const completionHistory = await personalizeModule.analyzeCompletionHistory(userId);
     
-    const allRituals = getAllRitualDefinitions();
-    const personalizedRituals = allRituals.filter(r => r.scope === 'personalized');
+    // Only use Firestore rituals - no hardcoded fallback
+    if (firestoreRituals.length === 0) {
+      return [];
+    }
+    
+    const personalizedRituals = firestoreRituals;
     
     // Filter out recently completed rituals (last 7 days)
     const weekAgo = new Date();
@@ -137,8 +165,26 @@ async function getPersonalizedRitualsFallback(userId: string): Promise<RitualDef
   const personalizedRituals: RitualDefinition[] = [];
   const usedRitualIds = new Set<string>();
 
+  // Only use Firestore rituals - no hardcoded fallback
+        const ritualsSnapshot = await getDocs(ritualsCollection);
+        const firestoreRituals = ritualsSnapshot.docs
+          .map(doc => {
+            const data = doc.data();
+            // Remove any id field from document data to ensure we use the Firestore document ID
+            const { id: _, ...dataWithoutId } = data;
+            return {
+              id: doc.id, // Use Firestore document ID, not any id field in the document
+              ...dataWithoutId
+            } as RitualDefinition;
+          })
+          .filter(r => r.scope === 'personalized');
+  
+  if (firestoreRituals.length === 0) {
+    return [];
+  }
+
   for (const tag of preferredTags.slice(0, 2)) {
-    const tagRituals = getPersonalizedRitualsByTag(tag);
+    const tagRituals = firestoreRituals.filter(r => r.tags.includes(tag));
     
     // Filter out rituals user has seen recently (last 7 days)
     const availableRituals = tagRituals.filter(r => !usedRitualIds.has(r.id || ''));
