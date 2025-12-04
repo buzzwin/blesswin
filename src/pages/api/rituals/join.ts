@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { doc, getDoc, updateDoc, arrayUnion, collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc, updateDoc, arrayUnion, collection, addDoc, serverTimestamp, query, where, getDocs, type DocumentReference } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { adminDb } from '@lib/firebase/admin';
 import { ritualsCollection } from '@lib/firebase/collections';
@@ -47,7 +47,7 @@ export default async function handler(
     // Determine which collection the ritual is in
     // If ritualScope is 'global' or 'personalized', it's in the rituals collection
     // Otherwise, it's a custom ritual in users/{userId}/custom_rituals
-    let ritualDocRef;
+    let ritualDocRef: DocumentReference | undefined;
     let ritualData: RitualDefinition | null = null;
 
     if (ritualScope === 'global' || ritualScope === 'personalized') {

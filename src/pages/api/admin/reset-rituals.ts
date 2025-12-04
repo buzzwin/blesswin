@@ -40,14 +40,12 @@ export default async function handler(
     // Step 1: Delete all existing rituals
     console.log('🗑️  Deleting existing rituals...');
     let deletedCount = 0;
+    const batchSize = 500; // Firestore limit is 500 operations per batch
 
     if (adminDb) {
       // Use Admin SDK for deletion (bypasses security rules)
       const existingSnapshot = await adminDb.collection('rituals').get();
       const existingDocs = existingSnapshot.docs;
-      
-      // Delete in batches (Firestore limit is 500 operations per batch)
-      const batchSize = 500;
       for (let i = 0; i < existingDocs.length; i += batchSize) {
         const batch = adminDb.batch();
         const chunk = existingDocs.slice(i, i + batchSize);
@@ -65,8 +63,6 @@ export default async function handler(
       console.log('⚠️  Admin SDK not available, using client SDK (may have permission issues)');
       const existingSnapshot = await getDocs(ritualsCollection);
       const existingDocs = existingSnapshot.docs;
-      
-      const batchSize = 500;
       for (let i = 0; i < existingDocs.length; i += batchSize) {
         const batch = writeBatch(db);
         const chunk = existingDocs.slice(i, i + batchSize);
@@ -102,7 +98,7 @@ export default async function handler(
           completionRate: 0,
           joinedByUsers: [],
           rippleCount: 0
-        } as Omit<RitualDefinition, 'id'>);
+        });
       });
 
       await batch.commit();

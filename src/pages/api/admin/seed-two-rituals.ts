@@ -110,7 +110,7 @@ export default async function handler(
           completionRate: 0,
           joinedByUsers: [],
           rippleCount: 0
-        } as Omit<RitualDefinition, 'id'>);
+        });
         
         addedRituals.push({ id: docRef.id, title: ritual.title });
         console.log(`✅ Added: "${ritual.title}" (${ritual.scope})`);

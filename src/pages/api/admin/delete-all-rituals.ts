@@ -23,6 +23,8 @@ export default async function handler(
     res.status(405).json({
       success: false,
       deleted: 0,
+      deletedCustomRituals: 0,
+      usersAffected: 0,
       error: 'Method not allowed'
     });
     return;
@@ -142,7 +144,7 @@ export default async function handler(
       }
     }
 
-    console.log(`✅ Successfully deleted:`);
+    console.log('✅ Successfully deleted:');
     console.log(`   - ${deletedCount} rituals from main collection`);
     console.log(`   - ${deletedCustomRituals} custom rituals from ${usersAffected} users`);
 
@@ -157,6 +159,8 @@ export default async function handler(
     res.status(500).json({
       success: false,
       deleted: 0,
+      deletedCustomRituals: 0,
+      usersAffected: 0,
       error: error instanceof Error ? error.message : 'Failed to delete rituals'
     });
   }

@@ -82,7 +82,7 @@ export function MyRitualsSection({
           }
           
           filteredAvailable = filteredAvailable.filter(
-            ritual => !todayRitualIds.has(ritual.id || '')
+            (ritual: RitualDefinition) => !todayRitualIds.has(ritual.id || '')
           );
           
           console.log('🔍 Filtered available rituals:', {
