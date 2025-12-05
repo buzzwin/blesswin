@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { doc, getDoc } from 'firebase/firestore';
-import { db } from '@lib/firebase/app';
-import { adminDb } from '@lib/firebase/admin';
 import { ritualsCollection } from '@lib/firebase/collections';
 
 interface CheckStatusResponse {
@@ -36,29 +34,16 @@ export default async function handler(
       return;
     }
 
-    let ritualData;
+    // Use client SDK (respects Firestore security rules)
+    const ritualDocRef = doc(ritualsCollection, ritualId);
+    const snapshot = await getDoc(ritualDocRef);
     
-    if (adminDb) {
-      const ritualDoc = adminDb.collection('rituals').doc(ritualId);
-      const snapshot = await ritualDoc.get();
-      
-      if (!snapshot.exists) {
-        res.status(404).json({ error: 'Ritual not found' });
-        return;
-      }
-      
-      ritualData = snapshot.data();
-    } else {
-      const ritualDocRef = doc(ritualsCollection, ritualId);
-      const snapshot = await getDoc(ritualDocRef);
-      
-      if (!snapshot.exists()) {
-        res.status(404).json({ error: 'Ritual not found' });
-        return;
-      }
-      
-      ritualData = snapshot.data();
+    if (!snapshot.exists()) {
+      res.status(404).json({ error: 'Ritual not found' });
+      return;
     }
+    
+    const ritualData = snapshot.data();
 
     const joinedByUsers = ritualData?.joinedByUsers || [];
     const userHasJoined = joinedByUsers.includes(userId);

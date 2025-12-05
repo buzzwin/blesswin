@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { adminDb } from '@lib/firebase/admin';
+import { doc, getDoc, setDoc, updateDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@lib/firebase/app';
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,15 +16,11 @@ export default async function handler(
     }
 
     try {
-      if (!adminDb) {
-        // Fallback to false if admin DB not available
-        res.status(200).json({ accepted: false });
-        return;
-      }
+      // Use client SDK (respects Firestore security rules)
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
 
-      const userDoc = await adminDb.collection('users').doc(userId).get();
-
-      if (!userDoc.exists) {
+      if (!userDoc.exists()) {
         res.status(200).json({ accepted: false });
         return;
       }
@@ -50,26 +47,22 @@ export default async function handler(
     }
 
     try {
-      if (!adminDb) {
-        res.status(500).json({ error: 'Database not available' });
-        return;
-      }
+      // Use client SDK (respects Firestore security rules)
+      const userDocRef = doc(db, 'users', userId);
+      const userDoc = await getDoc(userDocRef);
 
-      const userRef = adminDb.collection('users').doc(userId);
-      const userDoc = await userRef.get();
-
-      if (!userDoc.exists) {
+      if (!userDoc.exists()) {
         // Create user document if it doesn't exist
-        await userRef.set({
+        await setDoc(userDocRef, {
           disclaimerAccepted: true,
-          disclaimerAcceptedAt: new Date(),
-          createdAt: new Date()
+          disclaimerAcceptedAt: serverTimestamp(),
+          createdAt: serverTimestamp()
         });
       } else {
         // Update existing user document
-        await userRef.update({
+        await updateDoc(userDocRef, {
           disclaimerAccepted: true,
-          disclaimerAcceptedAt: new Date()
+          disclaimerAcceptedAt: serverTimestamp()
         });
       }
 

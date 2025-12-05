@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { adminDb } from '@lib/firebase/admin';
+import { collection, query, where, getDocs, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { db } from '@lib/firebase/app';
 
 export default async function handler(
   req: NextApiRequest,
@@ -23,35 +24,31 @@ export default async function handler(
   }
 
   try {
-    if (!adminDb) {
-      res.status(500).json({ error: 'Database not available' });
-      return;
-    }
-
-    // Check if preference already exists
-    const existingPref = await adminDb
-      .collection('user_preferences')
-      .where('userId', '==', userId)
-      .where('itemId', '==', itemId)
-      .limit(1)
-      .get();
+    // Use client SDK (respects Firestore security rules)
+    const preferencesCollection = collection(db, 'user_preferences');
+    const existingPrefQuery = query(
+      preferencesCollection,
+      where('userId', '==', userId),
+      where('itemId', '==', itemId)
+    );
+    const existingPref = await getDocs(existingPrefQuery);
 
     if (!existingPref.empty) {
       // Update existing preference
-      const doc = existingPref.docs[0];
-      await doc.ref.update({
+      const prefDoc = existingPref.docs[0];
+      await updateDoc(doc(preferencesCollection, prefDoc.id), {
         preference,
-        updatedAt: new Date()
+        updatedAt: serverTimestamp()
       });
     } else {
       // Create new preference
-      await adminDb.collection('user_preferences').add({
+      await addDoc(preferencesCollection, {
         userId,
         itemId,
         itemType,
         preference,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp()
       });
     }
 
