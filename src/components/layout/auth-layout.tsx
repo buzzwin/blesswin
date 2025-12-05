@@ -9,9 +9,16 @@ export function AuthLayout({ children }: { children: ReactNode }): JSX.Element {
   const router = useRouter();
 
   useEffect(() => {
-    // If user is authenticated and on login page, redirect to home
+    // If user is authenticated and on login page, redirect appropriately
     if (user && router.pathname === '/login') {
-      router.replace('/home');
+      const redirect = router.query.redirect as string | undefined;
+      if (redirect) {
+        // Redirect to the specified URL
+        void router.replace(redirect);
+      } else {
+        // Default redirect to home
+        void router.replace('/home');
+      }
     }
   }, [user, router]);
 

@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { collection, addDoc, serverTimestamp, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc, query, where, getDocs, updateDoc, arrayUnion } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
-import { impactMomentsCollection } from '@lib/firebase/collections';
+import { impactMomentsCollection, ritualsCollection } from '@lib/firebase/collections';
 import type { RitualDefinition, RitualTimeOfDay } from '@lib/types/ritual';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 
@@ -17,6 +17,7 @@ interface CreateRitualFromMomentRequest {
 interface CreateRitualFromMomentResponse {
   success: boolean;
   ritualId?: string;
+  joined?: boolean; // true if user joined existing ritual, false if created new one
   error?: string;
 }
 
@@ -57,17 +58,134 @@ export default async function handler(
     const momentData = momentDoc.data();
     const moment = { id: momentDoc.id, ...momentData } as any;
 
-    // Use provided title/description or default to moment's content
+    // If moment was created from a ritual, join that ritual directly
+    if (moment.ritualId) {
+      // Find the ritual - could be in main collection or user's custom_rituals
+      let ritualDocRef: any = null;
+      let ritualData: any = null;
+      let ritualScope: 'global' | 'personalized' | undefined = undefined;
+
+      // Try main rituals collection first
+      try {
+        const ritualDoc = await getDoc(doc(ritualsCollection, moment.ritualId));
+        if (ritualDoc.exists()) {
+          ritualDocRef = ritualDoc.ref;
+          ritualData = ritualDoc.data();
+          ritualScope = ritualData.scope === 'global' ? 'global' : 'personalized';
+        }
+      } catch (error) {
+        // Ritual might be in a user's custom_rituals collection
+        console.log('Ritual not found in main collection, checking custom rituals...');
+      }
+
+      // If not found, try to find it in any user's custom_rituals
+      // (This is a limitation - we'd need to know which user owns it)
+      // For now, if ritualId exists but ritual not found, create/join based on moment
+      if (!ritualDocRef) {
+        // Ritual might have been deleted or is in a user's custom collection
+        // Fall through to create/join logic below
+      } else {
+        // Found the ritual - join it
+        const currentJoinedBy = ritualData.joinedByUsers || [];
+        
+        if (!currentJoinedBy.includes(userId)) {
+          await updateDoc(ritualDocRef, {
+            joinedByUsers: arrayUnion(userId),
+            rippleCount: (ritualData.rippleCount || 0) + 1
+          });
+        }
+
+        // Also add to user's custom_rituals so they can complete it
+        const userCustomRitualsQuery = query(
+          collection(db, 'users', userId, 'custom_rituals'),
+          where('title', '==', ritualData.title)
+        );
+        const existingCustomRituals = await getDocs(userCustomRitualsQuery);
+
+        if (existingCustomRituals.empty) {
+          const { id, ...ritualDataWithoutId } = ritualData;
+          const ritualCopy = {
+            ...ritualDataWithoutId,
+            createdAt: serverTimestamp(),
+            createdBy: userId,
+            scope: 'personalized',
+            joinedByUsers: [],
+            rippleCount: 0
+          };
+          await addDoc(collection(db, 'users', userId, 'custom_rituals'), ritualCopy);
+        }
+
+        res.status(200).json({
+          success: true,
+          ritualId: moment.ritualId,
+          joined: true
+        });
+        return;
+      }
+    }
+
+    // If moment doesn't have ritualId, check if a ritual was created from this moment
+    // Check if a ritual already exists for this moment (viral effect - multiple users join same ritual)
+    const existingRitualQuery = query(
+      ritualsCollection,
+      where('createdFromMomentId', '==', momentId)
+    );
+    const existingRituals = await getDocs(existingRitualQuery);
+
+    if (!existingRituals.empty) {
+      // Ritual already exists - join it instead of creating a new one
+      const existingRitual = existingRituals.docs[0];
+      const existingRitualData = existingRitual.data();
+      const currentJoinedBy = existingRitualData.joinedByUsers || [];
+
+      // Add user to joinedByUsers if not already there
+      if (!currentJoinedBy.includes(userId)) {
+        await updateDoc(existingRitual.ref, {
+          joinedByUsers: arrayUnion(userId),
+          rippleCount: (existingRitualData.rippleCount || 0) + 1
+        });
+      }
+
+      // Also add this ritual to user's custom_rituals so they can complete it
+      const userCustomRitualsQuery = query(
+        collection(db, 'users', userId, 'custom_rituals'),
+        where('title', '==', existingRitualData.title)
+      );
+      const existingCustomRituals = await getDocs(userCustomRitualsQuery);
+
+      if (existingCustomRituals.empty) {
+        // Copy ritual to user's custom_rituals
+        const { id, ...ritualDataWithoutId } = existingRitualData;
+        const ritualCopy = {
+          ...ritualDataWithoutId,
+          createdAt: serverTimestamp(),
+          createdBy: userId,
+          scope: 'personalized',
+          joinedByUsers: [],
+          rippleCount: 0
+        };
+        await addDoc(collection(db, 'users', userId, 'custom_rituals'), ritualCopy);
+      }
+
+      res.status(200).json({
+        success: true,
+        ritualId: existingRitual.id,
+        joined: true // Indicates user joined existing ritual
+      });
+      return;
+    }
+
+    // No existing ritual - create a new shared ritual in main collection
     const ritualTitle = title?.trim() || moment.text.substring(0, 50) || 'New Ritual';
     const ritualDescription = description?.trim() || moment.text || 'A ritual inspired by an impact moment';
 
-    // Create custom ritual document from moment
-    const ritualDoc: Record<string, unknown> = {
+    // Create shared ritual in main rituals collection (so others can join)
+    const ritualDoc = {
       title: ritualTitle,
       description: ritualDescription,
       tags: moment.tags || [],
       effortLevel: moment.effortLevel || 'medium',
-      scope: 'personalized', // User-created rituals are personalized
+      scope: 'personalized', // Shared but personalized scope
       suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
       durationEstimate: durationEstimate || '5 minutes',
       prefillTemplate: moment.text || `Completed ritual: ${ritualTitle}`,
@@ -76,15 +194,26 @@ export default async function handler(
       completionRate: 0,
       createdBy: userId,
       createdFromMomentId: momentId, // Link back to source moment
-      joinedByUsers: [], // Initialize empty
-      rippleCount: 0 // Initialize to 0
+      joinedByUsers: [userId], // Creator is first to join
+      rippleCount: 1 // Creator counts as first ripple
     };
 
-    const docRef = await addDoc(userCustomRitualsCollection(userId), ritualDoc);
+    const docRef = await addDoc(ritualsCollection, ritualDoc as any);
+
+    // Also add to user's custom_rituals so they can complete it
+    const ritualCopy = {
+      ...ritualDoc,
+      createdAt: serverTimestamp(),
+      scope: 'personalized',
+      joinedByUsers: [],
+      rippleCount: 0
+    };
+    await addDoc(userCustomRitualsCollection(userId), ritualCopy);
 
     res.status(200).json({
       success: true,
-      ritualId: docRef.id
+      ritualId: docRef.id,
+      joined: false // Indicates user created new ritual
     });
   } catch (error) {
     console.error('Error creating ritual from moment:', error);

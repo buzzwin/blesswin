@@ -311,26 +311,38 @@ export function ImpactMomentCard({
 
           {/* Actions */}
           <div className='relative flex flex-col gap-3 pt-2'>
-            {/* Primary Actions: Do this once & Make this recurring */}
+            {/* Primary Actions: Do this once & Make this recurring (only for signed-in users) */}
             {moment.createdBy !== user?.id && !moment.joinedFromMomentId && (
-              <div className='flex gap-2'>
-                {/* Do this once - Join Action */}
-                <Link href={`/impact/${moment.id}/join`}>
-                  <a className='flex-1 flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600'>
-                    <span>🌱</span>
-                    <span>Do this once</span>
-                  </a>
-                </Link>
-                
-                {/* Make this recurring - Create Ritual */}
-                <button
-                  onClick={() => setCreateRitualModalOpen(true)}
-                  className='flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-400 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'
-                >
-                  <span>🔄</span>
-                  <span>Make this recurring</span>
-                </button>
-              </div>
+              <>
+                {user ? (
+                  <div className='flex gap-2'>
+                    {/* Do this once - Join Action */}
+                    <Link href={`/impact/${moment.id}/join`}>
+                      <a className='flex-1 flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600'>
+                        <span>🌱</span>
+                        <span>Do this once</span>
+                      </a>
+                    </Link>
+                    
+                    {/* Make this recurring - Create Ritual */}
+                    <button
+                      onClick={() => setCreateRitualModalOpen(true)}
+                      className='flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-400 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'
+                    >
+                      <span>🔄</span>
+                      <span>Make this recurring</span>
+                    </button>
+                  </div>
+                ) : (
+                  /* Join button for non-signed-in users - redirects to login then create ritual from moment */
+                  <Link href={`/login?redirect=/rituals/create-from-moment/${moment.id}`}>
+                    <a className='flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600'>
+                      <span>🌱</span>
+                      <span>Join</span>
+                    </a>
+                  </Link>
+                )}
+              </>
             )}
 
             {/* Secondary Actions: Reactions, Comment, Share */}
