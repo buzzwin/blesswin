@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { doc, getDoc, updateDoc, arrayUnion, collection, addDoc, serverTimestamp, query, where, getDocs, type DocumentReference } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
-import { adminDb } from '@lib/firebase/admin';
 import { ritualsCollection } from '@lib/firebase/collections';
 import type { RitualDefinition } from '@lib/types/ritual';
-import { FieldValue } from 'firebase-admin/firestore';
 
 interface JoinRitualRequest {
   userId: string;
@@ -57,46 +55,23 @@ export default async function handler(
         userId
       });
       
-      let ritualSnapshot;
-      let ritualDoc;
-      
-      // Use Admin SDK if available (bypasses security rules)
-      if (adminDb) {
-        ritualDoc = adminDb.collection('rituals').doc(ritualId);
-        ritualSnapshot = await ritualDoc.get();
-        console.log('📄 Ritual snapshot exists (Admin SDK):', ritualSnapshot.exists);
-      } else {
-        // Fallback to client SDK
-        ritualDocRef = doc(ritualsCollection, ritualId);
-        const clientSnapshot = await getDoc(ritualDocRef);
-        console.log('📄 Ritual snapshot exists (Client SDK):', clientSnapshot.exists());
-        if (!clientSnapshot.exists()) {
-          ritualSnapshot = null;
-        } else {
-          ritualSnapshot = { exists: true, data: () => clientSnapshot.data(), id: clientSnapshot.id };
-        }
-      }
+      // Use client SDK (respects Firestore security rules)
+      ritualDocRef = doc(ritualsCollection, ritualId);
+      const clientSnapshot = await getDoc(ritualDocRef);
+      console.log('📄 Ritual snapshot exists:', clientSnapshot.exists());
+      const ritualSnapshot = clientSnapshot.exists() 
+        ? { exists: true, data: () => clientSnapshot.data(), id: clientSnapshot.id }
+        : null;
       
       if (!ritualSnapshot || !ritualSnapshot.exists) {
         // Try to find by title as fallback (for hardcoded rituals that might have different IDs)
         console.log('⚠️ Ritual not found by ID, trying to find by title...');
-        let allRituals: Array<{ id: string; title?: string; data?: any }> = [];
-        
-        if (adminDb) {
-          const allRitualsSnapshot = await adminDb.collection('rituals').get();
-          allRituals = allRitualsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            title: doc.data().title,
-            data: doc.data()
-          }));
-        } else {
-          const allRitualsSnapshot = await getDocs(ritualsCollection);
-          allRituals = allRitualsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            title: doc.data().title,
-            data: doc.data()
-          }));
-        }
+        const allRitualsSnapshot = await getDocs(ritualsCollection);
+        const allRituals = allRitualsSnapshot.docs.map(doc => ({
+          id: doc.id,
+          title: doc.data().title,
+          data: doc.data()
+        }));
         
         console.log('📋 All rituals in Firestore:', allRituals.map(r => ({ id: r.id, title: r.title })));
         
@@ -112,13 +87,7 @@ export default async function handler(
             console.log('✅ Found ritual by title, using Firestore ID:', matchingRitual.id);
             // Use the matching ritual
             ritualData = { id: matchingRitual.id, ...matchingRitual.data } as RitualDefinition;
-            
-            // Update ritualDoc for Admin SDK
-            if (adminDb) {
-              ritualDoc = adminDb.collection('rituals').doc(matchingRitual.id);
-            } else {
-              ritualDocRef = doc(ritualsCollection, matchingRitual.id);
-            }
+            ritualDocRef = doc(ritualsCollection, matchingRitual.id);
           } else {
             res.status(404).json({ 
               success: false, 
@@ -139,60 +108,38 @@ export default async function handler(
       }
 
       // Add user to joinedByUsers array
+      if (!ritualDocRef) {
+        res.status(500).json({ success: false, error: 'Ritual document reference not found' });
+        return;
+      }
+
       const currentJoinedBy = ritualData.joinedByUsers || [];
       console.log('📊 Current joinedByUsers before update:', currentJoinedBy);
       console.log('👤 User ID to add:', userId);
       console.log('🔍 User already in array?', currentJoinedBy.includes(userId));
       
       if (!currentJoinedBy.includes(userId)) {
-        if (adminDb && ritualDoc) {
-          // Use Admin SDK
-          console.log('✅ Updating ritual with Admin SDK:', {
-            ritualId: ritualDoc.id,
-            userId,
-            currentRippleCount: ritualData.rippleCount || 0,
-            newRippleCount: (ritualData.rippleCount || 0) + 1
-          });
-          await ritualDoc.update({
-            joinedByUsers: FieldValue.arrayUnion(userId),
-            rippleCount: (ritualData.rippleCount || 0) + 1
-          });
-          
-          // Verify the update
-          const verifySnapshot = await ritualDoc.get();
-          const verifyData = verifySnapshot.data();
-          console.log('✅ Verified update - joinedByUsers after:', verifyData?.joinedByUsers);
-        } else {
-          // Fallback to client SDK
-          console.log('✅ Updating ritual with Client SDK:', {
-            ritualId: ritualDocRef?.id,
-            userId,
-            currentRippleCount: ritualData.rippleCount || 0,
-            newRippleCount: (ritualData.rippleCount || 0) + 1
-          });
-          await updateDoc(ritualDocRef!, {
-            joinedByUsers: arrayUnion(userId),
-            rippleCount: (ritualData.rippleCount || 0) + 1
-          });
-        }
+        // Use client SDK (respects Firestore security rules)
+        console.log('✅ Updating ritual:', {
+          ritualId: ritualDocRef.id,
+          userId,
+          currentRippleCount: ritualData.rippleCount || 0,
+          newRippleCount: (ritualData.rippleCount || 0) + 1
+        });
+        await updateDoc(ritualDocRef, {
+          joinedByUsers: arrayUnion(userId),
+          rippleCount: (ritualData.rippleCount || 0) + 1
+        });
       } else {
         console.log('⚠️ User already in joinedByUsers array, skipping update');
       }
 
       // Also add this ritual to user's custom_rituals so they can complete it
-      let existingCustomRituals;
-      if (adminDb) {
-        const customRitualsSnapshot = await adminDb.collection(`users/${userId}/custom_rituals`)
-          .where('title', '==', ritualData.title)
-          .get();
-        existingCustomRituals = { empty: customRitualsSnapshot.empty };
-      } else {
-        const customRitualsQuery = query(
-          userCustomRitualsCollection(userId),
-          where('title', '==', ritualData.title)
-        );
-        existingCustomRituals = await getDocs(customRitualsQuery);
-      }
+      const customRitualsQuery = query(
+        userCustomRitualsCollection(userId),
+        where('title', '==', ritualData.title)
+      );
+      const existingCustomRituals = await getDocs(customRitualsQuery);
       
       if (existingCustomRituals.empty) {
         // Copy ritual to user's custom_rituals
@@ -200,18 +147,14 @@ export default async function handler(
         const { id, ...ritualDataWithoutId } = ritualData;
         const ritualCopy = {
           ...ritualDataWithoutId,
-          createdAt: adminDb ? FieldValue.serverTimestamp() : serverTimestamp(),
+          createdAt: serverTimestamp(),
           createdBy: userId,
           scope: 'personalized',
           joinedByUsers: [],
           rippleCount: 0
         };
         
-        if (adminDb) {
-          await adminDb.collection(`users/${userId}/custom_rituals`).add(ritualCopy);
-        } else {
-          await addDoc(userCustomRitualsCollection(userId), ritualCopy as any);
-        }
+        await addDoc(userCustomRitualsCollection(userId), ritualCopy);
       }
     } else {
       // Custom ritual - find it in the creator's custom_rituals
