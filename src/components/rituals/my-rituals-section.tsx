@@ -1,9 +1,11 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 import { RitualCard } from './ritual-card';
 import { Loading } from '@components/ui/loading';
 import { Plus, Edit2, Users, Sparkles } from 'lucide-react';
 import type { RitualDefinition } from '@lib/types/ritual';
+import { filterAndSortRituals } from '@lib/utils/ritual-filtering';
+import type { SortOption } from '@components/rituals/rituals-sort';
 
 interface MyRitualsSectionProps {
   onCreateRitual: () => void;
@@ -15,7 +17,12 @@ interface MyRitualsSectionProps {
     globalRitual?: RitualDefinition | null;
     personalizedRituals?: RitualDefinition[];
   } | null;
-  onRefetch?: () => void; // Expose refetch function to parent
+  onRefetch?: () => void;
+  showOnlyAvailable?: boolean; // Show only available rituals (for Available tab)
+  onCountsUpdate?: (counts: { myRituals: number; available: number; joined: number; created: number }) => void;
+  filterType?: 'created'; // Filter to apply to this section (only 'created' now)
+  searchQuery?: string; // Search query for filtering rituals
+  sortBy?: SortOption; // Sort option
 }
 
 export function MyRitualsSection({
@@ -25,7 +32,12 @@ export function MyRitualsSection({
   onShareRitual,
   completingRitualId,
   todayRituals,
-  onRefetch
+  onRefetch,
+  showOnlyAvailable = false,
+  onCountsUpdate,
+  filterType = 'created',
+  searchQuery = '',
+  sortBy = 'popularity'
 }: MyRitualsSectionProps): JSX.Element {
   const { user } = useAuth();
   const [createdRituals, setCreatedRituals] = useState<RitualDefinition[]>([]);
@@ -53,25 +65,26 @@ export function MyRitualsSection({
       const response = await fetch(`/api/rituals/my-rituals?userId=${user.id}`);
       console.log('📥 My Rituals Response Status:', response.status);
       
-      const data = await response.json();
+      const data = await response.json() as {
+        createdRituals?: RitualDefinition[];
+        joinedRituals?: RitualDefinition[];
+        availableRituals?: RitualDefinition[];
+        error?: string;
+      };
       console.log('📦 My Rituals Data:', {
         createdCount: data.createdRituals?.length || 0,
         joinedCount: data.joinedRituals?.length || 0,
         availableCount: data.availableRituals?.length || 0,
-        createdRituals: data.createdRituals,
-        joinedRituals: data.joinedRituals,
-        availableRituals: data.availableRituals,
+        createdRituals: data.createdRituals?.map((r: RitualDefinition) => ({ id: r.id, title: r.title })),
+        joinedRituals: data.joinedRituals?.map((r: RitualDefinition) => ({ id: r.id, title: r.title })),
+        availableRituals: data.availableRituals?.length || 0,
         error: data.error
       });
 
       if (response.ok) {
-        setCreatedRituals(data.createdRituals || []);
-        setJoinedRituals(data.joinedRituals || []);
-        
-        // Filter out rituals that are already in today's rituals
-        let filteredAvailable = data.availableRituals || [];
+        // Get IDs of rituals that are in today's rituals (to filter duplicates)
+        const todayRitualIds = new Set<string>();
         if (todayRituals) {
-          const todayRitualIds = new Set<string>();
           if (todayRituals.globalRitual?.id) {
             todayRitualIds.add(todayRituals.globalRitual.id);
           }
@@ -80,20 +93,80 @@ export function MyRitualsSection({
               if (r.id) todayRitualIds.add(r.id);
             });
           }
-          
-          filteredAvailable = filteredAvailable.filter(
-            (ritual: RitualDefinition) => !todayRitualIds.has(ritual.id || '')
-          );
-          
-          console.log('🔍 Filtered available rituals:', {
-            total: data.availableRituals?.length || 0,
-            filtered: filteredAvailable.length,
-            todayRitualIds: Array.from(todayRitualIds)
-          });
         }
         
+        console.log('📋 Today Ritual IDs to exclude:', Array.from(todayRitualIds));
+        
+        // Filter created rituals - exclude those already in "Today's Rituals"
+        // (Smart merge: created rituals scheduled for today appear in "Today's Rituals", not here)
+        const allCreatedRituals = data.createdRituals || [];
+        const createdRitualsNotInToday = allCreatedRituals.filter(
+          (ritual: RitualDefinition) => !todayRitualIds.has(ritual.id || '')
+        );
+        setCreatedRituals(createdRitualsNotInToday);
+        
+        // Store ALL joined rituals (we'll filter them in the render based on todayRituals)
+        // This ensures we have the full list even if todayRituals changes
+        const allJoinedRituals = data.joinedRituals || [];
+        console.log('👥 All Joined Rituals:', allJoinedRituals.map((r: RitualDefinition) => ({ id: r.id, title: r.title, joinedByUsers: r.joinedByUsers })));
+        setJoinedRituals(allJoinedRituals);
+        
+        // Filter out rituals that are already in today's rituals OR already joined from available rituals
+        let filteredAvailable = data.availableRituals || [];
+        const joinedRitualIds = new Set(
+          allJoinedRituals
+            .map((r: RitualDefinition) => r.id)
+            .filter((id: string | undefined): id is string => Boolean(id))
+        );
+        
+        filteredAvailable = filteredAvailable.filter(
+          (ritual: RitualDefinition) => {
+            // Exclude if in today's rituals
+            if (todayRitualIds.has(ritual.id || '')) {
+              return false;
+            }
+            // Exclude if already joined
+            if (joinedRitualIds.has(ritual.id || '')) {
+              return false;
+            }
+            return true;
+          }
+        );
+        
+        console.log('🔍 Filtered available rituals:', {
+          total: data.availableRituals?.length || 0,
+          filtered: filteredAvailable.length,
+          todayRitualIds: Array.from(todayRitualIds),
+          joinedRitualIds: Array.from(joinedRitualIds)
+        });
+        
         setAvailableRituals(filteredAvailable);
-        console.log('✅ My Rituals loaded successfully');
+        
+        // Calculate joined rituals not in today (for counts)
+        const joinedRitualsNotInToday = allJoinedRituals.filter(
+          (ritual: RitualDefinition) => !todayRitualIds.has(ritual.id || '')
+        );
+        
+        console.log('✅ My Rituals loaded successfully', {
+          totalCreated: allCreatedRituals.length,
+          createdNotInToday: createdRitualsNotInToday.length,
+          createdInToday: allCreatedRituals.length - createdRitualsNotInToday.length,
+          totalJoined: allJoinedRituals.length,
+          joinedNotInToday: joinedRitualsNotInToday.length,
+          joinedInToday: allJoinedRituals.length - joinedRitualsNotInToday.length,
+          todayRitualIds: Array.from(todayRitualIds)
+        });
+        
+        // Update parent with counts
+        if (onCountsUpdate) {
+          const availableCount = filteredAvailable.length;
+          onCountsUpdate({ 
+            myRituals: 0, // No longer used
+            available: availableCount,
+            joined: allJoinedRituals.length,  // Total joined count
+            created: createdRitualsNotInToday.length
+          });
+        }
       } else {
         console.error('❌ Failed to fetch my rituals:', data.error);
       }
@@ -102,11 +175,57 @@ export function MyRitualsSection({
     } finally {
       setLoading(false);
     }
-  }, [user?.id, todayRituals]);
+  }, [user?.id, todayRituals, onCountsUpdate]);
 
   useEffect(() => {
     void fetchMyRituals();
   }, [fetchMyRituals]);
+
+  // Get IDs of rituals in today's rituals to avoid duplication
+  const todayRitualIds = useMemo(() => {
+    const ids = new Set<string>();
+    if (todayRituals) {
+      if (todayRituals.globalRitual?.id) {
+        ids.add(todayRituals.globalRitual.id);
+      }
+      if (todayRituals.personalizedRituals) {
+        todayRituals.personalizedRituals.forEach(r => {
+          if (r.id) ids.add(r.id);
+        });
+      }
+    }
+    return ids;
+  }, [todayRituals]);
+  
+  // Note: joinedRituals is still fetched for filtering available rituals
+  // but is no longer displayed here (handled by JoinedRitualsSection)
+
+  // Apply filterType to determine what to show
+  // Now only handles 'created' filter (for Created tab) or showOnlyAvailable (for Available tab)
+  const displayCreatedRituals = useMemo(() => {
+    if (filterType === 'created') {
+      return createdRituals;
+    }
+    return [];
+  }, [filterType, createdRituals]);
+
+  const displayAvailableRituals = useMemo(() => {
+    if (showOnlyAvailable) {
+      return availableRituals;
+    }
+    return [];
+  }, [showOnlyAvailable, availableRituals]);
+
+  // Apply search and sort filtering
+  const filteredAndSortedCreated = useMemo(
+    () => filterAndSortRituals(displayCreatedRituals, searchQuery, sortBy),
+    [displayCreatedRituals, searchQuery, sortBy]
+  );
+
+  const filteredAndSortedAvailable = useMemo(
+    () => filterAndSortRituals(displayAvailableRituals, searchQuery, sortBy),
+    [displayAvailableRituals, searchQuery, sortBy]
+  );
 
   if (loading) {
     return (
@@ -116,146 +235,192 @@ export function MyRitualsSection({
     );
   }
 
-  const hasRituals = createdRituals.length > 0 || joinedRituals.length > 0 || availableRituals.length > 0;
+  const hasRituals = showOnlyAvailable 
+    ? availableRituals.length > 0
+    : filterType === 'created'
+    ? createdRituals.length > 0
+    : false;
+
+  // If showing only available, skip created and joined sections
+  if (showOnlyAvailable) {
+    return (
+      <div className='space-y-3 md:space-y-4'>
+        {availableRituals.length > 0 ? (
+          <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+            <div className='mb-3 flex items-center justify-between md:mb-4'>
+              <div className='flex items-center gap-2'>
+                <Sparkles className='h-4 w-4 text-blue-600 dark:text-blue-400 md:h-5 md:w-5' />
+                <h3 className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
+                  Available Rituals
+                </h3>
+                <span className='rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'>
+                  {availableRituals.length}
+                </span>
+              </div>
+            </div>
+            <p className='mb-3 text-xs text-gray-600 dark:text-gray-400 md:mb-4 md:text-sm'>
+              Discover new rituals you can join and make part of your daily practice.
+            </p>
+            <div className='space-y-2 md:space-y-3'>
+              {filteredAndSortedAvailable.map((ritual) => {
+                const userHasJoined = ritual.joinedByUsers?.includes(user?.id || '') || false;
+                
+                return (
+                  <RitualCard
+                    key={ritual.id}
+                    ritual={ritual}
+                    isGlobal={ritual.scope === 'global'}
+                    completed={false}
+                    onCompleteAndShare={() => onCompleteAndShare(ritual)}
+                    onShareRitual={() => onShareRitual(ritual)}
+                    loading={completingRitualId === ritual.id}
+                    showJoinButton={!userHasJoined}
+                    ritualScope={ritual.scope || 'personalized'}
+                    onJoinSuccess={fetchMyRituals}
+                  />
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
+            <div className='mx-auto max-w-md'>
+              <div className='mb-4 text-4xl md:text-6xl'>🌱</div>
+              <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
+                No New Rituals Available
+              </h3>
+              <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+                Create your own ritual or check back later for new rituals to join!
+              </p>
+              <button
+                onClick={onCreateRitual}
+                className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:px-6 md:py-3'
+              >
+                <Plus className='h-4 w-4 md:h-5 md:w-5' />
+                Create Your First Ritual
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
+
+  // Don't show sections if they're filtered out
+  if (filterType === 'created' && createdRituals.length === 0) {
+    return (
+      <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
+        <div className='mx-auto max-w-md'>
+          <div className='mb-4 text-4xl md:text-6xl'>📝</div>
+          <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
+            No Created Rituals
+          </h3>
+          <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+            Create your first ritual to get started!
+          </p>
+          <button
+            onClick={onCreateRitual}
+            className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:px-6 md:py-3'
+          >
+            <Plus className='h-4 w-4 md:h-5 md:w-5' />
+            Create Your First Ritual
+          </button>
+        </div>
+      </div>
+    );
+  }
+
 
   return (
-    <div className='space-y-6'>
-      {/* Created Rituals Section */}
-      {createdRituals.length > 0 && (
-        <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-          <div className='mb-4 flex items-center justify-between'>
+    <div className='space-y-3 md:space-y-4 lg:space-y-6'>
+      {/* Created Rituals Section - Always show when filter is 'created' */}
+      {/* (Created rituals scheduled for today appear in "Today's Rituals" section above) */}
+      {filterType === 'created' && (
+        <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+          <div className='mb-3 flex items-center justify-between md:mb-4'>
             <div className='flex items-center gap-2'>
-              <Plus className='h-5 w-5 text-purple-600 dark:text-purple-400' />
-              <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+              <Plus className='h-4 w-4 text-purple-600 dark:text-purple-400 md:h-5 md:w-5' />
+              <h3 className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
                 My Created Rituals
               </h3>
-              <span className='rounded-full bg-purple-100 px-2.5 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
-                {createdRituals.length}
-              </span>
+              {filteredAndSortedCreated.length > 0 && (
+                <span className='rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+                  {filteredAndSortedCreated.length}
+                </span>
+              )}
             </div>
             <button
               onClick={onCreateRitual}
-              className='flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'
+              className='flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:gap-2 md:px-4 md:py-2 md:text-sm'
             >
-              <Plus className='h-4 w-4' />
-              New Ritual
+              <Plus className='h-3 w-3 md:h-4 md:w-4' />
+              <span className='hidden sm:inline'>New Ritual</span>
             </button>
           </div>
-          <div className='space-y-4'>
-            {createdRituals.map((ritual) => (
-              <div key={ritual.id} className='relative'>
-                <RitualCard
-                  ritual={ritual}
-                  isGlobal={false}
-                  completed={false}
-                  onCompleteAndShare={() => onCompleteAndShare(ritual)}
-                  onShareRitual={() => onShareRitual(ritual)}
-                  loading={completingRitualId === ritual.id}
-                  showJoinButton={false}
-                />
+          {filteredAndSortedCreated.length > 0 ? (
+            <div className='space-y-2 md:space-y-3 lg:space-y-4'>
+              {filteredAndSortedCreated.map((ritual) => (
+                <div key={ritual.id} className='relative'>
+                  <RitualCard
+                    ritual={ritual}
+                    isGlobal={false}
+                    completed={false}
+                    onCompleteAndShare={() => onCompleteAndShare(ritual)}
+                    onShareRitual={() => onShareRitual(ritual)}
+                    loading={completingRitualId === ritual.id}
+                    showJoinButton={false}
+                  />
+                  <button
+                    onClick={() => onEditRitual(ritual)}
+                    className='absolute right-4 top-4 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+                    aria-label='Edit ritual'
+                  >
+                    <Edit2 className='h-4 w-4' />
+                  </button>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className='rounded-lg border-2 border-dashed border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20 md:p-8'>
+              <div className='mx-auto max-w-md'>
+                <div className='mb-3 text-4xl md:mb-4 md:text-5xl'>✨</div>
+                <h4 className='mb-2 text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
+                  Create Your Own Ritual
+                </h4>
+                <p className='mb-4 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+                  Design a personalized ritual that reflects your values and goals. Share it with others and build a community around positive habits!
+                </p>
                 <button
-                  onClick={() => onEditRitual(ritual)}
-                  className='absolute right-4 top-4 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
-                  aria-label='Edit ritual'
+                  onClick={onCreateRitual}
+                  className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:px-6 md:py-3'
                 >
-                  <Edit2 className='h-4 w-4' />
+                  <Plus className='h-4 w-4 md:h-5 md:w-5' />
+                  Create Your First Ritual
                 </button>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
       )}
 
-      {/* Joined Rituals Section */}
-      {joinedRituals.length > 0 && (
-        <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-          <div className='mb-4 flex items-center justify-between'>
-            <div className='flex items-center gap-2'>
-              <Users className='h-5 w-5 text-green-600 dark:text-green-400' />
-              <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
-                Rituals I've Joined
-              </h3>
-              <span className='rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700 dark:bg-green-900/30 dark:text-green-300'>
-                {joinedRituals.length}
-              </span>
-            </div>
-          </div>
-          <div className='space-y-4'>
-            {joinedRituals.map((ritual) => (
-              <RitualCard
-                key={ritual.id}
-                ritual={ritual}
-                isGlobal={ritual.scope === 'global'}
-                completed={false}
-                onCompleteAndShare={() => onCompleteAndShare(ritual)}
-                onShareRitual={() => onShareRitual(ritual)}
-                loading={completingRitualId === ritual.id}
-                showJoinButton={false}
-                ritualScope={ritual.scope}
-                onLeaveSuccess={fetchMyRituals}
-              />
-            ))}
-          </div>
-        </div>
-      )}
 
-      {/* Available Rituals Section */}
-      {availableRituals.length > 0 && (
-        <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-          <div className='mb-4 flex items-center justify-between'>
-            <div className='flex items-center gap-2'>
-              <Sparkles className='h-5 w-5 text-blue-600 dark:text-blue-400' />
-              <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
-                Available Rituals
-              </h3>
-              <span className='rounded-full bg-blue-100 px-2.5 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'>
-                {availableRituals.length}
-              </span>
-            </div>
-          </div>
-          <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
-            Discover new rituals you can join and make part of your daily practice.
-          </p>
-          <div className='space-y-4'>
-            {availableRituals.map((ritual) => {
-              // Check if user has already joined this ritual
-              const userHasJoined = ritual.joinedByUsers?.includes(user?.id || '') || false;
-              
-              return (
-                <RitualCard
-                  key={ritual.id}
-                  ritual={ritual}
-                  isGlobal={ritual.scope === 'global'}
-                  completed={false}
-                  onCompleteAndShare={() => onCompleteAndShare(ritual)}
-                  onShareRitual={() => onShareRitual(ritual)}
-                  loading={completingRitualId === ritual.id}
-                  showJoinButton={!userHasJoined}
-                  ritualScope={ritual.scope || 'personalized'}
-                  onJoinSuccess={fetchMyRituals}
-                />
-              );
-            })}
-          </div>
-        </div>
-      )}
 
       {/* Empty State */}
       {!hasRituals && (
-        <div className='rounded-xl border border-gray-200 bg-white p-12 text-center dark:border-gray-700 dark:bg-gray-800'>
+        <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
           <div className='mx-auto max-w-md'>
-            <div className='mb-4 text-6xl'>🌱</div>
-            <h3 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
+            <div className='mb-4 text-4xl md:text-6xl'>🌱</div>
+            <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
               No Rituals Yet
             </h3>
-            <p className='mb-6 text-gray-600 dark:text-gray-400'>
+            <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
               Create your first ritual or join one from today's suggestions to get started!
             </p>
             <button
               onClick={onCreateRitual}
-              className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-6 py-3 font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'
+              className='inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:px-6 md:py-3'
             >
-              <Plus className='h-5 w-5' />
+              <Plus className='h-4 w-4 md:h-5 md:w-5' />
               Create Your First Ritual
             </button>
           </div>

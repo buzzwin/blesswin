@@ -34,7 +34,8 @@ export function CurrentEvents(): JSX.Element {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch('/api/current-events');
+        // Use cacheOnly=true for home page to avoid triggering Gemini calls
+        const response = await fetch('/api/current-events?cacheOnly=true');
         
         if (!response.ok) {
           throw new Error('Failed to fetch events');

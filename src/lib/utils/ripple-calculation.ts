@@ -7,21 +7,24 @@ const impactMomentsCollection = collection(db, 'impact_moments');
 
 /**
  * Calculate ripple count for an impact moment
- * Ripples = number of users who joined this action
+ * NOTE: Ripples only refer to reactions (inspired, grateful, sent_love), NOT users who joined.
+ * Use moment.joinedByUsers.length for joined user count.
+ * Returns sum of reactions to this moment.
  */
 export function calculateMomentRipples(moment: ImpactMoment): number {
-  return moment.joinedByUsers?.length || 0;
+  return (moment.ripples?.inspired?.length || 0) +
+         (moment.ripples?.grateful?.length || 0) +
+         (moment.ripples?.sent_love?.length || 0);
 }
 
 /**
  * Calculate ripple count for a ritual
- * Ripples = users who joined ritual + sum of all ripples from moments created from this ritual
+ * NOTE: Ripples only refer to reactions to impact moments (inspired, grateful, sent_love).
+ * This function does NOT count users who joined the ritual - use joinedByUsers.length for that.
+ * Returns sum of all ripples from moments created from this ritual.
  */
 export async function calculateRitualRipples(ritual: RitualDefinition): Promise<number> {
-  // Start with users who joined the ritual
-  const joinedUsersCount = ritual.joinedByUsers?.length || 0;
-  
-  // Sum ripples from all impact moments created from this ritual
+  // Sum ripples (reactions) from all impact moments created from this ritual
   let momentRipplesSum = 0;
   
   if (ritual.id) {
@@ -35,16 +38,18 @@ export async function calculateRitualRipples(ritual: RitualDefinition): Promise<
       
       momentsSnapshot.forEach((doc) => {
         const momentData = doc.data() as ImpactMoment;
-        const momentRipples = calculateMomentRipples(momentData);
+        // Count reactions (inspired, grateful, sent_love) - NOT joined users
+        const momentRipples = (momentData.ripples?.inspired?.length || 0) +
+                              (momentData.ripples?.grateful?.length || 0) +
+                              (momentData.ripples?.sent_love?.length || 0);
         momentRipplesSum += momentRipples;
       });
     } catch (error) {
       console.error('Error calculating ritual ripples:', error);
-      // Return joined users count even if moment query fails
     }
   }
   
-  return joinedUsersCount + momentRipplesSum;
+  return momentRipplesSum;
 }
 
 /**

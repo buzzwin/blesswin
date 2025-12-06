@@ -7,7 +7,6 @@ interface CheckStatusResponse {
   ritualTitle?: string;
   joinedByUsers: string[];
   userHasJoined: boolean;
-  rippleCount: number;
   error?: string;
 }
 
@@ -52,8 +51,7 @@ export default async function handler(
       ritualId,
       ritualTitle: ritualData?.title,
       joinedByUsers,
-      userHasJoined,
-      rippleCount: ritualData?.rippleCount || 0
+      userHasJoined
     });
   } catch (error) {
     console.error('Error checking ritual status:', error);

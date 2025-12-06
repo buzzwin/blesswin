@@ -279,6 +279,13 @@ service cloud.firestore {
       allow write: if request.auth == null;
     }
 
+    // Current events cache collection (public read, server-side write only)
+    match /current_events_cache/{docId} {
+      allow read: if true; // Public read for cached events
+      // Allow write only server-side (when auth is null - API routes)
+      allow write: if request.auth == null;
+    }
+
     // Story reactions collection (public read, server-side write only)
     match /story_reactions/{docId} {
       allow read: if true; // Public read for reaction counts

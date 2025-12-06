@@ -122,13 +122,10 @@ export default async function handler(
         // Use client SDK (respects Firestore security rules)
         console.log('✅ Updating ritual:', {
           ritualId: ritualDocRef.id,
-          userId,
-          currentRippleCount: ritualData.rippleCount || 0,
-          newRippleCount: (ritualData.rippleCount || 0) + 1
+          userId
         });
         await updateDoc(ritualDocRef, {
-          joinedByUsers: arrayUnion(userId),
-          rippleCount: (ritualData.rippleCount || 0) + 1
+          joinedByUsers: arrayUnion(userId)
         });
       } else {
         console.log('⚠️ User already in joinedByUsers array, skipping update');
@@ -150,8 +147,7 @@ export default async function handler(
           createdAt: serverTimestamp(),
           createdBy: userId,
           scope: 'personalized',
-          joinedByUsers: [],
-          rippleCount: 0
+          joinedByUsers: []
         };
         
         await addDoc(userCustomRitualsCollection(userId), ritualCopy);
@@ -173,8 +169,7 @@ export default async function handler(
         const currentJoinedBy = ritualData.joinedByUsers || [];
         if (!currentJoinedBy.includes(userId)) {
           await updateDoc(ritualDocRef, {
-            joinedByUsers: arrayUnion(userId),
-            rippleCount: (ritualData.rippleCount || 0) + 1
+            joinedByUsers: arrayUnion(userId)
           });
         }
       } else {

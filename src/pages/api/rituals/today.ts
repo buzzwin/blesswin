@@ -242,9 +242,8 @@ export default async function handler(
 
     // Get today's rituals
     const globalRitual = await getTodaysGlobalRitual();
-    const personalizedRituals = await getPersonalizedRituals(userId);
     
-    // Get user's custom rituals
+    // Get user's custom rituals (only custom rituals, no personalized rituals)
     const customRitualsCollection = collection(db, 'users', userId, 'custom_rituals');
     const customRitualsSnapshot = await getDocs(customRitualsCollection);
     const customRituals: RitualDefinition[] = customRitualsSnapshot.docs.map(doc => ({
@@ -263,8 +262,27 @@ export default async function handler(
       todayCompletionsSnapshot.docs.map(doc => doc.data().ritualId)
     );
 
-    // Combine personalized and custom rituals
-    const allPersonalizedRituals = [...personalizedRituals, ...customRituals];
+    // Only use custom rituals (no personalized rituals)
+    const globalRitualId = globalRitual?.id;
+    
+    // Deduplicate custom rituals and exclude global ritual if it appears
+    const seenIds = new Set<string>();
+    const uniqueCustomRituals = customRituals.filter((ritual) => {
+      if (!ritual.id) return false; // Skip rituals without IDs
+      
+      // Exclude global ritual from custom list
+      if (ritual.id === globalRitualId) {
+        return false;
+      }
+      
+      // Deduplicate by ID
+      if (seenIds.has(ritual.id)) {
+        return false;
+      }
+      
+      seenIds.add(ritual.id);
+      return true;
+    });
 
     // Mark rituals as completed if they were completed today
     const todayRituals: TodayRituals = {
@@ -272,7 +290,7 @@ export default async function handler(
         ...globalRitual,
         completed: completedRitualIds.has(globalRitual.id || '')
       } : null,
-      personalizedRituals: allPersonalizedRituals.map(ritual => ({
+      personalizedRituals: uniqueCustomRituals.map(ritual => ({
         ...ritual,
         completed: completedRitualIds.has(ritual.id || '')
       })),

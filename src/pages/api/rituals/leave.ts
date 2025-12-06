@@ -66,8 +66,7 @@ export default async function handler(
         if (currentJoinedBy.includes(userId)) {
           // Remove user from joinedByUsers array
           await updateDoc(ritualDocRef, {
-            joinedByUsers: arrayRemove(userId),
-            rippleCount: Math.max((ritualData.rippleCount || 0) - 1, 0)
+            joinedByUsers: arrayRemove(userId)
           });
         }
       }
@@ -90,8 +89,7 @@ export default async function handler(
         if (customJoinedBy.includes(userId)) {
           // Remove user from joinedByUsers array in custom ritual
           await updateDoc(doc(userCustomRitualsCollection(userId), customRitual.id), {
-            joinedByUsers: arrayRemove(userId),
-            rippleCount: Math.max((customRitualData.rippleCount || 0) - 1, 0)
+            joinedByUsers: arrayRemove(userId)
           });
         }
       }

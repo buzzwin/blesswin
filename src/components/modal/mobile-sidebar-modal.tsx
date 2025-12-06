@@ -143,7 +143,7 @@ export function MobileSidebarModal({
       e.preventDefault();
       closeModal();
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('redirectAfterLogin', '/home');
+        sessionStorage.setItem('redirectAfterLogin', '/rituals');
       }
       void router.push('/login');
     } else {

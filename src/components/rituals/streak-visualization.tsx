@@ -47,27 +47,27 @@ export function StreakVisualization({
   const today = getTodayDateString();
 
   return (
-    <div className={cn('space-y-4', className)}>
+    <div className={cn('space-y-3 md:space-y-4', className)}>
       {/* Streak Counter */}
-      <div className='flex items-center justify-center gap-4'>
+      <div className='flex items-center justify-center gap-3 md:gap-4'>
         <div className='text-center'>
-          <div className='mb-1 flex items-center justify-center gap-2'>
+          <div className='mb-0.5 flex items-center justify-center gap-1.5 md:mb-1 md:gap-2'>
             {currentStreak > 0 && (
-              <Flame className='h-5 w-5 text-orange-500' />
+              <Flame className='h-4 w-4 text-orange-500 md:h-5 md:w-5' />
             )}
-            <span className='text-4xl font-bold text-gray-900 dark:text-white'>
+            <span className='text-3xl font-bold text-gray-900 dark:text-white md:text-4xl'>
               {currentStreak}
             </span>
           </div>
-          <div className='text-sm text-gray-600 dark:text-gray-400'>
+          <div className='text-xs text-gray-600 dark:text-gray-400 md:text-sm'>
             day {currentStreak === 1 ? 'streak' : 'streak'}
           </div>
         </div>
         {longestStreak > currentStreak && (
           <>
-            <div className='h-12 w-px bg-gray-300 dark:bg-gray-700' />
+            <div className='h-10 w-px bg-gray-300 dark:bg-gray-700 md:h-12' />
             <div className='text-center'>
-              <div className='mb-1 text-2xl font-bold text-gray-600 dark:text-gray-400'>
+              <div className='mb-0.5 text-xl font-bold text-gray-600 dark:text-gray-400 md:mb-1 md:text-2xl'>
                 {longestStreak}
               </div>
               <div className='text-xs text-gray-500 dark:text-gray-400'>
@@ -80,10 +80,10 @@ export function StreakVisualization({
 
       {/* Calendar View */}
       <div>
-        <h3 className='mb-3 text-sm font-semibold text-gray-700 dark:text-gray-300'>
+        <h3 className='mb-2 text-xs font-semibold text-gray-700 dark:text-gray-300 md:mb-3 md:text-sm'>
           Last 30 Days
         </h3>
-        <div className='grid grid-cols-7 gap-1'>
+        <div className='grid grid-cols-7 gap-0.5 md:gap-1'>
           {last30Days.map((date, index) => {
             const isCompleted = completedDates.has(date);
             const isToday = date === today;

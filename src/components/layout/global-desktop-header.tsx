@@ -40,7 +40,7 @@ export function GlobalDesktopHeader(): JSX.Element {
     if (!user) {
       e.preventDefault();
       if (typeof window !== 'undefined') {
-        sessionStorage.setItem('redirectAfterLogin', '/home');
+        sessionStorage.setItem('redirectAfterLogin', '/rituals');
       }
       void router.push('/login');
     }
@@ -50,7 +50,7 @@ export function GlobalDesktopHeader(): JSX.Element {
     <header className='sticky top-0 z-50 hidden border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900 md:block'>
       <div className='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
         {/* Logo and Brand */}
-        <Link href='/'>
+        <Link href={user ? '/rituals' : '/'}>
           <a className='flex items-center gap-2 sm:gap-3'>
             <div className='flex h-7 w-7 items-center justify-center rounded-lg bg-gray-900 dark:bg-white sm:h-8 sm:w-8'>
               <LogoIcon className='h-3.5 w-3.5 text-white dark:text-gray-900 sm:h-4 sm:w-4' />

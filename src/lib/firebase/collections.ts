@@ -62,6 +62,7 @@ export function ritualCompletionsCollection(userId: string): CollectionReference
 }
 
 export const realStoriesCacheCollection = collection(db, 'real_stories_cache');
+export const currentEventsCacheCollection = collection(db, 'current_events_cache');
 export const storyReactionsCollection = collection(db, 'story_reactions');
 
 export function userStoryBookmarksCollection(userId: string): CollectionReference<StoryBookmark> {

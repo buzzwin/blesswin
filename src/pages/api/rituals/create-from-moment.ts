@@ -90,8 +90,7 @@ export default async function handler(
         
         if (!currentJoinedBy.includes(userId)) {
           await updateDoc(ritualDocRef, {
-            joinedByUsers: arrayUnion(userId),
-            rippleCount: (ritualData.rippleCount || 0) + 1
+            joinedByUsers: arrayUnion(userId)
           });
         }
 
@@ -109,8 +108,7 @@ export default async function handler(
             createdAt: serverTimestamp(),
             createdBy: userId,
             scope: 'personalized',
-            joinedByUsers: [],
-            rippleCount: 0
+            joinedByUsers: []
           };
           await addDoc(collection(db, 'users', userId, 'custom_rituals'), ritualCopy);
         }
@@ -194,8 +192,7 @@ export default async function handler(
       completionRate: 0,
       createdBy: userId,
       createdFromMomentId: momentId, // Link back to source moment
-      joinedByUsers: [userId], // Creator is first to join
-      rippleCount: 1 // Creator counts as first ripple
+      joinedByUsers: [userId] // Creator is first to join
     };
 
     const docRef = await addDoc(ritualsCollection, ritualDoc as any);
@@ -205,8 +202,7 @@ export default async function handler(
       ...ritualDoc,
       createdAt: serverTimestamp(),
       scope: 'personalized',
-      joinedByUsers: [],
-      rippleCount: 0
+      joinedByUsers: []
     };
     await addDoc(userCustomRitualsCollection(userId), ritualCopy);
 

@@ -12,16 +12,29 @@ import { RitualFormModal } from '@components/rituals/ritual-form-modal';
 import { RitualShareModal } from '@components/rituals/ritual-share-modal';
 import { StreakVisualization } from '@components/rituals/streak-visualization';
 import { MyRitualsSection } from '@components/rituals/my-rituals-section';
+import { KarmaLevelSystem } from '@components/rituals/karma-level-system';
+import { ProgressBars } from '@components/rituals/progress-bars';
+import { Achievements } from '@components/rituals/achievements';
+import { Leaderboard } from '@components/rituals/leaderboard';
+import { InviteModal } from '@components/rituals/invite-modal';
+import { NotificationCenter } from '@components/rituals/notification-center';
+import { RitualsStatsBar, type RitualTab } from '@components/rituals/rituals-stats-bar';
+import { RitualsTabs } from '@components/rituals/rituals-tabs';
+import { JoinedRitualsSection } from '@components/rituals/joined-rituals-section';
+import { RitualsSearch } from '@components/rituals/rituals-search';
+import { RitualsSort, type SortOption } from '@components/rituals/rituals-sort';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import { useModal } from '@lib/hooks/useModal';
+import { useBrowserNotifications } from '@lib/hooks/useBrowserNotifications';
 import { toast } from 'react-hot-toast';
 import { Flame, Settings, Calendar, Plus, Edit2 } from 'lucide-react';
 import Link from 'next/link';
-import type { RitualDefinition, TodayRituals, RitualStats, RitualCompletion } from '@lib/types/ritual';
+import type { RitualDefinition, TodayRituals, RitualStats, RitualCompletion, Achievement, LeaderboardEntry } from '@lib/types/ritual';
 import type { ImpactTag } from '@lib/types/impact-moment';
 import type { ReactElement, ReactNode } from 'react';
+import { getKarmaPoints } from '@lib/types/karma';
 
 export default function RitualsPage(): JSX.Element {
   const { user, loading: authLoading } = useAuth();
@@ -41,6 +54,20 @@ export default function RitualsPage(): JSX.Element {
   const [sharingRitual, setSharingRitual] = useState<RitualDefinition | null>(null);
   const [onboardingCompleted, setOnboardingCompleted] = useState(false);
   const [ritualsEnabled, setRitualsEnabled] = useState(false);
+  const [userKarma, setUserKarma] = useState(0);
+  const [previousKarma, setPreviousKarma] = useState(0);
+  const [achievements, setAchievements] = useState<Achievement[]>([]);
+  const [unlockedAchievementIds, setUnlockedAchievementIds] = useState<string[]>([]);
+  const [leaderboardEntries, setLeaderboardEntries] = useState<LeaderboardEntry[]>([]);
+  const [invitingRitual, setInvitingRitual] = useState<RitualDefinition | null>(null);
+  const { open: inviteModalOpen, openModal: openInviteModal, closeModal: closeInviteModal } = useModal();
+  const { requestPermission: requestNotificationPermission } = useBrowserNotifications();
+  const [activeTab, setActiveTab] = useState<RitualTab>('joined');
+  const [joinedRitualsCount, setJoinedRitualsCount] = useState(0);
+  const [availableRitualsCount, setAvailableRitualsCount] = useState(0);
+  const [createdRitualsCount, setCreatedRitualsCount] = useState(0);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortOption>('popularity');
 
   // Function to fetch today's rituals (can be called from callbacks)
   const fetchTodayRituals = useCallback(async (): Promise<void> => {
@@ -114,6 +141,70 @@ export default function RitualsPage(): JSX.Element {
   useEffect(() => {
     void fetchTodayRituals();
   }, [user?.id]);
+
+  // Fetch user karma
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchKarma = async (): Promise<void> => {
+      try {
+        const response = await fetch(`/api/karma/${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPreviousKarma(userKarma);
+          setUserKarma(data.karmaPoints || 0);
+        }
+      } catch (error) {
+        console.error('Error fetching karma:', error);
+      }
+    };
+
+    void fetchKarma();
+  }, [user?.id]);
+
+  // Fetch achievements
+  useEffect(() => {
+    if (!user?.id) return;
+
+    const fetchAchievements = async (): Promise<void> => {
+      try {
+        const response = await fetch(`/api/rituals/achievements?userId=${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setAchievements(data.achievements || []);
+          setUnlockedAchievementIds(data.unlockedIds || []);
+        }
+      } catch (error) {
+        console.error('Error fetching achievements:', error);
+      }
+    };
+
+    void fetchAchievements();
+  }, [user?.id, userKarma, stats?.currentStreak, stats?.totalCompleted]);
+
+  // Fetch leaderboard
+  useEffect(() => {
+    const fetchLeaderboard = async (): Promise<void> => {
+      try {
+        const response = await fetch('/api/rituals/leaderboard?limit=10');
+        if (response.ok) {
+          const data = await response.json();
+          setLeaderboardEntries(data.entries || []);
+        }
+      } catch (error) {
+        console.error('Error fetching leaderboard:', error);
+      }
+    };
+
+    void fetchLeaderboard();
+  }, []);
+
+  // Register service worker for notifications
+  useEffect(() => {
+    if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw.js').catch(console.error);
+    }
+  }, []);
 
   // Fetch stats
   useEffect(() => {
@@ -315,6 +406,21 @@ export default function RitualsPage(): JSX.Element {
     );
   }
 
+  // Calculate stats for stats bar
+  const dailyProgress = stats ? Math.min(100, ((stats.completedThisWeek > 0 ? 1 : 0) / 1) * 100) : 0;
+  const weeklyProgress = stats ? Math.min(100, (stats.completedThisWeek / 5) * 100) : 0;
+  const totalRitualsCount = joinedRitualsCount + availableRitualsCount + createdRitualsCount;
+
+  // Calculate tab counts
+  const tabCounts = {
+    'joined': joinedRitualsCount,
+    'available': availableRitualsCount,
+    'created': createdRitualsCount,
+    'progress': undefined,
+    'achievements': achievements.filter(a => unlockedAchievementIds.includes(a.id)).length,
+    'leaderboard': undefined
+  };
+
   return (
     <MainContainer>
       <SEO 
@@ -323,282 +429,255 @@ export default function RitualsPage(): JSX.Element {
       />
       <MainHeader title='Daily Rituals' useMobileSidebar />
       
-      {/* Onboarding - Removed popup */}
+      {/* Compact Stats Bar */}
+      <RitualsStatsBar
+        dailyProgress={dailyProgress}
+        weeklyProgress={weeklyProgress}
+        karmaPoints={userKarma}
+        ritualsCount={totalRitualsCount}
+        onNavigateToTab={setActiveTab}
+      />
 
-      {/* Header with Streak */}
-      <div className='border-b border-gray-200 px-4 py-4 dark:border-gray-700'>
-        <div className='flex items-center justify-between'>
-          <div>
-            <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
-              Daily Rituals
-            </h2>
-            <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
-              Small actions, big impact
-            </p>
-          </div>
-          <div className='flex items-center gap-3'>
-            {stats && stats.currentStreak > 0 && (
-              <div className='flex items-center gap-2 rounded-lg bg-orange-50 px-4 py-2 dark:bg-orange-900/20'>
-                <Flame className='h-5 w-5 text-orange-500' />
-                <div>
-                  <div className='text-lg font-bold text-orange-700 dark:text-orange-300'>
-                    {stats.currentStreak}
-                  </div>
-                  <div className='text-xs text-orange-600 dark:text-orange-400'>
-                    day streak
-                  </div>
-                </div>
-              </div>
-            )}
-            <button
-              onClick={openSettingsModal}
-              className='rounded-full p-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800 transition-colors'
-              aria-label='Settings'
-            >
-              <Settings className='h-5 w-5' />
-            </button>
-          </div>
-        </div>
-      </div>
+      {/* Tabs */}
+      <RitualsTabs
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        tabCounts={tabCounts}
+      />
 
       {loading ? (
         <Loading className='mt-5' />
       ) : (
         <div className='space-y-6 px-4 py-6'>
-          {/* Today's Rituals Section */}
-          {todayRituals && (todayRituals.globalRitual || (todayRituals.personalizedRituals && todayRituals.personalizedRituals.length > 0)) ? (
-            <div>
-              <div className='mb-4 flex items-center justify-between'>
-                <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
-                  Today's Rituals
-                </h3>
-                <button
-                  onClick={() => {
-                    setEditingRitual(null);
-                    openRitualFormModal();
-                  }}
-                  className='flex items-center gap-2 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700'
-                >
-                  <Plus className='h-4 w-4' />
-                  New Ritual
-                </button>
+          {/* Tab Content */}
+          {activeTab === 'joined' && (
+            <div className='space-y-3 md:space-y-4'>
+              {/* Search and Sort Controls */}
+              <div className='space-y-2 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
+                <RitualsSearch
+                  onSearchChange={setSearchQuery}
+                  placeholder='Search joined rituals by name, description, or tags...'
+                />
+                <RitualsSort activeSort={sortBy} onSortChange={setSortBy} />
               </div>
-              <div className='space-y-4'>
-                {/* Global Ritual */}
-                {todayRituals.globalRitual && (
-                  <RitualCard
-                    ritual={todayRituals.globalRitual}
-                    isGlobal
-                    completed={todayRituals.globalRitual.completed || false}
-                    onCompleteAndShare={() => handleCompleteAndShare(todayRituals.globalRitual!)}
-                    onShareRitual={() => handleShareRitual(todayRituals.globalRitual!)}
-                    loading={completingRitualId === todayRituals.globalRitual.id}
-                    showJoinButton={true}
-                    ritualScope='global'
-                    onJoinSuccess={fetchTodayRituals}
-                    onLeaveSuccess={fetchTodayRituals}
-                  />
-                )}
 
-                {/* Personalized Rituals */}
-                {todayRituals.personalizedRituals.map((ritual) => {
-                  // Check if this is a custom ritual (has createdBy field matching current user)
-                  const isCustomRitual = (ritual as any).createdBy === user?.id;
-                  
-                  return (
-                    <div key={ritual.id} className='relative'>
-                      <RitualCard
-                        ritual={ritual}
-                        isGlobal={false}
-                        completed={ritual.completed || false}
-                        onCompleteAndShare={() => handleCompleteAndShare(ritual)}
-                        onShareRitual={() => handleShareRitual(ritual)}
-                        loading={completingRitualId === ritual.id}
-                        showJoinButton={!isCustomRitual}
-                        ritualScope={isCustomRitual ? undefined : 'personalized'}
-                        onJoinSuccess={fetchTodayRituals}
-                        onLeaveSuccess={fetchTodayRituals}
-                      />
-                      {isCustomRitual && (
-                        <button
-                          onClick={() => {
-                            setEditingRitual(ritual);
-                            openRitualFormModal();
-                          }}
-                          className='absolute right-4 top-4 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
-                          aria-label='Edit ritual'
-                        >
-                          <Edit2 className='h-4 w-4' />
-                        </button>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          ) : (
-            <div className='px-4 py-12 text-center'>
-              <div className='mx-auto max-w-md'>
-                <div className='mb-4 text-6xl'>🌱</div>
-                <h3 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
-                  No Rituals Available Yet
-                </h3>
-                <p className='mb-6 text-gray-600 dark:text-gray-400'>
-                  {!ritualsEnabled 
-                    ? 'Initializing your rituals...' 
-                    : 'We\'re setting up your daily rituals. This might take a moment.'}
-                </p>
-                {process.env.NODE_ENV === 'development' && todayRituals && (
-                  <div className='mb-4 rounded-lg bg-gray-100 p-4 text-left text-xs dark:bg-gray-800'>
-                    <div className='font-semibold'>Debug Info:</div>
-                    <div>Has Global: {todayRituals.globalRitual ? 'Yes' : 'No'}</div>
-                    <div>Personalized Count: {todayRituals.personalizedRituals?.length || 0}</div>
-                    <div>Rituals Enabled: {ritualsEnabled ? 'Yes' : 'No'}</div>
-                    <div>Onboarding Completed: {onboardingCompleted ? 'Yes' : 'No'}</div>
-                  </div>
-                )}
-                <button
-                  onClick={() => {
-                    if (user?.id) {
-                      setLoading(true);
-                      fetch(`/api/rituals/today?userId=${user.id}`)
-                        .then(res => res.json())
-                        .then(data => {
-                          console.log('Refresh - Rituals Data:', data);
-                          setTodayRituals(data.rituals);
-                          setRitualsEnabled(!data.error);
-                          setLoading(false);
-                        })
-                        .catch((err) => {
-                          console.error('Refresh error:', err);
-                          setLoading(false);
-                        });
-                    }
-                  }}
-                  className='rounded-full bg-main-accent px-6 py-2 font-medium text-white transition hover:bg-main-accent/90'
-                >
-                  Refresh
-                </button>
-              </div>
+              <JoinedRitualsSection
+                onCompleteAndShare={handleCompleteAndShare}
+                onShareRitual={handleShareRitual}
+                completingRitualId={completingRitualId}
+                todayRituals={todayRituals}
+                onRefetch={() => {
+                  void fetchTodayRituals();
+                }}
+                searchQuery={searchQuery}
+                sortBy={sortBy}
+                onCountsUpdate={setJoinedRitualsCount}
+              />
             </div>
           )}
 
-          {/* My Rituals Section - Always visible */}
-          <MyRitualsSection
-            onCreateRitual={() => {
-              setEditingRitual(null);
-              openRitualFormModal();
-            }}
-            onEditRitual={(ritual) => {
-              setEditingRitual(ritual);
-              openRitualFormModal();
-            }}
-            onCompleteAndShare={handleCompleteAndShare}
-            onShareRitual={handleShareRitual}
-            completingRitualId={completingRitualId}
-            todayRituals={todayRituals}
-          />
-
-          {/* Progress Section */}
-          {stats && (
-            <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-              <h3 className='mb-4 text-lg font-semibold text-gray-900 dark:text-white'>
-                Your Progress
-              </h3>
-              <StreakVisualization
-                currentStreak={stats.currentStreak}
-                longestStreak={stats.longestStreak}
-                completions={completions}
-              />
-              <div className='mt-6 grid grid-cols-3 gap-4'>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-gray-900 dark:text-white'>
-                    {stats.completedThisWeek}
-                  </div>
-                  <div className='text-xs text-gray-600 dark:text-gray-400'>
-                    This Week
-                  </div>
-                </div>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-gray-900 dark:text-white'>
-                    {stats.completedThisMonth}
-                  </div>
-                  <div className='text-xs text-gray-600 dark:text-gray-400'>
-                    This Month
-                  </div>
-                </div>
-                <div className='text-center'>
-                  <div className='text-2xl font-bold text-gray-900 dark:text-white'>
-                    {stats.totalCompleted}
-                  </div>
-                  <div className='text-xs text-gray-600 dark:text-gray-400'>
-                    Total
-                  </div>
-                </div>
+          {activeTab === 'created' && (
+            <div className='space-y-3 md:space-y-4'>
+              {/* Search and Sort Controls */}
+              <div className='space-y-2 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
+                <RitualsSearch
+                  onSearchChange={setSearchQuery}
+                  placeholder='Search created rituals by name, description, or tags...'
+                />
+                <RitualsSort activeSort={sortBy} onSortChange={setSortBy} />
               </div>
 
-              {/* Enhanced Stats */}
-              {(stats.averageCompletionsPerDay !== undefined || stats.completionRate !== undefined || stats.bestDay) && (
-                <div className='mt-6 border-t border-gray-200 pt-6 dark:border-gray-700'>
-                  <h4 className='mb-3 text-sm font-semibold text-gray-900 dark:text-white'>
-                    Detailed Insights
-                  </h4>
-                  <div className='grid grid-cols-2 gap-4 text-sm'>
-                    {stats.averageCompletionsPerDay !== undefined && (
-                      <div>
-                        <div className='text-gray-600 dark:text-gray-400'>Avg per Day</div>
-                        <div className='text-lg font-semibold text-gray-900 dark:text-white'>
-                          {stats.averageCompletionsPerDay.toFixed(2)}
-                        </div>
+              <MyRitualsSection
+                onCreateRitual={() => {
+                  setEditingRitual(null);
+                  openRitualFormModal();
+                }}
+                onEditRitual={(ritual) => {
+                  setEditingRitual(ritual);
+                  openRitualFormModal();
+                }}
+                onCompleteAndShare={handleCompleteAndShare}
+                onShareRitual={handleShareRitual}
+                completingRitualId={completingRitualId}
+                todayRituals={todayRituals}
+                onRefetch={() => {
+                  void fetchTodayRituals();
+                }}
+                onCountsUpdate={(counts) => {
+                  setAvailableRitualsCount(counts.available);
+                  setJoinedRitualsCount(counts.joined);
+                  setCreatedRitualsCount(counts.created);
+                }}
+                filterType='created'
+                searchQuery={searchQuery}
+                sortBy={sortBy}
+              />
+            </div>
+          )}
+
+          {activeTab === 'available' && (
+            <div className='space-y-3 md:space-y-4'>
+              {/* Search and Sort Controls */}
+              <div className='space-y-2 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
+                <RitualsSearch
+                  onSearchChange={setSearchQuery}
+                  placeholder='Search available rituals...'
+                />
+                <RitualsSort activeSort={sortBy} onSortChange={setSortBy} />
+              </div>
+              <MyRitualsSection
+                onCreateRitual={() => {
+                  setEditingRitual(null);
+                  openRitualFormModal();
+                }}
+                onEditRitual={(ritual) => {
+                  setEditingRitual(ritual);
+                  openRitualFormModal();
+                }}
+                onCompleteAndShare={handleCompleteAndShare}
+                onShareRitual={handleShareRitual}
+                completingRitualId={completingRitualId}
+                todayRituals={todayRituals}
+                showOnlyAvailable={true}
+                onRefetch={() => {
+                  void fetchTodayRituals();
+                }}
+                onCountsUpdate={(counts) => {
+                  setAvailableRitualsCount(counts.available);
+                  setJoinedRitualsCount(counts.joined);
+                  setCreatedRitualsCount(counts.created);
+                }}
+                searchQuery={searchQuery}
+                sortBy={sortBy}
+              />
+            </div>
+          )}
+
+          {activeTab === 'progress' && stats && (
+            <div className='space-y-3 md:space-y-4'>
+              {/* Progress Bars */}
+              <div className='grid grid-cols-1 gap-3 md:gap-4 lg:grid-cols-2'>
+                <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
+                  <ProgressBars
+                    dailyCompleted={stats.completedThisWeek > 0 ? 1 : 0}
+                    dailyGoal={1}
+                    weeklyCompleted={stats.completedThisWeek}
+                    weeklyGoal={5}
+                  />
+                </div>
+                {stats.currentStreak > 0 && (
+                  <div className='flex items-center justify-center rounded-lg border border-gray-200 bg-gradient-to-r from-orange-50 to-red-50 p-4 dark:border-gray-700 dark:from-orange-900/20 dark:to-red-900/20 md:p-6'>
+                    <div className='text-center'>
+                      <Flame className='mx-auto mb-2 h-6 w-6 text-orange-500 md:h-8 md:w-8' />
+                      <div className='text-2xl font-bold text-orange-700 dark:text-orange-300 md:text-3xl'>
+                        {stats.currentStreak}
                       </div>
-                    )}
-                    {stats.completionRate !== undefined && (
-                      <div>
-                        <div className='text-gray-600 dark:text-gray-400'>Completion Rate</div>
-                        <div className='text-lg font-semibold text-gray-900 dark:text-white'>
-                          {stats.completionRate.toFixed(1)}%
-                        </div>
+                      <div className='text-xs text-orange-600 dark:text-orange-400 md:text-sm'>
+                        day streak! Keep it going! 🔥
                       </div>
-                    )}
-                    {stats.bestDay && (
-                      <div>
-                        <div className='text-gray-600 dark:text-gray-400'>Best Day</div>
-                        <div className='text-lg font-semibold text-gray-900 dark:text-white'>
-                          {stats.bestDay}
-                        </div>
-                      </div>
-                    )}
-                    {stats.completionTrend && (
-                      <div>
-                        <div className='text-gray-600 dark:text-gray-400'>Trend</div>
-                        <div className={`text-lg font-semibold ${
-                          stats.completionTrend === 'increasing' ? 'text-green-600 dark:text-green-400' :
-                          stats.completionTrend === 'decreasing' ? 'text-red-600 dark:text-red-400' :
-                          'text-gray-600 dark:text-gray-400'
-                        }`}>
-                          {stats.completionTrend === 'increasing' ? '📈 Increasing' :
-                           stats.completionTrend === 'decreasing' ? '📉 Decreasing' :
-                           '➡️ Stable'}
-                        </div>
-                      </div>
-                    )}
+                    </div>
+                  </div>
+                )}
+              </div>
+
+                  <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+                <h3 className='mb-3 text-base font-semibold text-gray-900 dark:text-white md:mb-4 md:text-lg'>
+                  Your Progress
+                </h3>
+                <StreakVisualization
+                  currentStreak={stats.currentStreak}
+                  longestStreak={stats.longestStreak}
+                  completions={completions}
+                />
+                <div className='mt-4 grid grid-cols-3 gap-2 md:mt-6 md:gap-4'>
+                  <div className='text-center'>
+                    <div className='text-lg font-bold text-gray-900 dark:text-white md:text-2xl'>
+                      {stats.completedThisWeek}
+                    </div>
+                    <div className='text-xs text-gray-600 dark:text-gray-400'>
+                      This Week
+                    </div>
+                  </div>
+                  <div className='text-center'>
+                    <div className='text-lg font-bold text-gray-900 dark:text-white md:text-2xl'>
+                      {stats.completedThisMonth}
+                    </div>
+                    <div className='text-xs text-gray-600 dark:text-gray-400'>
+                      This Month
+                    </div>
+                  </div>
+                  <div className='text-center'>
+                    <div className='text-lg font-bold text-gray-900 dark:text-white md:text-2xl'>
+                      {stats.totalCompleted}
+                    </div>
+                    <div className='text-xs text-gray-600 dark:text-gray-400'>
+                      Total
+                    </div>
                   </div>
                 </div>
-              )}
 
-              {/* Milestones */}
-              {(stats.streakMilestones && stats.streakMilestones.length > 0) || 
-               (stats.completionMilestones && stats.completionMilestones.length > 0) ? (
-                <div className='mt-6 border-t border-gray-200 pt-6 dark:border-gray-700'>
-                  <h4 className='mb-3 text-sm font-semibold text-gray-900 dark:text-white'>
-                    Milestones
-                  </h4>
-                  {stats.streakMilestones && stats.streakMilestones.length > 0 && (
-                    <div className='mb-4'>
-                      <div className='mb-2 text-xs font-medium text-gray-600 dark:text-gray-400'>
-                        Streak Milestones
-                      </div>
-                      <div className='flex flex-wrap gap-2'>
+                {/* Enhanced Stats */}
+                {(stats.averageCompletionsPerDay !== undefined || stats.completionRate !== undefined || stats.bestDay) && (
+                  <div className='mt-4 border-t border-gray-200 pt-4 dark:border-gray-700 md:mt-6 md:pt-6'>
+                    <h4 className='mb-2 text-xs font-semibold text-gray-900 dark:text-white md:mb-3 md:text-sm'>
+                      Detailed Insights
+                    </h4>
+                    <div className='grid grid-cols-2 gap-2 text-xs md:gap-4 md:text-sm'>
+                      {stats.averageCompletionsPerDay !== undefined && (
+                        <div>
+                          <div className='text-gray-600 dark:text-gray-400'>Avg per Day</div>
+                          <div className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
+                            {stats.averageCompletionsPerDay.toFixed(2)}
+                          </div>
+                        </div>
+                      )}
+                      {stats.completionRate !== undefined && (
+                        <div>
+                          <div className='text-gray-600 dark:text-gray-400'>Completion Rate</div>
+                          <div className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
+                            {stats.completionRate.toFixed(1)}%
+                          </div>
+                        </div>
+                      )}
+                      {stats.bestDay && (
+                        <div>
+                          <div className='text-gray-600 dark:text-gray-400'>Best Day</div>
+                          <div className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
+                            {stats.bestDay}
+                          </div>
+                        </div>
+                      )}
+                      {stats.completionTrend && (
+                        <div>
+                          <div className='text-gray-600 dark:text-gray-400'>Trend</div>
+                          <div className={`text-base font-semibold md:text-lg ${
+                            stats.completionTrend === 'increasing' ? 'text-green-600 dark:text-green-400' :
+                            stats.completionTrend === 'decreasing' ? 'text-red-600 dark:text-red-400' :
+                            'text-gray-600 dark:text-gray-400'
+                          }`}>
+                            {stats.completionTrend === 'increasing' ? '📈 Increasing' :
+                             stats.completionTrend === 'decreasing' ? '📉 Decreasing' :
+                             '➡️ Stable'}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* Milestones */}
+                {(stats.streakMilestones && stats.streakMilestones.length > 0) || 
+                 (stats.completionMilestones && stats.completionMilestones.length > 0) ? (
+                  <div className='mt-4 border-t border-gray-200 pt-4 dark:border-gray-700 md:mt-6 md:pt-6'>
+                    <h4 className='mb-2 text-xs font-semibold text-gray-900 dark:text-white md:mb-3 md:text-sm'>
+                      Milestones
+                    </h4>
+                    {stats.streakMilestones && stats.streakMilestones.length > 0 && (
+                      <div className='mb-3 md:mb-4'>
+                        <div className='mb-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 md:mb-2'>
+                          Streak Milestones
+                        </div>
+                        <div className='flex flex-wrap gap-1.5 md:gap-2'>
                         {stats.streakMilestones.map((milestone) => (
                           <div
                             key={milestone.milestone}
@@ -614,12 +693,12 @@ export default function RitualsPage(): JSX.Element {
                       </div>
                     </div>
                   )}
-                  {stats.completionMilestones && stats.completionMilestones.length > 0 && (
-                    <div>
-                      <div className='mb-2 text-xs font-medium text-gray-600 dark:text-gray-400'>
-                        Completion Milestones
-                      </div>
-                      <div className='flex flex-wrap gap-2'>
+                    {stats.completionMilestones && stats.completionMilestones.length > 0 && (
+                      <div>
+                        <div className='mb-1.5 text-xs font-medium text-gray-600 dark:text-gray-400 md:mb-2'>
+                          Completion Milestones
+                        </div>
+                        <div className='flex flex-wrap gap-1.5 md:gap-2'>
                         {stats.completionMilestones.map((milestone) => (
                           <div
                             key={milestone.milestone}
@@ -638,13 +717,13 @@ export default function RitualsPage(): JSX.Element {
                 </div>
               ) : null}
 
-              {/* Most Active Tags */}
-              {stats.mostActiveTags && stats.mostActiveTags.length > 0 && (
-                <div className='mt-6 border-t border-gray-200 pt-6 dark:border-gray-700'>
-                  <h4 className='mb-3 text-sm font-semibold text-gray-900 dark:text-white'>
-                    Most Active Categories
-                  </h4>
-                  <div className='flex flex-wrap gap-2'>
+                {/* Most Active Tags */}
+                {stats.mostActiveTags && stats.mostActiveTags.length > 0 && (
+                  <div className='mt-4 border-t border-gray-200 pt-4 dark:border-gray-700 md:mt-6 md:pt-6'>
+                    <h4 className='mb-2 text-xs font-semibold text-gray-900 dark:text-white md:mb-3 md:text-sm'>
+                      Most Active Categories
+                    </h4>
+                    <div className='flex flex-wrap gap-1.5 md:gap-2'>
                     {stats.mostActiveTags.map(({ tag, count }) => (
                       <div
                         key={tag}
@@ -652,22 +731,38 @@ export default function RitualsPage(): JSX.Element {
                       >
                         {tag}: {count}
                       </div>
-                    ))}
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </div>
           )}
 
-          {/* History Section (Placeholder) */}
-          <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
-            <h3 className='mb-4 text-lg font-semibold text-gray-900 dark:text-white'>
-              History
-            </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400'>
-              Your ritual completion history will appear here.
-            </p>
-          </div>
+          {activeTab === 'achievements' && user?.id && (
+            <div className='space-y-3 md:space-y-4'>
+              <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+                <Achievements
+                  achievements={achievements}
+                  unlockedAchievementIds={unlockedAchievementIds}
+                  userKarma={userKarma}
+                  userStreak={stats?.currentStreak || 0}
+                  userCompletions={stats?.totalCompleted || 0}
+                />
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'leaderboard' && leaderboardEntries.length > 0 && (
+            <div className='space-y-3 md:space-y-4'>
+              <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+                <Leaderboard
+                  entries={leaderboardEntries}
+                  currentUserId={user?.id}
+                />
+              </div>
+            </div>
+          )}
         </div>
       )}
 
@@ -725,6 +820,18 @@ export default function RitualsPage(): JSX.Element {
           }
         }}
       />
+
+      {/* Invite Modal */}
+      {invitingRitual && (
+        <InviteModal
+          ritual={invitingRitual}
+          open={inviteModalOpen}
+          onClose={() => {
+            closeInviteModal();
+            setInvitingRitual(null);
+          }}
+        />
+      )}
     </MainContainer>
   );
 }

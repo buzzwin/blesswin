@@ -19,9 +19,9 @@ export interface RitualDefinition {
   usageCount?: number; // How many times assigned
   completionRate?: number; // Percentage completion rate
   completed?: boolean; // Whether this ritual was completed today (client-side only)
-  // Ripple system fields
+  // Ritual joining fields
   joinedByUsers?: string[]; // User IDs who have joined/subscribed to this ritual
-  rippleCount?: number; // Calculated total ripples (joined users + sum of moment ripples)
+  rippleCount?: number; // DEPRECATED: Legacy field. Only counts reactions to impact moments (inspired, grateful, sent_love), NOT ritual joins. Use joinedByUsers.length for participant count.
   createdFromMomentId?: string; // Source impact moment ID (if ritual was created from a moment)
 }
 
@@ -93,6 +93,45 @@ export interface RitualStats {
   recentStreaks?: Array<{ startDate: string; endDate: string; length: number }>; // Recent streak history
   completionTrend?: 'increasing' | 'decreasing' | 'stable';
   lastCompletedDate?: string;
+}
+
+/**
+ * Achievement types for rituals
+ */
+export type AchievementCategory = 'streak' | 'completion' | 'social' | 'karma';
+
+export interface Achievement {
+  id: string;
+  name: string;
+  description: string;
+  icon: string; // Emoji or icon identifier
+  category: AchievementCategory;
+  karmaThreshold?: number; // Karma points needed to unlock
+  streakThreshold?: number; // Streak days needed to unlock
+  completionThreshold?: number; // Completion count needed to unlock
+  unlockedAt?: Timestamp | Date;
+}
+
+export interface UserAchievement {
+  id?: string;
+  userId: string;
+  achievementId: string;
+  unlockedAt: Timestamp | Date;
+}
+
+/**
+ * Leaderboard entry for rituals
+ */
+export interface LeaderboardEntry {
+  userId: string;
+  username: string;
+  name: string;
+  photoURL: string;
+  karmaPoints: number;
+  level: number;
+  totalCompleted: number;
+  currentStreak: number;
+  rank: number;
 }
 
 export const ritualDefinitionConverter: FirestoreDataConverter<RitualDefinition> = {

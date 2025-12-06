@@ -60,7 +60,7 @@ export default function Home(): JSX.Element {
 
   const handleGetInvolved = (): void => {
     if (user) {
-      void router.push('/home');
+      void router.push('/rituals');
     } else {
       void router.push('/login');
     }

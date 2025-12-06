@@ -16,8 +16,8 @@ export function AuthLayout({ children }: { children: ReactNode }): JSX.Element {
         // Redirect to the specified URL
         void router.replace(redirect);
       } else {
-        // Default redirect to home
-        void router.replace('/home');
+        // Default redirect to rituals page
+        void router.replace('/rituals');
       }
     }
   }, [user, router]);

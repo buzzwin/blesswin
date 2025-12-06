@@ -90,7 +90,6 @@ export default async function handler(
       storyId: storyId || null,
       storyTitle: storyTitle || null,
       joinedByUsers: [], // Initialize empty
-      rippleCount: 0, // Initialize to 0
       ...(createdFromMomentId && { createdFromMomentId })
     };
 
