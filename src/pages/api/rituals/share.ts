@@ -11,9 +11,11 @@ interface ShareRitualRequest {
   ritualDescription: string;
   ritualTags: ImpactTag[];
   ritualEffortLevel: EffortLevel;
-  friendEmail: string;
+  friendEmail?: string;
+  friendPhone?: string;
   friendName?: string;
   message?: string;
+  shareMethod?: 'email' | 'sms';
 }
 
 interface ShareRitualResponse {
@@ -40,8 +42,10 @@ export default async function handler(
       ritualTags,
       ritualEffortLevel,
       friendEmail,
+      friendPhone,
       friendName,
-      message
+      message,
+      shareMethod = 'email'
     } = req.body as ShareRitualRequest;
 
     // Validate input
@@ -50,15 +54,34 @@ export default async function handler(
       return;
     }
 
-    if (!friendEmail || typeof friendEmail !== 'string') {
-      res.status(400).json({ success: false, error: 'Friend email is required' });
-      return;
-    }
+    // Validate based on share method
+    if (shareMethod === 'email') {
+      if (!friendEmail || typeof friendEmail !== 'string') {
+        res.status(400).json({ success: false, error: 'Friend email is required' });
+        return;
+      }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(friendEmail)) {
-      res.status(400).json({ success: false, error: 'Invalid email address' });
+      // Basic email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(friendEmail)) {
+        res.status(400).json({ success: false, error: 'Invalid email address' });
+        return;
+      }
+    } else if (shareMethod === 'sms') {
+      if (!friendPhone || typeof friendPhone !== 'string') {
+        res.status(400).json({ success: false, error: 'Friend phone number is required' });
+        return;
+      }
+
+      // Basic phone validation (at least 10 digits)
+      const phoneRegex = /\d{10,}/;
+      const cleanPhone = friendPhone.replace(/\D/g, '');
+      if (!phoneRegex.test(cleanPhone) || cleanPhone.length < 10) {
+        res.status(400).json({ success: false, error: 'Invalid phone number' });
+        return;
+      }
+    } else {
+      res.status(400).json({ success: false, error: 'Invalid share method. Use "email" or "sms"' });
       return;
     }
 
@@ -78,7 +101,99 @@ export default async function handler(
     const userName = user.name || user.username || 'a friend';
     const siteURL = process.env.NEXT_PUBLIC_SITE_URL || 'https://buzzwin.com';
 
-    // Prepare email content
+    // Handle SMS sharing
+    if (shareMethod === 'sms') {
+      // Check if Twilio is configured
+      const twilioAccountSid = process.env.TWILIO_ACCOUNT_SID;
+      const twilioAuthToken = process.env.TWILIO_AUTH_TOKEN;
+      const twilioPhoneNumber = process.env.TWILIO_PHONE_NUMBER;
+
+      if (twilioAccountSid && twilioAuthToken && twilioPhoneNumber) {
+        // Use Twilio to send SMS
+        try {
+          // Dynamic require to avoid adding Twilio as a required dependency
+          // eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
+          let twilio: any = null;
+          try {
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            twilio = require('twilio');
+          } catch {
+            // Twilio not installed - handled below
+          }
+          
+          if (!twilio || !twilio.default) {
+            res.status(500).json({
+              success: false,
+              error: 'Twilio package not installed. Run: npm install twilio'
+            });
+            return;
+          }
+
+          const client = twilio.default(twilioAccountSid, twilioAuthToken);
+          
+          // Format tags
+          const tagsDisplay = ritualTags.map(tag => {
+            const tagLabels: Record<ImpactTag, string> = {
+              mind: 'Mind',
+              body: 'Body',
+              relationships: 'Relationships',
+              nature: 'Nature',
+              community: 'Community'
+            };
+            return tagLabels[tag] || tag;
+          }).join(', ');
+
+          // Format effort level
+          const effortLabels: Record<EffortLevel, string> = {
+            tiny: 'Tiny Effort',
+            medium: 'Medium Effort',
+            deep: 'Deep Effort'
+          };
+          const effortDisplay = effortLabels[ritualEffortLevel] || ritualEffortLevel;
+
+          // Create SMS message
+          const smsMessage = message || `Hi${friendName ? ` ${friendName}` : ''}! ${userName} thought you'd love this daily ritual from Buzzwin.`;
+          const smsBody = `${smsMessage}
+
+🌱 ${ritualTitle}
+${ritualDescription}
+
+Tags: ${tagsDisplay}
+Effort: ${effortDisplay}
+
+Try it: ${siteURL}/rituals`;
+
+          // Send SMS via Twilio
+          await client.messages.create({
+            body: smsBody,
+            from: twilioPhoneNumber,
+            to: friendPhone!
+          });
+
+          res.status(200).json({
+            success: true,
+            message: 'Ritual shared via SMS successfully!'
+          });
+          return;
+        } catch (smsError) {
+          console.error('Error sending SMS via Twilio:', smsError);
+          res.status(500).json({
+            success: false,
+            error: `Failed to send SMS: ${smsError instanceof Error ? smsError.message : 'Unknown error'}`
+          });
+          return;
+        }
+      } else {
+        // Twilio not configured - return error suggesting native SMS or configuration
+        res.status(500).json({
+          success: false,
+          error: 'SMS service not configured. Please set TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, and TWILIO_PHONE_NUMBER environment variables, or use the native SMS link on mobile devices.'
+        });
+        return;
+      }
+    }
+
+    // Prepare email content (existing email sharing logic)
     const shareSubject = `${userName} shared a daily ritual with you 🌱`;
     const shareMessage = message || `Hi${friendName ? ` ${friendName}` : ''}! ${userName} thought you'd love this daily ritual from Buzzwin.`;
 

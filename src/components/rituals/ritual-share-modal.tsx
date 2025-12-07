@@ -4,7 +4,7 @@ import { Input } from '@components/ui/input';
 import { Textarea } from '@components/ui/textarea';
 import { Button } from '@components/ui/button-shadcn';
 import { toast } from 'react-hot-toast';
-import { Mail, Share2, Copy, Check } from 'lucide-react';
+import { Mail, Share2, Copy, Check, Phone } from 'lucide-react';
 import { SimpleSocialShare } from '@components/share/simple-social-share';
 import type { RitualDefinition } from '@lib/types/ritual';
 import { useAuth } from '@lib/context/auth-context';
@@ -24,7 +24,10 @@ export function RitualShareModal({
   const [friendEmail, setFriendEmail] = useState('');
   const [friendName, setFriendName] = useState('');
   const [message, setMessage] = useState('');
+  const [friendPhone, setFriendPhone] = useState('');
+  const [smsMessage, setSmsMessage] = useState('');
   const [sending, setSending] = useState(false);
+  const [sendingSMS, setSendingSMS] = useState(false);
   const [copied, setCopied] = useState(false);
 
   const siteURL = process.env.NEXT_PUBLIC_SITE_URL || 'https://buzzwin.com';
@@ -73,6 +76,83 @@ export function RitualShareModal({
       toast.error(error instanceof Error ? error.message : 'Failed to share ritual');
     } finally {
       setSending(false);
+    }
+  };
+
+  const handleSMSShare = async (): Promise<void> => {
+    if (!friendPhone) {
+      toast.error('Please enter your friend\'s phone number.');
+      return;
+    }
+
+    // Format phone number (remove non-digits, ensure it starts with + for international)
+    const cleanPhone = friendPhone.replace(/\D/g, '');
+    const formattedPhone = cleanPhone.startsWith('1') && cleanPhone.length === 11 
+      ? `+${cleanPhone}` 
+      : cleanPhone.startsWith('+')
+      ? cleanPhone
+      : `+1${cleanPhone}`;
+
+    // Validate phone number length
+    if (cleanPhone.length < 10) {
+      toast.error('Please enter a valid phone number.');
+      return;
+    }
+
+    const userName = user?.name || user?.username || 'a friend';
+    const smsText = smsMessage || `Hi${friendName ? ` ${friendName}` : ''}! ${userName} thought you'd love this daily ritual: ${ritual.title} - ${ritual.description}\n\n${ritualUrl}`;
+    
+    // Use native SMS link for mobile devices
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    
+    if (isMobile) {
+      // Native SMS link - opens device's SMS app
+      const smsLink = `sms:${formattedPhone}?body=${encodeURIComponent(smsText)}`;
+      window.location.href = smsLink;
+      toast.success('Opening SMS app... 📱');
+      setTimeout(() => {
+        closeModal();
+        setFriendPhone('');
+        setSmsMessage('');
+      }, 500);
+    } else {
+      // For desktop, use API to send SMS via Twilio or other service
+      setSendingSMS(true);
+      try {
+        const response = await fetch('/api/rituals/share', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            userId: user?.id,
+            ritualId: ritual.id,
+            ritualTitle: ritual.title,
+            ritualDescription: ritual.description,
+            ritualTags: ritual.tags,
+            ritualEffortLevel: ritual.effortLevel,
+            friendPhone: formattedPhone,
+            friendName,
+            message: smsMessage,
+            shareMethod: 'sms'
+          })
+        });
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Failed to send SMS');
+        }
+
+        toast.success('Ritual shared via SMS! 📱');
+        closeModal();
+        setFriendPhone('');
+        setSmsMessage('');
+      } catch (error) {
+        console.error('Error sharing ritual via SMS:', error);
+        toast.error(error instanceof Error ? error.message : 'Failed to share ritual via SMS');
+      } finally {
+        setSendingSMS(false);
+      }
     }
   };
 
@@ -180,6 +260,77 @@ export function RitualShareModal({
             className='w-full rounded-full bg-purple-600 px-4 py-2 font-semibold text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed'
           >
             {sending ? 'Sending...' : 'Send Email'}
+          </Button>
+        </div>
+
+        {/* SMS Share Section */}
+        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+          <div className='flex items-center gap-2'>
+            <Phone className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+              Share via SMS
+            </h3>
+          </div>
+
+          {/* Friend Phone */}
+          <div>
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              Friend&apos;s Phone Number <span className='text-red-500'>*</span>
+            </label>
+            <div className='relative'>
+              <div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
+                <Phone className='h-5 w-5 text-gray-400' />
+              </div>
+              <Input
+                type='tel'
+                value={friendPhone}
+                onChange={(e) => setFriendPhone(e.target.value)}
+                placeholder='+1234567890 or (123) 456-7890'
+                required
+                className='pl-10'
+              />
+            </div>
+            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+              On mobile devices, this will open your SMS app
+            </p>
+          </div>
+
+          {/* Friend Name for SMS */}
+          <div>
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              Friend&apos;s Name <span className='text-gray-400 text-xs'>(Optional)</span>
+            </label>
+            <Input
+              type='text'
+              value={friendName}
+              onChange={(e) => setFriendName(e.target.value)}
+              placeholder='John Doe'
+            />
+          </div>
+
+          {/* SMS Message */}
+          <div>
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+              Personal Message <span className='text-gray-400 text-xs'>(Optional)</span>
+            </label>
+            <Textarea
+              value={smsMessage}
+              onChange={(e) => setSmsMessage(e.target.value)}
+              placeholder={`Hi${friendName ? ` ${friendName}` : ''}! Check out this daily ritual...`}
+              rows={3}
+              maxLength={160}
+            />
+            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+              {smsMessage.length}/160 characters (message will include ritual details and link)
+            </p>
+          </div>
+
+          <Button
+            onClick={handleSMSShare}
+            disabled={sendingSMS || !friendPhone}
+            className='w-full rounded-full bg-green-600 px-4 py-2 font-semibold text-white hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed'
+          >
+            {sendingSMS ? 'Sending...' : 'Send SMS'}
           </Button>
         </div>
 
