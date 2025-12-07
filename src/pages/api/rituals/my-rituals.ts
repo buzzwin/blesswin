@@ -46,7 +46,7 @@ export default async function handler(
 
     // Fetch rituals created by the user (custom rituals)
     const customRitualsSnapshot = await getDocs(userCustomRitualsCollection(userId));
-    const createdRituals: RitualDefinition[] = customRitualsSnapshot.docs.map(doc => ({
+    const customRituals: RitualDefinition[] = customRitualsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     } as RitualDefinition));
@@ -63,14 +63,94 @@ export default async function handler(
       } as RitualDefinition;
     });
 
+    // Get user-created rituals from main collection (by createdBy or sourceUserId)
+    const userCreatedFromMain: RitualDefinition[] = allFirestoreRituals.filter((ritual): ritual is RitualDefinition => {
+      const ritualData = ritual as any;
+      return ritualData.createdBy === userId || ritualData.sourceUserId === userId;
+    });
+
+    // Combine custom rituals and user-created rituals from main collection
+    // Deduplicate by ID and sourceRitualId to avoid showing the same ritual twice
+    const createdRitualsMap = new Map<string, RitualDefinition>();
+    
+    // Add custom rituals first
+    customRituals.forEach(ritual => {
+      if (ritual.id) {
+        createdRitualsMap.set(ritual.id, ritual);
+      }
+    });
+    
+    // Add user-created rituals from main collection (skip if already in custom)
+    userCreatedFromMain.forEach(ritual => {
+      const ritualData = ritual as any;
+      const sourceId = ritualData.sourceRitualId;
+      
+      // Only add if not already in custom rituals (by ID or sourceRitualId)
+      if (ritual.id && !createdRitualsMap.has(ritual.id)) {
+        // Check if any custom ritual has this as sourceRitualId
+        const isDuplicate = customRituals.some(cr => {
+          const crData = cr as any;
+          return cr.id === sourceId || crData.sourceRitualId === ritual.id;
+        });
+        
+        if (!isDuplicate) {
+          createdRitualsMap.set(ritual.id, ritual);
+        }
+      }
+    });
+    
+    const createdRituals: RitualDefinition[] = Array.from(createdRitualsMap.values());
+
+    console.log('[MY-RITUALS] Debug:', {
+      userId,
+      customRitualsCount: customRituals.length,
+      userCreatedFromMainCount: userCreatedFromMain.length,
+      totalCreatedCount: createdRituals.length,
+      allFirestoreRitualsCount: allFirestoreRituals.length,
+      customRitualIds: customRituals.map(r => r.id),
+      mainCollectionRitualIds: userCreatedFromMain.map(r => r.id),
+      finalCreatedRitualIds: createdRituals.map(r => r.id),
+      allRitualScopes: allFirestoreRituals.map(r => ({ 
+        id: r.id, 
+        scope: r.scope, 
+        createdBy: (r as any).createdBy,
+        sourceUserId: (r as any).sourceUserId 
+      }))
+    });
+
+    // Get user's own ritual IDs (both public and private) to exclude from available
+    // Include both custom ritual IDs and main collection ritual IDs
+    const userOwnRitualIds = new Set(createdRituals.map(r => r.id).filter((id): id is string => Boolean(id)));
+    
+    // Also track by sourceRitualId for rituals that were copied to main collection
+    const userOwnSourceIds = new Set(
+      userCreatedFromMain
+        .map((r): string | undefined => {
+          const rData = r as any;
+          return rData.sourceRitualId as string | undefined;
+        })
+        .filter((id): id is string => Boolean(id))
+    );
+
     // Separate joined vs available rituals
     const joinedRituals: RitualDefinition[] = [];
     const availableRituals: RitualDefinition[] = [];
     const joinedRitualIds = new Set<string>();
 
     allFirestoreRituals.forEach(ritual => {
+      const ritualData = ritual as any;
       const joinedByUsers = ritual.joinedByUsers || [];
-      if (joinedByUsers.includes(userId)) {
+      const isJoined = joinedByUsers.includes(userId);
+      
+      // Check if user owns this ritual (only exclude if explicitly owned)
+      const isUserOwned = 
+        ritualData.sourceUserId === userId || 
+        ritualData.createdBy === userId ||
+        userOwnRitualIds.has(ritual.id || '') ||
+        userOwnSourceIds.has(ritualData.sourceRitualId);
+
+      // Handle joined rituals (regardless of scope)
+      if (isJoined) {
         joinedRituals.push(ritual);
         if (ritual.id) {
           joinedRitualIds.add(ritual.id);
@@ -79,7 +159,15 @@ export default async function handler(
         if (ritual.title) {
           joinedRitualIds.add(ritual.title.toLowerCase());
         }
-      } else {
+        return; // Don't add to available if already joined
+      }
+
+      // For available rituals, include public and global rituals
+      // Exclude only if user explicitly owns them
+      const isPublic = ritual.scope === 'public' || ritual.scope === 'global';
+      
+      if (isPublic && !isUserOwned) {
+        // Add to available if it's public/global and user hasn't joined and doesn't own it
         availableRituals.push(ritual);
       }
     });

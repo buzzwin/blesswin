@@ -1,8 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
-import type { RitualDefinition, RitualTimeOfDay } from '@lib/types/ritual';
+import type { RitualDefinition, RitualTimeOfDay, RitualScope } from '@lib/types/ritual';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
+import { ritualsCollection } from '@lib/firebase/collections';
 
 interface CreateRitualRequest {
   userId: string;
@@ -12,6 +13,7 @@ interface CreateRitualRequest {
   effortLevel: EffortLevel;
   suggestedTimeOfDay: RitualTimeOfDay;
   durationEstimate: string;
+  scope?: RitualScope; // 'personalized' (private) or 'public'
   storyId?: string;
   storyTitle?: string;
   createdFromMomentId?: string; // If ritual was created from an impact moment
@@ -38,7 +40,7 @@ export default async function handler(
   }
 
   try {
-    const { userId, title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, storyId, storyTitle, createdFromMomentId } = req.body as CreateRitualRequest;
+    const { userId, title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, scope, storyId, storyTitle, createdFromMomentId } = req.body as CreateRitualRequest;
 
     if (!userId || typeof userId !== 'string') {
       res.status(401).json({ success: false, error: 'Unauthorized. User ID required.' });
@@ -72,13 +74,16 @@ export default async function handler(
       return;
     }
 
+    // Validate scope
+    const ritualScope: RitualScope = scope === 'public' ? 'public' : 'personalized';
+
     // Create custom ritual document
     const ritualDoc: Record<string, unknown> = {
       title: title.trim(),
       description: description.trim(),
       tags,
       effortLevel,
-      scope: 'personalized', // User-created rituals are personalized
+      scope: ritualScope,
       suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
       durationEstimate: durationEstimate || '5 minutes',
       prefillTemplate: `Completed ritual: ${title.trim()}\n\n${description.trim()}`,
@@ -93,7 +98,18 @@ export default async function handler(
       ...(createdFromMomentId && { createdFromMomentId })
     };
 
+    // Always create in user's custom rituals collection
     const docRef = await addDoc(userCustomRitualsCollection(userId), ritualDoc);
+
+    // If public, also create in main rituals collection for discovery
+    if (ritualScope === 'public') {
+      const publicRitualDoc = {
+        ...ritualDoc,
+        sourceRitualId: docRef.id, // Link back to user's copy
+        sourceUserId: userId
+      };
+      await addDoc(ritualsCollection, publicRitualDoc as any);
+    }
 
     res.status(200).json({
       success: true,

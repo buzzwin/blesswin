@@ -1,7 +1,7 @@
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 import type { ImpactTag, EffortLevel } from './impact-moment';
 
-export type RitualScope = 'global' | 'personalized';
+export type RitualScope = 'global' | 'personalized' | 'public';
 export type RitualTimeOfDay = 'morning' | 'afternoon' | 'evening' | 'anytime';
 
 export interface RitualDefinition {

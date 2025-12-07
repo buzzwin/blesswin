@@ -10,8 +10,8 @@ import {
   effortLevelLabels, 
   effortLevelIcons 
 } from '@lib/types/impact-moment';
-import type { RitualDefinition } from '@lib/types/ritual';
-import { Check, X, Sparkles, Share2, Users, ArrowRight, UserPlus } from 'lucide-react';
+import type { RitualDefinition, RitualScope } from '@lib/types/ritual';
+import { Check, X, Sparkles, Share2, Users, ArrowRight, UserPlus, Globe, Lock } from 'lucide-react';
 
 interface RitualCardProps {
   ritual: RitualDefinition;
@@ -24,10 +24,12 @@ interface RitualCardProps {
   onInvite?: () => void; // Callback for invite button
   loading?: boolean;
   showJoinButton?: boolean; // Whether to show join button
-  ritualScope?: 'global' | 'personalized'; // Scope for joining
+  ritualScope?: RitualScope; // Scope for joining
   onJoinSuccess?: () => void; // Callback when join succeeds
   onLeaveSuccess?: () => void; // Callback when leave succeeds
   karmaReward?: number; // Karma points earned on completion
+  isOwnRitual?: boolean; // Whether this ritual is owned by the current user
+  onVisibilityChange?: () => void; // Callback when visibility changes
 }
 
 export function RitualCard({
@@ -44,7 +46,9 @@ export function RitualCard({
   ritualScope,
   onJoinSuccess,
   onLeaveSuccess,
-  karmaReward
+  karmaReward,
+  isOwnRitual = false,
+  onVisibilityChange
 }: RitualCardProps): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
@@ -54,6 +58,7 @@ export function RitualCard({
   const [hasJoined, setHasJoined] = useState(
     ritual.joinedByUsers?.includes(user?.id || '') || false
   );
+  const [togglingVisibility, setTogglingVisibility] = useState(false);
 
   // Update hasJoined when ritual or user changes
   useEffect(() => {
@@ -128,6 +133,40 @@ export function RitualCard({
       toast.error(message);
     } finally {
       setJoining(false);
+    }
+  };
+
+  const handleToggleVisibility = async (): Promise<void> => {
+    if (!user?.id || !ritual.id || !isOwnRitual) {
+      return;
+    }
+
+    setTogglingVisibility(true);
+    try {
+      const newScope: RitualScope = ritual.scope === 'public' ? 'personalized' : 'public';
+      
+      const response = await fetch(`/api/rituals/${ritual.id}/visibility`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          userId: user.id,
+          scope: newScope
+        })
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toast.success(`Ritual is now ${newScope === 'public' ? 'public' : 'private'}`);
+        onVisibilityChange?.();
+      } else {
+        throw new Error(data.error || 'Failed to update visibility');
+      }
+    } catch (error) {
+      console.error('Error toggling visibility:', error);
+      toast.error(error instanceof Error ? error.message : 'Failed to update visibility');
+    } finally {
+      setTogglingVisibility(false);
     }
   };
 
@@ -232,6 +271,24 @@ export function RitualCard({
           </span>
         )}
         <div className='flex items-center gap-2'>
+          {isOwnRitual && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                void handleToggleVisibility();
+              }}
+              disabled={togglingVisibility}
+              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+              aria-label={ritual.scope === 'public' ? 'Make private' : 'Make public'}
+              title={ritual.scope === 'public' ? 'Make private' : 'Make public'}
+            >
+              {ritual.scope === 'public' ? (
+                <Globe className='h-4 w-4 text-blue-600 dark:text-blue-400' />
+              ) : (
+                <Lock className='h-4 w-4' />
+              )}
+            </button>
+          )}
           {onShareRitual && (
             <button
               onClick={(e) => {

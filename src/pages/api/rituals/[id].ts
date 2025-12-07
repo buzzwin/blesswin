@@ -2,8 +2,10 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { doc, getDoc, updateDoc, deleteDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { collection } from 'firebase/firestore';
-import type { RitualDefinition, RitualTimeOfDay } from '@lib/types/ritual';
+import type { RitualDefinition, RitualTimeOfDay, RitualScope } from '@lib/types/ritual';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
+import { ritualsCollection } from '@lib/firebase/collections';
+import { query, where, getDocs, addDoc, deleteDoc as firestoreDeleteDoc } from 'firebase/firestore';
 
 interface UpdateRitualRequest {
   userId: string;
@@ -13,6 +15,7 @@ interface UpdateRitualRequest {
   effortLevel: EffortLevel;
   suggestedTimeOfDay: RitualTimeOfDay;
   durationEstimate: string;
+  scope?: RitualScope;
 }
 
 export default async function handler(
@@ -57,7 +60,7 @@ export default async function handler(
   if (req.method === 'PUT' || req.method === 'PATCH') {
     // Update ritual
     try {
-      const { title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate } = req.body as UpdateRitualRequest;
+      const { title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, scope } = req.body as UpdateRitualRequest;
 
       // Validation
       if (!title || typeof title !== 'string' || title.trim().length === 0) {
@@ -86,11 +89,15 @@ export default async function handler(
         return;
       }
 
+      const oldScope = ritualData.scope as RitualScope || 'personalized';
+      const newScope: RitualScope = scope === 'public' ? 'public' : 'personalized';
+
       const updateData = {
         title: title.trim(),
         description: description.trim(),
         tags,
         effortLevel,
+        scope: newScope,
         suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
         durationEstimate: durationEstimate || '5 minutes',
         prefillTemplate: `Completed ritual: ${title.trim()}\n\n${description.trim()}`,
@@ -98,6 +105,63 @@ export default async function handler(
       };
 
       await updateDoc(ritualDocRef, updateData as any);
+
+      // Handle scope changes - sync with public rituals collection
+      if (oldScope !== newScope) {
+        if (newScope === 'public') {
+          // Add to public collection
+          const publicRitualDoc = {
+            ...updateData,
+            sourceRitualId: id,
+            sourceUserId: userId,
+            createdAt: ritualData.createdAt || serverTimestamp(),
+            usageCount: ritualData.usageCount || 0,
+            completionRate: ritualData.completionRate || 0,
+            joinedByUsers: ritualData.joinedByUsers || [],
+            createdBy: userId
+          };
+          await addDoc(ritualsCollection, publicRitualDoc as any);
+        } else if (oldScope === 'public') {
+          // Remove from public collection (find by sourceRitualId)
+          const publicRitualsQuery = query(
+            ritualsCollection,
+            where('sourceRitualId', '==', id),
+            where('sourceUserId', '==', userId)
+          );
+          const publicRitualsSnapshot = await getDocs(publicRitualsQuery);
+          for (const publicRitualDoc of publicRitualsSnapshot.docs) {
+            await firestoreDeleteDoc(publicRitualDoc.ref);
+          }
+        }
+      } else if (newScope === 'public') {
+        // Update existing public ritual if it exists
+        const publicRitualsQuery = query(
+          ritualsCollection,
+          where('sourceRitualId', '==', id),
+          where('sourceUserId', '==', userId)
+        );
+        const publicRitualsSnapshot = await getDocs(publicRitualsQuery);
+        if (!publicRitualsSnapshot.empty) {
+          const publicRitualDoc = publicRitualsSnapshot.docs[0];
+          await updateDoc(publicRitualDoc.ref, {
+            ...updateData,
+            updatedAt: serverTimestamp()
+          } as any);
+        } else {
+          // Create if it doesn't exist
+          const publicRitualDoc = {
+            ...updateData,
+            sourceRitualId: id,
+            sourceUserId: userId,
+            createdAt: ritualData.createdAt || serverTimestamp(),
+            usageCount: ritualData.usageCount || 0,
+            completionRate: ritualData.completionRate || 0,
+            joinedByUsers: ritualData.joinedByUsers || [],
+            createdBy: userId
+          };
+          await addDoc(ritualsCollection, publicRitualDoc as any);
+        }
+      }
 
       res.status(200).json({
         success: true,

@@ -25,14 +25,15 @@ import {
   Sparkles,
   ArrowRight,
   Edit2,
-  Trash2
+  Trash2,
+  Calendar,
+  TrendingUp
 } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { EditMomentModal } from './edit-moment-modal';
 import { ActionShareModal } from './action-share-modal';
-import { CreateRitualFromMomentModal } from '@components/modal/create-ritual-from-moment-modal';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -51,7 +52,6 @@ export function ImpactMomentCard({
   const [loadingOriginal, setLoadingOriginal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
-  const [createRitualModalOpen, setCreateRitualModalOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const isOwner = user?.id === moment.createdBy;
 
@@ -130,14 +130,62 @@ export function ImpactMomentCard({
 
         {/* Content */}
         <div className='min-w-0 flex-1'>
-          {/* Ritual Badge */}
+          {/* Ritual Badge - Enhanced with join encouragement (compact mobile-friendly) */}
           {moment.fromDailyRitual && (
-            <div className='mb-3 flex items-center gap-2 rounded-lg border border-green-200 bg-green-50 px-3 py-2 dark:border-green-800 dark:bg-green-900/20'>
-              <span className='text-lg'>🌱</span>
-              <span className='text-sm font-medium text-green-700 dark:text-green-300'>
-                From today's ritual
-                {moment.ritualTitle ? `: ${moment.ritualTitle}` : ''}
-              </span>
+            <div className='mb-3 overflow-hidden rounded-lg border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 shadow-sm transition-shadow hover:shadow-md dark:border-emerald-700/50 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-cyan-900/30'>
+              <div className='p-2.5 md:p-3'>
+                <div className='flex items-start gap-2 md:gap-2.5'>
+                  {/* Icon */}
+                  <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-sm md:h-9 md:w-9'>
+                    <Calendar className='h-4 w-4 text-white md:h-4.5 md:w-4.5' />
+                  </div>
+                  
+                  {/* Content */}
+                  <div className='min-w-0 flex-1'>
+                    {/* Header with badge */}
+                    <div className='mb-1 flex flex-wrap items-center gap-1.5 md:gap-2'>
+                      <span className='text-xs font-bold text-emerald-800 dark:text-emerald-200 md:text-sm'>
+                        Today's Ritual
+                      </span>
+                      <span className='flex items-center gap-0.5 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-800 dark:text-emerald-200 md:px-2 md:text-xs'>
+                        <TrendingUp className='h-2.5 w-2.5 md:h-3 md:w-3' />
+                        Active
+                      </span>
+                    </div>
+                    
+                    {/* Ritual Title */}
+                    <h4 className='mb-1.5 text-sm font-bold text-gray-900 dark:text-white md:text-base'>
+                      {moment.ritualTitle || 'Daily Ritual'}
+                    </h4>
+                    
+                    {/* Compact description */}
+                    <p className='mb-2 text-xs leading-relaxed text-gray-700 dark:text-gray-300 md:text-sm'>
+                      Join this ritual to create your own moments and earn karma!
+                    </p>
+                    
+                    {/* Join Button - Compact */}
+                    {moment.ritualId ? (
+                      <Link href={`/rituals/${moment.ritualId}`}>
+                        <a className='inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:from-emerald-700 hover:to-teal-700 hover:shadow-md md:px-3.5 md:py-2 md:text-sm'>
+                          <span className='text-sm md:text-base'>🌱</span>
+                          <span>Join Ritual</span>
+                          <ArrowRight className='h-3 w-3 md:h-3.5 md:w-3.5' />
+                        </a>
+                      </Link>
+                    ) : (
+                      <Link href='/rituals'>
+                        <a className='inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:from-emerald-700 hover:to-teal-700 hover:shadow-md md:px-3.5 md:py-2 md:text-sm'>
+                          <span className='text-sm md:text-base'>🌱</span>
+                          <span>View Rituals</span>
+                          <ArrowRight className='h-3 w-3 md:h-3.5 md:w-3.5' />
+                        </a>
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              </div>
+              {/* Decorative bottom border - thinner */}
+              <div className='h-0.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 md:h-1'></div>
             </div>
           )}
 
@@ -234,10 +282,16 @@ export function ImpactMomentCard({
                 )}
                 {reactionCount > 0 && rippleCount > 0 && <span>•</span>}
                 {rippleCount > 0 && (
-                  <Link href={`/impact/${moment.id}/ripple`}>
+                  <Link href={moment.ritualId ? `/rituals/${moment.ritualId}` : `/impact/${moment.id}/ripple`}>
                     <a className='inline-flex items-center gap-1 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'>
                       <span>
-                        {rippleCount} {rippleCount === 1 ? 'ripple' : 'ripples'}
+                        {moment.ritualId ? (
+                          <>View ritual</>
+                        ) : (
+                          <>
+                            {rippleCount} {rippleCount === 1 ? 'ripple' : 'ripples'}
+                          </>
+                        )}
                       </span>
                       <ArrowRight className='h-3 w-3' />
                     </a>
@@ -246,18 +300,28 @@ export function ImpactMomentCard({
               </div>
             )}
 
-          {/* View Ripple Button (for original moments with no reactions/ripples yet) */}
+          {/* View Ripple/Ritual Button (for original moments with no reactions/ripples yet) */}
           {!moment.joinedFromMomentId &&
             reactionCount === 0 &&
             rippleCount === 0 && (
               <div className='mb-3'>
-                <Link href={`/impact/${moment.id}/ripple`}>
-                  <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
-                    <span>🌱</span>
-                    <span>View ripple</span>
-                    <ArrowRight className='h-4 w-4' />
-                  </a>
-                </Link>
+                {moment.ritualId ? (
+                  <Link href={`/rituals/${moment.ritualId}`}>
+                    <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
+                      <span>🌱</span>
+                      <span>View ritual</span>
+                      <ArrowRight className='h-4 w-4' />
+                    </a>
+                  </Link>
+                ) : (
+                  <Link href={`/impact/${moment.id}/ripple`}>
+                    <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
+                      <span>🌱</span>
+                      <span>View ripple</span>
+                      <ArrowRight className='h-4 w-4' />
+                    </a>
+                  </Link>
+                )}
               </div>
             )}
 
@@ -309,53 +373,20 @@ export function ImpactMomentCard({
             </div>
           )}
 
-          {/* Actions */}
-          <div className='relative flex flex-col gap-3 pt-2'>
-            {/* Primary Actions: Do this once & Make this recurring (only for signed-in users) */}
-            {moment.createdBy !== user?.id && !moment.joinedFromMomentId && (
-              <>
-                {user ? (
-                  <div className='flex gap-2'>
-                    {/* Do this once - Join Action */}
-                    <Link href={`/impact/${moment.id}/join`}>
-                      <a className='flex-1 flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600'>
-                        <span>🌱</span>
-                        <span>Do this once</span>
-                      </a>
-                    </Link>
-                    
-                    {/* Make this recurring - Create Ritual */}
-                    <button
-                      onClick={() => setCreateRitualModalOpen(true)}
-                      className='flex-1 flex items-center justify-center gap-2 rounded-lg border-2 border-purple-500 bg-purple-50 px-4 py-2.5 text-sm font-semibold text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-400 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'
-                    >
-                      <span>🔄</span>
-                      <span>Make this recurring</span>
-                    </button>
-                  </div>
-                ) : (
-                  /* Join button for non-signed-in users - redirects to login then create ritual from moment */
-                  <Link href={`/login?redirect=/rituals/create-from-moment/${moment.id}`}>
-                    <a className='flex items-center justify-center gap-2 rounded-lg bg-green-600 px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600'>
-                      <span>🌱</span>
-                      <span>Join</span>
-                    </a>
-                  </Link>
-                )}
-              </>
-            )}
-
-            {/* Secondary Actions: Reactions, Comment, Share */}
-            <div className='flex items-center gap-4'>
+          {/* Actions - Compact */}
+          <div className='relative flex flex-col gap-1.5 pt-2'>
+            {/* Primary Actions: Reactions, Comment, Share, Edit, Delete */}
+            <div className='flex flex-wrap items-center gap-1.5 md:gap-2'>
               {/* React Button (Reactions) */}
               <div className='relative'>
                 <button
                   onClick={() => setRippleMenuOpen(!rippleMenuOpen)}
-                  className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-purple-100 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400'
+                  className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-purple-100 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400 md:gap-1.5 md:p-2'
+                  title='React'
                 >
-                  <Sparkles className='h-5 w-5' />
-                  <span className='text-sm font-medium'>
-                    {reactionCount > 0 ? reactionCount : 'React'}
+                  <Sparkles className='h-4 w-4 md:h-4.5 md:w-4.5' />
+                  <span className='text-xs font-medium md:text-sm'>
+                    {reactionCount > 0 ? reactionCount : <span className='hidden sm:inline'>React</span>}
                   </span>
                 </button>
 
@@ -399,92 +430,95 @@ export function ImpactMomentCard({
 
               {/* Comment Button */}
               <Link href={`/impact/${moment.id}`}>
-                <a className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'>
-                  <MessageCircle className='h-5 w-5' />
-                  <span className='text-sm font-medium'>Comment</span>
+                <a className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 md:gap-1.5 md:p-2' title='Comment'>
+                  <MessageCircle className='h-4 w-4 md:h-4.5 md:w-4.5' />
+                  <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Comment</span></span>
                 </a>
               </Link>
 
               {/* Share Button */}
               <button
                 onClick={() => setShareModalOpen(true)}
-                className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400'
+                className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400 md:gap-1.5 md:p-2'
+                title='Share'
               >
-                <Share2 className='h-5 w-5' />
-                <span className='text-sm font-medium'>Share</span>
+                <Share2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
+                <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Share</span></span>
               </button>
-            </div>
 
-            {/* Edit & Delete Buttons (Owner Only) */}
-            {isOwner && (
-              <>
-                <button
-                  onClick={() => setEditModalOpen(true)}
-                  className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400'
-                >
-                  <Edit2 className='h-5 w-5' />
-                  <span className='text-sm font-medium'>Edit</span>
-                </button>
-                <button
-                  onClick={async () => {
-                    if (
-                      !window.confirm(
-                        'Are you sure you want to delete this impact moment? This action cannot be undone.'
-                      )
-                    ) {
-                      return;
-                    }
-
-                    if (!user?.id || !moment.id) {
-                      toast.error('Unable to delete moment');
-                      return;
-                    }
-
-                    setDeleting(true);
-                    try {
-                      const response = await fetch(
-                        `/api/impact-moments/${moment.id}`,
-                        {
-                          method: 'DELETE',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({ userId: user.id })
-                        }
-                      );
-
-                      const data = await response.json();
-
-                      if (response.ok) {
-                        toast.success('Impact moment deleted successfully');
-                        // Reload the page to refresh the feed
-                        if (typeof window !== 'undefined') {
-                          window.location.reload();
-                        }
-                      } else {
-                        throw new Error(
-                          data.error || 'Failed to delete impact moment'
-                        );
+              {/* Edit & Delete Buttons (Owner Only) - Now inline */}
+              {isOwner && (
+                <>
+                  <button
+                    onClick={() => setEditModalOpen(true)}
+                    className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 md:gap-1.5 md:p-2'
+                    title='Edit'
+                  >
+                    <Edit2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
+                    <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Edit</span></span>
+                  </button>
+                  <button
+                    onClick={async () => {
+                      if (
+                        !window.confirm(
+                          'Are you sure you want to delete this impact moment? This action cannot be undone.'
+                        )
+                      ) {
+                        return;
                       }
-                    } catch (error) {
-                      console.error('Error deleting impact moment:', error);
-                      toast.error(
-                        error instanceof Error
-                          ? error.message
-                          : 'Failed to delete impact moment'
-                      );
-                    } finally {
-                      setDeleting(false);
-                    }
-                  }}
-                  disabled={deleting}
-                  className='group flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-red-100 hover:text-red-600 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400'
-                >
-                  <Trash2 className='h-5 w-5' />
-                  <span className='text-sm font-medium'>
-                    {deleting ? 'Deleting...' : 'Delete'}
-                  </span>
-                </button>
-              </>
-            )}
+
+                      if (!user?.id || !moment.id) {
+                        toast.error('Unable to delete moment');
+                        return;
+                      }
+
+                      setDeleting(true);
+                      try {
+                        const response = await fetch(
+                          `/api/impact-moments/${moment.id}`,
+                          {
+                            method: 'DELETE',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ userId: user.id })
+                          }
+                        );
+
+                        const data = await response.json();
+
+                        if (response.ok) {
+                          toast.success('Impact moment deleted successfully');
+                          // Reload the page to refresh the feed
+                          if (typeof window !== 'undefined') {
+                            window.location.reload();
+                          }
+                        } else {
+                          throw new Error(
+                            data.error || 'Failed to delete impact moment'
+                          );
+                        }
+                      } catch (error) {
+                        console.error('Error deleting impact moment:', error);
+                        toast.error(
+                          error instanceof Error
+                            ? error.message
+                            : 'Failed to delete impact moment'
+                        );
+                      } finally {
+                        setDeleting(false);
+                      }
+                    }}
+                    disabled={deleting}
+                    className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-red-100 hover:text-red-600 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400 md:gap-1.5 md:p-2'
+                    title='Delete'
+                  >
+                    <Trash2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
+                    <span className='text-xs font-medium md:text-sm'>
+                      {deleting ? <span className='hidden sm:inline'>Deleting...</span> : <span className='hidden sm:inline'>Delete</span>}
+                    </span>
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -508,20 +542,6 @@ export function ImpactMomentCard({
         open={shareModalOpen}
         closeModal={() => setShareModalOpen(false)}
       />
-
-      {/* Create Ritual from Moment Modal */}
-      {user && (
-        <CreateRitualFromMomentModal
-          moment={moment}
-          open={createRitualModalOpen}
-          closeModal={() => setCreateRitualModalOpen(false)}
-          onSuccess={(ritualId) => {
-            toast.success('Ritual created! Check your rituals page 🌱');
-            // Optionally navigate to rituals page
-            // router.push('/rituals');
-          }}
-        />
-      )}
     </article>
   );
 }

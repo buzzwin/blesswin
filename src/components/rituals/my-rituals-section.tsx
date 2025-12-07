@@ -369,6 +369,8 @@ export function MyRitualsSection({
                     onShareRitual={() => onShareRitual(ritual)}
                     loading={completingRitualId === ritual.id}
                     showJoinButton={false}
+                    isOwnRitual={true}
+                    onVisibilityChange={fetchMyRituals}
                   />
                   <button
                     onClick={() => onEditRitual(ritual)}
