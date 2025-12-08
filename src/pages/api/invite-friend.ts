@@ -60,7 +60,7 @@ export default async function handler(
 
     // Prepare email content
     const inviteSubject = `${userName} invited you to join Buzzwin 🌱`;
-    const inviteMessage = message || `Hi${friendName ? ` ${friendName}` : ''}! ${userName} thought you'd love Buzzwin - a platform for positive impact, mindfulness, and community action. Join us to share your impact moments, discover inspiring stories, and connect with others making a difference!`;
+    const inviteMessage = message || `Hi${friendName ? ` ${friendName}` : ''}! ${userName} thought you'd love Buzzwin - a platform for ritual sharing and participation. Join us to share your ritual participations, discover inspiring rituals, and connect with others on their wellness journey!`;
 
     const inviteHtml = `
       <!DOCTYPE html>

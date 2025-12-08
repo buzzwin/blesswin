@@ -18,7 +18,7 @@ export async function sendJoinedActionEmail(data: JoinedActionEmailData): Promis
   
   const content = `
     <h2 style="margin: 0 0 20px; color: #1a1a1a; font-size: 24px; font-weight: 600;">
-      🌱 Someone Joined Your Action!
+      🌱 Someone Joined Your Ritual!
     </h2>
     
     <p style="margin: 0 0 20px; color: #333333; font-size: 16px; line-height: 1.6;">
@@ -26,7 +26,7 @@ export async function sendJoinedActionEmail(data: JoinedActionEmailData): Promis
     </p>
     
     <p style="margin: 0 0 20px; color: #333333; font-size: 16px; line-height: 1.6;">
-      Great news! <strong>${joinerName}</strong> (@${joinerUsername}) just joined your action:
+      Great news! <strong>${joinerName}</strong> (@${joinerUsername}) just joined your ritual:
     </p>
     
     <div style="margin: 20px 0; padding: 20px; background-color: #f9fafb; border-left: 4px solid #9333ea; border-radius: 4px;">
@@ -38,12 +38,12 @@ export async function sendJoinedActionEmail(data: JoinedActionEmailData): Promis
     <p style="margin: 20px 0; color: #333333; font-size: 16px; line-height: 1.6;">
       ${joinCount === 1 
         ? 'They\'re the first person to join! 🌟' 
-        : `They're one of ${joinCount} people who have joined your action! 🌟`
+        : `They're one of ${joinCount} people who have joined your ritual! 🌟`
       }
     </p>
     
     <p style="margin: 20px 0 0; color: #666666; font-size: 14px; line-height: 1.6;">
-      Your positive action is creating a ripple effect. Keep inspiring others!
+      Your ritual participation is inspiring others! Keep sharing your journey!
     </p>
   `;
   
@@ -51,9 +51,9 @@ export async function sendJoinedActionEmail(data: JoinedActionEmailData): Promis
   
   await sendEmail({
     to: originalCreatorEmail,
-    subject: `🌱 ${joinerName} joined your action on Buzzwin`,
+    subject: `🌱 ${joinerName} joined your ritual on Buzzwin`,
     html,
-    text: `${joinerName} (@${joinerUsername}) just joined your action: "${previewText}". See the ripple: ${rippleUrl}`
+    text: `${joinerName} (@${joinerUsername}) just joined your ritual: "${previewText}". See the ripple: ${rippleUrl}`
   });
 }
 

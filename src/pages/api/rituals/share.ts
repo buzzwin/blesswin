@@ -272,7 +272,7 @@ Try it: ${siteURL}/rituals`;
                       <div style="margin: 30px 0; padding: 20px; background-color: #f0fdf4; border-left: 4px solid #22c55e; border-radius: 4px;">
                         <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.6;">
                           <strong>What is Buzzwin?</strong><br>
-                          A storytelling studio that amplifies good causes. Share your impact moments, discover inspiring real stories, practice daily rituals, and join a community of do-gooders making positive change.
+                          A storytelling studio that amplifies good causes. Share your ritual participations, discover inspiring real stories, practice daily rituals, and join a community of do-gooders making positive change.
                         </p>
                       </div>
 

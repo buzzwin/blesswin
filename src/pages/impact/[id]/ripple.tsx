@@ -51,7 +51,7 @@ export default function RippleViewPage(): JSX.Element {
         const originalDoc = await getDoc(doc(impactMomentsCollection, id));
 
         if (!originalDoc.exists()) {
-          toast.error('Impact moment not found');
+          toast.error('Ritual share not found');
           return;
         }
 
@@ -363,13 +363,13 @@ export default function RippleViewPage(): JSX.Element {
               <div className='mb-4 text-6xl'>🌱</div>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
                 {originalMoment.createdBy === user?.id
-                  ? 'Share Your Action'
-                  : 'Start the Ripple'}
+                  ? 'Share Your Ritual Participation'
+                  : 'View Ritual'}
               </h3>
               <p className='mb-6 text-sm text-gray-600 dark:text-gray-400'>
                 {originalMoment.createdBy === user?.id
-                  ? 'Share this action with others to inspire them to join!'
-                  : 'Be the first to join this action and create a ripple of positive impact!'}
+                  ? 'Share your ritual participation with others to inspire them!'
+                  : 'This ritual participation is part of a ritual. Join the ritual to participate yourself!'}
               </p>
             </div>
 
@@ -476,7 +476,7 @@ export default function RippleViewPage(): JSX.Element {
                       onKeyDown={(e) => e.stopPropagation()}
                       placeholder={`Hi${
                         friendName ? ` ${friendName}` : ''
-                      }! I thought you'd love to join this action...`}
+                      }! I thought you'd love to see this ritual participation...`}
                       rows={4}
                       readOnly={false}
                       disabled={false}
@@ -514,10 +514,10 @@ export default function RippleViewPage(): JSX.Element {
                     </h4>
                   </div>
                   <SimpleSocialShare
-                    title={`Join This Action: ${originalMoment.user.name}'s Impact Moment`}
+                    title={`${originalMoment.user.name}'s Ritual Participation`}
                     description={`${originalMoment.text.substring(0, 150)}${
                       originalMoment.text.length > 150 ? '...' : ''
-                    }\n\nJoin the ripple of positive impact 🌱`}
+                    }\n\nShare your ritual participation 🌱`}
                     url={publicUrl}
                     hashtags={[
                       'PositiveImpact',
@@ -532,21 +532,21 @@ export default function RippleViewPage(): JSX.Element {
               </div>
             )}
 
-            {/* Join Button (for non-creators) */}
-            {originalMoment.createdBy !== user?.id && (
+            {/* View Ritual Button (for non-creators) */}
+            {originalMoment.createdBy !== user?.id && originalMoment.ritualId && (
               <>
                 {user ? (
-                  <Link href={`/impact/${id}/join`}>
+                  <Link href={`/rituals/${originalMoment.ritualId}`}>
                     <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
-                      Join This Action
+                      Join This Ritual
                       <ArrowLeft className='h-4 w-4 rotate-180' />
                     </a>
                   </Link>
                 ) : (
-                  <Link href={`/login?redirect=/impact/${id}/join`}>
+                  <Link href={`/login?redirect=/rituals/${originalMoment.ritualId}`}>
                     <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
                       <LogIn className='h-5 w-5' />
-                      Sign In to Join
+                      Sign In to Join Ritual
                     </a>
                   </Link>
                 )}
@@ -562,8 +562,8 @@ export default function RippleViewPage(): JSX.Element {
               Join the Community
             </h3>
             <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
-              Sign in to join actions, comment, and share your own impact
-              moments!
+              Sign in to join rituals, comment, and share your own ritual
+              participations!
             </p>
             <Link href={`/login?redirect=/impact/${id}/ripple`}>
               <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>

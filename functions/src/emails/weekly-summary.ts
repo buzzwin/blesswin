@@ -56,7 +56,7 @@ export async function sendWeeklySummaryEmail(data: WeeklySummaryEmailData): Prom
             ${impactMomentsCreated}
           </div>
           <div style="font-size: 14px; color: #666666;">
-            Impact Moments
+            Ritual Participations Shared
           </div>
         </td>
       </tr>
@@ -86,10 +86,10 @@ export async function sendWeeklySummaryEmail(data: WeeklySummaryEmailData): Prom
     ${peopleJoinedActions > 0 ? `
     <div style="margin: 20px 0; padding: 20px; background-color: #f0fdf4; border-left: 4px solid #10b981; border-radius: 4px;">
       <p style="margin: 0 0 8px; color: #065f46; font-size: 16px; font-weight: 600;">
-        🌱 Your Impact is Growing!
+        🌱 Your Rituals are Growing!
       </p>
       <p style="margin: 0; color: #047857; font-size: 14px; line-height: 1.6;">
-        ${peopleJoinedActions} ${peopleJoinedActions === 1 ? 'person has' : 'people have'} joined your actions this week!
+        ${peopleJoinedActions} ${peopleJoinedActions === 1 ? 'person has' : 'people have'} joined your rituals this week!
       </p>
     </div>
     ` : ''}
@@ -97,10 +97,10 @@ export async function sendWeeklySummaryEmail(data: WeeklySummaryEmailData): Prom
     ${actionsJoined > 0 ? `
     <div style="margin: 20px 0; padding: 20px; background-color: #fef3c7; border-left: 4px solid #f59e0b; border-radius: 4px;">
       <p style="margin: 0 0 8px; color: #92400e; font-size: 16px; font-weight: 600;">
-        ✨ You Joined ${actionsJoined} ${actionsJoined === 1 ? 'Action' : 'Actions'}!
+        ✨ You Joined ${actionsJoined} ${actionsJoined === 1 ? 'Ritual' : 'Rituals'}!
       </p>
       <p style="margin: 0; color: #78350f; font-size: 14px; line-height: 1.6;">
-        Keep spreading positive impact!
+        Keep participating in rituals and sharing your journey!
       </p>
     </div>
     ` : ''}
@@ -114,7 +114,7 @@ export async function sendWeeklySummaryEmail(data: WeeklySummaryEmailData): Prom
     ` : ''}
     
     <p style="margin: 30px 0 0; color: #666666; font-size: 14px; line-height: 1.6;">
-      Keep up the amazing work! Every small action creates positive change. 🌱
+      Keep up the amazing work! Every ritual participation creates positive change. 🌱
     </p>
   `;
   
@@ -122,9 +122,9 @@ export async function sendWeeklySummaryEmail(data: WeeklySummaryEmailData): Prom
   
   await sendEmail({
     to: userEmail,
-    subject: `📊 Your Week on Buzzwin - ${ritualsCompleted} Rituals, ${impactMomentsCreated} Moments`,
+    subject: `📊 Your Week on Buzzwin - ${ritualsCompleted} Rituals, ${impactMomentsCreated} Participations`,
     html,
-    text: `Your week in review: ${ritualsCompleted} rituals completed, ${impactMomentsCreated} impact moments created, ${karmaPointsEarned} karma points earned. View full summary: ${homeUrl}`
+    text: `Your week in review: ${ritualsCompleted} rituals completed, ${impactMomentsCreated} ritual participations shared, ${karmaPointsEarned} karma points earned. View full summary: ${homeUrl}`
   });
 }
 

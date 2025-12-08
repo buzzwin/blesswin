@@ -310,15 +310,15 @@ export function RitualSettings({
             Choose which emails you'd like to receive from Buzzwin
           </p>
 
-          {/* Joined Action Email */}
+          {/* Joined Ritual Email */}
           <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
             <div className='flex items-center justify-between'>
               <div className='flex-1'>
                 <div className='flex items-center gap-2 mb-1'>
-                  <span className='font-medium text-gray-900 dark:text-white'>Someone Joined Your Action</span>
+                  <span className='font-medium text-gray-900 dark:text-white'>Someone Joined Your Ritual</span>
                 </div>
                 <p className='text-sm text-gray-600 dark:text-gray-400'>
-                  Get notified when someone joins your impact moment
+                  Get notified when someone joins your ritual
                 </p>
               </div>
               <label className='relative inline-flex items-center cursor-pointer ml-4'>

@@ -62,8 +62,8 @@ export function ImpactMomentInput({
   const [aiAssisting, setAiAssisting] = useState(false);
   const [parsing, setParsing] = useState(false);
   const [validationWarning, setValidationWarning] = useState<string | null>(null);
-  const [placeholder, setPlaceholder] = useState('What small good deed did you do today? (e.g., "Cooked a healthy meal for my family", "Picked up trash on my walk")');
-  const [description, setDescription] = useState('What small good deed did you do today?');
+  const [placeholder, setPlaceholder] = useState('Share your ritual participation... (e.g., "Just finished my breathing ritual", "Completed my morning meditation")');
+  const [description, setDescription] = useState('Share your ritual participation');
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);

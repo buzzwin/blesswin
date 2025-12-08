@@ -82,11 +82,11 @@ export function RippleSystem({ user }: RippleSystemProps): JSX.Element {
             <ul className='space-y-2 text-sm text-purple-700 dark:text-purple-300'>
               <li className='flex items-start gap-2'>
                 <span className='mt-0.5'>✓</span>
-                <span>Creates your own impact moment</span>
+                <span>Shares their ritual participation</span>
               </li>
               <li className='flex items-start gap-2'>
                 <span className='mt-0.5'>✓</span>
-                <span>Links to the original action</span>
+                <span>Links to the original ritual</span>
               </li>
               <li className='flex items-start gap-2'>
                 <span className='mt-0.5'>✓</span>
@@ -95,9 +95,9 @@ export function RippleSystem({ user }: RippleSystemProps): JSX.Element {
             </ul>
             <div className='mt-4 rounded-lg bg-white/50 p-3 dark:bg-gray-800/50'>
               <p className='text-xs font-medium text-purple-900 dark:text-purple-100'>
-                💡 Example: Someone posts "Cooked a healthy meal for my family".
-                You click "Join This Action" and share your own version. Now
-                there's a ripple showing how this action spread!
+                💡 Example: Someone shares "Just finished my breathing ritual".
+                You click "Join This Ritual" to participate, then share your own participation. Now
+                you're both part of the same ritual community!
               </p>
             </div>
           </div>

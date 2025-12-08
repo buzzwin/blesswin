@@ -43,6 +43,12 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
+    href: '/rituals',
+    linkName: 'Rituals',
+    iconName: 'calendar',
+    disabled: false
+  },
+  {
     href: '/home',
     linkName: 'Feed',
     iconName: 'sparkles',
@@ -67,21 +73,15 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
-    href: '/rituals',
-    linkName: 'Rituals',
-    iconName: 'calendar',
+    href: '/settings',
+    linkName: 'Settings',
+    iconName: 'settings',
     disabled: false
   },
   {
     href: `/user/${username}`,
     linkName: 'Profile',
     iconName: 'user',
-    disabled: false
-  },
-  {
-    href: '/settings',
-    linkName: 'Settings',
-    iconName: 'settings',
     disabled: false
   }
 ];

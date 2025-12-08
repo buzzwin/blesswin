@@ -63,6 +63,12 @@ export function GlobalDesktopHeader(): JSX.Element {
 
         {/* Navigation Links */}
         <nav className='flex items-center gap-2 sm:gap-4'>
+          <Link href='/rituals'>
+            <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
+              <Calendar className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+              <span className='hidden sm:inline'>Rituals</span>
+            </a>
+          </Link>
           <Link href='/home'>
             <a 
               onClick={handleFeedClick}
@@ -85,14 +91,6 @@ export function GlobalDesktopHeader(): JSX.Element {
             </a>
           </Link>
           {user && (
-            <Link href='/settings'>
-              <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
-                <Settings className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
-                <span className='hidden sm:inline'>Settings</span>
-              </a>
-            </Link>
-          )}
-          {user && (
             <Link href='/story-bookmarks'>
               <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
                 <Bookmark className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
@@ -100,12 +98,14 @@ export function GlobalDesktopHeader(): JSX.Element {
               </a>
             </Link>
           )}
-          <Link href='/rituals'>
-            <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
-              <Calendar className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
-              <span className='hidden sm:inline'>Rituals</span>
-            </a>
-          </Link>
+          {user && (
+            <Link href='/settings'>
+              <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
+                <Settings className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+                <span className='hidden sm:inline'>Settings</span>
+              </a>
+            </Link>
+          )}
         </nav>
 
         {/* User Actions */}

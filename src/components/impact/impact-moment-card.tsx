@@ -189,17 +189,17 @@ export function ImpactMomentCard({
             </div>
           )}
 
-          {/* Joined Badge */}
+          {/* Shared Ritual Participation Badge */}
           {moment.joinedFromMomentId && (
             <div className='mb-3 flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 dark:border-purple-800 dark:bg-purple-900/20'>
               <span className='text-lg'>🌱</span>
               <span className='text-sm font-medium text-purple-700 dark:text-purple-300'>
-                Joined{' '}
+                Shared ritual participation from{' '}
                 {loadingOriginal
                   ? '...'
                   : originalMoment
                   ? `@${originalMoment.user.username}`
-                  : 'this action'}
+                  : 'another user'}
               </span>
               {originalMoment && (
                 <Link href={`/impact/${moment.joinedFromMomentId}`}>
@@ -240,7 +240,7 @@ export function ImpactMomentCard({
             )}
           </div>
 
-          {/* Impact Moment Text */}
+          {/* Ritual Participation Text */}
           <p className='mb-3 whitespace-pre-wrap break-words text-gray-900 dark:text-white'>
             {moment.text}
           </p>
@@ -366,7 +366,7 @@ export function ImpactMomentCard({
                 <img
                   key={index}
                   src={imageUrl}
-                  alt={`Impact moment image ${index + 1}`}
+                  alt={`Ritual share image ${index + 1}`}
                   className='h-48 w-full object-cover'
                 />
               ))}
@@ -461,14 +461,14 @@ export function ImpactMomentCard({
                     onClick={async () => {
                       if (
                         !window.confirm(
-                          'Are you sure you want to delete this impact moment? This action cannot be undone.'
+                          'Are you sure you want to delete this ritual share? This action cannot be undone.'
                         )
                       ) {
                         return;
                       }
 
                       if (!user?.id || !moment.id) {
-                        toast.error('Unable to delete moment');
+                        toast.error('Unable to delete ritual share');
                         return;
                       }
 
@@ -486,22 +486,22 @@ export function ImpactMomentCard({
                         const data = await response.json();
 
                         if (response.ok) {
-                          toast.success('Impact moment deleted successfully');
+                          toast.success('Ritual share deleted successfully');
                           // Reload the page to refresh the feed
                           if (typeof window !== 'undefined') {
                             window.location.reload();
                           }
                         } else {
                           throw new Error(
-                            data.error || 'Failed to delete impact moment'
+                            data.error || 'Failed to delete ritual share'
                           );
                         }
                       } catch (error) {
-                        console.error('Error deleting impact moment:', error);
+                        console.error('Error deleting ritual share:', error);
                         toast.error(
                           error instanceof Error
                             ? error.message
-                            : 'Failed to delete impact moment'
+                            : 'Failed to delete ritual share'
                         );
                       } finally {
                         setDeleting(false);

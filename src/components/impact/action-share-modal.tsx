@@ -35,12 +35,12 @@ export function ActionShareModal({
   const shareText = `${moment.text.substring(0, 150)}${
     moment.text.length > 150 ? '...' : ''
   }`;
-  const shareTitle = `Join This Action: ${moment.user.name}'s Impact Moment`;
+  const shareTitle = `${moment.user.name}'s Ritual Participation`;
   const shareDescription = `${shareText}${
     joinCount > 0
-      ? `\n\n${joinCount} ${joinCount === 1 ? 'ripple' : 'ripples'}`
+      ? `\n\n${joinCount} ${joinCount === 1 ? 'person has' : 'people have'} joined this ritual`
       : ''
-  }\n\nJoin the ripple of positive impact 🌱`;
+  }\n\nShare your ritual participation 🌱`;
 
   const handleEmailShare = async (): Promise<void> => {
     if (!friendEmail) {
@@ -72,18 +72,18 @@ export function ActionShareModal({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to share action');
+        throw new Error(errorData.error || 'Failed to share ritual participation');
       }
 
-      toast.success('Action shared via email! ✨');
+      toast.success('Ritual participation shared via email! ✨');
       closeModal();
       setFriendEmail('');
       setFriendName('');
       setMessage('');
     } catch (error) {
-      console.error('Error sharing action:', error);
+      console.error('Error sharing ritual participation:', error);
       toast.error(
-        error instanceof Error ? error.message : 'Failed to share action'
+        error instanceof Error ? error.message : 'Failed to share ritual participation'
       );
     } finally {
       setSending(false);
@@ -116,10 +116,10 @@ export function ActionShareModal({
             </div>
             <div>
               <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
-                🌱 Share Your Action
+                🌱 Share Your Ritual Participation
               </h2>
               <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
-                Share this action with others to inspire them to join!
+                Share your ritual participation with others to inspire them!
               </p>
             </div>
           </div>
@@ -130,7 +130,7 @@ export function ActionShareModal({
           <div className='mb-2 flex items-center gap-2'>
             <span className='text-lg'>🌱</span>
             <h3 className='font-semibold text-green-900 dark:text-green-100'>
-              {moment.user.name}'s Action
+              {moment.user.name}'s Ritual Participation
             </h3>
           </div>
           <p className='line-clamp-3 text-sm text-green-800 dark:text-green-200'>
@@ -138,7 +138,7 @@ export function ActionShareModal({
           </p>
           {joinCount > 0 && (
             <div className='mt-2 text-xs font-medium text-green-700 dark:text-green-300'>
-              {joinCount} {joinCount === 1 ? 'ripple' : 'ripples'}
+              {joinCount} {joinCount === 1 ? 'person has' : 'people have'} joined this ritual
             </div>
           )}
         </div>
@@ -197,7 +197,7 @@ export function ActionShareModal({
               onChange={(e) => setMessage(e.target.value)}
               placeholder={`Hi${
                 friendName ? ` ${friendName}` : ''
-              }! I thought you'd love to join this action...`}
+              }! I thought you'd love to see this ritual participation...`}
               rows={3}
             />
           </div>
@@ -224,7 +224,7 @@ export function ActionShareModal({
             title={shareTitle}
             description={shareDescription}
             url={rippleUrl}
-            hashtags={['PositiveImpact', 'JoinTheRipple', 'Buzzwin', 'DoGood']}
+            hashtags={['RitualSharing', 'RitualParticipation', 'Buzzwin', 'DoGood']}
             variant='compact'
             showTitle={false}
           />

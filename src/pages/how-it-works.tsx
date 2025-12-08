@@ -11,12 +11,12 @@ export default function HowItWorksPage(): JSX.Element {
   return (
     <>
       <SEO
-        title='How It Works - Reactions, Join, and Ripples | Buzzwin'
-        description='Learn how Buzzwin works: express yourself with reactions, join actions to create impact, and watch ripples spread through our community.'
+        title='How It Works - Ritual Sharing and Participation | Buzzwin'
+        description='Learn how Buzzwin works: express yourself with reactions, join rituals to participate, and share your ritual participations with the community.'
       />
       <PublicLayout
         title='How It Works - Buzzwin'
-        description='Learn how Buzzwin works: express yourself with reactions, join actions to create impact, and watch ripples spread.'
+        description='Learn how Buzzwin works: express yourself with reactions, join rituals to participate, and share your ritual participations.'
       >
         <MainHeader title='How It Works' />
         <div className='mx-auto min-h-screen max-w-4xl bg-main-background px-4 py-12 dark:bg-dark-background'>
@@ -26,13 +26,13 @@ export default function HowItWorksPage(): JSX.Element {
               How Buzzwin Works
             </h1>
             <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400'>
-              A simple, powerful way to amplify good causes. Express yourself with reactions, join actions to create impact, and watch ripples spread.
+              A simple, powerful way to share ritual participation. Express yourself with reactions, join rituals to participate, and share your journey with the community.
             </p>
           </div>
 
           {/* Core Concepts */}
           <div className='mb-16 space-y-8'>
-            {/* Impact Moments */}
+            {/* Ritual Sharing */}
             <section className='rounded-xl border border-gray-200 bg-white p-8 dark:border-gray-700 dark:bg-gray-800'>
               <div className='mb-6 flex items-center gap-4'>
                 <div className='flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-green-500 to-emerald-600'>
@@ -40,24 +40,24 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
                 <div>
                   <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
-                    1. Impact Moments
+                    1. Ritual Sharing
                   </h2>
                   <p className='text-sm text-gray-600 dark:text-gray-400'>
-                    The foundation of everything
+                    Share your ritual participations
                   </p>
                 </div>
               </div>
               <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                Impact Moments are actions you've taken to make a positive difference. They can be big or small—from cooking a healthy meal to volunteering at a shelter.
+                Ritual Participations are when you complete and share rituals. When you finish a ritual, you can share your participation with the community to inspire others.
               </p>
               <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />
-                  <span>Share what you did and how it made you feel</span>
+                  <span>Complete rituals and share your participation</span>
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />
-                  <span>Tag your moment (Mind, Body, Relationships, Nature, Community)</span>
+                  <span>Tag your participation (Mind, Body, Relationships, Nature, Community)</span>
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />
@@ -82,7 +82,7 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
               </div>
               <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                Reactions are lightweight expressions of emotion. Click the "React" button on any Impact Moment to show how it made you feel.
+                Reactions are lightweight expressions of emotion. Click the "React" button on any ritual participation to show how it made you feel.
               </p>
               <div className='grid gap-4 md:grid-cols-3'>
                 <div className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
@@ -115,7 +115,7 @@ export default function HowItWorksPage(): JSX.Element {
               </div>
             </section>
 
-            {/* Join */}
+            {/* Join Rituals */}
             <section className='rounded-xl border-2 border-purple-300 bg-purple-50 p-8 dark:border-purple-700 dark:bg-purple-900/20'>
               <div className='mb-6 flex items-center gap-4'>
                 <div className='flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-600 to-pink-600'>
@@ -123,25 +123,25 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
                 <div>
                   <h2 className='text-2xl font-bold text-purple-900 dark:text-purple-100'>
-                    3. Join This Action
+                    3. Join This Ritual
                   </h2>
                   <p className='text-sm text-purple-700 dark:text-purple-300'>
-                    Create your own impact moment
+                    Participate in rituals and share your journey
                   </p>
                 </div>
               </div>
               <p className='mb-4 text-purple-800 dark:text-purple-200'>
-                <strong>This is different from reactions.</strong> When you join an action, you're committing to do the same thing yourself and creating a ripple in the chain.
+                <strong>This is different from reactions.</strong> When you join a ritual, you're committing to participate in that ritual yourself and share your participation with the community.
               </p>
               <div className='mb-4 space-y-3'>
                 <div className='flex items-start gap-3 rounded-lg bg-white/50 p-3 dark:bg-gray-800/50'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-purple-600 dark:text-purple-400' />
                   <div>
                     <p className='font-semibold text-purple-900 dark:text-purple-100'>
-                      Creates Your Own Impact Moment
+                      Share Your Ritual Participation
                     </p>
                     <p className='text-sm text-purple-700 dark:text-purple-300'>
-                      Share how you're doing the same action in your own way
+                      Complete the ritual and share your participation with the community
                     </p>
                   </div>
                 </div>
@@ -149,10 +149,10 @@ export default function HowItWorksPage(): JSX.Element {
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-purple-600 dark:text-purple-400' />
                   <div>
                     <p className='font-semibold text-purple-900 dark:text-purple-100'>
-                      Links to the Original Action
+                      Connects to the Ritual
                     </p>
                     <p className='text-sm text-purple-700 dark:text-purple-300'>
-                      Your moment is connected to the one that inspired you
+                      Your participation is linked to the ritual you joined
                     </p>
                   </div>
                 </div>
@@ -160,17 +160,17 @@ export default function HowItWorksPage(): JSX.Element {
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-purple-600 dark:text-purple-400' />
                   <div>
                     <p className='font-semibold text-purple-900 dark:text-purple-100'>
-                      Extends the Ripple
+                      Inspires Others
                     </p>
                     <p className='text-sm text-purple-700 dark:text-purple-300'>
-                      Your participation becomes part of the ripple chain
+                      Your participation inspires others to join the ritual too
                     </p>
                   </div>
                 </div>
               </div>
               <div className='rounded-lg border border-purple-200 bg-white p-4 dark:border-purple-800 dark:bg-gray-800'>
                 <p className='text-sm font-medium text-purple-900 dark:text-purple-100'>
-                  💡 Example: Someone posts "Cooked a healthy meal for my family". You click "Join This Action" and share your own version: "Made a nutritious dinner tonight with fresh vegetables". Now there's a ripple showing how this action spread!
+                  💡 Example: Someone shares "Just finished my breathing ritual". You click "Join This Ritual" to participate in the same ritual, then share your own participation: "Completed my breathing practice this morning". Now you're both part of the same ritual community!
                 </p>
               </div>
             </section>
@@ -191,20 +191,20 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
               </div>
               <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                A Ripple is the visual chain showing how an action spread. When someone says "This moment has 23 ripples," it means 23 people joined that action.
+                A Ripple shows how a ritual spreads through the community. When someone says "This ritual has 23 participants," it means 23 people have joined and participated in that ritual.
               </p>
               <div className='mb-6 rounded-lg border-2 border-purple-300 bg-purple-50 p-6 dark:border-purple-700 dark:bg-purple-900/20'>
                 <h3 className='mb-4 text-lg font-semibold text-purple-900 dark:text-purple-100'>
-                  See the Ripple in Action
+                  See the Ritual Community in Action
                 </h3>
                 <div className='space-y-4'>
                   {/* Original */}
                   <div className='rounded-lg border-2 border-purple-300 bg-white p-4 dark:border-purple-700 dark:bg-gray-800'>
                     <div className='mb-2 text-xs font-semibold uppercase text-purple-600 dark:text-purple-400'>
-                      Original Action
+                      Original Ritual Participation
                     </div>
                     <p className='text-sm text-gray-900 dark:text-white'>
-                      "Cooked a healthy meal for my family"
+                      "Just finished my breathing ritual"
                     </p>
                   </div>
 
@@ -218,11 +218,11 @@ export default function HowItWorksPage(): JSX.Element {
                     <div className='mb-2 flex items-center gap-2'>
                       <span className='text-xs'>🌱</span>
                       <span className='text-xs font-semibold text-purple-600 dark:text-purple-400'>
-                        Joined @originaluser
+                        Joined the ritual
                       </span>
                     </div>
                     <p className='text-sm text-gray-900 dark:text-white'>
-                      "Made a nutritious dinner tonight"
+                      "Completed my breathing practice this morning"
                     </p>
                   </div>
 
@@ -236,17 +236,17 @@ export default function HowItWorksPage(): JSX.Element {
                     <div className='mb-2 flex items-center gap-2'>
                       <span className='text-xs'>🌱</span>
                       <span className='text-xs font-semibold text-purple-600 dark:text-purple-400'>
-                        Joined @originaluser
+                        Joined the ritual
                       </span>
                     </div>
                     <p className='text-sm text-gray-900 dark:text-white'>
-                      "I also cooked healthy! Made a big batch of soup"
+                      "I also did my breathing ritual! Feeling calm and centered"
                     </p>
                   </div>
 
                   <div className='pt-2 text-center'>
                     <p className='text-sm font-semibold text-purple-700 dark:text-purple-300'>
-                      Impact is spreading! 🌱
+                      Ritual participation is growing! 🌱
                     </p>
                   </div>
                 </div>
@@ -254,15 +254,15 @@ export default function HowItWorksPage(): JSX.Element {
               <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400' />
-                  <span>View the ripple to see everyone who joined</span>
+                  <span>View the ritual to see everyone who joined</span>
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400' />
-                  <span>See how actions spread through the community</span>
+                  <span>See how rituals spread through the community</span>
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400' />
-                  <span>Track your impact and inspire others</span>
+                  <span>Track your ritual participation and inspire others</span>
                 </li>
               </ul>
             </section>
@@ -289,13 +289,13 @@ export default function HowItWorksPage(): JSX.Element {
               <div className='rounded-lg border-2 border-purple-300 bg-purple-50 p-6 dark:border-purple-700 dark:bg-purple-900/20'>
                 <h3 className='mb-3 flex items-center gap-2 text-lg font-semibold text-purple-900 dark:text-purple-100'>
                   <span className='text-xl'>🌱</span>
-                  Join This Action
+                  Join This Ritual
                 </h3>
                 <ul className='space-y-2 text-sm text-purple-700 dark:text-purple-300'>
-                  <li>• Creates your own Impact Moment</li>
-                  <li>• Requires action and commitment</li>
-                  <li>• Extends the ripple chain</li>
-                  <li>• Builds visible chains of impact</li>
+                  <li>• Participate in the ritual yourself</li>
+                  <li>• Share your ritual participation</li>
+                  <li>• Connects you to the ritual community</li>
+                  <li>• Builds visible ritual participation chains</li>
                 </ul>
               </div>
             </div>
@@ -309,12 +309,12 @@ export default function HowItWorksPage(): JSX.Element {
             <div className='space-y-6'>
               <div className='rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900'>
                 <h3 className='mb-3 text-lg font-semibold text-gray-900 dark:text-white'>
-                  Reacting to an Impact Moment
+                  Reacting to a Ritual Participation
                 </h3>
                 <ol className='space-y-2 text-sm text-gray-600 dark:text-gray-400'>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>1.</span>
-                    <span>You see an Impact Moment that resonates with you</span>
+                    <span>You see a ritual participation that resonates with you</span>
                   </li>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>2.</span>
@@ -333,40 +333,40 @@ export default function HowItWorksPage(): JSX.Element {
 
               <div className='rounded-lg border-2 border-purple-300 bg-purple-50 p-6 dark:border-purple-700 dark:bg-purple-900/20'>
                 <h3 className='mb-3 text-lg font-semibold text-purple-900 dark:text-purple-100'>
-                  Joining an Action
+                  Joining a Ritual
                 </h3>
                 <ol className='space-y-2 text-sm text-purple-700 dark:text-purple-300'>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>1.</span>
-                    <span>You see an Impact Moment you want to do yourself</span>
+                    <span>You see a ritual you want to participate in</span>
                   </li>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>2.</span>
-                    <span>Click "Join This Action" button</span>
+                    <span>Click "Join This Ritual" button</span>
                   </li>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>3.</span>
-                    <span>You're redirected to the join page</span>
+                    <span>You're redirected to the ritual page</span>
                   </li>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>4.</span>
-                    <span>Create your own Impact Moment describing how you're joining</span>
+                    <span>Complete the ritual and share your participation</span>
                   </li>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-purple-600 dark:text-purple-400'>5.</span>
-                    <span>You're redirected to the ripple page to see your join</span>
+                    <span>Your participation is shared with the community</span>
                   </li>
                 </ol>
               </div>
 
               <div className='rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-900'>
                 <h3 className='mb-3 text-lg font-semibold text-gray-900 dark:text-white'>
-                  Viewing a Ripple
+                  Viewing a Ritual
                 </h3>
                 <ol className='space-y-2 text-sm text-gray-600 dark:text-gray-400'>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-teal-600 dark:text-teal-400'>1.</span>
-                    <span>Click "View ripple" or "X ripples" on an Impact Moment</span>
+                    <span>Click "View ritual" or see ritual participations</span>
                   </li>
                   <li className='flex items-start gap-2'>
                     <span className='font-semibold text-teal-600 dark:text-teal-400'>2.</span>

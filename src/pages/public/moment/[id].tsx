@@ -90,8 +90,8 @@ export default function PublicImpactMomentPage(): JSX.Element {
               }
         } as ImpactMomentWithUser);
       } catch (error) {
-        console.error('Error fetching impact moment:', error);
-        toast.error('Failed to load impact moment');
+        console.error('Error fetching ritual share:', error);
+        toast.error('Failed to load ritual share');
       } finally {
         setLoading(false);
       }
@@ -165,11 +165,11 @@ export default function PublicImpactMomentPage(): JSX.Element {
   if (loading) {
     return (
       <PublicLayout
-        title='Impact Moment - Buzzwin'
-        description='View this positive impact moment on Buzzwin'
+        title='Ritual Share - Buzzwin'
+        description='View this ritual participation on Buzzwin'
         ogUrl={`${siteURL || 'https://buzzwin.com'}/public/moment/${id}`}
       >
-        <MainHeader title='Impact Moment' />
+        <MainHeader title='Ritual Share' />
         <div className='mx-auto max-w-2xl px-4 py-8'>
           <Loading className='mt-5' />
         </div>
@@ -180,10 +180,10 @@ export default function PublicImpactMomentPage(): JSX.Element {
   if (!moment) {
     return (
       <PublicLayout
-        title='Impact Moment Not Found - Buzzwin'
-        description='The impact moment you are looking for could not be found'
+        title='Ritual Share Not Found - Buzzwin'
+        description='The ritual share you are looking for could not be found'
       >
-        <MainHeader title='Impact Moment' />
+        <MainHeader title='Ritual Share' />
         <div className='mx-auto max-w-2xl px-4 py-8'>
           <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
             <p className='mb-4 text-gray-600 dark:text-gray-400'>
@@ -208,17 +208,17 @@ export default function PublicImpactMomentPage(): JSX.Element {
   return (
     <>
       <SEO
-        title={`Impact Moment by ${moment.user.name} - Buzzwin`}
+        title={`Ritual Share by ${moment.user.name} - Buzzwin`}
         description={moment.text.substring(0, 160)}
         image={moment.user.photoURL || undefined}
       />
       <PublicLayout
-        title={`Impact Moment by ${moment.user.name} - Buzzwin`}
+        title={`Ritual Share by ${moment.user.name} - Buzzwin`}
         description={moment.text.substring(0, 160)}
         ogImage={moment.user.photoURL || undefined}
         ogUrl={publicUrl}
       >
-        <MainHeader title='Impact Moment' />
+        <MainHeader title='Ritual Share' />
 
         <div className='mx-auto max-w-2xl px-4 py-8'>
           {/* Back Button */}
@@ -231,7 +231,7 @@ export default function PublicImpactMomentPage(): JSX.Element {
             </Link>
           </div>
 
-          {/* Impact Moment */}
+          {/* Ritual Share */}
           <div className='mb-6'>
             <ImpactMomentCard
               moment={moment}
@@ -304,7 +304,7 @@ export default function PublicImpactMomentPage(): JSX.Element {
                 Join the Community
               </h3>
               <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
-                Sign in to comment, react, and share your own impact moments!
+                Sign in to comment, react, and share your own ritual participations!
               </p>
               <Link href={`/login?redirect=/public/moment/${moment.id}`}>
                 <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700'>

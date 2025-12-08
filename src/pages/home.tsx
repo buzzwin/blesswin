@@ -526,11 +526,11 @@ export default function HomeFeed(): JSX.Element {
           <Loading className='mt-5' />
         ) : moments.length === 0 && featuredStories.length === 0 ? (
           <StatsEmpty
-            title='Welcome to the Impact Feed!'
-            description="Be the first to share an Impact Moment! Share a small good deed you did today - whether it's cooking a healthy meal, picking up trash, or calling an old friend."
+            title='Welcome to the Ritual Feed!'
+            description="Be the first to share a ritual participation! Share how you completed a ritual today - whether it's your breathing practice, morning meditation, or any other ritual you participated in."
             imageData={{
               src: '/assets/no-buzz.png',
-              alt: 'No impact moments yet'
+              alt: 'No ritual participations yet'
             }}
           />
         ) : (

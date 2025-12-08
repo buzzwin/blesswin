@@ -65,7 +65,7 @@ export function RealStoriesSection(): JSX.Element {
               </h3>
             </div>
             <p className='mb-4 text-gray-700 dark:text-gray-300'>
-              Every story has a "Get Inspired" button. Click it to create an Impact Moment and share how the story motivates you to make a difference. Turn inspiration into action and earn bonus karma points!
+              Every story has a "Get Inspired" button. Click it to create a ritual and share how the story motivates you to make a difference. Turn inspiration into ritual participation and earn bonus karma points!
             </p>
             <Link href='/real-stories'>
               <a className='inline-flex items-center gap-2 text-sm font-semibold text-purple-700 hover:underline dark:text-purple-300'>

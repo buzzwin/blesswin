@@ -23,7 +23,7 @@ export default async function handler(
   const { id } = req.query;
 
   if (!id || typeof id !== 'string') {
-    res.status(400).json({ error: 'Impact moment ID is required' });
+    res.status(400).json({ error: 'Ritual share ID is required' });
     return;
   }
 
@@ -31,7 +31,7 @@ export default async function handler(
   const momentDoc = await getDoc(momentDocRef);
 
   if (!momentDoc.exists()) {
-    res.status(404).json({ error: 'Impact moment not found' });
+    res.status(404).json({ error: 'Ritual share not found' });
     return;
   }
 
@@ -49,7 +49,7 @@ export default async function handler(
 
       // Verify ownership
       if (momentData.createdBy !== userId) {
-        res.status(403).json({ error: 'Forbidden. You can only edit your own impact moments.' });
+        res.status(403).json({ error: 'Forbidden. You can only edit your own ritual shares.' });
         return;
       }
 
@@ -117,12 +117,12 @@ export default async function handler(
 
       res.status(200).json({
         success: true,
-        message: 'Impact moment updated successfully'
+        message: 'Ritual share updated successfully'
       });
     } catch (error) {
-      console.error('Error updating impact moment:', error);
+      console.error('Error updating ritual share:', error);
       res.status(500).json({
-        error: 'Failed to update impact moment',
+        error: 'Failed to update ritual share',
         message: error instanceof Error ? error.message : 'Unknown error'
       });
     }
@@ -138,7 +138,7 @@ export default async function handler(
 
       // Verify ownership
       if (momentData.createdBy !== userId) {
-        res.status(403).json({ error: 'Forbidden. You can only delete your own impact moments.' });
+        res.status(403).json({ error: 'Forbidden. You can only delete your own ritual shares.' });
         return;
       }
 
@@ -146,12 +146,12 @@ export default async function handler(
 
       res.status(200).json({
         success: true,
-        message: 'Impact moment deleted successfully'
+        message: 'Ritual share deleted successfully'
       });
     } catch (error) {
-      console.error('Error deleting impact moment:', error);
-      res.status(500).json({
-        error: 'Failed to delete impact moment',
+      console.error('Error deleting ritual share:', error);
+        res.status(500).json({
+          error: 'Failed to delete ritual share',
         message: error instanceof Error ? error.message : 'Unknown error'
       });
     }

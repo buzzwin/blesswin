@@ -51,7 +51,7 @@ export async function sendRitualReminderEmail(data: RitualReminderEmailData): Pr
     ` : ''}
     
     <p style="margin: 20px 0 0; color: #666666; font-size: 14px; line-height: 1.6;">
-      Complete your ritual and share your impact moment with the community!
+      Complete your ritual and share your participation with the community! You can also join other rituals that inspire you.
     </p>
   `;
   

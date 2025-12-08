@@ -68,7 +68,7 @@ export function UserImpactMoments({
 
         setMoments(momentsWithUsers);
       } catch (error) {
-        console.error('Error fetching user impact moments:', error);
+        console.error('Error fetching user ritual participations:', error);
       } finally {
         setLoading(false);
       }
@@ -84,8 +84,8 @@ export function UserImpactMoments({
   if (moments.length === 0) {
     return (
       <StatsEmpty
-        title='No impact moments yet'
-        description='When you share impact moments, they will show up here.'
+        title='No ritual participations yet'
+        description='When you share your ritual participations, they will show up here.'
       />
     );
   }

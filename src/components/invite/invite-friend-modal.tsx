@@ -150,7 +150,7 @@ export function InviteFriendModal({
           {/* Info Box */}
           <div className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
             <p className='text-sm text-purple-900 dark:text-purple-100'>
-              <strong>What happens next?</strong> Your friend will receive an email invitation with a link to join Buzzwin. They'll be able to create an account and start sharing their impact moments!
+              <strong>What happens next?</strong> Your friend will receive an email invitation with a link to join Buzzwin. They'll be able to create an account and start sharing their ritual participations!
             </p>
           </div>
 
