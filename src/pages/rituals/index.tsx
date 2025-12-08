@@ -11,6 +11,7 @@ import { RitualSettings } from '@components/rituals/ritual-settings';
 import { RitualFormModal } from '@components/rituals/ritual-form-modal';
 import { RitualShareModal } from '@components/rituals/ritual-share-modal';
 import { StreakVisualization } from '@components/rituals/streak-visualization';
+import { WeeklyTracker } from '@components/rituals/weekly-tracker';
 import { MyRitualsSection } from '@components/rituals/my-rituals-section';
 import { KarmaLevelSystem } from '@components/rituals/karma-level-system';
 import { ProgressBars } from '@components/rituals/progress-bars';
@@ -472,6 +473,46 @@ export default function RitualsPage(): JSX.Element {
                 searchQuery={searchQuery}
                 sortBy={sortBy}
                 onCountsUpdate={setJoinedRitualsCount}
+                allCompletions={completions}
+                onEditRitual={(ritual) => {
+                  setEditingRitual(ritual);
+                  openRitualFormModal();
+                }}
+                onDeleteRitual={async (ritual) => {
+                  if (!ritual.id || !user?.id) return;
+                  
+                  if (!window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
+                    return;
+                  }
+
+                  try {
+                    const response = await fetch(`/api/rituals/${ritual.id}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ userId: user.id })
+                    });
+
+                    if (response.ok) {
+                      toast.success('Ritual deleted successfully');
+                      // Refresh rituals
+                      if (user?.id) {
+                        const todayResponse = await fetch(`/api/rituals/today?userId=${user.id}`);
+                        if (todayResponse.ok) {
+                          const data = await todayResponse.json();
+                          setTodayRituals(data.rituals);
+                        }
+                      }
+                    } else {
+                      const errorData = await response.json();
+                      toast.error(errorData.error || 'Failed to delete ritual');
+                    }
+                  } catch (error) {
+                    console.error('Error deleting ritual:', error);
+                    toast.error('Failed to delete ritual');
+                  }
+                }}
               />
             </div>
           )}
@@ -496,6 +537,41 @@ export default function RitualsPage(): JSX.Element {
                   setEditingRitual(ritual);
                   openRitualFormModal();
                 }}
+                onDeleteRitual={async (ritual) => {
+                  if (!ritual.id || !user?.id) return;
+                  
+                  if (!window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
+                    return;
+                  }
+
+                  try {
+                    const response = await fetch(`/api/rituals/${ritual.id}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ userId: user.id })
+                    });
+
+                    if (response.ok) {
+                      toast.success('Ritual deleted successfully');
+                      // Refresh rituals
+                      if (user?.id) {
+                        const todayResponse = await fetch(`/api/rituals/today?userId=${user.id}`);
+                        if (todayResponse.ok) {
+                          const data = await todayResponse.json();
+                          setTodayRituals(data.rituals);
+                        }
+                      }
+                    } else {
+                      const errorData = await response.json();
+                      toast.error(errorData.error || 'Failed to delete ritual');
+                    }
+                  } catch (error) {
+                    console.error('Error deleting ritual:', error);
+                    toast.error('Failed to delete ritual');
+                  }
+                }}
                 onCompleteAndShare={handleCompleteAndShare}
                 onShareRitual={handleShareRitual}
                 completingRitualId={completingRitualId}
@@ -511,6 +587,7 @@ export default function RitualsPage(): JSX.Element {
                 filterType='created'
                 searchQuery={searchQuery}
                 sortBy={sortBy}
+                allCompletions={completions}
               />
             </div>
           )}
@@ -534,6 +611,41 @@ export default function RitualsPage(): JSX.Element {
                   setEditingRitual(ritual);
                   openRitualFormModal();
                 }}
+                onDeleteRitual={async (ritual) => {
+                  if (!ritual.id || !user?.id) return;
+                  
+                  if (!window.confirm('Are you sure you want to delete this ritual? This action cannot be undone.')) {
+                    return;
+                  }
+
+                  try {
+                    const response = await fetch(`/api/rituals/${ritual.id}`, {
+                      method: 'DELETE',
+                      headers: {
+                        'Content-Type': 'application/json'
+                      },
+                      body: JSON.stringify({ userId: user.id })
+                    });
+
+                    if (response.ok) {
+                      toast.success('Ritual deleted successfully');
+                      // Refresh rituals
+                      if (user?.id) {
+                        const todayResponse = await fetch(`/api/rituals/today?userId=${user.id}`);
+                        if (todayResponse.ok) {
+                          const data = await todayResponse.json();
+                          setTodayRituals(data.rituals);
+                        }
+                      }
+                    } else {
+                      const errorData = await response.json();
+                      toast.error(errorData.error || 'Failed to delete ritual');
+                    }
+                  } catch (error) {
+                    console.error('Error deleting ritual:', error);
+                    toast.error('Failed to delete ritual');
+                  }
+                }}
                 onCompleteAndShare={handleCompleteAndShare}
                 onShareRitual={handleShareRitual}
                 completingRitualId={completingRitualId}
@@ -549,12 +661,21 @@ export default function RitualsPage(): JSX.Element {
                 }}
                 searchQuery={searchQuery}
                 sortBy={sortBy}
+                allCompletions={completions}
               />
             </div>
           )}
 
           {activeTab === 'progress' && stats && (
             <div className='space-y-3 md:space-y-4'>
+              {/* Weekly Tracker - Compact for mobile */}
+              <div className='rounded-lg border border-gray-200 bg-white p-2 dark:border-gray-700 dark:bg-gray-800 md:p-3'>
+                <h3 className='mb-2 text-xs font-semibold text-gray-900 dark:text-white md:mb-2.5 md:text-sm'>
+                  This Week
+                </h3>
+                <WeeklyTracker completions={completions} />
+              </div>
+
               {/* Progress Bars */}
               <div className='grid grid-cols-1 gap-3 md:gap-4 lg:grid-cols-2'>
                 <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
@@ -809,10 +930,17 @@ export default function RitualsPage(): JSX.Element {
           // Refresh rituals after create/update
           if (user?.id) {
             try {
+              // Refresh today's rituals
               const response = await fetch(`/api/rituals/today?userId=${user.id}`);
               if (response.ok) {
                 const data = await response.json();
                 setTodayRituals(data.rituals);
+              }
+              // Trigger a re-render by switching tabs briefly
+              // This will cause joined rituals to refetch
+              const currentTab = activeTab;
+              if (currentTab !== 'joined') {
+                setActiveTab('joined');
               }
             } catch (error) {
               console.error('Error refreshing rituals:', error);

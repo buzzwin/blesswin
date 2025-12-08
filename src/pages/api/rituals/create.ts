@@ -78,6 +78,7 @@ export default async function handler(
     const ritualScope: RitualScope = scope === 'public' ? 'public' : 'personalized';
 
     // Create custom ritual document
+    // Creator automatically joins their own ritual
     const ritualDoc: Record<string, unknown> = {
       title: title.trim(),
       description: description.trim(),
@@ -94,7 +95,7 @@ export default async function handler(
       fromRealStory: storyId ? true : false,
       storyId: storyId || null,
       storyTitle: storyTitle || null,
-      joinedByUsers: [], // Initialize empty
+      joinedByUsers: [userId], // Creator automatically joins their own ritual
       ...(createdFromMomentId && { createdFromMomentId })
     };
 
@@ -106,7 +107,8 @@ export default async function handler(
       const publicRitualDoc = {
         ...ritualDoc,
         sourceRitualId: docRef.id, // Link back to user's copy
-        sourceUserId: userId
+        sourceUserId: userId,
+        joinedByUsers: [userId] // Creator also joins the public version
       };
       await addDoc(ritualsCollection, publicRitualDoc as any);
     }

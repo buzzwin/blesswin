@@ -3,7 +3,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { RitualCard } from './ritual-card';
 import { Loading } from '@components/ui/loading';
 import { Users } from 'lucide-react';
-import type { RitualDefinition } from '@lib/types/ritual';
+import type { RitualDefinition, RitualCompletion } from '@lib/types/ritual';
 import { filterAndSortRituals } from '@lib/utils/ritual-filtering';
 import type { SortOption } from '@components/rituals/rituals-sort';
 
@@ -19,6 +19,9 @@ interface JoinedRitualsSectionProps {
   searchQuery?: string;
   sortBy?: SortOption;
   onCountsUpdate?: (count: number) => void;
+  allCompletions?: RitualCompletion[];
+  onEditRitual?: (ritual: RitualDefinition) => void;
+  onDeleteRitual?: (ritual: RitualDefinition) => void;
 }
 
 export function JoinedRitualsSection({
@@ -29,7 +32,10 @@ export function JoinedRitualsSection({
   onRefetch,
   searchQuery = '',
   sortBy = 'popularity',
-  onCountsUpdate
+  onCountsUpdate,
+  allCompletions = [],
+  onEditRitual,
+  onDeleteRitual
 }: JoinedRitualsSectionProps): JSX.Element {
   const { user } = useAuth();
   const [joinedRituals, setJoinedRituals] = useState<RitualDefinition[]>([]);
@@ -62,6 +68,12 @@ export function JoinedRitualsSection({
       const response = await fetch(`/api/rituals/my-rituals?userId=${user.id}`);
       const data = await response.json();
 
+      console.log('[JOINED-RITUALS] Fetched data:', {
+        joinedRitualsCount: data.joinedRituals?.length || 0,
+        joinedRitualIds: data.joinedRituals?.map((r: RitualDefinition) => r.id),
+        joinedRitualTitles: data.joinedRituals?.map((r: RitualDefinition) => r.title)
+      });
+
       if (response.ok && data.joinedRituals) {
         // Mark completion status for each ritual
         const ritualsWithCompletion = data.joinedRituals.map((ritual: RitualDefinition) => ({
@@ -79,7 +91,7 @@ export function JoinedRitualsSection({
     } finally {
       setLoading(false);
     }
-  }, [user?.id, completedRitualIds]);
+  }, [user?.id, completedRitualIds, onCountsUpdate]);
 
   useEffect(() => {
     void fetchJoinedRituals();
@@ -162,6 +174,10 @@ export function JoinedRitualsSection({
               showJoinButton={false}
               ritualScope={ritual.scope}
               onLeaveSuccess={fetchJoinedRituals}
+              karmaReward={10}
+              allCompletions={allCompletions}
+              onEditRitual={onEditRitual ? () => onEditRitual(ritual) : undefined}
+              onDeleteRitual={onDeleteRitual ? () => onDeleteRitual(ritual) : undefined}
             />
           ))}
         </div>

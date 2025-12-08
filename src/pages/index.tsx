@@ -22,6 +22,7 @@ import { RealStoriesSection } from '@components/home/real-stories-section';
 import { DailyRitualsSection } from '@components/home/daily-rituals-section';
 import { siteURL } from '@lib/env';
 import Head from 'next/head';
+import { Loading } from '@components/ui/loading';
 
 export default function Home(): JSX.Element {
   const router = useRouter();
@@ -31,6 +32,14 @@ export default function Home(): JSX.Element {
   // The AuthContextProvider wraps all pages in _app.tsx
   const authContext = useAuth();
   const user = authContext.user;
+  const { loading: authLoading } = authContext;
+
+  // Redirect logged-in users to rituals page immediately
+  useEffect(() => {
+    if (!authLoading && user) {
+      void router.replace('/rituals');
+    }
+  }, [user, authLoading, router]);
 
   useEffect(() => {
     const handleRouteChangeStart = (): void => {
@@ -65,6 +74,11 @@ export default function Home(): JSX.Element {
       void router.push('/login');
     }
   };
+
+  // Don't render content if user is logged in (will redirect)
+  if (!authLoading && user) {
+    return <Loading />;
+  }
 
   const impactAreas = [
     {

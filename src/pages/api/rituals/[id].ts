@@ -178,7 +178,24 @@ export default async function handler(
   } else if (req.method === 'DELETE') {
     // Delete ritual
     try {
+      const ritualData = ritualDoc.data();
+      const ritualScope = ritualData.scope as RitualScope || 'personalized';
+
+      // Delete from custom_rituals
       await deleteDoc(ritualDocRef);
+
+      // If it was public, also delete from main rituals collection
+      if (ritualScope === 'public') {
+        const publicRitualsQuery = query(
+          ritualsCollection,
+          where('sourceRitualId', '==', id),
+          where('sourceUserId', '==', userId)
+        );
+        const publicRitualsSnapshot = await getDocs(publicRitualsQuery);
+        for (const publicRitualDoc of publicRitualsSnapshot.docs) {
+          await firestoreDeleteDoc(publicRitualDoc.ref);
+        }
+      }
 
       res.status(200).json({
         success: true,

@@ -10,8 +10,9 @@ import {
   effortLevelLabels, 
   effortLevelIcons 
 } from '@lib/types/impact-moment';
-import type { RitualDefinition, RitualScope } from '@lib/types/ritual';
-import { Check, X, Sparkles, Share2, Users, ArrowRight, UserPlus, Globe, Lock } from 'lucide-react';
+import type { RitualDefinition, RitualScope, RitualCompletion } from '@lib/types/ritual';
+import { Check, X, Sparkles, Share2, Users, ArrowRight, UserPlus, Globe, Lock, Edit2, Trash2 } from 'lucide-react';
+import { WeeklyTracker } from './weekly-tracker';
 
 interface RitualCardProps {
   ritual: RitualDefinition;
@@ -30,6 +31,9 @@ interface RitualCardProps {
   karmaReward?: number; // Karma points earned on completion
   isOwnRitual?: boolean; // Whether this ritual is owned by the current user
   onVisibilityChange?: () => void; // Callback when visibility changes
+  allCompletions?: RitualCompletion[]; // All user completions to filter by ritualId
+  onEditRitual?: () => void; // Callback for editing ritual
+  onDeleteRitual?: () => void; // Callback for deleting ritual
 }
 
 export function RitualCard({
@@ -48,23 +52,38 @@ export function RitualCard({
   onLeaveSuccess,
   karmaReward,
   isOwnRitual = false,
-  onVisibilityChange
+  onVisibilityChange,
+  allCompletions = [],
+  onEditRitual,
+  onDeleteRitual
 }: RitualCardProps): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
   const [showActions, setShowActions] = useState(!completed);
   const [joining, setJoining] = useState(false);
   const [leaving, setLeaving] = useState(false);
+  // Creator is automatically considered as joined
+  const isCreator = (ritual as any).createdBy === user?.id || (ritual as any).sourceUserId === user?.id;
   const [hasJoined, setHasJoined] = useState(
-    ritual.joinedByUsers?.includes(user?.id || '') || false
+    ritual.joinedByUsers?.includes(user?.id || '') || isCreator || false
   );
   const [togglingVisibility, setTogglingVisibility] = useState(false);
+  
+  // Determine if user is the creator (for showing delete button)
+  const userIsCreator = (ritual as any).createdBy === user?.id || (ritual as any).sourceUserId === user?.id;
+
+  // Filter completions for this specific ritual
+  const ritualCompletions = allCompletions.filter(
+    c => c.ritualId === ritual.id
+  );
 
   // Update hasJoined when ritual or user changes
+  // Creator is automatically considered as joined
   useEffect(() => {
-    const isJoined = ritual.joinedByUsers?.includes(user?.id || '') || false;
+    const isCreator = (ritual as any).createdBy === user?.id || (ritual as any).sourceUserId === user?.id;
+    const isJoined = ritual.joinedByUsers?.includes(user?.id || '') || isCreator || false;
     setHasJoined(isJoined);
-  }, [ritual.joinedByUsers, user?.id]);
+  }, [ritual.joinedByUsers, (ritual as any).createdBy, user?.id]);
 
   const handleJoinRitual = async (): Promise<void> => {
     console.log('🔵 Join Ritual Clicked:', {
@@ -251,26 +270,84 @@ export function RitualCard({
         : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800',
       completed && 'opacity-75'
     )}>
-      {/* Badge */}
+      {/* Badge and Info */}
       <div className='mb-2 flex items-center justify-between md:mb-3'>
-        {/* Only show badge if not joined, or if it's a global ritual */}
-        {(!hasJoined || isGlobal) && (
-          <span className={cn(
-            'rounded-full px-2 py-0.5 text-xs font-semibold md:px-3 md:py-1',
-            isGlobal
-              ? 'bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200'
-              : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-          )}>
-            {isGlobal ? 'Global Ritual of the Day' : 'Recommended for You'}
-          </span>
-        )}
-        {/* Show "Joined" badge if user has joined and it's not global */}
-        {hasJoined && !isGlobal && (
-          <span className='rounded-full bg-green-200 px-2 py-0.5 text-xs font-semibold text-green-800 dark:bg-green-800 dark:text-green-200 md:px-3 md:py-1'>
-            Joined
-          </span>
-        )}
         <div className='flex items-center gap-2'>
+          {/* Only show badge if not joined, or if it's a global ritual */}
+          {(!hasJoined || isGlobal) && (
+            <span className={cn(
+              'rounded-full px-2 py-0.5 text-xs font-semibold md:px-3 md:py-1',
+              isGlobal
+                ? 'bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200'
+                : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+            )}>
+              {isGlobal ? 'Global Ritual of the Day' : 'Recommended for You'}
+            </span>
+          )}
+          {/* Joined indicator */}
+          {hasJoined && (
+            <span className='flex items-center gap-1 text-[10px] font-medium text-green-700 dark:text-green-300 md:text-xs'>
+              <Check className='h-3 w-3' />
+              You joined
+            </span>
+          )}
+          {/* Karma reward */}
+          {karmaReward !== undefined && karmaReward > 0 && (
+            <span className='flex items-center gap-1 text-[10px] font-medium text-purple-700 dark:text-purple-300 md:text-xs'>
+              <Sparkles className='h-3 w-3' />
+              {completed ? 'Earned' : 'Earn'} {karmaReward} karma
+            </span>
+          )}
+        </div>
+        <div className='flex items-center gap-1'>
+          {hasJoined && user && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                void handleLeaveRitual();
+              }}
+              disabled={leaving}
+              className={cn(
+                'rounded-full border border-red-300 bg-white px-1.5 py-1 text-[10px] font-medium text-red-600',
+                'transition-colors hover:bg-red-50 dark:border-red-700 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20',
+                'flex items-center justify-center',
+                leaving && 'opacity-50 cursor-not-allowed'
+              )}
+              title='Leave ritual'
+            >
+              {leaving ? (
+                <Sparkles className='h-2.5 w-2.5 animate-spin' />
+              ) : (
+                <X className='h-2.5 w-2.5' />
+              )}
+            </button>
+          )}
+          {userIsCreator && onEditRitual && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onEditRitual();
+              }}
+              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+              aria-label='Edit ritual'
+              title='Edit ritual'
+            >
+              <Edit2 className='h-3.5 w-3.5' />
+            </button>
+          )}
+          {userIsCreator && onDeleteRitual && (
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onDeleteRitual();
+              }}
+              className='rounded-full p-1.5 text-red-600 transition-colors hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900/20 dark:hover:text-red-300'
+              aria-label='Delete ritual'
+              title='Delete ritual'
+            >
+              <Trash2 className='h-3.5 w-3.5' />
+            </button>
+          )}
           {isOwnRitual && (
             <button
               onClick={(e) => {
@@ -283,9 +360,9 @@ export function RitualCard({
               title={ritual.scope === 'public' ? 'Make private' : 'Make public'}
             >
               {ritual.scope === 'public' ? (
-                <Globe className='h-4 w-4 text-blue-600 dark:text-blue-400' />
+                <Globe className='h-3.5 w-3.5 text-blue-600 dark:text-blue-400' />
               ) : (
-                <Lock className='h-4 w-4' />
+                <Lock className='h-3.5 w-3.5' />
               )}
             </button>
           )}
@@ -299,7 +376,7 @@ export function RitualCard({
               aria-label='Share ritual'
               title='Share ritual'
             >
-              <Share2 className='h-4 w-4' />
+              <Share2 className='h-3.5 w-3.5' />
             </button>
           )}
           {completed && (
@@ -348,24 +425,13 @@ export function RitualCard({
         <span>{ritual.durationEstimate}</span>
       </div>
 
-      {/* Karma Reward Display */}
-      {karmaReward !== undefined && karmaReward > 0 && (
-        <div className='mb-2 rounded-lg bg-gradient-to-r from-purple-50 to-pink-50 px-2 py-1.5 dark:from-purple-900/20 dark:to-pink-900/20 md:mb-3 md:px-3 md:py-2'>
-          <div className='flex items-center justify-between'>
-            <div className='flex items-center gap-1.5 md:gap-2'>
-              <Sparkles className='h-3 w-3 text-purple-600 dark:text-purple-400 md:h-4 md:w-4' />
-              <span className='text-xs font-medium text-purple-700 dark:text-purple-300 md:text-sm'>
-                {completed ? 'Earned' : 'Earn'} {karmaReward} karma
-              </span>
-            </div>
-            {completed && (
-              <span className='text-xs font-semibold text-green-600 dark:text-green-400'>
-                ✓
-              </span>
-            )}
-          </div>
+      {/* Weekly Tracker - Completion Status */}
+      {hasJoined && (
+        <div className='mb-2 md:mb-3'>
+          <WeeklyTracker completions={ritualCompletions} />
         </div>
       )}
+
 
       {/* Joined Count */}
       {(ritual.joinedByUsers?.length || 0) > 0 && (
@@ -439,39 +505,6 @@ export function RitualCard({
         </div>
       )}
 
-      {/* Joined Indicator and Leave Button */}
-      {hasJoined && (
-        <div className='mb-2 space-y-1.5 md:mb-3 md:space-y-2'>
-          <div className='rounded-lg border border-green-200 bg-green-50 px-2 py-1.5 text-xs font-medium text-green-700 dark:border-green-800 dark:bg-green-900/20 dark:text-green-300 md:px-3 md:py-2 md:text-sm'>
-            ✓ You joined this ritual
-          </div>
-          {user && (
-            <button
-              onClick={handleLeaveRitual}
-              disabled={leaving}
-              className={cn(
-                'w-full rounded-lg border-2 border-red-300 bg-white px-3 py-2 text-xs font-semibold text-red-600',
-                'transition-colors hover:bg-red-50 dark:border-red-700 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20',
-                'flex items-center justify-center gap-1.5',
-                'md:px-4 md:py-2.5 md:text-sm md:gap-2',
-                leaving && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              {leaving ? (
-                <>
-                  <Sparkles className='h-3 w-3 animate-spin md:h-4 md:w-4' />
-                  Leaving...
-                </>
-              ) : (
-                <>
-                  <X className='h-3 w-3 md:h-4 md:w-4' />
-                  Leave Ritual
-                </>
-              )}
-            </button>
-          )}
-        </div>
-      )}
 
       {/* Action Buttons */}
       {showActions && !completed && (

@@ -2,14 +2,16 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@lib/context/auth-context';
 import { RitualCard } from './ritual-card';
 import { Loading } from '@components/ui/loading';
-import { Plus, Edit2, Users, Sparkles } from 'lucide-react';
-import type { RitualDefinition } from '@lib/types/ritual';
+import { Plus, Edit2, Users, Sparkles, Trash2 } from 'lucide-react';
+import type { RitualDefinition, RitualCompletion } from '@lib/types/ritual';
 import { filterAndSortRituals } from '@lib/utils/ritual-filtering';
 import type { SortOption } from '@components/rituals/rituals-sort';
+import { toast } from 'react-hot-toast';
 
 interface MyRitualsSectionProps {
   onCreateRitual: () => void;
   onEditRitual: (ritual: RitualDefinition) => void;
+  onDeleteRitual?: (ritual: RitualDefinition) => void;
   onCompleteAndShare: (ritual: RitualDefinition) => void;
   onShareRitual: (ritual: RitualDefinition) => void;
   completingRitualId?: string | null;
@@ -23,11 +25,13 @@ interface MyRitualsSectionProps {
   filterType?: 'created'; // Filter to apply to this section (only 'created' now)
   searchQuery?: string; // Search query for filtering rituals
   sortBy?: SortOption; // Sort option
+  allCompletions?: RitualCompletion[]; // All user completions for weekly tracker
 }
 
 export function MyRitualsSection({
   onCreateRitual,
   onEditRitual,
+  onDeleteRitual,
   onCompleteAndShare,
   onShareRitual,
   completingRitualId,
@@ -37,7 +41,8 @@ export function MyRitualsSection({
   onCountsUpdate,
   filterType = 'created',
   searchQuery = '',
-  sortBy = 'popularity'
+  sortBy = 'popularity',
+  allCompletions = []
 }: MyRitualsSectionProps): JSX.Element {
   const { user } = useAuth();
   const [createdRituals, setCreatedRituals] = useState<RitualDefinition[]>([]);
@@ -97,19 +102,22 @@ export function MyRitualsSection({
         
         console.log('📋 Today Ritual IDs to exclude:', Array.from(todayRitualIds));
         
-        // Filter created rituals - exclude those already in "Today's Rituals"
-        // (Smart merge: created rituals scheduled for today appear in "Today's Rituals", not here)
+        // Show ALL created rituals (don't filter out those in "Today's Rituals")
+        // Users should see all their created rituals in the Created tab
         const allCreatedRituals = data.createdRituals || [];
-        const createdRitualsNotInToday = allCreatedRituals.filter(
-          (ritual: RitualDefinition) => !todayRitualIds.has(ritual.id || '')
-        );
-        setCreatedRituals(createdRitualsNotInToday);
+        setCreatedRituals(allCreatedRituals);
         
         // Store ALL joined rituals (we'll filter them in the render based on todayRituals)
         // This ensures we have the full list even if todayRituals changes
         const allJoinedRituals = data.joinedRituals || [];
         console.log('👥 All Joined Rituals:', allJoinedRituals.map((r: RitualDefinition) => ({ id: r.id, title: r.title, joinedByUsers: r.joinedByUsers })));
         setJoinedRituals(allJoinedRituals);
+        
+        console.log('✅ Created Rituals:', {
+          total: allCreatedRituals.length,
+          ritualIds: allCreatedRituals.map(r => r.id),
+          ritualTitles: allCreatedRituals.map(r => r.title)
+        });
         
         // Filter out rituals that are already in today's rituals OR already joined from available rituals
         let filteredAvailable = data.availableRituals || [];
@@ -149,10 +157,7 @@ export function MyRitualsSection({
         
         console.log('✅ My Rituals loaded successfully', {
           totalCreated: allCreatedRituals.length,
-          createdNotInToday: createdRitualsNotInToday.length,
-          createdInToday: allCreatedRituals.length - createdRitualsNotInToday.length,
           totalJoined: allJoinedRituals.length,
-          joinedNotInToday: joinedRitualsNotInToday.length,
           joinedInToday: allJoinedRituals.length - joinedRitualsNotInToday.length,
           todayRitualIds: Array.from(todayRitualIds)
         });
@@ -164,7 +169,7 @@ export function MyRitualsSection({
             myRituals: 0, // No longer used
             available: availableCount,
             joined: allJoinedRituals.length,  // Total joined count
-            created: createdRitualsNotInToday.length
+            created: allCreatedRituals.length  // Total created count (not filtered)
           });
         }
       } else {
@@ -277,6 +282,9 @@ export function MyRitualsSection({
                     showJoinButton={!userHasJoined}
                     ritualScope={ritual.scope || 'personalized'}
                     onJoinSuccess={fetchMyRituals}
+                    allCompletions={allCompletions}
+                    onEditRitual={onEditRitual ? () => onEditRitual(ritual) : undefined}
+                    onDeleteRitual={onDeleteRitual ? () => onDeleteRitual(ritual) : undefined}
                   />
                 );
               })}
@@ -360,26 +368,21 @@ export function MyRitualsSection({
           {filteredAndSortedCreated.length > 0 ? (
             <div className='space-y-2 md:space-y-3 lg:space-y-4'>
               {filteredAndSortedCreated.map((ritual) => (
-                <div key={ritual.id} className='relative'>
-                  <RitualCard
-                    ritual={ritual}
-                    isGlobal={false}
-                    completed={false}
-                    onCompleteAndShare={() => onCompleteAndShare(ritual)}
-                    onShareRitual={() => onShareRitual(ritual)}
-                    loading={completingRitualId === ritual.id}
-                    showJoinButton={false}
-                    isOwnRitual={true}
-                    onVisibilityChange={fetchMyRituals}
-                  />
-                  <button
-                    onClick={() => onEditRitual(ritual)}
-                    className='absolute right-4 top-4 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
-                    aria-label='Edit ritual'
-                  >
-                    <Edit2 className='h-4 w-4' />
-                  </button>
-                </div>
+                <RitualCard
+                  key={ritual.id}
+                  ritual={ritual}
+                  isGlobal={false}
+                  completed={false}
+                  onCompleteAndShare={() => onCompleteAndShare(ritual)}
+                  onShareRitual={() => onShareRitual(ritual)}
+                  loading={completingRitualId === ritual.id}
+                  showJoinButton={false}
+                  isOwnRitual={true}
+                  onVisibilityChange={fetchMyRituals}
+                  allCompletions={allCompletions}
+                  onEditRitual={() => onEditRitual(ritual)}
+                  onDeleteRitual={onDeleteRitual ? () => onDeleteRitual(ritual) : undefined}
+                />
               ))}
             </div>
           ) : (

@@ -63,6 +63,10 @@ export default async function handler(
       } as RitualDefinition;
     });
 
+    // Combine custom rituals with Firestore rituals for joined check
+    // Custom rituals where user is in joinedByUsers should appear in joined rituals
+    const allRitualsForJoinedCheck = [...allFirestoreRituals, ...customRituals];
+
     // Get user-created rituals from main collection (by createdBy or sourceUserId)
     const userCreatedFromMain: RitualDefinition[] = allFirestoreRituals.filter((ritual): ritual is RitualDefinition => {
       const ritualData = ritual as any;
@@ -137,7 +141,18 @@ export default async function handler(
     const availableRituals: RitualDefinition[] = [];
     const joinedRitualIds = new Set<string>();
 
-    allFirestoreRituals.forEach(ritual => {
+    console.log('[MY-RITUALS] Checking joined status:', {
+      totalRitualsToCheck: allRitualsForJoinedCheck.length,
+      customRitualsCount: customRituals.length,
+      customRitualsWithJoinedBy: customRituals.map(r => ({
+        id: r.id,
+        title: r.title,
+        joinedByUsers: r.joinedByUsers
+      }))
+    });
+
+    // Check all rituals (both Firestore and custom) for joined status
+    allRitualsForJoinedCheck.forEach(ritual => {
       const ritualData = ritual as any;
       const joinedByUsers = ritual.joinedByUsers || [];
       const isJoined = joinedByUsers.includes(userId);
@@ -149,8 +164,25 @@ export default async function handler(
         userOwnRitualIds.has(ritual.id || '') ||
         userOwnSourceIds.has(ritualData.sourceRitualId);
 
+      // Check if this is a custom ritual created by the user
+      // Creator is automatically considered as joined
+      // A ritual is a custom ritual if it's in the customRituals array
+      const isCustomRitual = customRituals.some(cr => cr.id === ritual.id);
+      const isCustomRitualCreatedByUser = isCustomRitual && 
+        (ritualData.createdBy === userId || (customRituals.find(cr => cr.id === ritual.id) as any)?.createdBy === userId);
+
       // Handle joined rituals (regardless of scope)
-      if (isJoined) {
+      // Include custom rituals where user is in joinedByUsers OR user is the creator
+      if (isJoined || isCustomRitualCreatedByUser) {
+        console.log('[MY-RITUALS] Found joined ritual:', {
+          id: ritual.id,
+          title: ritual.title,
+          isCustom: customRituals.some(cr => cr.id === ritual.id),
+          isJoined: isJoined,
+          isCustomRitualCreatedByUser: isCustomRitualCreatedByUser,
+          joinedByUsers: joinedByUsers,
+          createdBy: ritualData.createdBy
+        });
         joinedRituals.push(ritual);
         if (ritual.id) {
           joinedRitualIds.add(ritual.id);
@@ -162,6 +194,13 @@ export default async function handler(
         return; // Don't add to available if already joined
       }
 
+      // For available rituals, only check Firestore rituals (not custom rituals)
+      // Custom rituals are private to the user
+      const isFromCustomRituals = customRituals.some(cr => cr.id === ritual.id);
+      if (isFromCustomRituals) {
+        return; // Skip custom rituals for available list
+      }
+
       // For available rituals, include public and global rituals
       // Exclude only if user explicitly owns them
       const isPublic = ritual.scope === 'public' || ritual.scope === 'global';
@@ -170,6 +209,12 @@ export default async function handler(
         // Add to available if it's public/global and user hasn't joined and doesn't own it
         availableRituals.push(ritual);
       }
+    });
+
+    console.log('[MY-RITUALS] Joined rituals result:', {
+      joinedCount: joinedRituals.length,
+      joinedIds: joinedRituals.map(r => r.id),
+      joinedTitles: joinedRituals.map(r => r.title)
     });
 
     // Only show rituals from Firestore - no hardcoded fallback

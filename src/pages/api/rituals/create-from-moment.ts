@@ -198,11 +198,12 @@ export default async function handler(
     const docRef = await addDoc(ritualsCollection, ritualDoc as any);
 
     // Also add to user's custom_rituals so they can complete it
+    // Creator automatically joins their own ritual
     const ritualCopy = {
       ...ritualDoc,
       createdAt: serverTimestamp(),
       scope: 'personalized',
-      joinedByUsers: []
+      joinedByUsers: [userId] // Creator automatically joins their own ritual
     };
     await addDoc(userCustomRitualsCollection(userId), ritualCopy);
 

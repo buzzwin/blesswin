@@ -49,7 +49,7 @@ import type { ReactElement, ReactNode } from 'react';
 
 export default function HomeFeed(): JSX.Element {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -75,6 +75,13 @@ export default function HomeFeed(): JSX.Element {
   } | null>(null);
   const [featuredStories, setFeaturedStories] = useState<RealStory[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(false);
+
+  // Redirect logged-in users to rituals page
+  useEffect(() => {
+    if (!authLoading && user) {
+      void router.replace('/rituals');
+    }
+  }, [user, authLoading, router]);
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -141,11 +148,6 @@ export default function HomeFeed(): JSX.Element {
     }
   };
 
-  useEffect(() => {
-    void fetchMoments();
-    void fetchFeaturedStories();
-  }, []);
-
   // Fetch featured stories for feed - CACHE ONLY (no Gemini calls)
   const fetchFeaturedStories = async (): Promise<void> => {
     try {
@@ -166,58 +168,6 @@ export default function HomeFeed(): JSX.Element {
   };
 
   // Fetch user karma
-  useEffect(() => {
-    if (!user?.id) return;
-    void fetchUserKarma();
-  }, [user?.id]);
-
-  // Fetch today's ritual for banner
-  useEffect(() => {
-    if (!user?.id) return;
-
-    const fetchTodayRitual = async (): Promise<void> => {
-      try {
-        const response = await fetch(`/api/rituals/today?userId=${user.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.rituals?.globalRitual) {
-            const ritual = data.rituals.globalRitual;
-            setTodayRitual(ritual);
-            setRitualCompleted(ritual.completed || false);
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching today's ritual:", error);
-      }
-    };
-
-    void fetchTodayRitual();
-  }, [user?.id]);
-
-  // Fetch ritual stats
-  useEffect(() => {
-    if (!user?.id) return;
-
-    const fetchRitualStats = async (): Promise<void> => {
-      setRitualStatsLoading(true);
-      try {
-        const response = await fetch(`/api/rituals/stats?userId=${user.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          if (data.stats) {
-            setRitualStats(data.stats);
-          }
-        }
-      } catch (error) {
-        console.error('Error fetching ritual stats:', error);
-      } finally {
-        setRitualStatsLoading(false);
-      }
-    };
-
-    void fetchRitualStats();
-  }, [user?.id]);
-
   const fetchUserKarma = async (): Promise<void> => {
     if (!user?.id) return;
     try {
@@ -235,6 +185,66 @@ export default function HomeFeed(): JSX.Element {
       console.error('Error fetching user karma:', error);
     }
   };
+
+  // Fetch today's ritual for banner
+  const fetchTodayRitual = async (): Promise<void> => {
+    if (!user?.id) return;
+    try {
+      const response = await fetch(`/api/rituals/today?userId=${user.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.rituals?.globalRitual) {
+          const ritual = data.rituals.globalRitual;
+          setTodayRitual(ritual);
+          setRitualCompleted(ritual.completed || false);
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching today's ritual:", error);
+    }
+  };
+
+  // Fetch ritual stats
+  const fetchRitualStats = async (): Promise<void> => {
+    if (!user?.id) return;
+    setRitualStatsLoading(true);
+    try {
+      const response = await fetch(`/api/rituals/stats?userId=${user.id}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (data.stats) {
+          setRitualStats(data.stats);
+        }
+      }
+    } catch (error) {
+      console.error('Error fetching ritual stats:', error);
+    } finally {
+      setRitualStatsLoading(false);
+    }
+  };
+
+  // All useEffect hooks must be before any early returns
+  useEffect(() => {
+    void fetchMoments();
+    void fetchFeaturedStories();
+  }, []);
+
+  useEffect(() => {
+    void fetchUserKarma();
+  }, [user?.id]);
+
+  useEffect(() => {
+    void fetchTodayRitual();
+  }, [user?.id]);
+
+  useEffect(() => {
+    void fetchRitualStats();
+  }, [user?.id]);
+
+  // Don't render content if user is logged in (will redirect)
+  if (!authLoading && user) {
+    return <Loading />;
+  }
 
   const handleRipple = async (
     momentId: string,
