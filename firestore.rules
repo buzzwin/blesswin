@@ -217,14 +217,20 @@ service cloud.firestore {
       allow create, delete: if false; // Admin only (handled server-side)
       // Allow updates when auth is null (server-side API) OR when updating join/leave fields
       // Users can join/leave rituals by updating joinedByUsers and rippleCount
-      allow update: if request.auth == null || (
-        isSignedIn() && (
-          // Allow updating joinedByUsers and rippleCount for join/leave functionality
-          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['joinedByUsers', 'rippleCount']) ||
+      allow update: if 
+        // Server-side API (when auth is null or undefined) - allows all updates
+        request.auth == null || 
+        // Authenticated users can update joinedByUsers and rippleCount (for joining/leaving)
+        // This allows any signed-in user to join/leave any ritual
+        (isSignedIn() && (
+          // Allow updating joinedByUsers (for joining/leaving rituals)
+          // Check if joinedByUsers is in the affected keys using hasAny
+          request.resource.data.diff(resource.data).affectedKeys().hasAny(['joinedByUsers']) ||
+          // Allow updating only rippleCount
+          request.resource.data.diff(resource.data).affectedKeys().hasOnly(['rippleCount']) ||
           // Allow server-side updates to other fields (admin operations)
           request.resource.data.diff(resource.data).affectedKeys().hasOnly(['usageCount', 'completionRate', 'updatedAt'])
-        )
-      );
+        ));
     }
 
     // User ritual state subcollection (single document per user)

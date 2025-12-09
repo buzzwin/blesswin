@@ -78,7 +78,7 @@ export default async function handler(
         return;
       }
 
-      const validTags = ['mind', 'body', 'relationships', 'nature', 'community'];
+      const validTags = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
       if (!tags.every((tag) => validTags.includes(tag))) {
         res.status(400).json({ success: false, error: 'Invalid tag(s)' });
         return;

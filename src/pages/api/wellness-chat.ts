@@ -101,7 +101,7 @@ IMPORTANT: You must respond in valid JSON format with the following structure:
   "ritualSuggestion": { // Optional, include ONLY if you are suggesting a specific actionable ritual
     "title": "Short title of ritual",
     "description": "Brief description",
-    "tags": ["mind", "body"], // Choose from: mind, body, relationships, nature, community
+    "tags": ["mind", "body"], // Choose from: mind, body, relationships, nature, community, chores
     "effortLevel": "tiny", // Choose from: tiny, medium, deep
     "suggestedTimeOfDay": "morning", // Choose from: morning, afternoon, evening, anytime
     "durationEstimate": "5 minutes"

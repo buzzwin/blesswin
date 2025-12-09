@@ -3,23 +3,19 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import {
   Heart,
-  Users,
-  Sparkles,
-  BookOpen,
-  HandHeart,
   ArrowRight
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
 import { HomeLayout } from '@components/layout/common-layout';
 import { SectionShell } from '@components/layout/section-shell';
-import { ImpactCard } from '@components/home/impact-card';
 import { CurrentEvents } from '@components/home/current-events';
 import { YouTubeVideos } from '@components/home/youtube-videos';
 import { HeroSection } from '@components/home/hero-section';
-import { RippleSystem } from '@components/home/ripple-system';
 import { RealStoriesSection } from '@components/home/real-stories-section';
 import { DailyRitualsSection } from '@components/home/daily-rituals-section';
+import { LearnFromOthersSection } from '@components/home/learn-from-others-section';
+import { AISuggestionsSection } from '@components/home/ai-suggestions-section';
 import { siteURL } from '@lib/env';
 import Head from 'next/head';
 import { Loading } from '@components/ui/loading';
@@ -80,41 +76,6 @@ export default function Home(): JSX.Element {
     return <Loading />;
   }
 
-  const impactAreas = [
-    {
-      title: 'Amplify Stories',
-      description:
-        'We share authentic human stories that inspire action and create meaningful connections.',
-      icon: <BookOpen className='h-6 w-6' />,
-      color: 'earth' as const,
-      onClick: () => void router.push('/blog')
-    },
-    {
-      title: 'Build Community',
-      description:
-        'Connect with like-minded individuals committed to making a positive impact.',
-      icon: <Users className='h-6 w-6' />,
-      color: 'sage' as const,
-      onClick: () => void router.push('/login')
-    },
-    {
-      title: 'Inspire Action',
-      description:
-        'Turn inspiration into action with tools and resources for meaningful change.',
-      icon: <Sparkles className='h-6 w-6' />,
-      color: 'sky' as const,
-      onClick: () => void router.push('/login')
-    },
-    {
-      title: 'Support Wellness',
-      description:
-        'Promote mental health, mindfulness, and holistic well-being for all.',
-      icon: <HandHeart className='h-6 w-6' />,
-      color: 'terracotta' as const,
-      onClick: () => void router.push('/yoga')
-    }
-  ];
-
   // Structured data for SEO
   const structuredData = {
     '@context': 'https://schema.org',
@@ -164,9 +125,9 @@ export default function Home(): JSX.Element {
   return (
     <HomeLayout>
       <SEO
-        title='Buzzwin - Empowering People. One Small Action at a Time.'
-        description='A storytelling studio that amplifies good causes. We create and share stories that inspire positive change, wellness, and harmony in the world.'
-        keywords='social good, community impact, positive change, wellness, storytelling, human stories, community building, social impact'
+        title='Buzzwin - Routines are boring, Rituals are fun'
+        description="Let's start a new ritual today on a journey of self improvement. Transform your daily routines into meaningful rituals that inspire growth and positive change."
+        keywords='rituals, self improvement, personal growth, wellness, mindfulness, daily rituals, transformation, positive change'
         structuredData={structuredData}
       />
       <Head>
@@ -185,51 +146,11 @@ export default function Home(): JSX.Element {
         navigating={navigating}
       />
 
-      {/* What We Do Section - Full Screen */}
-      <SectionShell>
-        <div className='mx-auto w-full max-w-6xl px-6'>
-          <div className='mb-16 text-center'>
-            <h2 className='mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl lg:text-5xl'>
-              What We Do
-            </h2>
-            <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl'>
-              We believe in the power of small actions to create big change.
-              Here&apos;s how we&apos;re making a difference.
-            </p>
-          </div>
+      {/* Learn from Others Section */}
+      <LearnFromOthersSection />
 
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4'>
-            {impactAreas.map((area, index) => (
-              <ImpactCard
-                key={index}
-                title={area.title}
-                description={area.description}
-                icon={area.icon}
-                color={area.color}
-                onClick={area.onClick}
-              />
-            ))}
-          </div>
-        </div>
-      </SectionShell>
-
-      {/* Ripple System Section */}
-      <RippleSystem user={user} />
-
-      {/* How It Works Link */}
-      <SectionShell>
-        <div className='mx-auto w-full max-w-4xl px-6 text-center'>
-          <p className='mb-4 text-lg text-gray-600 dark:text-gray-300'>
-            Want to learn more about how reactions, joining, and ripples work?
-          </p>
-          <Link href='/how-it-works'>
-            <a className='inline-flex items-center gap-2 rounded-full border-2 border-purple-600 px-6 py-3 text-base font-semibold text-purple-600 transition-colors hover:bg-purple-50 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900/20'>
-              Learn How It Works
-              <ArrowRight className='h-5 w-5' />
-            </a>
-          </Link>
-        </div>
-      </SectionShell>
+      {/* AI Suggestions Section */}
+      <AISuggestionsSection />
 
       {/* Real Stories Section */}
       <RealStoriesSection />

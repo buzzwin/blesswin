@@ -138,7 +138,8 @@ export default async function handler(
               body: 'Body',
               relationships: 'Relationships',
               nature: 'Nature',
-              community: 'Community'
+              community: 'Community',
+              chores: 'Chores'
             };
             return tagLabels[tag] || tag;
           }).join(', ');
@@ -200,6 +201,7 @@ Try it: ${siteURL}/rituals`;
     // Format tags
     const tagsDisplay = ritualTags.map(tag => {
       const tagLabels: Record<ImpactTag, string> = {
+        chores: 'Chores',
         mind: 'Mind',
         body: 'Body',
         relationships: 'Relationships',

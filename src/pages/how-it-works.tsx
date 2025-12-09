@@ -57,7 +57,7 @@ export default function HowItWorksPage(): JSX.Element {
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />
-                  <span>Tag your participation (Mind, Body, Relationships, Nature, Community)</span>
+                  <span>Tag your participation (Mind, Body, Relationships, Nature, Community, Chores)</span>
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />

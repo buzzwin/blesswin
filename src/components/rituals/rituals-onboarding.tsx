@@ -42,7 +42,7 @@ export function RitualsOnboarding({
     eveningTime: '19:00'
   });
 
-  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
 
   const toggleTag = (tag: ImpactTag): void => {
     setSelectedTags((prev) =>

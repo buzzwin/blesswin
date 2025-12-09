@@ -1,6 +1,6 @@
 import type { Timestamp } from 'firebase-admin/firestore';
 
-export type ImpactTag = 'mind' | 'body' | 'relationships' | 'nature' | 'community';
+export type ImpactTag = 'mind' | 'body' | 'relationships' | 'nature' | 'community' | 'chores';
 export type EffortLevel = 'tiny' | 'medium' | 'deep';
 export type RippleType = 'inspired' | 'grateful' | 'joined_you' | 'sent_love';
 

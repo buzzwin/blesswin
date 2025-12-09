@@ -1,6 +1,6 @@
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 
-export type ImpactTag = 'mind' | 'body' | 'relationships' | 'nature' | 'community';
+export type ImpactTag = 'mind' | 'body' | 'relationships' | 'nature' | 'community' | 'chores';
 export type EffortLevel = 'tiny' | 'medium' | 'deep';
 export type RippleType = 'inspired' | 'grateful' | 'joined_you' | 'sent_love';
 
@@ -54,7 +54,8 @@ export const impactTagLabels: Record<ImpactTag, string> = {
   body: 'Body',
   relationships: 'Relationships',
   nature: 'Nature',
-  community: 'Community'
+  community: 'Community',
+  chores: 'Chores'
 };
 
 export const impactTagColors: Record<ImpactTag, string> = {
@@ -62,7 +63,8 @@ export const impactTagColors: Record<ImpactTag, string> = {
   body: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
   relationships: 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200',
   nature: 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
-  community: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+  community: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  chores: 'bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200'
 };
 
 export const effortLevelLabels: Record<EffortLevel, string> = {

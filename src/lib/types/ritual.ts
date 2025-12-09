@@ -3,6 +3,20 @@ import type { ImpactTag, EffortLevel } from './impact-moment';
 
 export type RitualScope = 'global' | 'personalized' | 'public';
 export type RitualTimeOfDay = 'morning' | 'afternoon' | 'evening' | 'anytime';
+export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+export type DayOfMonth = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 | 19 | 20 | 21 | 22 | 23 | 24 | 25 | 26 | 27 | 28 | 29 | 30 | 31;
+
+/**
+ * Ritual frequency using iCalendar RRULE format (RFC 5545)
+ * Examples:
+ * - Daily: "FREQ=DAILY;INTERVAL=1"
+ * - Weekly (Mon/Wed/Fri): "FREQ=WEEKLY;BYDAY=MO,WE,FR"
+ * - Monthly (2nd Friday): "FREQ=MONTHLY;BYDAY=2FR"
+ * - Monthly (1st and 15th): "FREQ=MONTHLY;BYMONTHDAY=1,15"
+ * - With until date: "FREQ=DAILY;UNTIL=20241231T235959Z"
+ * - With count: "FREQ=WEEKLY;COUNT=10"
+ */
+export type RitualFrequency = string; // RRULE string
 
 export interface RitualDefinition {
   id?: string;
@@ -15,6 +29,7 @@ export interface RitualDefinition {
   durationEstimate: string; // e.g., "2 minutes", "5 minutes"
   prefillTemplate: string; // Template for Impact Moment when shared
   icon?: string; // Emoji or icon identifier
+  frequency?: RitualFrequency; // How often this ritual should be done (defaults to daily if not set)
   createdAt?: Timestamp | Date;
   usageCount?: number; // How many times assigned
   completionRate?: number; // Percentage completion rate
@@ -136,7 +151,7 @@ export interface LeaderboardEntry {
 
 export const ritualDefinitionConverter: FirestoreDataConverter<RitualDefinition> = {
   toFirestore(ritual) {
-    const { id, createdAt, usageCount, completionRate, icon, joinedByUsers, rippleCount, createdFromMomentId, ...requiredData } = ritual;
+    const { id, createdAt, usageCount, completionRate, icon, joinedByUsers, rippleCount, createdFromMomentId, frequency, ...requiredData } = ritual;
     const firestoreData: Record<string, unknown> = {
       ...requiredData
     };
@@ -161,6 +176,9 @@ export const ritualDefinitionConverter: FirestoreDataConverter<RitualDefinition>
     }
     if (createdFromMomentId !== undefined) {
       firestoreData.createdFromMomentId = createdFromMomentId;
+    }
+    if (frequency !== undefined) {
+      firestoreData.frequency = frequency;
     }
 
     return firestoreData;

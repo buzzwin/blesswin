@@ -70,7 +70,7 @@ export function ImpactMomentInput({
   const parseTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const inputLimit = 280;
 
-  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
   const allEffortLevels: EffortLevel[] = ['tiny', 'medium', 'deep'];
 
   // Fetch AI-generated placeholder and description on mount

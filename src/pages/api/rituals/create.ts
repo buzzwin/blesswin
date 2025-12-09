@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { collection, addDoc, serverTimestamp, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
-import type { RitualDefinition, RitualTimeOfDay, RitualScope } from '@lib/types/ritual';
+import type { RitualDefinition, RitualTimeOfDay, RitualScope, RitualFrequency } from '@lib/types/ritual';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 import { ritualsCollection } from '@lib/firebase/collections';
 
@@ -13,6 +13,7 @@ interface CreateRitualRequest {
   effortLevel: EffortLevel;
   suggestedTimeOfDay: RitualTimeOfDay;
   durationEstimate: string;
+  frequency?: RitualFrequency; // How often this ritual should be done
   scope?: RitualScope; // 'personalized' (private) or 'public'
   storyId?: string;
   storyTitle?: string;
@@ -40,7 +41,7 @@ export default async function handler(
   }
 
   try {
-    const { userId, title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, scope, storyId, storyTitle, createdFromMomentId } = req.body as CreateRitualRequest;
+    const { userId, title, description, tags, effortLevel, suggestedTimeOfDay, durationEstimate, frequency, scope, storyId, storyTitle, createdFromMomentId } = req.body as CreateRitualRequest;
 
     if (!userId || typeof userId !== 'string') {
       res.status(401).json({ success: false, error: 'Unauthorized. User ID required.' });
@@ -63,7 +64,7 @@ export default async function handler(
       return;
     }
 
-    const validTags = ['mind', 'body', 'relationships', 'nature', 'community'];
+    const validTags = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
     if (!tags.every((tag) => validTags.includes(tag))) {
       res.status(400).json({ success: false, error: 'Invalid tag(s)' });
       return;
@@ -88,6 +89,7 @@ export default async function handler(
       suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
       durationEstimate: durationEstimate || '5 minutes',
       prefillTemplate: `Completed ritual: ${title.trim()}\n\n${description.trim()}`,
+      frequency: frequency || 'FREQ=DAILY;INTERVAL=1', // Default to daily if not specified
       createdAt: serverTimestamp(),
       usageCount: 0,
       completionRate: 0,

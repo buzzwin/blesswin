@@ -21,7 +21,7 @@ interface GenerateRitualResponse {
   error?: string;
 }
 
-const validTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+const validTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
 const validEffortLevels: EffortLevel[] = ['tiny', 'medium', 'deep'];
 const validTimeOfDay: RitualTimeOfDay[] = ['morning', 'afternoon', 'evening', 'anytime'];
 

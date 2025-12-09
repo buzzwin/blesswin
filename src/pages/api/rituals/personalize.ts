@@ -47,7 +47,8 @@ export async function analyzeUserPatterns(userId: string): Promise<{
     body: 0,
     relationships: 0,
     nature: 0,
-    community: 0
+    community: 0,
+    chores: 0
   };
 
   const effortLevelFrequency: Record<EffortLevel, number> = {

@@ -39,7 +39,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputLimit = 280;
 
-  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
   const allEffortLevels: EffortLevel[] = ['tiny', 'medium', 'deep'];
 
   // Initialize text when modal opens

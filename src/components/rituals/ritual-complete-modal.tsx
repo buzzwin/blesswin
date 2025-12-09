@@ -51,6 +51,43 @@ export function RitualCompleteModal({
     }
   }, [open, ritual]);
 
+  const handleCompleteQuietly = async (): Promise<void> => {
+    if (!user?.id) {
+      toast.error('Please sign in');
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const response = await fetch('/api/rituals/complete', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userId: user.id,
+          ritualId: ritual.id,
+          completedQuietly: true
+        })
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Failed to complete ritual');
+      }
+
+      toast.success('Ritual completed! ✨');
+      closeModal();
+      onComplete();
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to complete ritual';
+      toast.error(message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleSubmit = async (): Promise<void> => {
     if (!text.trim()) {
       toast.error('Please describe your ritual completion');
@@ -280,9 +317,9 @@ export function RitualCompleteModal({
         </div>
 
         {/* Action Buttons */}
-        <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
+        <div className='flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700'>
           <button
-            onClick={closeModal}
+            onClick={handleCompleteQuietly}
             disabled={loading}
             className={cn(
               'rounded-full px-4 py-2 text-sm font-semibold',
@@ -290,25 +327,45 @@ export function RitualCompleteModal({
               loading && 'opacity-50 cursor-not-allowed'
             )}
           >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!text.trim() || loading}
-            className={cn(
-              'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
-              (!text.trim() || loading) && 'opacity-50 cursor-not-allowed'
-            )}
-          >
             {loading ? (
               <span className='flex items-center gap-2'>
                 <Loader2 className='h-4 w-4 animate-spin' />
-                Sharing...
+                Completing...
               </span>
             ) : (
-              'Share Moment 🌱'
+              'Complete without sharing'
             )}
           </button>
+          <div className='flex gap-2'>
+            <button
+              onClick={closeModal}
+              disabled={loading}
+              className={cn(
+                'rounded-full px-4 py-2 text-sm font-semibold',
+                'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+                loading && 'opacity-50 cursor-not-allowed'
+              )}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSubmit}
+              disabled={!text.trim() || loading}
+              className={cn(
+                'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
+                (!text.trim() || loading) && 'opacity-50 cursor-not-allowed'
+              )}
+            >
+              {loading ? (
+                <span className='flex items-center gap-2'>
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                  Sharing...
+                </span>
+              ) : (
+                'Share Moment 🌱'
+              )}
+            </button>
+          </div>
         </div>
       </div>
     </Modal>

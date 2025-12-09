@@ -117,7 +117,7 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
     }
   };
 
-  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
   const allEffortLevels: EffortLevel[] = ['tiny', 'medium', 'deep'];
 
   return (

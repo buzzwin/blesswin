@@ -243,7 +243,8 @@ export function calculateStats(
     body: 0,
     relationships: 0,
     nature: 0,
-    community: 0
+    community: 0,
+    chores: 0
   };
 
   if (ritualDefinitions && ritualDefinitions.length > 0) {

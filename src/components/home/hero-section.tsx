@@ -26,17 +26,15 @@ export function HeroSection({
         <div className='text-center'>
           {/* Animated heading with stagger effect */}
           <h1 className='mb-6 animate-fade-in-up text-4xl font-bold leading-[1.15] tracking-tight text-gray-900 dark:text-white md:text-5xl lg:text-6xl'>
-            Empowering people.{' '}
+            Routines are boring.{' '}
             <span className='bg-gradient-to-r from-action via-hope to-action bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]'>
-              One small action
-            </span>{' '}
-            at a time.
+              Rituals are fun.
+            </span>
           </h1>
           
           {/* Animated description */}
           <p className='mx-auto mb-12 max-w-2xl animate-fade-in-up text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl lg:text-2xl [animation-delay:150ms]'>
-            We amplify stories of creativity, kindness, and community impact. 
-            Join us in building a more hopeful world.
+            Let&apos;s start a new ritual today on a journey of self improvement.
           </p>
 
           {/* Modern button group */}
@@ -46,7 +44,7 @@ export function HeroSection({
               className='group relative overflow-hidden rounded-full bg-gradient-to-r from-action to-hope px-8 py-4 text-base font-semibold text-white shadow-lg shadow-action/25 transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-action/40 active:scale-95'
             >
               <span className='relative z-10 flex items-center gap-2'>
-                Get Involved
+                Start a Ritual
                 <ArrowRight className='h-4 w-4 transition-transform group-hover:translate-x-1' />
               </span>
               <div className='absolute inset-0 bg-gradient-to-r from-hope to-action opacity-0 transition-opacity duration-300 group-hover:opacity-100' />

@@ -94,7 +94,8 @@ export default async function handler(
         body: 'Body',
         relationships: 'Relationships',
         nature: 'Nature',
-        community: 'Community'
+        community: 'Community',
+        chores: 'Chores'
       };
       return tagLabels[tag] || tag;
     }).join(', ');

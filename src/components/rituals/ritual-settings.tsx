@@ -147,7 +147,7 @@ export function RitualSettings({
     );
   }
 
-  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
 
   return (
     <Modal

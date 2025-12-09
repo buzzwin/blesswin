@@ -166,7 +166,7 @@ export default function SettingsPage(): JSX.Element {
     );
   }
 
-  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community'];
+  const allTags: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
 
   return (
     <MainContainer>

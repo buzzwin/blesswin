@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getDoc, query, where, getDocs, setDoc, serverTimestamp, doc, collection } from 'firebase/firestore';
+import { getDoc, query, where, getDocs, setDoc, serverTimestamp, doc, collection, orderBy, limit } from 'firebase/firestore';
 import { ritualsCollection, userRitualStateDoc, impactMomentsCollection, ritualCompletionsCollection } from '@lib/firebase/collections';
 import { db } from '@lib/firebase/app';
 import { getGlobalRituals, getPersonalizedRitualsByTag } from '@lib/data/ritual-definitions';
-import type { RitualDefinition, TodayRituals } from '@lib/types/ritual';
+import type { RitualDefinition, TodayRituals, RitualFrequency } from '@lib/types/ritual';
+import { isDateMatchingRRULE } from '@lib/utils/rrule';
 import type { ImpactTag } from '@lib/types/impact-moment';
 
 interface TodayRitualsResponse {
@@ -17,6 +18,34 @@ interface TodayRitualsResponse {
 function getTodayDateString(): string {
   const today = new Date();
   return today.toISOString().split('T')[0];
+}
+
+/**
+ * Check if a ritual is due based on its frequency and last completion
+ */
+function isRitualDue(
+  ritual: RitualDefinition,
+  lastCompletionDate: Date | null,
+  today: Date = new Date()
+): boolean {
+  const rrule: RitualFrequency | undefined = ritual.frequency;
+  
+  // If no RRULE, default to daily
+  if (!rrule) {
+    // Default to daily - check if not completed today
+    if (!lastCompletionDate) {
+      return true;
+    }
+    const lastCompletionDay = new Date(lastCompletionDate);
+    const isCompletedToday = 
+      lastCompletionDay.getDate() === today.getDate() &&
+      lastCompletionDay.getMonth() === today.getMonth() &&
+      lastCompletionDay.getFullYear() === today.getFullYear();
+    return !isCompletedToday;
+  }
+  
+  // Use RRULE parser to check if date matches
+  return isDateMatchingRRULE(rrule, today, lastCompletionDate);
 }
 
 /**
@@ -35,7 +64,8 @@ async function getUserPreferredTags(userId: string): Promise<ImpactTag[]> {
       body: 0,
       relationships: 0,
       nature: 0,
-      community: 0
+      community: 0,
+      chores: 0
     };
 
     momentsSnapshot.docs.forEach(doc => {
@@ -251,7 +281,40 @@ export default async function handler(
       ...doc.data()
     } as RitualDefinition));
 
-    // Check completion status for each ritual
+    // Get all completions for this user to check last completion dates
+    const allCompletionsQuery = query(
+      ritualCompletionsCollection(userId),
+      orderBy('completedAt', 'desc')
+    );
+    const allCompletionsSnapshot = await getDocs(allCompletionsQuery);
+    
+    // Build a map of ritualId -> last completion date
+    const lastCompletionDates = new Map<string, Date>();
+    allCompletionsSnapshot.docs.forEach(doc => {
+      const completion = doc.data();
+      const ritualId = completion.ritualId;
+      
+      // Handle both Timestamp and Date types
+      let completedAt: Date | null = null;
+      if (completion.completedAt) {
+        if (completion.completedAt instanceof Date) {
+          completedAt = completion.completedAt;
+        } else if (typeof completion.completedAt.toDate === 'function') {
+          // Firestore Timestamp
+          completedAt = completion.completedAt.toDate();
+        }
+      }
+      
+      if (ritualId && completedAt) {
+        // Only keep the most recent completion for each ritual
+        if (!lastCompletionDates.has(ritualId) || 
+            (lastCompletionDates.get(ritualId)?.getTime() || 0) < completedAt.getTime()) {
+          lastCompletionDates.set(ritualId, completedAt);
+        }
+      }
+    });
+
+    // Check completion status for today
     const today = getTodayDateString();
     const todayCompletionsQuery = query(
       ritualCompletionsCollection(userId),
@@ -262,12 +325,29 @@ export default async function handler(
       todayCompletionsSnapshot.docs.map(doc => doc.data().ritualId)
     );
 
+    // Filter rituals by frequency - only show rituals that are due
+    const todayDate = new Date();
+    const dueCustomRituals = customRituals.filter(ritual => {
+      if (!ritual.id) return false;
+      const lastCompletion = lastCompletionDates.get(ritual.id) || null;
+      return isRitualDue(ritual, lastCompletion, todayDate);
+    });
+
     // Only use custom rituals (no personalized rituals)
     const globalRitualId = globalRitual?.id;
     
+    // Check if global ritual is due (if it exists)
+    let dueGlobalRitual: RitualDefinition | null = null;
+    if (globalRitual) {
+      const globalLastCompletion = globalRitual.id ? lastCompletionDates.get(globalRitual.id) || null : null;
+      if (isRitualDue(globalRitual, globalLastCompletion, todayDate)) {
+        dueGlobalRitual = globalRitual;
+      }
+    }
+    
     // Deduplicate custom rituals and exclude global ritual if it appears
     const seenIds = new Set<string>();
-    const uniqueCustomRituals = customRituals.filter((ritual) => {
+    const uniqueCustomRituals = dueCustomRituals.filter((ritual) => {
       if (!ritual.id) return false; // Skip rituals without IDs
       
       // Exclude global ritual from custom list
@@ -286,9 +366,9 @@ export default async function handler(
 
     // Mark rituals as completed if they were completed today
     const todayRituals: TodayRituals = {
-      globalRitual: globalRitual ? {
-        ...globalRitual,
-        completed: completedRitualIds.has(globalRitual.id || '')
+      globalRitual: dueGlobalRitual ? {
+        ...dueGlobalRitual,
+        completed: completedRitualIds.has(dueGlobalRitual.id || '')
       } : null,
       personalizedRituals: uniqueCustomRituals.map(ritual => ({
         ...ritual,

@@ -6,7 +6,7 @@ interface ParseRequest {
 }
 
 interface ParsedImpactMoment {
-  tags: Array<'mind' | 'body' | 'relationships' | 'nature' | 'community'>;
+  tags: Array<'mind' | 'body' | 'relationships' | 'nature' | 'community' | 'chores'>;
   effortLevel: 'tiny' | 'medium' | 'deep';
   moodCheckIn?: {
     before?: number;
@@ -38,12 +38,13 @@ Impact Moment Text: "${text}"
 
 An Impact Moment is a small good deed or positive action. Analyze the text and determine:
 
-1. **Tags** (select ALL that apply from: mind, body, relationships, nature, community):
+1. **Tags** (select ALL that apply from: mind, body, relationships, nature, community, chores):
    - "mind": Mental wellness, meditation, mindfulness, learning, reflection
    - "body": Physical health, exercise, yoga, healthy eating, fitness
    - "relationships": Connecting with others, helping friends/family, social connections
    - "nature": Environmental actions, spending time outdoors, eco-friendly actions
    - "community": Community service, volunteering, helping neighbors, local impact
+   - "chores": Household tasks, cleaning, organizing, maintenance, daily responsibilities
 
 2. **Effort Level** (select ONE: tiny, medium, deep):
    - "tiny": Very quick/easy actions (e.g., "took 3 deep breaths", "smiled at a stranger")
@@ -70,8 +71,8 @@ If moodCheckIn cannot be inferred, omit it entirely.`;
     const parsed = extractJSONFromResponse(responseText) as unknown as ParsedImpactMoment;
 
     // Validate and sanitize the response
-    const validTags: Array<'mind' | 'body' | 'relationships' | 'nature' | 'community'> = 
-      ['mind', 'body', 'relationships', 'nature', 'community'];
+    const validTags: Array<'mind' | 'body' | 'relationships' | 'nature' | 'community' | 'chores'> = 
+      ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
     
     const tags = Array.isArray(parsed.tags)
       ? parsed.tags.filter(tag => validTags.includes(tag))
