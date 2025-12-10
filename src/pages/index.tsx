@@ -178,65 +178,23 @@ export default function Home(): JSX.Element {
             </p>
           </div>
 
-          <div className='grid grid-cols-1 gap-6 md:grid-cols-3'>
-            {/* Yoga Card */}
+          <div className='flex justify-center'>
+            {/* Unified Wellness Chatbot Card */}
             <button
-              onClick={() => void router.push('/yoga')}
-              className='group rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-green-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
+              onClick={() => void router.push('/wellness')}
+              className='group w-full max-w-md rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
             >
-              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-green-500 to-emerald-600 shadow-lg'>
-                <span className='text-3xl'>🧘</span>
+              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-teal-500 shadow-lg'>
+                <span className='text-3xl'>🌱</span>
               </div>
               <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-                Yoga AI Pal
+                Wellness AI Pal
               </h3>
               <p className='mb-4 text-gray-600 dark:text-gray-300'>
-                Discover personalized yoga poses, sequences, and breathing
-                techniques.
-              </p>
-              <span className='inline-flex items-center gap-2 text-green-600 transition-transform group-hover:translate-x-1 dark:text-green-400'>
-                Start Practice
-                <ArrowRight className='h-4 w-4' />
-              </span>
-            </button>
-
-            {/* Meditation Card */}
-            <button
-              onClick={() => void router.push('/meditation')}
-              className='group rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
-            >
-              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-violet-600 shadow-lg'>
-                <span className='text-3xl'>🧘‍♀️</span>
-              </div>
-              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-                Meditation AI Pal
-              </h3>
-              <p className='mb-4 text-gray-600 dark:text-gray-300'>
-                Deepen your meditation practice and cultivate present-moment
-                awareness.
+                Your complete wellness companion. Get personalized guidance for yoga, meditation, mindfulness, and finding inner harmony.
               </p>
               <span className='inline-flex items-center gap-2 text-purple-600 transition-transform group-hover:translate-x-1 dark:text-purple-400'>
-                Begin Meditation
-                <ArrowRight className='h-4 w-4' />
-              </span>
-            </button>
-
-            {/* Harmony Card */}
-            <button
-              onClick={() => void router.push('/harmony')}
-              className='group rounded-2xl border-2 border-gray-200 bg-white p-8 text-left transition-all duration-300 hover:scale-105 hover:border-teal-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
-            >
-              <div className='mb-4 flex h-16 w-16 items-center justify-center rounded-xl bg-gradient-to-br from-teal-500 to-cyan-600 shadow-lg'>
-                <span className='text-3xl'>☮️</span>
-              </div>
-              <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
-                Harmony AI Pal
-              </h3>
-              <p className='mb-4 text-gray-600 dark:text-gray-300'>
-                Find balance and inner peace through personalized guidance.
-              </p>
-              <span className='inline-flex items-center gap-2 text-teal-600 transition-transform group-hover:translate-x-1 dark:text-teal-400'>
-                Find Harmony
+                Start Chatting
                 <ArrowRight className='h-4 w-4' />
               </span>
             </button>

@@ -56,6 +56,7 @@ export function ImpactMomentInput({
   const [effortLevel, setEffortLevel] = useState<EffortLevel | null>(initialEffortLevel || null);
   const [moodBefore, setMoodBefore] = useState<number | null>(null);
   const [moodAfter, setMoodAfter] = useState<number | null>(null);
+  const [isPublic, setIsPublic] = useState<boolean>(true); // Default to public
   const [selectedImages, setSelectedImages] = useState<FilesWithId>([]);
   const [imagesPreview, setImagesPreview] = useState<ImagesPreview>([]);
   const [loading, setLoading] = useState(false);
@@ -346,7 +347,7 @@ export function ImpactMomentInput({
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
+          body: JSON.stringify({
           text: text.trim(),
           tags: selectedTags,
           effortLevel,
@@ -355,6 +356,7 @@ export function ImpactMomentInput({
             : undefined,
           images: imageUrls.length > 0 ? imageUrls : undefined,
           userId: user.id,
+          isPublic,
           ...(storyId && storyTitle ? {
             fromRealStory: true,
             storyId: storyId,
@@ -374,6 +376,7 @@ export function ImpactMomentInput({
       setEffortLevel(null);
       setMoodBefore(null);
       setMoodAfter(null);
+      setIsPublic(true); // Reset to public by default
       setSelectedImages([]);
       imagesPreview.forEach((image) => URL.revokeObjectURL(image.src));
       setImagesPreview([]);
@@ -395,6 +398,7 @@ export function ImpactMomentInput({
     setEffortLevel(null);
     setMoodBefore(null);
     setMoodAfter(null);
+    setIsPublic(true); // Reset to public by default
     setSelectedImages([]);
     imagesPreview.forEach((image) => URL.revokeObjectURL(image.src));
     setImagesPreview([]);
@@ -649,6 +653,37 @@ export function ImpactMomentInput({
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Privacy Toggle */}
+        <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-900/50'>
+          <div className='flex-1'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Visibility
+            </label>
+            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+              {isPublic 
+                ? 'This moment will be visible to everyone in the feed' 
+                : 'This moment will only be visible to you'}
+            </p>
+          </div>
+          <button
+            type='button'
+            onClick={() => setIsPublic(!isPublic)}
+            className={cn(
+              'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
+              isPublic 
+                ? 'bg-purple-600' 
+                : 'bg-gray-300 dark:bg-gray-600'
+            )}
+          >
+            <span
+              className={cn(
+                'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                isPublic ? 'translate-x-6' : 'translate-x-1'
+              )}
+            />
+          </button>
         </div>
 
         {/* Image Preview */}

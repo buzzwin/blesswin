@@ -4,6 +4,7 @@ import type { RitualCompletion } from '@lib/types/ritual';
 interface WeeklyTrackerProps {
   completions: RitualCompletion[];
   className?: string;
+  onDateClick?: () => void;
 }
 
 /**
@@ -42,11 +43,19 @@ function getCurrentWeekDates(): Array<{ date: string; dayName: string; dayNumber
 
 export function WeeklyTracker({
   completions,
-  className
+  className,
+  onDateClick
 }: WeeklyTrackerProps): JSX.Element {
   const weekDates = getCurrentWeekDates();
   const completedDates = new Set(completions.map(c => c.date));
   const today = getTodayDateString();
+
+  const handleDateClick = (date: string, isCompleted: boolean, isFuture: boolean, isToday: boolean): void => {
+    // Only allow clicking on today's date if not completed
+    if (onDateClick && !isCompleted && !isFuture && isToday) {
+      onDateClick();
+    }
+  };
 
   return (
     <div className={cn('w-full', className)}>
@@ -68,10 +77,12 @@ export function WeeklyTracker({
           const isCompleted = completedDates.has(date);
           const isToday = date === today;
           const isFuture = date > today;
+          const isClickable = !isCompleted && !isFuture && isToday && onDateClick;
 
           return (
             <div
               key={date}
+              onClick={() => handleDateClick(date, isCompleted, isFuture, isToday)}
               className={cn(
                 'rounded flex items-center justify-center',
                 // Mobile: very small fixed height, desktop: slightly larger
@@ -81,7 +92,8 @@ export function WeeklyTracker({
                   ? 'bg-green-500 dark:bg-green-600'
                   : isToday
                   ? 'border-2 border-purple-500 bg-purple-100 dark:bg-purple-900/20'
-                  : 'bg-gray-200 dark:bg-gray-700'
+                  : 'bg-gray-200 dark:bg-gray-700',
+                isClickable && 'cursor-pointer transition-all hover:scale-105 hover:shadow-md hover:bg-purple-200 dark:hover:bg-purple-800/30'
               )}
               title={date}
             >

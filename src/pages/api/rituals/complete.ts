@@ -42,8 +42,17 @@ export default async function handler(
       return;
     }
 
+    // completedQuietly is kept for backward compatibility but should always be false
+    // All ritual completions now create impact moments (public or private)
     if (typeof completedQuietly !== 'boolean') {
       res.status(400).json({ success: false, error: 'completedQuietly must be a boolean' });
+      return;
+    }
+    
+    // If completedQuietly is true but no sharedAsMomentId, this is an error
+    // (all completions should create moments now)
+    if (completedQuietly && !sharedAsMomentId) {
+      res.status(400).json({ success: false, error: 'All ritual completions must create an impact moment. Please provide sharedAsMomentId.' });
       return;
     }
 
@@ -136,9 +145,9 @@ export default async function handler(
     }
 
     // Award karma for ritual completion
+    // Always use 'ritual_completed_shared' since all completions now create impact moments
     try {
-      const karmaAction = completedQuietly ? 'ritual_completed_quiet' : 'ritual_completed_shared';
-      await awardKarma(userId, karmaAction);
+      await awardKarma(userId, 'ritual_completed_shared');
 
       // Check for streak milestones
       if (newStreak === 7) {

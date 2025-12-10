@@ -15,6 +15,7 @@ interface CreateImpactMomentRequest {
   images?: string[];
   videoUrl?: string;
   userId: string;
+  isPublic?: boolean; // Whether this moment is visible to everyone (default: true)
   fromDailyRitual?: boolean;
   ritualId?: string;
   ritualTitle?: string;
@@ -34,7 +35,7 @@ export default async function handler(
   }
 
   try {
-    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle } = req.body as CreateImpactMomentRequest;
+    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, isPublic, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle } = req.body as CreateImpactMomentRequest;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized. User ID required.' });
@@ -84,6 +85,7 @@ export default async function handler(
       effortLevel: effortLevel as ImpactMoment['effortLevel'],
       createdBy: userId,
       createdAt: serverTimestamp(),
+      isPublic: isPublic !== undefined ? isPublic : true, // Default to public for backward compatibility
       ripples: {
         inspired: [],
         grateful: [],

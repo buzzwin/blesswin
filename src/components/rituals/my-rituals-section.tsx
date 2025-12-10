@@ -14,7 +14,6 @@ interface MyRitualsSectionProps {
   onDeleteRitual?: (ritual: RitualDefinition) => void;
   onCompleteAndShare: (ritual: RitualDefinition) => void;
   onShareRitual: (ritual: RitualDefinition) => void;
-  completingRitualId?: string | null;
   todayRituals?: {
     globalRitual?: RitualDefinition | null;
     personalizedRituals?: RitualDefinition[];
@@ -34,7 +33,6 @@ export function MyRitualsSection({
   onDeleteRitual,
   onCompleteAndShare,
   onShareRitual,
-  completingRitualId,
   todayRituals,
   onRefetch,
   showOnlyAvailable = false,
@@ -278,7 +276,7 @@ export function MyRitualsSection({
                     completed={false}
                     onCompleteAndShare={() => onCompleteAndShare(ritual)}
                     onShareRitual={() => onShareRitual(ritual)}
-                    loading={completingRitualId === ritual.id}
+                    loading={false}
                     showJoinButton={!userHasJoined}
                     ritualScope={ritual.scope || 'personalized'}
                     onJoinSuccess={fetchMyRituals}

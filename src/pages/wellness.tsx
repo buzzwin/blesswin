@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { Moon, ArrowLeft } from 'lucide-react';
+import { Sparkles, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import { SEO } from '@components/common/seo';
 import { HomeLayout } from '@components/layout/common-layout';
@@ -15,7 +15,7 @@ import { siteURL } from '@lib/env';
 import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 
-export default function MeditationPage(): JSX.Element {
+export default function WellnessPage(): JSX.Element {
   const { user } = useAuth();
   const router = useRouter();
   const [disclaimerAccepted, setDisclaimerAcceptedState] = useState(false);
@@ -35,7 +35,7 @@ export default function MeditationPage(): JSX.Element {
 
   useEffect(() => {
     if (authChecked && !user) {
-      void router.push('/login?redirect=/meditation');
+      void router.push('/login?redirect=/wellness');
     }
   }, [authChecked, user, router]);
 
@@ -90,19 +90,19 @@ export default function MeditationPage(): JSX.Element {
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Meditation & Mindfulness AI Pal - AI-Powered Practice | Buzzwin',
+    name: 'Wellness AI Pal - Your Complete Wellness Companion | Buzzwin',
     description:
-      'Deepen your meditation practice and cultivate present-moment awareness with personalized guidance from your Meditation & Mindfulness AI Pal.',
-    url: `${siteURL || 'https://Buzzwin.com'}/meditation`
+      'Get personalized guidance for yoga, meditation, mindfulness, and finding inner harmony with your Wellness AI Pal.',
+    url: `${siteURL || 'https://Buzzwin.com'}/wellness`
   };
 
   return (
     <HomeLayout>
       <SEO
-        title='Meditation & Mindfulness AI Pal - AI-Powered Practice | Buzzwin'
-        description='Deepen your meditation practice and cultivate present-moment awareness with personalized guidance from your Meditation & Mindfulness AI Pal.'
-        keywords='meditation, mindfulness, meditation AI pal, guided meditation, present-moment awareness, inner peace'
-        image={`${siteURL || 'https://Buzzwin.com'}/assets/og-meditation.jpg`}
+        title='Wellness AI Pal - Your Complete Wellness Companion | Buzzwin'
+        description='Get personalized guidance for yoga, meditation, mindfulness, and finding inner harmony. Your AI wellness companion for holistic well-being.'
+        keywords='wellness, yoga, meditation, mindfulness, harmony, inner peace, wellness AI, wellness chatbot, holistic wellness'
+        image={`${siteURL || 'https://Buzzwin.com'}/assets/wellness-og-image.jpg`}
         structuredData={structuredData}
       />
 
@@ -132,11 +132,11 @@ export default function MeditationPage(): JSX.Element {
           {/* Compact Sticky Header */}
           <header className='sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900 sm:px-4 md:px-6'>
             <div className='flex items-center gap-2'>
-              <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-violet-600 shadow-sm'>
-                <Moon className='h-4 w-4 text-white' />
+              <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-teal-500 shadow-sm'>
+                <Sparkles className='h-4 w-4 text-white' />
               </div>
               <h1 className='text-sm font-semibold text-gray-900 dark:text-white sm:text-base'>
-                Meditation & Mindfulness AI Pal
+                Wellness AI Pal
               </h1>
             </div>
             <Link
@@ -151,7 +151,7 @@ export default function MeditationPage(): JSX.Element {
           <div className='flex-1 overflow-hidden px-0 sm:px-4 md:px-6 lg:px-8'>
             <div className='mx-auto h-full max-w-5xl'>
               <WellnessChat
-                agentType='meditation'
+                agentType='wellness'
                 className='h-full'
                 onLoginRequest={handleSignIn}
                 userId={user?.id}
@@ -162,12 +162,12 @@ export default function MeditationPage(): JSX.Element {
       ) : !isChecking ? (
         <div className='flex min-h-screen items-center justify-center px-4'>
           <div className='max-w-md text-center'>
-            <div className='mb-4 text-5xl'>🧘‍♀️</div>
+            <div className='mb-4 text-5xl'>🌱</div>
             <h2 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
               Disclaimer Required
             </h2>
             <p className='mb-6 text-gray-600 dark:text-gray-400'>
-              To use the Meditation AI Pal, please review and accept our wellness disclaimer.
+              To use the Wellness AI Pal, please review and accept our wellness disclaimer.
             </p>
             <button
               onClick={() => {
@@ -176,7 +176,7 @@ export default function MeditationPage(): JSX.Element {
                 setShowContent(false);
                 setIsChecking(false);
               }}
-              className='rounded-lg bg-gradient-to-r from-purple-500 to-violet-600 px-6 py-3 font-semibold text-white transition-all hover:from-purple-600 hover:to-violet-700 hover:shadow-lg'
+              className='rounded-lg bg-gradient-to-r from-purple-500 to-teal-500 px-6 py-3 font-semibold text-white transition-all hover:opacity-90 hover:shadow-lg'
             >
               Review Disclaimer
             </button>
@@ -186,3 +186,4 @@ export default function MeditationPage(): JSX.Element {
     </HomeLayout>
   );
 }
+

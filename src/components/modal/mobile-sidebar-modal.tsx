@@ -125,7 +125,7 @@ export function MobileSidebarModal({
   const navLinks = user 
     ? allNavLinks 
     : allNavLinks.filter(link => 
-        ['/', '/home', '/blog', '/real-stories', '/rituals'].includes(link.href)
+        ['/', '/home', '/feed', '/blog', '/real-stories', '/rituals'].includes(link.href)
       );
 
   const handleLogout = async (): Promise<void> => {
@@ -138,17 +138,8 @@ export function MobileSidebarModal({
     }
   };
 
-  const handleFeedClick = (e: MouseEvent<HTMLAnchorElement>): void => {
-    if (!user) {
-      e.preventDefault();
-      closeModal();
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('redirectAfterLogin', '/rituals');
-      }
-      void router.push('/login');
-    } else {
-      closeModal();
-    }
+  const handleFeedClick = (): void => {
+    closeModal();
   };
 
   const getIcon = (iconName: string, href?: string) => {

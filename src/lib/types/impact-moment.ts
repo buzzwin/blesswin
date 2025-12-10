@@ -20,6 +20,7 @@ export interface ImpactMoment {
   createdBy: string;
   createdAt: Timestamp | Date;
   updatedAt?: Timestamp | Date;
+  isPublic?: boolean; // Whether this moment is visible to everyone (default: true for backward compatibility)
   ripples: {
     // Reactions (emotional feedback) - NOT ripples
     inspired: string[]; // user IDs who reacted with "Inspired"
@@ -95,7 +96,7 @@ export const rippleTypeIcons: Record<RippleType, string> = {
 
 export const impactMomentConverter: FirestoreDataConverter<ImpactMoment> = {
   toFirestore(moment) {
-    const { id, updatedAt, moodCheckIn, images, videoUrl, userRipples, joinedFromMomentId, joinedByUsers, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle, ...requiredData } = moment;
+    const { id, updatedAt, moodCheckIn, images, videoUrl, userRipples, joinedFromMomentId, joinedByUsers, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle, isPublic, ...requiredData } = moment;
     const firestoreData: Record<string, unknown> = {
       ...requiredData,
       createdAt: moment.createdAt instanceof Date ? moment.createdAt : moment.createdAt
@@ -140,6 +141,9 @@ export const impactMomentConverter: FirestoreDataConverter<ImpactMoment> = {
     }
     if (storyTitle !== undefined) {
       firestoreData.storyTitle = storyTitle;
+    }
+    if (isPublic !== undefined) {
+      firestoreData.isPublic = isPublic;
     }
     
     return firestoreData;

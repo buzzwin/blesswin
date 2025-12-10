@@ -27,7 +27,9 @@ import {
   Edit2,
   Trash2,
   Calendar,
-  TrendingUp
+  TrendingUp,
+  Globe,
+  Lock
 } from 'lucide-react';
 import { cn } from '@lib/utils';
 import { toast } from 'react-hot-toast';
@@ -236,6 +238,29 @@ export function ImpactMomentCard({
                       )
                     : formatDate(moment.createdAt, 'tweet')}
                 </time>
+              </>
+            )}
+            {/* Privacy Indicator */}
+            {moment.isPublic === false && (
+              <>
+                <span className='text-gray-500 dark:text-gray-400'>·</span>
+                <div className='flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 dark:bg-gray-800'>
+                  <Lock className='h-3 w-3 text-gray-600 dark:text-gray-400' />
+                  <span className='text-xs font-medium text-gray-600 dark:text-gray-400'>
+                    Private
+                  </span>
+                </div>
+              </>
+            )}
+            {moment.isPublic !== false && (
+              <>
+                <span className='text-gray-500 dark:text-gray-400'>·</span>
+                <div className='flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 dark:bg-blue-900/30'>
+                  <Globe className='h-3 w-3 text-blue-600 dark:text-blue-400' />
+                  <span className='text-xs font-medium text-blue-600 dark:text-blue-400'>
+                    Public
+                  </span>
+                </div>
               </>
             )}
           </div>

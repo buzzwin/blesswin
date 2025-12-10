@@ -428,7 +428,10 @@ export function RitualCard({
       {/* Weekly Tracker - Completion Status */}
       {hasJoined && (
         <div className='mb-2 md:mb-3'>
-          <WeeklyTracker completions={ritualCompletions} />
+          <WeeklyTracker 
+            completions={ritualCompletions} 
+            onDateClick={onCompleteAndShare && !completed ? onCompleteAndShare : undefined}
+          />
         </div>
       )}
 

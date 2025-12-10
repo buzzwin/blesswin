@@ -10,7 +10,6 @@ import type { SortOption } from '@components/rituals/rituals-sort';
 interface JoinedRitualsSectionProps {
   onCompleteAndShare: (ritual: RitualDefinition) => void;
   onShareRitual: (ritual: RitualDefinition) => void;
-  completingRitualId?: string | null;
   todayRituals?: {
     globalRitual?: RitualDefinition | null;
     personalizedRituals?: RitualDefinition[];
@@ -27,7 +26,6 @@ interface JoinedRitualsSectionProps {
 export function JoinedRitualsSection({
   onCompleteAndShare,
   onShareRitual,
-  completingRitualId,
   todayRituals,
   onRefetch,
   searchQuery = '',
@@ -170,7 +168,7 @@ export function JoinedRitualsSection({
               completed={ritual.completed || false}
               onCompleteAndShare={() => onCompleteAndShare(ritual)}
               onShareRitual={() => onShareRitual(ritual)}
-              loading={completingRitualId === ritual.id}
+              loading={false}
               showJoinButton={false}
               ritualScope={ritual.scope}
               onLeaveSuccess={fetchJoinedRituals}

@@ -12,7 +12,7 @@ import {
   type ImpactTag,
   type EffortLevel
 } from '@lib/types/impact-moment';
-import { Smile, Frown, X, Loader2 } from 'lucide-react';
+import { Smile, Frown, X, Loader2, Globe, Lock } from 'lucide-react';
 import type { RitualDefinition } from '@lib/types/ritual';
 
 interface RitualCompleteModalProps {
@@ -32,6 +32,7 @@ export function RitualCompleteModal({
   const [text, setText] = useState(ritual.prefillTemplate);
   const [moodBefore, setMoodBefore] = useState<number | null>(null);
   const [moodAfter, setMoodAfter] = useState<number | null>(null);
+  const [isPublic, setIsPublic] = useState<boolean>(true); // Default to public
   const [loading, setLoading] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputLimit = 280;
@@ -42,6 +43,7 @@ export function RitualCompleteModal({
       setText(ritual.prefillTemplate);
       setMoodBefore(null);
       setMoodAfter(null);
+      setIsPublic(true); // Reset to public by default
       setTimeout(() => {
         textareaRef.current?.focus();
         // Select the text so user can easily edit
@@ -50,43 +52,6 @@ export function RitualCompleteModal({
       }, 100);
     }
   }, [open, ritual]);
-
-  const handleCompleteQuietly = async (): Promise<void> => {
-    if (!user?.id) {
-      toast.error('Please sign in');
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const response = await fetch('/api/rituals/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          ritualId: ritual.id,
-          completedQuietly: true
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to complete ritual');
-      }
-
-      toast.success('Ritual completed! ✨');
-      closeModal();
-      onComplete();
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to complete ritual';
-      toast.error(message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const handleSubmit = async (): Promise<void> => {
     if (!text.trim()) {
@@ -116,6 +81,7 @@ export function RitualCompleteModal({
             ? { before: moodBefore, after: moodAfter }
             : undefined,
           userId: user?.id,
+          isPublic,
           fromDailyRitual: true,
           ritualId: ritual.id,
           ritualTitle: ritual.title
@@ -138,7 +104,7 @@ export function RitualCompleteModal({
         body: JSON.stringify({
           userId: user?.id,
           ritualId: ritual.id,
-          completedQuietly: false,
+          completedQuietly: false, // Always false now, but kept for API compatibility
           sharedAsMomentId: data.momentId || data.id
         })
       });
@@ -316,27 +282,41 @@ export function RitualCompleteModal({
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className='flex justify-between items-center pt-4 border-t border-gray-200 dark:border-gray-700'>
+        {/* Privacy Toggle */}
+        <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/50'>
+          <div className='flex-1'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Visibility
+            </label>
+            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+              {isPublic 
+                ? 'This moment will be visible to everyone in the feed' 
+                : 'This moment will only be visible to you'}
+            </p>
+          </div>
           <button
-            onClick={handleCompleteQuietly}
+            type='button'
+            onClick={() => setIsPublic(!isPublic)}
             disabled={loading}
             className={cn(
-              'rounded-full px-4 py-2 text-sm font-semibold',
-              'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+              'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
+              isPublic 
+                ? 'bg-purple-600' 
+                : 'bg-gray-300 dark:bg-gray-600',
               loading && 'opacity-50 cursor-not-allowed'
             )}
           >
-            {loading ? (
-              <span className='flex items-center gap-2'>
-                <Loader2 className='h-4 w-4 animate-spin' />
-                Completing...
-              </span>
-            ) : (
-              'Complete without sharing'
-            )}
+            <span
+              className={cn(
+                'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                isPublic ? 'translate-x-6' : 'translate-x-1'
+              )}
+            />
           </button>
-          <div className='flex gap-2'>
+        </div>
+
+        {/* Action Buttons */}
+        <div className='flex justify-end items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
             <button
               onClick={closeModal}
               disabled={loading}
@@ -365,7 +345,6 @@ export function RitualCompleteModal({
                 'Share Moment 🌱'
               )}
             </button>
-          </div>
         </div>
       </div>
     </Modal>

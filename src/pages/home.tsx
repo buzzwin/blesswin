@@ -15,7 +15,7 @@ import {
 } from 'firebase/firestore';
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import { usersCollection } from '@lib/firebase/collections';
-import { ProtectedLayout } from '@components/layout/common-layout';
+import { CommonLayout } from '@components/layout/common-layout';
 import { MainLayout } from '@components/layout/main-layout';
 import { MainContainer } from '@components/home/main-container';
 import { MainHeader } from '@components/home/main-header';
@@ -76,13 +76,6 @@ export default function HomeFeed(): JSX.Element {
   const [featuredStories, setFeaturedStories] = useState<RealStory[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(false);
 
-  // Redirect logged-in users to rituals page
-  useEffect(() => {
-    if (!authLoading && user) {
-      void router.replace('/rituals');
-    }
-  }, [user, authLoading, router]);
-
   const fetchMoments = async (): Promise<void> => {
     try {
       setLoading(true);
@@ -90,8 +83,17 @@ export default function HomeFeed(): JSX.Element {
         query(impactMomentsCollection, orderBy('createdAt', 'desc'))
       );
 
+      // Filter moments based on privacy: show public moments to all, private moments only to creator
+      const filteredDocs = snapshot.docs.filter((docSnapshot) => {
+        const momentData = docSnapshot.data();
+        const isPublic = momentData.isPublic !== false; // Default to true for backward compatibility
+        const isCreator = user?.id === momentData.createdBy;
+        // Show if public OR if user is the creator
+        return isPublic || isCreator;
+      });
+
       const momentsWithUsers = await Promise.all(
-        snapshot.docs.map(async (docSnapshot) => {
+        filteredDocs.map(async (docSnapshot) => {
           const momentData = { id: docSnapshot.id, ...docSnapshot.data() };
 
           // If joinedByUsers doesn't exist, query for it
@@ -240,11 +242,6 @@ export default function HomeFeed(): JSX.Element {
   useEffect(() => {
     void fetchRitualStats();
   }, [user?.id]);
-
-  // Don't render content if user is logged in (will redirect)
-  if (!authLoading && user) {
-    return <Loading />;
-  }
 
   const handleRipple = async (
     momentId: string,
@@ -634,7 +631,7 @@ export default function HomeFeed(): JSX.Element {
 }
 
 HomeFeed.getLayout = (page: ReactElement): ReactNode => (
-  <ProtectedLayout>
-    <MainLayout>{page}</MainLayout>
-  </ProtectedLayout>
+  <CommonLayout>
+    {page}
+  </CommonLayout>
 );

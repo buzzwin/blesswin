@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { Heart, Send, X, Moon, Flower2, Waves } from 'lucide-react';
+import { Heart, Send, X, Moon, Flower2, Waves, Sparkles } from 'lucide-react';
 import { Button } from '@components/ui/button-shadcn';
 
 import { RitualFormModal } from '@components/rituals/ritual-form-modal';
 import type { RitualDefinition } from '@lib/types/ritual';
 import { Plus } from 'lucide-react';
 
-export type WellnessAgentType = 'yoga' | 'meditation' | 'harmony';
+export type WellnessAgentType = 'yoga' | 'meditation' | 'harmony' | 'wellness';
 
 interface Message {
   id: string;
@@ -26,6 +26,18 @@ interface WellnessChatProps {
 }
 
 const agentConfig = {
+  wellness: {
+    name: 'Wellness AI Pal',
+    icon: Sparkles,
+    color: 'from-purple-500 to-teal-500',
+    initialMessage: 'Hello! I\'m your Wellness AI Pal, your complete wellness companion. I can help you with yoga poses and sequences, meditation and mindfulness practices, finding inner peace and harmony, and creating personalized wellness rituals. Whether you\'re looking to start a new practice or deepen an existing one, I\'m here to guide you. What would you like to explore today?',
+    suggestions: [
+      'Yoga for beginners',
+      'Meditation techniques',
+      'Finding inner peace',
+      'Wellness rituals'
+    ]
+  },
   yoga: {
     name: 'Yoga AI Pal',
     icon: Flower2,

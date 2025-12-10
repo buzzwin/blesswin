@@ -36,15 +36,6 @@ export function GlobalDesktopHeader(): JSX.Element {
     void router.push('/login');
   };
 
-  const handleFeedClick = (e: MouseEvent<HTMLAnchorElement>): void => {
-    if (!user) {
-      e.preventDefault();
-      if (typeof window !== 'undefined') {
-        sessionStorage.setItem('redirectAfterLogin', '/rituals');
-      }
-      void router.push('/login');
-    }
-  };
 
   return (
     <header className='sticky top-0 z-50 hidden border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900 md:block'>
@@ -70,10 +61,7 @@ export function GlobalDesktopHeader(): JSX.Element {
             </a>
           </Link>
           <Link href='/home'>
-            <a 
-              onClick={handleFeedClick}
-              className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'
-            >
+            <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
               <Sparkles className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
               <span className='hidden sm:inline'>Feed</span>
             </a>

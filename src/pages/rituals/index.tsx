@@ -45,7 +45,6 @@ export default function RitualsPage(): JSX.Element {
   const [stats, setStats] = useState<RitualStats | null>(null);
   const [completions, setCompletions] = useState<RitualCompletion[]>([]);
   const [loading, setLoading] = useState(true);
-  const [completingRitualId, setCompletingRitualId] = useState<string | null>(null);
   const { open: completeModalOpen, openModal: openCompleteModal, closeModal: closeCompleteModal } = useModal();
   const { open: settingsModalOpen, openModal: openSettingsModal, closeModal: closeSettingsModal } = useModal();
   const { open: ritualFormModalOpen, openModal: openRitualFormModal, closeModal: closeRitualFormModal } = useModal();
@@ -246,53 +245,6 @@ export default function RitualsPage(): JSX.Element {
     void fetchStats();
   }, [user?.id]);
 
-  const handleCompleteQuietly = async (ritualId: string): Promise<void> => {
-    if (!user?.id) {
-      toast.error('Please sign in');
-      return;
-    }
-
-    try {
-      setCompletingRitualId(ritualId);
-      const response = await fetch('/api/rituals/complete', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: user.id,
-          ritualId,
-          completedQuietly: true
-        })
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to complete ritual');
-      }
-
-      toast.success('Ritual completed! ✨');
-      
-      // Refresh data
-      const todayResponse = await fetch(`/api/rituals/today?userId=${user.id}`);
-      if (todayResponse.ok) {
-        const todayData = await todayResponse.json();
-        setTodayRituals(todayData.rituals);
-      }
-
-      const statsResponse = await fetch(`/api/rituals/stats?userId=${user.id}`);
-      if (statsResponse.ok) {
-        const statsData = await statsResponse.json();
-        setStats(statsData.stats);
-      }
-    } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to complete ritual';
-      toast.error(message);
-    } finally {
-      setCompletingRitualId(null);
-    }
-  };
-
   const handleCompleteAndShare = (ritual: RitualDefinition): void => {
     setSelectedRitual(ritual);
     openCompleteModal();
@@ -465,7 +417,6 @@ export default function RitualsPage(): JSX.Element {
               <JoinedRitualsSection
                 onCompleteAndShare={handleCompleteAndShare}
                 onShareRitual={handleShareRitual}
-                completingRitualId={completingRitualId}
                 todayRituals={todayRituals}
                 onRefetch={() => {
                   void fetchTodayRituals();
@@ -574,7 +525,6 @@ export default function RitualsPage(): JSX.Element {
                 }}
                 onCompleteAndShare={handleCompleteAndShare}
                 onShareRitual={handleShareRitual}
-                completingRitualId={completingRitualId}
                 todayRituals={todayRituals}
                 onRefetch={() => {
                   void fetchTodayRituals();
@@ -648,7 +598,6 @@ export default function RitualsPage(): JSX.Element {
                 }}
                 onCompleteAndShare={handleCompleteAndShare}
                 onShareRitual={handleShareRitual}
-                completingRitualId={completingRitualId}
                 todayRituals={todayRituals}
                 showOnlyAvailable={true}
                 onRefetch={() => {
