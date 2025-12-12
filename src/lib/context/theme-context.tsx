@@ -58,9 +58,14 @@ export function ThemeContextProvider({
       const root = document.documentElement;
       const targetTheme = theme === 'dim' ? 'dark' : theme;
 
-      if (targetTheme === 'dark') root.classList.add('dark');
-      else root.classList.remove('dark');
+      // Apply dark class immediately
+      if (targetTheme === 'dark') {
+        root.classList.add('dark');
+      } else {
+        root.classList.remove('dark');
+      }
 
+      // Set CSS variables
       root.style.setProperty('--main-background', `var(--${theme}-background)`);
 
       root.style.setProperty(
@@ -73,17 +78,22 @@ export function ThemeContextProvider({
         `var(--${theme}-sidebar-background)`
       );
 
+      // Save to localStorage and update user theme
       if (user) {
         localStorage.setItem('theme', theme);
         return setTimeout(() => void updateUserTheme(user.id, { theme }), 500);
+      } else {
+        // Still save to localStorage even if not logged in
+        localStorage.setItem('theme', theme);
       }
 
       return undefined;
     };
 
+    // Apply theme immediately on mount and when it changes
     const timeoutId = flipTheme(theme);
     return () => clearTimeout(timeoutId);
-  }, [userId, theme]);
+  }, [userId, theme, user]);
 
   useEffect(() => {
     const flipAccent = (accent: Accent): NodeJS.Timeout | undefined => {

@@ -98,6 +98,58 @@
     @apply hover-animation bg-main-background font-twitter-chirp text-light-primary dark:text-dark-primary;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Dark mode support for web components (media-controller, etc.) */
+  media-controller,
+  media-control-bar,
+  media-fullscreen-button,
+  media-play-button,
+  media-mute-button,
+  media-volume-range,
+  media-time-range,
+  media-time-display {
+    color-scheme: light;
+  }
+
+  .dark media-controller,
+  .dark media-control-bar,
+  .dark media-fullscreen-button,
+  .dark media-play-button,
+  .dark media-mute-button,
+  .dark media-volume-range,
+  .dark media-time-range,
+  .dark media-time-display {
+    color-scheme: dark;
+    color: rgb(231, 233, 234); /* dark-primary */
+  }
+
+  .dark media-control-bar {
+    background-color: rgba(0, 0, 0, 0.7);
+  }
+
+  .dark media-fullscreen-button svg,
+  .dark media-play-button svg,
+  .dark media-mute-button svg {
+    stroke: rgb(231, 233, 234); /* dark-primary */
+    fill: none;
+  }
+
+  /* Ensure SVG icons in media controls respect dark mode */
+  .dark media-control-bar svg,
+  .dark media-fullscreen-button svg,
+  .dark media-play-button svg,
+  .dark media-mute-button svg {
+    color: rgb(231, 233, 234); /* dark-primary */
+  }
+
+  /* Ensure SVG icons with currentColor inherit properly in dark mode */
+  .dark svg[stroke="currentColor"] {
+    color: inherit;
+  }
+
+  .dark svg[fill="currentColor"] {
+    color: inherit;
+  }
 }
 
 @layer components {

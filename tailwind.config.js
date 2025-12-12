@@ -34,6 +34,7 @@ module.exports = {
         'accent-red': '#F4212E',
         'dark-primary': '#E7E9EA',
         'dark-secondary': '#71767B',
+        'dark-background': 'rgb(var(--dark-background) / <alpha-value>)',
         'light-primary': '#0F1419',
         'light-secondary': '#536471',
         'dark-border': '#2F3336',
