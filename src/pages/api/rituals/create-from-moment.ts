@@ -94,24 +94,7 @@ export default async function handler(
           });
         }
 
-        // Also add to user's custom_rituals so they can complete it
-        const userCustomRitualsQuery = query(
-          collection(db, 'users', userId, 'custom_rituals'),
-          where('title', '==', ritualData.title)
-        );
-        const existingCustomRituals = await getDocs(userCustomRitualsQuery);
-
-        if (existingCustomRituals.empty) {
-          const { id, ...ritualDataWithoutId } = ritualData;
-          const ritualCopy = {
-            ...ritualDataWithoutId,
-            createdAt: serverTimestamp(),
-            createdBy: userId,
-            scope: 'personalized',
-            joinedByUsers: []
-          };
-          await addDoc(collection(db, 'users', userId, 'custom_rituals'), ritualCopy);
-        }
+        // Ritual remains only in the main ritualsCollection - no copy created
 
         res.status(200).json({
           success: true,
@@ -144,26 +127,7 @@ export default async function handler(
         });
       }
 
-      // Also add this ritual to user's custom_rituals so they can complete it
-      const userCustomRitualsQuery = query(
-        collection(db, 'users', userId, 'custom_rituals'),
-        where('title', '==', existingRitualData.title)
-      );
-      const existingCustomRituals = await getDocs(userCustomRitualsQuery);
-
-      if (existingCustomRituals.empty) {
-        // Copy ritual to user's custom_rituals
-        const { id, ...ritualDataWithoutId } = existingRitualData;
-        const ritualCopy = {
-          ...ritualDataWithoutId,
-          createdAt: serverTimestamp(),
-          createdBy: userId,
-          scope: 'personalized',
-          joinedByUsers: [],
-          rippleCount: 0
-        };
-        await addDoc(collection(db, 'users', userId, 'custom_rituals'), ritualCopy);
-      }
+      // Ritual remains only in the main ritualsCollection - no copy created
 
       res.status(200).json({
         success: true,
@@ -177,6 +141,12 @@ export default async function handler(
     const ritualTitle = title?.trim() || moment.text.substring(0, 50) || 'New Ritual';
     const ritualDescription = description?.trim() || moment.text || 'A ritual inspired by an impact moment';
 
+    // Create prefillTemplate, ensuring it's under 280 characters
+    const fullPrefillTemplate = moment.text || `Completed ritual: ${ritualTitle}`;
+    const prefillTemplate = fullPrefillTemplate.length > 280 
+      ? fullPrefillTemplate.substring(0, 277) + '...'
+      : fullPrefillTemplate;
+
     // Create shared ritual in main rituals collection (so others can join)
     const ritualDoc = {
       title: ritualTitle,
@@ -186,7 +156,7 @@ export default async function handler(
       scope: 'personalized', // Shared but personalized scope
       suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
       durationEstimate: durationEstimate || '5 minutes',
-      prefillTemplate: moment.text || `Completed ritual: ${ritualTitle}`,
+      prefillTemplate,
       createdAt: serverTimestamp(),
       usageCount: 0,
       completionRate: 0,
@@ -197,15 +167,8 @@ export default async function handler(
 
     const docRef = await addDoc(ritualsCollection, ritualDoc as any);
 
-    // Also add to user's custom_rituals so they can complete it
-    // Creator automatically joins their own ritual
-    const ritualCopy = {
-      ...ritualDoc,
-      createdAt: serverTimestamp(),
-      scope: 'personalized',
-      joinedByUsers: [userId] // Creator automatically joins their own ritual
-    };
-    await addDoc(userCustomRitualsCollection(userId), ritualCopy);
+    // Ritual remains only in the main ritualsCollection - no copy created
+    // Creator automatically joins their own ritual (already in joinedByUsers array)
 
     res.status(200).json({
       success: true,

@@ -92,6 +92,12 @@ export default async function handler(
       const oldScope = ritualData.scope as RitualScope || 'personalized';
       const newScope: RitualScope = scope === 'public' ? 'public' : 'personalized';
 
+      // Create prefillTemplate, ensuring it's under 280 characters
+      const fullPrefillTemplate = `Completed ritual: ${title.trim()}\n\n${description.trim()}`;
+      const prefillTemplate = fullPrefillTemplate.length > 280 
+        ? fullPrefillTemplate.substring(0, 277) + '...'
+        : fullPrefillTemplate;
+
       const updateData = {
         title: title.trim(),
         description: description.trim(),
@@ -100,7 +106,7 @@ export default async function handler(
         scope: newScope,
         suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
         durationEstimate: durationEstimate || '5 minutes',
-        prefillTemplate: `Completed ritual: ${title.trim()}\n\n${description.trim()}`,
+        prefillTemplate,
         updatedAt: serverTimestamp()
       };
 

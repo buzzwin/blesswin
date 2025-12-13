@@ -131,27 +131,7 @@ export default async function handler(
         console.log('⚠️ User already in joinedByUsers array, skipping update');
       }
 
-      // Also add this ritual to user's custom_rituals so they can complete it
-      const customRitualsQuery = query(
-        userCustomRitualsCollection(userId),
-        where('title', '==', ritualData.title)
-      );
-      const existingCustomRituals = await getDocs(customRitualsQuery);
-      
-      if (existingCustomRituals.empty) {
-        // Copy ritual to user's custom_rituals
-        // Remove id field entirely (don't set to undefined)
-        const { id, ...ritualDataWithoutId } = ritualData;
-        const ritualCopy = {
-          ...ritualDataWithoutId,
-          createdAt: serverTimestamp(),
-          createdBy: userId,
-          scope: 'personalized',
-          joinedByUsers: []
-        };
-        
-        await addDoc(userCustomRitualsCollection(userId), ritualCopy);
-      }
+      // Ritual remains only in the main ritualsCollection - no copy created
     } else {
       // Custom ritual - find it in the creator's custom_rituals
       // We need to find which user owns this ritual

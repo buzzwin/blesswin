@@ -281,6 +281,23 @@ export default async function handler(
       ...doc.data()
     } as RitualDefinition));
 
+    // Get joined rituals from main collection (rituals where user is in joinedByUsers)
+    // Since joined rituals are no longer copied to custom_rituals, we need to fetch them from main collection
+    const allRitualsSnapshot = await getDocs(ritualsCollection);
+    const joinedRitualsFromMain: RitualDefinition[] = allRitualsSnapshot.docs
+      .map(doc => {
+        const data = doc.data();
+        const { id: _, ...dataWithoutId } = data;
+        return {
+          id: doc.id,
+          ...dataWithoutId
+        } as RitualDefinition;
+      })
+      .filter(ritual => {
+        const joinedByUsers = ritual.joinedByUsers || [];
+        return joinedByUsers.includes(userId);
+      });
+
     // Get all completions for this user to check last completion dates
     const allCompletionsQuery = query(
       ritualCompletionsCollection(userId),
@@ -325,9 +342,24 @@ export default async function handler(
       todayCompletionsSnapshot.docs.map(doc => doc.data().ritualId)
     );
 
+    // Combine custom rituals and joined rituals from main collection
+    // Deduplicate by ID to avoid showing the same ritual twice
+    const allUserRitualsMap = new Map<string, RitualDefinition>();
+    customRituals.forEach(ritual => {
+      if (ritual.id) {
+        allUserRitualsMap.set(ritual.id, ritual);
+      }
+    });
+    joinedRitualsFromMain.forEach(ritual => {
+      if (ritual.id && !allUserRitualsMap.has(ritual.id)) {
+        allUserRitualsMap.set(ritual.id, ritual);
+      }
+    });
+    const allUserRituals = Array.from(allUserRitualsMap.values());
+
     // Filter rituals by frequency - only show rituals that are due
     const todayDate = new Date();
-    const dueCustomRituals = customRituals.filter(ritual => {
+    const dueCustomRituals = allUserRituals.filter(ritual => {
       if (!ritual.id) return false;
       const lastCompletion = lastCompletionDates.get(ritual.id) || null;
       return isRitualDue(ritual, lastCompletion, todayDate);

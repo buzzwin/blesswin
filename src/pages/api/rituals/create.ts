@@ -78,6 +78,12 @@ export default async function handler(
     // Validate scope
     const ritualScope: RitualScope = scope === 'public' ? 'public' : 'personalized';
 
+    // Create prefillTemplate, ensuring it's under 280 characters
+    const fullPrefillTemplate = `Completed ritual: ${title.trim()}\n\n${description.trim()}`;
+    const prefillTemplate = fullPrefillTemplate.length > 280 
+      ? fullPrefillTemplate.substring(0, 277) + '...'
+      : fullPrefillTemplate;
+
     // Create custom ritual document
     // Creator automatically joins their own ritual
     const ritualDoc: Record<string, unknown> = {
@@ -88,7 +94,7 @@ export default async function handler(
       scope: ritualScope,
       suggestedTimeOfDay: suggestedTimeOfDay || 'anytime',
       durationEstimate: durationEstimate || '5 minutes',
-      prefillTemplate: `Completed ritual: ${title.trim()}\n\n${description.trim()}`,
+      prefillTemplate,
       frequency: frequency || 'FREQ=DAILY;INTERVAL=1', // Default to daily if not specified
       createdAt: serverTimestamp(),
       usageCount: 0,

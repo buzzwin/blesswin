@@ -4,10 +4,10 @@ import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { Modal } from '@components/modal/modal';
 import { UserAvatar } from '@components/user/user-avatar';
-import { 
-  impactTagLabels, 
-  impactTagColors, 
-  effortLevelLabels, 
+import {
+  impactTagLabels,
+  impactTagColors,
+  effortLevelLabels,
   effortLevelIcons,
   type ImpactTag,
   type EffortLevel
@@ -40,18 +40,24 @@ export function RitualCompleteModal({
   // Reset form when modal opens/closes
   useEffect(() => {
     if (open) {
-      setText(ritual.prefillTemplate);
+      // Ensure prefillTemplate doesn't exceed the limit (safety check)
+      const prefillText = ritual.prefillTemplate || '';
+      const safePrefillText =
+        prefillText.length > inputLimit
+          ? prefillText.substring(0, inputLimit)
+          : prefillText;
+      setText(safePrefillText);
       setMoodBefore(null);
       setMoodAfter(null);
       setIsPublic(true); // Reset to public by default
       setTimeout(() => {
         textareaRef.current?.focus();
         // Select the text so user can easily edit
-        const textLength = ritual.prefillTemplate.length;
+        const textLength = safePrefillText.length;
         textareaRef.current?.setSelectionRange(textLength, textLength);
       }, 100);
     }
-  }, [open, ritual]);
+  }, [open, ritual, inputLimit]);
 
   const handleSubmit = async (): Promise<void> => {
     if (!text.trim()) {
@@ -77,9 +83,10 @@ export function RitualCompleteModal({
           text: text.trim(),
           tags: ritual.tags,
           effortLevel: ritual.effortLevel,
-          moodCheckIn: moodBefore !== null && moodAfter !== null 
-            ? { before: moodBefore, after: moodAfter }
-            : undefined,
+          moodCheckIn:
+            moodBefore !== null && moodAfter !== null
+              ? { before: moodBefore, after: moodAfter }
+              : undefined,
           userId: user?.id,
           isPublic,
           fromDailyRitual: true,
@@ -94,7 +101,7 @@ export function RitualCompleteModal({
       }
 
       const data = await response.json();
-      
+
       // Now complete the ritual with the moment ID
       const completeResponse = await fetch('/api/rituals/complete', {
         method: 'POST',
@@ -117,7 +124,8 @@ export function RitualCompleteModal({
       closeModal();
       onComplete(data.momentId || data.id);
     } catch (error) {
-      const message = error instanceof Error ? error.message : 'Failed to share moment';
+      const message =
+        error instanceof Error ? error.message : 'Failed to share moment';
       toast.error(message);
     } finally {
       setLoading(false);
@@ -137,7 +145,7 @@ export function RitualCompleteModal({
             <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
               Share Your Ritual Completion
             </h2>
-            <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+            <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
               Complete & share: {ritual.title}
             </p>
           </div>
@@ -220,8 +228,12 @@ export function RitualCompleteModal({
             Effort Level
           </label>
           <div className='flex items-center gap-2'>
-            <span className='text-lg'>{effortLevelIcons[ritual.effortLevel]}</span>
-            <span className='text-sm font-medium'>{effortLevelLabels[ritual.effortLevel]} Effort</span>
+            <span className='text-lg'>
+              {effortLevelIcons[ritual.effortLevel]}
+            </span>
+            <span className='text-sm font-medium'>
+              {effortLevelLabels[ritual.effortLevel]} Effort
+            </span>
           </div>
         </div>
 
@@ -246,7 +258,7 @@ export function RitualCompleteModal({
                   disabled={loading}
                   className={cn(
                     'flex-1 accent-purple-500',
-                    loading && 'opacity-50 cursor-not-allowed'
+                    loading && 'cursor-not-allowed opacity-50'
                   )}
                 />
                 <Smile className='h-4 w-4 text-gray-400' />
@@ -270,7 +282,7 @@ export function RitualCompleteModal({
                   disabled={loading}
                   className={cn(
                     'flex-1 accent-purple-500',
-                    loading && 'opacity-50 cursor-not-allowed'
+                    loading && 'cursor-not-allowed opacity-50'
                   )}
                 />
                 <Smile className='h-4 w-4 text-gray-400' />
@@ -289,8 +301,8 @@ export function RitualCompleteModal({
               Visibility
             </label>
             <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
-              {isPublic 
-                ? 'This moment will be visible to everyone in the feed' 
+              {isPublic
+                ? 'This moment will be visible to everyone in the feed'
                 : 'This moment will only be visible to you'}
             </p>
           </div>
@@ -300,10 +312,8 @@ export function RitualCompleteModal({
             disabled={loading}
             className={cn(
               'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
-              isPublic 
-                ? 'bg-purple-600' 
-                : 'bg-gray-300 dark:bg-gray-600',
-              loading && 'opacity-50 cursor-not-allowed'
+              isPublic ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600',
+              loading && 'cursor-not-allowed opacity-50'
             )}
           >
             <span
@@ -316,38 +326,37 @@ export function RitualCompleteModal({
         </div>
 
         {/* Action Buttons */}
-        <div className='flex justify-end items-center gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
-            <button
-              onClick={closeModal}
-              disabled={loading}
-              className={cn(
-                'rounded-full px-4 py-2 text-sm font-semibold',
-                'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
-                loading && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSubmit}
-              disabled={!text.trim() || loading}
-              className={cn(
-                'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
-                (!text.trim() || loading) && 'opacity-50 cursor-not-allowed'
-              )}
-            >
-              {loading ? (
-                <span className='flex items-center gap-2'>
-                  <Loader2 className='h-4 w-4 animate-spin' />
-                  Sharing...
-                </span>
-              ) : (
-                'Share Moment 🌱'
-              )}
-            </button>
+        <div className='flex items-center justify-end gap-2 border-t border-gray-200 pt-4 dark:border-gray-700'>
+          <button
+            onClick={closeModal}
+            disabled={loading}
+            className={cn(
+              'rounded-full px-4 py-2 text-sm font-semibold',
+              'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+              loading && 'cursor-not-allowed opacity-50'
+            )}
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSubmit}
+            disabled={!text.trim() || loading}
+            className={cn(
+              'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
+              (!text.trim() || loading) && 'cursor-not-allowed opacity-50'
+            )}
+          >
+            {loading ? (
+              <span className='flex items-center gap-2'>
+                <Loader2 className='h-4 w-4 animate-spin' />
+                Sharing...
+              </span>
+            ) : (
+              'Share Moment 🌱'
+            )}
+          </button>
         </div>
       </div>
     </Modal>
   );
 }
-
