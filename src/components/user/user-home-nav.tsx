@@ -8,16 +8,11 @@ type UserNavLink = {
   default?: boolean;
 };
 
-// Update user navigation to include Reviews
 const userNavLinks: Readonly<UserNavLink[]> = [
   {
     href: '',
     name: 'Buzz',
     default: true
-  },
-  {
-    href: '/reviews',
-    name: 'Reviews'
   },
   {
     href: '/likes',

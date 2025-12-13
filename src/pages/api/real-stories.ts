@@ -10,18 +10,21 @@ interface RealStoriesResponse {
   cached?: boolean;
 }
 
-const CACHE_DURATION_DAYS = 15;
+const CACHE_DURATION_DAYS = 1; // Refresh daily for fresh stories
 const CACHE_DOC_ID = 'latest';
 
 function createOptimizedPrompt(): string {
   const currentDate = new Date().toISOString().split('T')[0];
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+  const oneYearAgoStr = oneYearAgo.toISOString().split('T')[0];
   
-  return `Find and share 10 of the LATEST AVAILABLE real stories about people, communities, or organizations doing good in the world. 
+  return `Find and share 10 real stories about people, communities, or organizations doing good in the world. 
 
 CRITICAL REQUIREMENTS:
-- Focus on stories from the MOST RECENT time period possible (prioritize current month, then recent weeks)
+- Include stories from the last year (from ${oneYearAgoStr} to ${currentDate})
+- Prioritize the MOST RECENT stories available (current month/week first, then expand to older stories if needed)
 - Only include stories that are verifiable and from credible sources
-- If you cannot find enough recent stories, include the most recent stories available (even if slightly older)
 - Prioritize stories with actual dates and sources
 
 Focus on these categories:
@@ -36,7 +39,7 @@ For each story, provide:
 - A compelling, specific title
 - A detailed description (2-3 sentences) of what they're doing and the impact
 - Location (city, country) if available
-- Date (when it happened or was reported) - MUST be a valid date in YYYY-MM-DD format. Use null ONLY if you absolutely cannot find a specific date.
+- Date (when it happened or was reported) - MUST be a valid date in YYYY-MM-DD format between ${oneYearAgoStr} and ${currentDate}. Use null ONLY if you absolutely cannot find a specific date.
 - Source (news outlet, organization name, etc.) - REQUIRED
 - URL if available (only real, verifiable URLs from actual news sources)
 
@@ -57,17 +60,21 @@ Categories must be one of: community, environment, education, health, social-jus
 
 IMPORTANT:
 - You MUST return exactly 10 stories
+- Stories can be from the last year (${oneYearAgoStr} to ${currentDate})
 - Prioritize the MOST RECENT stories available - start with current month/week, then expand if needed
 - Use null for date ONLY if you cannot find a specific, verifiable date
 - Make sure all URLs are real and verifiable - do not include placeholder URLs
 - All stories must be real and verifiable from credible sources
 - Sort stories by date (most recent first) in your response
 
-Current date: ${currentDate}`;
+Current date: ${currentDate}
+One year ago: ${oneYearAgoStr}`;
 }
 
 function validateAndFilterStories(stories: RealStory[]): RealStory[] {
   const now = new Date();
+  const oneYearAgo = new Date();
+  oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
   
   return stories
     .filter((story) => {
@@ -85,6 +92,10 @@ function validateAndFilterStories(stories: RealStory[]): RealStory[] {
             // Check if date is not in the future
             if (storyDate > now) {
               story.date = null;
+            }
+            // Only include stories from the last year
+            if (storyDate < oneYearAgo) {
+              return false; // Reject stories older than 1 year
             }
           }
         } catch {

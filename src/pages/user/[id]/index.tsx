@@ -16,7 +16,7 @@ export default function UserImpactMomentsPage(): JSX.Element {
   };
 
   return (
-    <section>
+    <div className='space-y-0'>
       {id ? (
         <UserImpactMoments userId={id} onRipple={handleRipple} />
       ) : (
@@ -24,7 +24,7 @@ export default function UserImpactMomentsPage(): JSX.Element {
           Loading user...
         </div>
       )}
-    </section>
+    </div>
   );
 }
 

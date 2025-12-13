@@ -1,15 +1,14 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useUser } from '@lib/context/user-context';
-import { getUserReviews } from '@lib/firebase/utils/review';
 import { UserLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { MainLayout } from '@components/layout/main-layout';
 import { SEO } from '@components/common/seo';
 import { UserDataLayout } from '@components/layout/user-data-layout';
 import { UserHomeLayout } from '@components/layout/user-home-layout';
-import { ReviewsList } from '@components/review/reviews-list';
-import type { ReviewWithUser } from '@lib/types/review';
+import { UserImpactMoments } from '@components/user/user-impact-moments';
 import type { ReactElement, ReactNode } from 'react';
+import type { RippleType } from '@lib/types/impact-moment';
 
 export default function UserProfile(): JSX.Element {
   const { user } = useUser();
@@ -23,30 +22,9 @@ export default function UserProfile(): JSX.Element {
     }
   }, [userId, push]);
 
-  const [reviews, setReviews] = useState<ReviewWithUser[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const loadUserReviews = async (): Promise<void> => {
-      if (!userId) return;
-
-      try {
-        const userReviews = await getUserReviews(userId);
-        setReviews(userReviews);
-      } catch (error) {
-        // console.error('Error loading user reviews:', error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    void loadUserReviews();
-  }, [userId]);
-
-  const handleReviewDeleted = (reviewId: string) => {
-    setReviews((prevReviews) =>
-      prevReviews.filter((review) => review.id !== reviewId)
-    );
+  const handleRipple = (momentId: string, rippleType: RippleType): void => {
+    // Ripple handling can be implemented here if needed
+    // For now, it's handled in the ImpactMomentCard component
   };
 
   return (
@@ -56,13 +34,13 @@ export default function UserProfile(): JSX.Element {
           user?.username as string
         }) / Buzzwin`}
       />
-      <div className='mt-0.5 px-4'>
-        <ReviewsList
-          reviews={reviews}
-          loading={loading}
-          onReviewDeleted={handleReviewDeleted}
-        />
-      </div>
+      {userId ? (
+        <UserImpactMoments userId={userId} onRipple={handleRipple} />
+      ) : (
+        <div className='mt-5 text-center text-gray-500 dark:text-gray-400'>
+          Loading user...
+        </div>
+      )}
     </section>
   );
 }

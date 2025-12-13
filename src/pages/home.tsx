@@ -150,7 +150,7 @@ export default function HomeFeed(): JSX.Element {
     }
   };
 
-  // Fetch featured stories for feed - CACHE ONLY (no Gemini calls)
+  // Fetch all real stories for feed - CACHE ONLY (no Gemini calls)
   const fetchFeaturedStories = async (): Promise<void> => {
     try {
       setStoriesLoading(true);
@@ -158,8 +158,8 @@ export default function HomeFeed(): JSX.Element {
       if (response.ok) {
         const data = await response.json();
         if (data.stories && Array.isArray(data.stories)) {
-          // Take top 2-3 stories to feature in feed
-          setFeaturedStories(data.stories.slice(0, 3));
+          // Show all stories from the last year
+          setFeaturedStories(data.stories);
         }
       }
     } catch (error) {
@@ -631,7 +631,5 @@ export default function HomeFeed(): JSX.Element {
 }
 
 HomeFeed.getLayout = (page: ReactElement): ReactNode => (
-  <CommonLayout>
-    {page}
-  </CommonLayout>
+  <CommonLayout>{page}</CommonLayout>
 );

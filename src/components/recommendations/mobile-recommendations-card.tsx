@@ -133,18 +133,8 @@ export function MobileRecommendationsCard({
           </h4>
           <p className='mb-3 text-xs text-gray-600 dark:text-gray-400'>
             {analysis?.suggestions?.[0] ??
-              'Start rating shows and movies to get AI-powered recommendations!'}
+              'Get personalized recommendations based on your preferences!'}
           </p>
-          <Link href='/swipe'>
-            <Button
-              variant='outline'
-              size='sm'
-              className='border-purple-300 text-purple-700 hover:bg-purple-50 dark:border-purple-700 dark:text-purple-300 dark:hover:bg-purple-900/20'
-            >
-              <Sparkles className='mr-2 h-3 w-3' />
-              Start Rating
-            </Button>
-          </Link>
         </CardContent>
       </Card>
     );

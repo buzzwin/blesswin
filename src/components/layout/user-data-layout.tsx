@@ -5,10 +5,15 @@ import { useCollection } from '@lib/hooks/useCollection';
 import { usersCollection } from '@lib/firebase/collections';
 import { SEO } from '@components/common/seo';
 import { MainHeader } from '@components/home/main-header';
+import { MainContainer } from '@components/home/main-container';
 import { UserHeader } from '@components/user/user-header';
 import type { ReactNode } from 'react';
 
-export function UserDataLayout({ children }: { children: ReactNode }): JSX.Element {
+export function UserDataLayout({
+  children
+}: {
+  children: ReactNode;
+}): JSX.Element {
   const {
     query: { id },
     back
@@ -24,12 +29,12 @@ export function UserDataLayout({ children }: { children: ReactNode }): JSX.Eleme
   return (
     <UserContextProvider value={{ user, loading }}>
       {!user && !loading && <SEO title='User not found / Buzzwin' />}
-      <div>
+      <MainContainer>
         <MainHeader useActionButton action={back}>
           <UserHeader />
         </MainHeader>
         {children}
-      </div>
+      </MainContainer>
     </UserContextProvider>
   );
 }

@@ -46,7 +46,7 @@ export function ModernInput({
   const [loading, setLoading] = useState(false);
   const [showMediaSearch, setShowMediaSearch] = useState(false);
   const [selectedMedia, setSelectedMedia] = useState<any>(null);
-  const [generatingReview, setGeneratingReview] = useState(false);
+  // Movie review generation removed
 
   const { user } = useAuth();
   const { name, username, photoURL } = user ?? {};
@@ -90,52 +90,7 @@ export function ModernInput({
     onMediaSelect?.(media);
   };
 
-  const generateAIReview = async (): Promise<void> => {
-    if (!selectedMedia) return;
-
-    setGeneratingReview(true);
-    try {
-      const response = await fetch('/api/generate-review', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title: selectedMedia?.title ? String(selectedMedia.title) : '',
-          overview: selectedMedia?.overview
-            ? String(selectedMedia.overview)
-            : ''
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to generate review');
-      }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(
-          (data.message as string) ?? 'Failed to generate review'
-        );
-      }
-
-      if (data.review && typeof data.review === 'string') {
-        const reviewText = data.review as string;
-        onChange?.(reviewText);
-        toast.success('AI review generated!');
-      } else {
-        throw new Error('No review received from API');
-      }
-    } catch (error) {
-      // console.error('Error generating review:', error);
-      const errorMessage =
-        error instanceof Error ? error.message : 'Failed to generate AI review';
-      toast.error(errorMessage);
-    } finally {
-      setGeneratingReview(false);
-    }
-  };
+  // Movie review generation removed
 
   return (
     <div className='w-full transition-all duration-300'>
@@ -160,10 +115,12 @@ export function ModernInput({
                 username={username ?? 'user'}
                 className={cn(compact && 'h-6 w-6')}
               />
-              <p className={cn(
-                'flex-1 text-gray-500 dark:text-gray-400',
-                compact ? 'text-xs' : 'text-xs md:text-base'
-              )}>
+              <p
+                className={cn(
+                  'flex-1 text-gray-500 dark:text-gray-400',
+                  compact ? 'text-xs' : 'text-xs md:text-base'
+                )}
+              >
                 {placeholder}
               </p>
               {!compact && (
@@ -275,17 +232,6 @@ export function ModernInput({
                           <h4 className='text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm'>
                             Write your review
                           </h4>
-                          <Button
-                            type='button'
-                            variant='outline'
-                            size='sm'
-                            onClick={generateAIReview}
-                            disabled={generatingReview ?? loading}
-                            className='gap-1 border-amber-300 text-xs text-amber-700 hover:bg-amber-50 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/20 md:gap-2 md:text-sm'
-                          >
-                            <Sparkles className='h-3 w-3 md:h-4 md:w-4' />
-                            {generatingReview ? 'Generating...' : 'AI Review'}
-                          </Button>
                         </div>
                         <Textarea
                           ref={inputRef}

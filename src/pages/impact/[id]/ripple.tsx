@@ -237,7 +237,7 @@ export default function RippleViewPage(): JSX.Element {
         description='See how positive actions inspire others to join'
       >
         <MainHeader title='Ripple' />
-        <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
+        <div className='mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8 dark:bg-dark-background'>
           <Loading className='mt-5' />
         </div>
       </PublicLayout>
@@ -283,7 +283,7 @@ export default function RippleViewPage(): JSX.Element {
       ogImage={userPhotoURL || undefined}
       ogUrl={publicUrl}
     >
-      <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
+      <div className='mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8 dark:bg-dark-background'>
         {/* Back Button */}
         <div className='mb-4'>
           <Link href={`/impact/${id}`}>
@@ -543,7 +543,9 @@ export default function RippleViewPage(): JSX.Element {
                     </a>
                   </Link>
                 ) : (
-                  <Link href={`/login?redirect=/rituals/${originalMoment.ritualId}`}>
+                  <Link
+                    href={`/login?redirect=/rituals/${originalMoment.ritualId}`}
+                  >
                     <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
                       <LogIn className='h-5 w-5' />
                       Sign In to Join Ritual

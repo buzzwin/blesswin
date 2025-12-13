@@ -241,18 +241,8 @@ export function RecommendationsCard({
           </h4>
           <p className='mb-4 text-sm text-muted-foreground dark:text-gray-400'>
             {analysis?.suggestions?.[0] ??
-              'Start rating shows and movies to get AI-powered recommendations!'}
+              'Get personalized recommendations based on your preferences!'}
           </p>
-          <Link href='/swipe'>
-            <Button
-              variant='outline'
-              size='sm'
-              className='group rounded-lg border-2 border-blue-500/40 bg-blue-500/10 px-4 py-2 text-sm font-medium text-blue-300 transition-all duration-300 hover:border-blue-500/60 hover:bg-blue-500/20 hover:text-blue-200'
-            >
-              <Sparkles className='mr-2 h-4 w-4 transition-transform duration-300 group-hover:scale-110' />
-              Start Rating
-            </Button>
-          </Link>
         </CardContent>
       </Card>
     );
@@ -507,11 +497,6 @@ export function RecommendationsCard({
                 >
                   Close
                 </Button>
-                <Link href={`/swipe?tmdbId=${selectedRecommendation.tmdbId}`}>
-                  <Button className='flex-1 bg-gray-900 text-white hover:bg-gray-800 dark:bg-white dark:text-gray-900 dark:hover:bg-gray-100'>
-                    Rate This
-                  </Button>
-                </Link>
               </div>
 
               {/* Compact Social Share */}

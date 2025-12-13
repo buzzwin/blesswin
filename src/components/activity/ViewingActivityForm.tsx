@@ -39,39 +39,7 @@ const defaultActivity: ViewingActivity = {
   photoURL: 'default-avatar',
   mediaType: 'movie'
 };
-interface ApiResponse {
-  review: string;
-}
-
-const generateReview = async (movieDetails: {
-  title: string;
-  overview: string;
-}): Promise<string> => {
-  try {
-    const response = await fetch('/api/generate-review', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(movieDetails)
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to generate review');
-    }
-
-    const data = await response.json();
-    if (!data || typeof data.review !== 'string') {
-      throw new Error('Invalid response format');
-    } else {
-      return data.review as string;
-    }
-  } catch (error) {
-    const message =
-      error instanceof Error ? error.message : 'Failed to generate review';
-    throw new Error(message);
-  }
-};
+// Movie review generation removed
 
 const ViewingActivityForm = ({
   onSave
@@ -92,7 +60,7 @@ const ViewingActivityForm = ({
     name: '',
     status: 'is watching'
   });
-  const [isGenerating, setIsGenerating] = useState(false);
+  // Movie review generation removed
   const { user } = useAuth();
 
   const handleInputChange = async (
@@ -239,31 +207,7 @@ const ViewingActivityForm = ({
     }
   };
 
-  const handleGenerateReview = async () => {
-    if (!selectedShow?.title) {
-      toast.error('Please select a show first');
-      return;
-    }
-
-    setIsGenerating(true);
-    try {
-      const review = await generateReview({
-        title: selectedShow.title,
-        overview: selectedShow.overview ?? ''
-      });
-      setViewingActivity((prev) => ({
-        ...prev,
-        review
-      }));
-      toast.success('Review generated!');
-    } catch (error) {
-      const message =
-        error instanceof Error ? error.message : 'Failed to generate review';
-      toast.error(message);
-    } finally {
-      setIsGenerating(false);
-    }
-  };
+  // Movie review generation removed
 
   return (
     <div className='mx-auto w-full max-w-2xl'>
@@ -419,26 +363,6 @@ const ViewingActivityForm = ({
                     value={viewingActivity.review}
                     onChange={handleReviewChange}
                   />
-                  <button
-                    onClick={handleGenerateReview}
-                    disabled={isGenerating ?? !selectedShow.title}
-                    className={cn(
-                      'absolute right-2 bottom-2',
-                      'rounded-lg p-2',
-                      'bg-emerald-500 text-white',
-                      'hover:bg-emerald-600',
-                      'disabled:cursor-not-allowed disabled:opacity-50'
-                    )}
-                  >
-                    {isGenerating ? (
-                      <HeroIcon
-                        iconName='ArrowPathIcon'
-                        className='h-5 w-5 animate-spin'
-                      />
-                    ) : (
-                      <HeroIcon iconName='SparklesIcon' className='h-5 w-5' />
-                    )}
-                  </button>
                 </div>
 
                 {/* Selected Show Preview */}

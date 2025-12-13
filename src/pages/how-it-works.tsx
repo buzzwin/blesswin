@@ -1,5 +1,12 @@
 import Link from 'next/link';
-import { ArrowRight, Sparkles, Heart, Users, TrendingUp, CheckCircle } from 'lucide-react';
+import {
+  ArrowRight,
+  Sparkles,
+  Heart,
+  Users,
+  TrendingUp,
+  CheckCircle
+} from 'lucide-react';
 import { PublicLayout } from '@components/layout/pub_layout';
 import { MainHeader } from '@components/home/main-header';
 import { SEO } from '@components/common/seo';
@@ -26,7 +33,9 @@ export default function HowItWorksPage(): JSX.Element {
               How Buzzwin Works
             </h1>
             <p className='mx-auto max-w-2xl text-lg text-gray-600 dark:text-gray-400'>
-              A simple, powerful way to share ritual participation. Express yourself with reactions, join rituals to participate, and share your journey with the community.
+              A simple, powerful way to share ritual participation. Express
+              yourself with reactions, join rituals to participate, and share
+              your journey with the community.
             </p>
           </div>
 
@@ -48,7 +57,9 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
               </div>
               <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                Ritual Participations are when you complete and share rituals. When you finish a ritual, you can share your participation with the community to inspire others.
+                Ritual Participations are when you complete and share rituals.
+                When you finish a ritual, you can share your participation with
+                the community to inspire others.
               </p>
               <ul className='space-y-2 text-gray-600 dark:text-gray-400'>
                 <li className='flex items-start gap-2'>
@@ -57,11 +68,16 @@ export default function HowItWorksPage(): JSX.Element {
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />
-                  <span>Tag your participation (Mind, Body, Relationships, Nature, Community, Chores)</span>
+                  <span>
+                    Tag your participation (Mind, Body, Relationships, Nature,
+                    Community, Chores)
+                  </span>
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-green-600 dark:text-green-400' />
-                  <span>Add photos or mood check-ins to track your journey</span>
+                  <span>
+                    Add photos or mood check-ins to track your journey
+                  </span>
                 </li>
               </ul>
             </section>
@@ -82,7 +98,9 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
               </div>
               <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                Reactions are lightweight expressions of emotion. Click the "React" button on any ritual participation to show how it made you feel.
+                Reactions are lightweight expressions of emotion. Click the
+                "React" button on any ritual participation to show how it made
+                you feel.
               </p>
               <div className='grid gap-4 md:grid-cols-3'>
                 <div className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
@@ -131,7 +149,9 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
               </div>
               <p className='mb-4 text-purple-800 dark:text-purple-200'>
-                <strong>This is different from reactions.</strong> When you join a ritual, you're committing to participate in that ritual yourself and share your participation with the community.
+                <strong>This is different from reactions.</strong> When you join
+                a ritual, you're committing to participate in that ritual
+                yourself and share your participation with the community.
               </p>
               <div className='mb-4 space-y-3'>
                 <div className='flex items-start gap-3 rounded-lg bg-white/50 p-3 dark:bg-gray-800/50'>
@@ -141,7 +161,8 @@ export default function HowItWorksPage(): JSX.Element {
                       Share Your Ritual Participation
                     </p>
                     <p className='text-sm text-purple-700 dark:text-purple-300'>
-                      Complete the ritual and share your participation with the community
+                      Complete the ritual and share your participation with the
+                      community
                     </p>
                   </div>
                 </div>
@@ -170,7 +191,11 @@ export default function HowItWorksPage(): JSX.Element {
               </div>
               <div className='rounded-lg border border-purple-200 bg-white p-4 dark:border-purple-800 dark:bg-gray-800'>
                 <p className='text-sm font-medium text-purple-900 dark:text-purple-100'>
-                  💡 Example: Someone shares "Just finished my breathing ritual". You click "Join This Ritual" to participate in the same ritual, then share your own participation: "Completed my breathing practice this morning". Now you're both part of the same ritual community!
+                  💡 Example: Someone shares "Just finished my breathing
+                  ritual". You click "Join This Ritual" to participate in the
+                  same ritual, then share your own participation: "Completed my
+                  breathing practice this morning". Now you're both part of the
+                  same ritual community!
                 </p>
               </div>
             </section>
@@ -191,7 +216,9 @@ export default function HowItWorksPage(): JSX.Element {
                 </div>
               </div>
               <p className='mb-4 text-gray-700 dark:text-gray-300'>
-                A Ripple shows how a ritual spreads through the community. When someone says "This ritual has 23 participants," it means 23 people have joined and participated in that ritual.
+                A Ripple shows how a ritual spreads through the community. When
+                someone says "This ritual has 23 participants," it means 23
+                people have joined and participated in that ritual.
               </p>
               <div className='mb-6 rounded-lg border-2 border-purple-300 bg-purple-50 p-6 dark:border-purple-700 dark:bg-purple-900/20'>
                 <h3 className='mb-4 text-lg font-semibold text-purple-900 dark:text-purple-100'>
@@ -240,7 +267,8 @@ export default function HowItWorksPage(): JSX.Element {
                       </span>
                     </div>
                     <p className='text-sm text-gray-900 dark:text-white'>
-                      "I also did my breathing ritual! Feeling calm and centered"
+                      "I also did my breathing ritual! Feeling calm and
+                      centered"
                     </p>
                   </div>
 
@@ -262,7 +290,9 @@ export default function HowItWorksPage(): JSX.Element {
                 </li>
                 <li className='flex items-start gap-2'>
                   <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-teal-600 dark:text-teal-400' />
-                  <span>Track your ritual participation and inspire others</span>
+                  <span>
+                    Track your ritual participation and inspire others
+                  </span>
                 </li>
               </ul>
             </section>
@@ -313,19 +343,31 @@ export default function HowItWorksPage(): JSX.Element {
                 </h3>
                 <ol className='space-y-2 text-sm text-gray-600 dark:text-gray-400'>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>1.</span>
-                    <span>You see a ritual participation that resonates with you</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      1.
+                    </span>
+                    <span>
+                      You see a ritual participation that resonates with you
+                    </span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>2.</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      2.
+                    </span>
                     <span>Click the "React" button</span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>3.</span>
-                    <span>Select: Inspired ✨, Grateful 🙏, or Sent Love 💚</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      3.
+                    </span>
+                    <span>
+                      Select: Inspired ✨, Grateful 🙏, or Sent Love 💚
+                    </span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>4.</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      4.
+                    </span>
                     <span>Your reaction is recorded instantly</span>
                   </li>
                 </ol>
@@ -337,23 +379,35 @@ export default function HowItWorksPage(): JSX.Element {
                 </h3>
                 <ol className='space-y-2 text-sm text-purple-700 dark:text-purple-300'>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>1.</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      1.
+                    </span>
                     <span>You see a ritual you want to participate in</span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>2.</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      2.
+                    </span>
                     <span>Click "Join This Ritual" button</span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>3.</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      3.
+                    </span>
                     <span>You're redirected to the ritual page</span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>4.</span>
-                    <span>Complete the ritual and share your participation</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      4.
+                    </span>
+                    <span>
+                      Complete the ritual and share your participation
+                    </span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-purple-600 dark:text-purple-400'>5.</span>
+                    <span className='font-semibold text-purple-600 dark:text-purple-400'>
+                      5.
+                    </span>
                     <span>Your participation is shared with the community</span>
                   </li>
                 </ol>
@@ -365,19 +419,31 @@ export default function HowItWorksPage(): JSX.Element {
                 </h3>
                 <ol className='space-y-2 text-sm text-gray-600 dark:text-gray-400'>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-teal-600 dark:text-teal-400'>1.</span>
-                    <span>Click "View ritual" or see ritual participations</span>
+                    <span className='font-semibold text-teal-600 dark:text-teal-400'>
+                      1.
+                    </span>
+                    <span>
+                      Click "View ritual" or see ritual participations
+                    </span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-teal-600 dark:text-teal-400'>2.</span>
-                    <span>See the chain visualization at /impact/[id]/ripple</span>
+                    <span className='font-semibold text-teal-600 dark:text-teal-400'>
+                      2.
+                    </span>
+                    <span>
+                      See the chain visualization at /impact/[id]/ripple
+                    </span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-teal-600 dark:text-teal-400'>3.</span>
+                    <span className='font-semibold text-teal-600 dark:text-teal-400'>
+                      3.
+                    </span>
                     <span>View the original action + all joined actions</span>
                   </li>
                   <li className='flex items-start gap-2'>
-                    <span className='font-semibold text-teal-600 dark:text-teal-400'>4.</span>
+                    <span className='font-semibold text-teal-600 dark:text-teal-400'>
+                      4.
+                    </span>
                     <span>See clear social proof of participation</span>
                   </li>
                 </ol>
@@ -391,7 +457,8 @@ export default function HowItWorksPage(): JSX.Element {
               Ready to Get Started?
             </h2>
             <p className='mb-6 text-gray-700 dark:text-gray-300'>
-              Join our community and start creating ripples of positive impact today.
+              Join our community and start creating ripples of positive impact
+              today.
             </p>
             <div className='flex flex-col items-center justify-center gap-4 sm:flex-row'>
               {user ? (
@@ -421,4 +488,3 @@ export default function HowItWorksPage(): JSX.Element {
     </>
   );
 }
-

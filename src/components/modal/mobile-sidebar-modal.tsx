@@ -118,14 +118,16 @@ export function MobileSidebarModal({
     openModal: displayOpenModal,
     closeModal: displayCloseModal
   } = useModal();
-  
+
   const allNavLinks = getNavLinks(username || 'guest');
-  
+
   // Filter links for unauthenticated users
-  const navLinks = user 
-    ? allNavLinks 
-    : allNavLinks.filter(link => 
-        ['/', '/home', '/feed', '/blog', '/real-stories', '/rituals'].includes(link.href)
+  const navLinks = user
+    ? allNavLinks
+    : allNavLinks.filter((link) =>
+        ['/', '/home', '/feed', '/blog', '/real-stories', '/rituals'].includes(
+          link.href
+        )
       );
 
   const handleLogout = async (): Promise<void> => {
@@ -252,7 +254,7 @@ export function MobileSidebarModal({
                 Join our community to track your wellness journey.
               </p>
               <Button
-                onClick={(e) => handleFeedClick(e as any)}
+                onClick={handleFeedClick}
                 className='w-full rounded-xl bg-gradient-to-r from-purple-600 to-pink-600 py-2.5 font-bold text-white shadow-lg transition-all hover:opacity-90'
               >
                 Log In / Sign Up
@@ -322,7 +324,7 @@ export function MobileSidebarModal({
             </button>
           ) : (
             <button
-              onClick={(e) => handleFeedClick(e as any)}
+              onClick={handleFeedClick}
               className='flex w-full items-center justify-center gap-3 rounded-xl bg-gray-100 px-4 py-3.5 font-semibold text-gray-900 transition-all hover:bg-gray-200 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700'
             >
               <LogOut className='h-5 w-5 rotate-180' />

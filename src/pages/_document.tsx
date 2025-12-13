@@ -6,13 +6,20 @@ export default function Document(): JSX.Element {
       <Head>
         {/* Preconnect for performance */}
         <link rel='preconnect' href='https://fonts.googleapis.com' />
-        <link rel='preconnect' href='https://fonts.gstatic.com' crossOrigin='anonymous' />
-        
+        <link
+          rel='preconnect'
+          href='https://fonts.gstatic.com'
+          crossOrigin='anonymous'
+        />
+
         {/* DNS Prefetch */}
         <link rel='dns-prefetch' href='https://fonts.googleapis.com' />
-        
+
         {/* Fonts */}
-        <link href='https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@400;500;600;700&display=swap' rel='stylesheet' />
+        <link
+          href='https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..900;1,9..144,400..900&family=Inter:wght@400;500;600;700&display=swap'
+          rel='stylesheet'
+        />
       </Head>
       <body>
         {/* Theme initialization script - prevents flash of wrong theme */}

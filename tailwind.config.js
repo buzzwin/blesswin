@@ -35,9 +35,11 @@ module.exports = {
         'dark-primary': '#E7E9EA',
         'dark-secondary': '#71767B',
         'dark-background': 'rgb(var(--dark-background) / <alpha-value>)',
+        'dark-surface': '#0A0A0A', // Slightly lighter than black for cards/surfaces
+        'dark-elevated': '#141414', // For elevated surfaces
         'light-primary': '#0F1419',
         'light-secondary': '#536471',
-        'dark-border': '#2F3336',
+        'dark-border': '#1F1F1F', // Darker border for better contrast on black
         'light-border': '#EFF3F4',
         'dark-line-reply': '#333639',
         'light-line-reply': '#CFD9DE',

@@ -33,10 +33,15 @@ export default function JoinActionPage(): JSX.Element {
   const router = useRouter();
   const { user } = useAuth();
   const { id } = router.query;
-  const [originalMoment, setOriginalMoment] = useState<ImpactMomentWithUser | null>(null);
+  const [originalMoment, setOriginalMoment] =
+    useState<ImpactMomentWithUser | null>(null);
   const [joinedCount, setJoinedCount] = useState(0);
   const [loading, setLoading] = useState(true);
-  const { open: joinModalOpen, openModal: openJoinModal, closeModal: closeJoinModal } = useModal();
+  const {
+    open: joinModalOpen,
+    openModal: openJoinModal,
+    closeModal: closeJoinModal
+  } = useModal();
 
   useEffect(() => {
     if (!id || typeof id !== 'string') return;
@@ -157,12 +162,12 @@ export default function JoinActionPage(): JSX.Element {
       // Update the original moment
       const originalMomentRef = doc(impactMomentsCollection, originalMoment.id);
       const originalMomentDoc = await getDoc(originalMomentRef);
-      
+
       if (originalMomentDoc.exists()) {
         const originalData = originalMomentDoc.data();
         const currentJoinedBy = originalData.joinedByUsers || [];
         const currentJoinedYouRipples = originalData.ripples?.joined_you || [];
-        
+
         // Add user to joinedByUsers if not already there
         if (!currentJoinedBy.includes(user.id)) {
           await updateDoc(originalMomentRef, {
@@ -209,7 +214,7 @@ export default function JoinActionPage(): JSX.Element {
 
       toast.success('You joined this action! 🌱');
       closeJoinModal();
-      
+
       // Redirect to ripple page to see the join
       void router.push(`/impact/${originalMoment.id}/ripple`);
     } catch (error) {
@@ -226,7 +231,7 @@ export default function JoinActionPage(): JSX.Element {
         description='Join this positive action and create a ripple of impact'
       >
         <MainHeader title='Join Action' />
-        <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
+        <div className='mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8 dark:bg-dark-background'>
           <Loading className='mt-5' />
         </div>
       </PublicLayout>
@@ -267,7 +272,7 @@ export default function JoinActionPage(): JSX.Element {
     return (
       <PublicLayout title={seoTitle} description={seoDescription}>
         <MainHeader title='Join Action' />
-        <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
+        <div className='mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8 dark:bg-dark-background'>
           <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
             <p className='mb-4 text-gray-600 dark:text-gray-400'>
               You created this action! View the ripple to see who joined.
@@ -285,8 +290,12 @@ export default function JoinActionPage(): JSX.Element {
 
   return (
     <>
-      <PublicLayout title={seoTitle} description={seoDescription} ogUrl={publicUrl}>
-        <div className='dark:bg-dark-background mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8'>
+      <PublicLayout
+        title={seoTitle}
+        description={seoDescription}
+        ogUrl={publicUrl}
+      >
+        <div className='mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8 dark:bg-dark-background'>
           {/* Back Button */}
           <div className='mb-4'>
             <Link href={`/impact/${id}/ripple`}>
@@ -333,7 +342,9 @@ export default function JoinActionPage(): JSX.Element {
                         );
 
                         if (!existingJoined.empty) {
-                          const confirmed = confirm('You already joined this action. Want to share a new version?');
+                          const confirmed = confirm(
+                            'You already joined this action. Want to share a new version?'
+                          );
                           if (!confirmed) return;
                         }
 
@@ -345,14 +356,16 @@ export default function JoinActionPage(): JSX.Element {
                     };
                     void checkExistingJoin();
                   }}
-                  className='inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-10 py-5 text-xl font-bold text-white transition-all hover:from-green-700 hover:to-emerald-700 hover:scale-105 hover:shadow-xl dark:from-green-600 dark:to-emerald-600 dark:hover:from-green-700 dark:hover:to-emerald-700'
+                  className='inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-green-600 to-emerald-600 px-10 py-5 text-xl font-bold text-white transition-all hover:scale-105 hover:from-green-700 hover:to-emerald-700 hover:shadow-xl dark:from-green-600 dark:to-emerald-600 dark:hover:from-green-700 dark:hover:to-emerald-700'
                 >
                   <span className='text-3xl'>🌱</span>
                   Join This Action
                 </button>
                 {joinedCount > 0 && (
                   <p className='mt-6 text-sm text-gray-600 dark:text-gray-400'>
-                    {joinedCount} {joinedCount === 1 ? 'person has' : 'people have'} already joined
+                    {joinedCount}{' '}
+                    {joinedCount === 1 ? 'person has' : 'people have'} already
+                    joined
                   </p>
                 )}
               </>
@@ -365,7 +378,7 @@ export default function JoinActionPage(): JSX.Element {
                   Sign in to join this action and be part of the ripple.
                 </p>
                 <Link href={`/login?redirect=/impact/${id}/join`}>
-                  <a className='inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-xl font-bold text-white transition-all hover:from-purple-700 hover:to-pink-700 hover:scale-105 hover:shadow-xl dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700'>
+                  <a className='inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 px-10 py-5 text-xl font-bold text-white transition-all hover:scale-105 hover:from-purple-700 hover:to-pink-700 hover:shadow-xl dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700'>
                     <LogIn className='h-6 w-6' />
                     Sign In to Join
                   </a>
@@ -388,4 +401,3 @@ export default function JoinActionPage(): JSX.Element {
     </>
   );
 }
-

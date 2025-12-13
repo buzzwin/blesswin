@@ -25,14 +25,12 @@ export function SectionShell({
   return (
     <section
       className={cn(
-        'relative w-full min-h-screen flex flex-col items-center justify-center transition-colors duration-200',
+        'relative flex min-h-screen w-full flex-col items-center justify-center transition-colors duration-200',
         variantStyles[variant],
         className
       )}
     >
-      <div className='w-full'>
-        {children}
-      </div>
+      <div className='w-full'>{children}</div>
     </section>
   );
 }
