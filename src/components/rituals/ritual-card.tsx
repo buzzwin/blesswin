@@ -2,16 +2,35 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
+import { motion } from 'framer-motion';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
-import { 
-  impactTagLabels, 
-  impactTagColors, 
-  effortLevelLabels, 
-  effortLevelIcons 
+import { BounceButton } from '@components/animations/bounce-button';
+import { StreakFire } from '@components/animations/streak-fire';
+import {
+  impactTagLabels,
+  impactTagColors,
+  effortLevelLabels,
+  effortLevelIcons
 } from '@lib/types/impact-moment';
-import type { RitualDefinition, RitualScope, RitualCompletion } from '@lib/types/ritual';
-import { Check, X, Sparkles, Share2, Users, ArrowRight, UserPlus, Globe, Lock, Edit2, Trash2 } from 'lucide-react';
+import type {
+  RitualDefinition,
+  RitualScope,
+  RitualCompletion
+} from '@lib/types/ritual';
+import {
+  Check,
+  X,
+  Sparkles,
+  Share2,
+  Users,
+  ArrowRight,
+  UserPlus,
+  Globe,
+  Lock,
+  Edit2,
+  Trash2
+} from 'lucide-react';
 import { WeeklyTracker } from './weekly-tracker';
 
 interface RitualCardProps {
@@ -63,25 +82,32 @@ export function RitualCard({
   const [joining, setJoining] = useState(false);
   const [leaving, setLeaving] = useState(false);
   // Creator is automatically considered as joined
-  const isCreator = (ritual as any).createdBy === user?.id || (ritual as any).sourceUserId === user?.id;
+  const isCreator =
+    (ritual as any).createdBy === user?.id ||
+    (ritual as any).sourceUserId === user?.id;
   const [hasJoined, setHasJoined] = useState(
     ritual.joinedByUsers?.includes(user?.id || '') || isCreator || false
   );
   const [togglingVisibility, setTogglingVisibility] = useState(false);
-  
+
   // Determine if user is the creator (for showing delete button)
-  const userIsCreator = (ritual as any).createdBy === user?.id || (ritual as any).sourceUserId === user?.id;
+  const userIsCreator =
+    (ritual as any).createdBy === user?.id ||
+    (ritual as any).sourceUserId === user?.id;
 
   // Filter completions for this specific ritual
   const ritualCompletions = allCompletions.filter(
-    c => c.ritualId === ritual.id
+    (c) => c.ritualId === ritual.id
   );
 
   // Update hasJoined when ritual or user changes
   // Creator is automatically considered as joined
   useEffect(() => {
-    const isCreator = (ritual as any).createdBy === user?.id || (ritual as any).sourceUserId === user?.id;
-    const isJoined = ritual.joinedByUsers?.includes(user?.id || '') || isCreator || false;
+    const isCreator =
+      (ritual as any).createdBy === user?.id ||
+      (ritual as any).sourceUserId === user?.id;
+    const isJoined =
+      ritual.joinedByUsers?.includes(user?.id || '') || isCreator || false;
     setHasJoined(isJoined);
   }, [ritual.joinedByUsers, (ritual as any).createdBy, user?.id]);
 
@@ -117,7 +143,7 @@ export function RitualCard({
         ritualTitle: ritual.title, // Include title for fallback lookup when ID is hardcoded
         ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized')
       };
-      
+
       console.log('📤 Join Request Body:', requestBody);
 
       const response = await fetch('/api/rituals/join', {
@@ -128,7 +154,11 @@ export function RitualCard({
         body: JSON.stringify(requestBody)
       });
 
-      console.log('📥 Join Response Status:', response.status, response.statusText);
+      console.log(
+        '📥 Join Response Status:',
+        response.status,
+        response.statusText
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -141,14 +171,15 @@ export function RitualCard({
 
       setHasJoined(true);
       toast.success('You joined this ritual! 🌱');
-      
+
       // Notify parent to refetch data
       if (onJoinSuccess) {
         onJoinSuccess();
       }
     } catch (error) {
       console.error('❌ Join Error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to join ritual';
+      const message =
+        error instanceof Error ? error.message : 'Failed to join ritual';
       toast.error(message);
     } finally {
       setJoining(false);
@@ -162,8 +193,9 @@ export function RitualCard({
 
     setTogglingVisibility(true);
     try {
-      const newScope: RitualScope = ritual.scope === 'public' ? 'personalized' : 'public';
-      
+      const newScope: RitualScope =
+        ritual.scope === 'public' ? 'personalized' : 'public';
+
       const response = await fetch(`/api/rituals/${ritual.id}/visibility`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -176,14 +208,18 @@ export function RitualCard({
       const data = await response.json();
 
       if (response.ok) {
-        toast.success(`Ritual is now ${newScope === 'public' ? 'public' : 'private'}`);
+        toast.success(
+          `Ritual is now ${newScope === 'public' ? 'public' : 'private'}`
+        );
         onVisibilityChange?.();
       } else {
         throw new Error(data.error || 'Failed to update visibility');
       }
     } catch (error) {
       console.error('Error toggling visibility:', error);
-      toast.error(error instanceof Error ? error.message : 'Failed to update visibility');
+      toast.error(
+        error instanceof Error ? error.message : 'Failed to update visibility'
+      );
     } finally {
       setTogglingVisibility(false);
     }
@@ -211,7 +247,11 @@ export function RitualCard({
     }
 
     // Confirm before leaving
-    if (!window.confirm('Are you sure you want to leave this ritual? You can always join again later.')) {
+    if (
+      !window.confirm(
+        'Are you sure you want to leave this ritual? You can always join again later.'
+      )
+    ) {
       return;
     }
 
@@ -224,7 +264,7 @@ export function RitualCard({
         ritualId: ritual.id,
         ritualScope: ritualScope || (isGlobal ? 'global' : 'personalized')
       };
-      
+
       console.log('📤 Leave Request Body:', requestBody);
 
       const response = await fetch('/api/rituals/leave', {
@@ -235,7 +275,11 @@ export function RitualCard({
         body: JSON.stringify(requestBody)
       });
 
-      console.log('📥 Leave Response Status:', response.status, response.statusText);
+      console.log(
+        '📥 Leave Response Status:',
+        response.status,
+        response.statusText
+      );
 
       if (!response.ok) {
         const errorData = await response.json();
@@ -248,14 +292,15 @@ export function RitualCard({
 
       setHasJoined(false);
       toast.success('You left this ritual');
-      
+
       // Notify parent to refetch data
       if (onLeaveSuccess) {
         onLeaveSuccess();
       }
     } catch (error) {
       console.error('❌ Leave Error:', error);
-      const message = error instanceof Error ? error.message : 'Failed to leave ritual';
+      const message =
+        error instanceof Error ? error.message : 'Failed to leave ritual';
       toast.error(message);
     } finally {
       setLeaving(false);
@@ -263,24 +308,32 @@ export function RitualCard({
   };
 
   return (
-    <div className={cn(
-      'rounded-lg border-2 p-3 transition-all md:rounded-xl md:p-4 lg:p-5',
-      isGlobal 
-        ? 'border-purple-300 bg-purple-50 dark:border-purple-700 dark:bg-purple-900/20'
-        : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800',
-      completed && 'opacity-75'
-    )}>
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+      whileHover={{ scale: 1.02, y: -2 }}
+      className={cn(
+        'rounded-lg border-2 p-3 transition-all md:rounded-xl md:p-4 lg:p-5',
+        isGlobal
+          ? 'border-purple-300 bg-purple-50 dark:border-purple-700 dark:bg-purple-900/20'
+          : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800',
+        completed && 'opacity-75'
+      )}
+    >
       {/* Badge and Info */}
       <div className='mb-2 flex items-center justify-between md:mb-3'>
         <div className='flex items-center gap-2'>
           {/* Only show badge if not joined, or if it's a global ritual */}
           {(!hasJoined || isGlobal) && (
-            <span className={cn(
-              'rounded-full px-2 py-0.5 text-xs font-semibold md:px-3 md:py-1',
-              isGlobal
-                ? 'bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200'
-                : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
-            )}>
+            <span
+              className={cn(
+                'rounded-full px-2 py-0.5 text-xs font-semibold md:px-3 md:py-1',
+                isGlobal
+                  ? 'bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200'
+                  : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+              )}
+            >
               {isGlobal ? 'Global Ritual of the Day' : 'Recommended for You'}
             </span>
           )}
@@ -311,7 +364,7 @@ export function RitualCard({
                 'rounded-full border border-red-300 bg-white px-1.5 py-1 text-[10px] font-medium text-red-600',
                 'transition-colors hover:bg-red-50 dark:border-red-700 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20',
                 'flex items-center justify-center',
-                leaving && 'opacity-50 cursor-not-allowed'
+                leaving && 'cursor-not-allowed opacity-50'
               )}
               title='Leave ritual'
             >
@@ -356,7 +409,9 @@ export function RitualCard({
               }}
               disabled={togglingVisibility}
               className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
-              aria-label={ritual.scope === 'public' ? 'Make private' : 'Make public'}
+              aria-label={
+                ritual.scope === 'public' ? 'Make private' : 'Make public'
+              }
               title={ritual.scope === 'public' ? 'Make private' : 'Make public'}
             >
               {ritual.scope === 'public' ? (
@@ -380,17 +435,33 @@ export function RitualCard({
             </button>
           )}
           {completed && (
-            <div className='flex items-center gap-1 text-sm text-green-600 dark:text-green-400'>
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ type: 'spring', stiffness: 200, damping: 15 }}
+              className='flex items-center gap-1 text-sm text-green-600 dark:text-green-400'
+            >
               <Check className='h-4 w-4' />
               <span>Completed</span>
-            </div>
+            </motion.div>
           )}
         </div>
       </div>
 
       {/* Icon and Title */}
-      <div className='mb-2 flex items-start gap-2 md:mb-3 md:gap-3'>
-        <div className='text-2xl md:text-3xl'>{ritual.icon || '🌱'}</div>
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.1 }}
+        className='mb-2 flex items-start gap-2 md:mb-3 md:gap-3'
+      >
+        <motion.div
+          animate={{ rotate: [0, 10, -10, 0] }}
+          transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+          className='text-2xl md:text-3xl'
+        >
+          {ritual.icon || '🌱'}
+        </motion.div>
         <div className='flex-1'>
           <h3 className='mb-1 text-base font-bold text-gray-900 dark:text-white md:mb-2 md:text-lg'>
             {ritual.title}
@@ -399,27 +470,33 @@ export function RitualCard({
             {ritual.description}
           </p>
         </div>
-      </div>
+      </motion.div>
 
       {/* Tags */}
       <div className='mb-3 flex flex-wrap gap-2'>
-        {ritual.tags.map((tag) => (
-          <span
+        {ritual.tags.map((tag, index) => (
+          <motion.span
             key={tag}
+            initial={{ opacity: 0, scale: 0 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 + index * 0.1, type: 'spring' }}
+            whileHover={{ scale: 1.1 }}
             className={cn(
               'rounded-full px-2 py-0.5 text-xs font-medium md:px-2.5 md:py-1',
               impactTagColors[tag]
             )}
           >
             {impactTagLabels[tag]}
-          </span>
+          </motion.span>
         ))}
       </div>
 
       {/* Effort Level and Duration */}
       <div className='mb-2 flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 md:mb-3 md:text-sm'>
         <div className='flex items-center gap-1.5 md:gap-2'>
-          <span className='text-base md:text-lg'>{effortLevelIcons[ritual.effortLevel]}</span>
+          <span className='text-base md:text-lg'>
+            {effortLevelIcons[ritual.effortLevel]}
+          </span>
           <span>{effortLevelLabels[ritual.effortLevel]} Effort</span>
         </div>
         <span>{ritual.durationEstimate}</span>
@@ -428,13 +505,14 @@ export function RitualCard({
       {/* Weekly Tracker - Completion Status */}
       {hasJoined && (
         <div className='mb-2 md:mb-3'>
-          <WeeklyTracker 
-            completions={ritualCompletions} 
-            onDateClick={onCompleteAndShare && !completed ? onCompleteAndShare : undefined}
+          <WeeklyTracker
+            completions={ritualCompletions}
+            onDateClick={
+              onCompleteAndShare && !completed ? onCompleteAndShare : undefined
+            }
           />
         </div>
       )}
-
 
       {/* Joined Count */}
       {(ritual.joinedByUsers?.length || 0) > 0 && (
@@ -443,7 +521,11 @@ export function RitualCard({
             <a className='inline-flex items-center gap-1.5 rounded-lg border border-purple-200 bg-purple-50 px-2 py-1.5 text-xs font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30 md:gap-2 md:px-3 md:py-2 md:text-sm'>
               <Users className='h-3 w-3 md:h-4 md:w-4' />
               <span>
-                {ritual.joinedByUsers?.length || 0} {ritual.joinedByUsers?.length === 1 ? 'person has' : 'people have'} joined
+                {ritual.joinedByUsers?.length || 0}{' '}
+                {ritual.joinedByUsers?.length === 1
+                  ? 'person has'
+                  : 'people have'}{' '}
+                joined
               </span>
               <ArrowRight className='h-3 w-3' />
             </a>
@@ -482,16 +564,12 @@ export function RitualCard({
       {/* Join Ritual Button */}
       {showJoinButton && !completed && user && !hasJoined && (
         <div className='mb-2 md:mb-3'>
-          <button
+          <BounceButton
+            variant='primary'
+            size='md'
             onClick={handleJoinRitual}
             disabled={joining}
-            className={cn(
-              'w-full rounded-lg bg-purple-600 px-3 py-2 text-xs font-semibold text-white',
-              'transition-colors hover:bg-purple-700',
-              'flex items-center justify-center gap-1.5',
-              'md:px-4 md:py-2.5 md:text-sm md:gap-2',
-              joining && 'opacity-50 cursor-not-allowed'
-            )}
+            fullWidth
           >
             {joining ? (
               <>
@@ -504,28 +582,28 @@ export function RitualCard({
                 Join Ritual
               </>
             )}
-          </button>
+          </BounceButton>
         </div>
       )}
 
-
       {/* Action Buttons */}
       {showActions && !completed && (
-        <div className='flex gap-1.5 md:gap-2'>
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+          className='flex gap-1.5 md:gap-2'
+        >
           {onCompleteAndShare && (
-            <button
+            <BounceButton
+              variant='primary'
+              size='md'
               onClick={() => {
                 onCompleteAndShare();
                 setShowActions(false);
               }}
               disabled={loading}
-              className={cn(
-                'w-full rounded-lg bg-purple-600 px-3 py-2 text-xs font-semibold text-white',
-                'transition-colors hover:bg-purple-700',
-                'flex items-center justify-center gap-1.5',
-                'md:px-4 md:py-2 md:text-sm md:gap-2',
-                loading && 'opacity-50 cursor-not-allowed'
-              )}
+              fullWidth
             >
               {loading ? (
                 <>
@@ -538,9 +616,9 @@ export function RitualCard({
                   Complete & Share
                 </>
               )}
-            </button>
+            </BounceButton>
           )}
-        </div>
+        </motion.div>
       )}
 
       {/* Share Button (if completed quietly) */}
@@ -557,7 +635,6 @@ export function RitualCard({
           Share This Moment
         </button>
       )}
-    </div>
+    </motion.div>
   );
 }
-

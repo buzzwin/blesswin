@@ -1,9 +1,12 @@
 import { useState, useRef, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
+import { motion, AnimatePresence } from 'framer-motion';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { Modal } from '@components/modal/modal';
 import { UserAvatar } from '@components/user/user-avatar';
+import { Celebration } from '@components/animations/celebration';
+import { BounceButton } from '@components/animations/bounce-button';
 import {
   impactTagLabels,
   impactTagColors,
@@ -34,6 +37,7 @@ export function RitualCompleteModal({
   const [moodAfter, setMoodAfter] = useState<number | null>(null);
   const [isPublic, setIsPublic] = useState<boolean>(true); // Default to public
   const [loading, setLoading] = useState(false);
+  const [showCelebration, setShowCelebration] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputLimit = 280;
 
@@ -120,9 +124,13 @@ export function RitualCompleteModal({
         throw new Error('Failed to mark ritual as complete');
       }
 
-      toast.success('Ritual completed and shared! 🌱');
-      closeModal();
-      onComplete(data.momentId || data.id);
+      // Show celebration animation
+      setShowCelebration(true);
+      // Close modal after celebration
+      setTimeout(() => {
+        closeModal();
+        onComplete(data.momentId || data.id);
+      }, 2000);
     } catch (error) {
       const message =
         error instanceof Error ? error.message : 'Failed to share moment';
@@ -133,230 +141,238 @@ export function RitualCompleteModal({
   };
 
   return (
-    <Modal
-      modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
-      open={open}
-      closeModal={closeModal}
-    >
-      <div className='space-y-4'>
-        {/* Header */}
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
-          <div>
-            <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
-              Share Your Ritual Completion
-            </h2>
-            <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
-              Complete & share: {ritual.title}
-            </p>
-          </div>
-          <button
-            onClick={closeModal}
-            className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
-          >
-            <X className='h-5 w-5' />
-          </button>
-        </div>
-
-        {/* Ritual Preview */}
-        <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
-          <div className='flex items-start gap-3'>
-            <div className='text-2xl'>{ritual.icon || '🌱'}</div>
-            <div className='flex-1'>
-              <h3 className='mb-1 text-sm font-semibold text-gray-900 dark:text-white'>
-                {ritual.title}
-              </h3>
-              <p className='text-xs text-gray-600 dark:text-gray-400'>
-                {ritual.description}
+    <>
+      <Celebration
+        show={showCelebration}
+        message='Ritual Completed! 🌱'
+        type='success'
+        onComplete={() => setShowCelebration(false)}
+      />
+      <Modal
+        modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+        open={open}
+        closeModal={closeModal}
+      >
+        <div className='space-y-4'>
+          {/* Header */}
+          <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+            <div>
+              <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
+                Share Your Ritual Completion
+              </h2>
+              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+                Complete & share: {ritual.title}
               </p>
             </div>
+            <button
+              onClick={closeModal}
+              className='text-gray-400 hover:text-gray-600 dark:hover:text-gray-300'
+            >
+              <X className='h-5 w-5' />
+            </button>
           </div>
-        </div>
 
-        {/* User Avatar and Text Input */}
-        <div className='flex gap-3'>
-          <UserAvatar
-            src={user?.photoURL ?? ''}
-            alt={user?.name ?? 'User'}
-            username={user?.username ?? 'user'}
-          />
-          <div className='flex-1'>
-            <textarea
-              ref={textareaRef}
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder='Describe how you completed this ritual...'
-              className={cn(
-                'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
-                'text-gray-900 placeholder-gray-500',
-                'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
-                'transition-colors'
-              )}
-              rows={3}
-              maxLength={inputLimit}
-              disabled={loading}
-            />
-            <div className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
-              {text.length} / {inputLimit}
+          {/* Ritual Preview */}
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+            <div className='flex items-start gap-3'>
+              <div className='text-2xl'>{ritual.icon || '🌱'}</div>
+              <div className='flex-1'>
+                <h3 className='mb-1 text-sm font-semibold text-gray-900 dark:text-white'>
+                  {ritual.title}
+                </h3>
+                <p className='text-xs text-gray-600 dark:text-gray-400'>
+                  {ritual.description}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Tags (read-only) */}
-        <div>
-          <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
-            Tags
-          </label>
-          <div className='flex flex-wrap gap-2'>
-            {ritual.tags.map((tag) => (
-              <span
-                key={tag}
+          {/* User Avatar and Text Input */}
+          <div className='flex gap-3'>
+            <UserAvatar
+              src={user?.photoURL ?? ''}
+              alt={user?.name ?? 'User'}
+              username={user?.username ?? 'user'}
+            />
+            <div className='flex-1'>
+              <textarea
+                ref={textareaRef}
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder='Describe how you completed this ritual...'
                 className={cn(
-                  'rounded-full px-3 py-1.5 text-sm font-medium',
-                  impactTagColors[tag]
+                  'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
+                  'text-gray-900 placeholder-gray-500',
+                  'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
+                  'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                  'transition-colors'
                 )}
-              >
-                {impactTagLabels[tag]}
-              </span>
-            ))}
-          </div>
-        </div>
-
-        {/* Effort Level (read-only) */}
-        <div>
-          <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
-            Effort Level
-          </label>
-          <div className='flex items-center gap-2'>
-            <span className='text-lg'>
-              {effortLevelIcons[ritual.effortLevel]}
-            </span>
-            <span className='text-sm font-medium'>
-              {effortLevelLabels[ritual.effortLevel]} Effort
-            </span>
-          </div>
-        </div>
-
-        {/* Mood Check-in (Optional) */}
-        <div>
-          <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
-            Mood Check-in (optional)
-          </label>
-          <div className='grid grid-cols-2 gap-4'>
-            <div>
-              <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
-                Before
-              </label>
-              <div className='flex items-center gap-2'>
-                <Frown className='h-4 w-4 text-gray-400' />
-                <input
-                  type='range'
-                  min='1'
-                  max='5'
-                  value={moodBefore ?? 3}
-                  onChange={(e) => setMoodBefore(Number(e.target.value))}
-                  disabled={loading}
-                  className={cn(
-                    'flex-1 accent-purple-500',
-                    loading && 'cursor-not-allowed opacity-50'
-                  )}
-                />
-                <Smile className='h-4 w-4 text-gray-400' />
-                <span className='w-8 text-center text-sm font-medium'>
-                  {moodBefore ?? 3}
-                </span>
-              </div>
-            </div>
-            <div>
-              <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
-                After
-              </label>
-              <div className='flex items-center gap-2'>
-                <Frown className='h-4 w-4 text-gray-400' />
-                <input
-                  type='range'
-                  min='1'
-                  max='5'
-                  value={moodAfter ?? 3}
-                  onChange={(e) => setMoodAfter(Number(e.target.value))}
-                  disabled={loading}
-                  className={cn(
-                    'flex-1 accent-purple-500',
-                    loading && 'cursor-not-allowed opacity-50'
-                  )}
-                />
-                <Smile className='h-4 w-4 text-gray-400' />
-                <span className='w-8 text-center text-sm font-medium'>
-                  {moodAfter ?? 3}
-                </span>
+                rows={3}
+                maxLength={inputLimit}
+                disabled={loading}
+              />
+              <div className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                {text.length} / {inputLimit}
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Privacy Toggle */}
-        <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/50'>
-          <div className='flex-1'>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
-              Visibility
+          {/* Tags (read-only) */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Tags
             </label>
-            <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
-              {isPublic
-                ? 'This moment will be visible to everyone in the feed'
-                : 'This moment will only be visible to you'}
-            </p>
+            <div className='flex flex-wrap gap-2'>
+              {ritual.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className={cn(
+                    'rounded-full px-3 py-1.5 text-sm font-medium',
+                    impactTagColors[tag]
+                  )}
+                >
+                  {impactTagLabels[tag]}
+                </span>
+              ))}
+            </div>
           </div>
-          <button
-            type='button'
-            onClick={() => setIsPublic(!isPublic)}
-            disabled={loading}
-            className={cn(
-              'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
-              isPublic ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600',
-              loading && 'cursor-not-allowed opacity-50'
-            )}
-          >
-            <span
-              className={cn(
-                'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
-                isPublic ? 'translate-x-6' : 'translate-x-1'
-              )}
-            />
-          </button>
-        </div>
 
-        {/* Action Buttons */}
-        <div className='flex items-center justify-end gap-2 border-t border-gray-200 pt-4 dark:border-gray-700'>
-          <button
-            onClick={closeModal}
-            disabled={loading}
-            className={cn(
-              'rounded-full px-4 py-2 text-sm font-semibold',
-              'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
-              loading && 'cursor-not-allowed opacity-50'
-            )}
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSubmit}
-            disabled={!text.trim() || loading}
-            className={cn(
-              'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
-              (!text.trim() || loading) && 'cursor-not-allowed opacity-50'
-            )}
-          >
-            {loading ? (
-              <span className='flex items-center gap-2'>
-                <Loader2 className='h-4 w-4 animate-spin' />
-                Sharing...
+          {/* Effort Level (read-only) */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Effort Level
+            </label>
+            <div className='flex items-center gap-2'>
+              <span className='text-lg'>
+                {effortLevelIcons[ritual.effortLevel]}
               </span>
-            ) : (
-              'Share Moment 🌱'
-            )}
-          </button>
+              <span className='text-sm font-medium'>
+                {effortLevelLabels[ritual.effortLevel]} Effort
+              </span>
+            </div>
+          </div>
+
+          {/* Mood Check-in (Optional) */}
+          <div>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              Mood Check-in (optional)
+            </label>
+            <div className='grid grid-cols-2 gap-4'>
+              <div>
+                <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
+                  Before
+                </label>
+                <div className='flex items-center gap-2'>
+                  <Frown className='h-4 w-4 text-gray-400' />
+                  <input
+                    type='range'
+                    min='1'
+                    max='5'
+                    value={moodBefore ?? 3}
+                    onChange={(e) => setMoodBefore(Number(e.target.value))}
+                    disabled={loading}
+                    className={cn(
+                      'flex-1 accent-purple-500',
+                      loading && 'cursor-not-allowed opacity-50'
+                    )}
+                  />
+                  <Smile className='h-4 w-4 text-gray-400' />
+                  <span className='w-8 text-center text-sm font-medium'>
+                    {moodBefore ?? 3}
+                  </span>
+                </div>
+              </div>
+              <div>
+                <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
+                  After
+                </label>
+                <div className='flex items-center gap-2'>
+                  <Frown className='h-4 w-4 text-gray-400' />
+                  <input
+                    type='range'
+                    min='1'
+                    max='5'
+                    value={moodAfter ?? 3}
+                    onChange={(e) => setMoodAfter(Number(e.target.value))}
+                    disabled={loading}
+                    className={cn(
+                      'flex-1 accent-purple-500',
+                      loading && 'cursor-not-allowed opacity-50'
+                    )}
+                  />
+                  <Smile className='h-4 w-4 text-gray-400' />
+                  <span className='w-8 text-center text-sm font-medium'>
+                    {moodAfter ?? 3}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Privacy Toggle */}
+          <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/50'>
+            <div className='flex-1'>
+              <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
+                Visibility
+              </label>
+              <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+                {isPublic
+                  ? 'This moment will be visible to everyone in the feed'
+                  : 'This moment will only be visible to you'}
+              </p>
+            </div>
+            <button
+              type='button'
+              onClick={() => setIsPublic(!isPublic)}
+              disabled={loading}
+              className={cn(
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
+                isPublic ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600',
+                loading && 'cursor-not-allowed opacity-50'
+              )}
+            >
+              <span
+                className={cn(
+                  'inline-block h-4 w-4 transform rounded-full bg-white transition-transform',
+                  isPublic ? 'translate-x-6' : 'translate-x-1'
+                )}
+              />
+            </button>
+          </div>
+
+          {/* Action Buttons */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className='flex items-center justify-end gap-2 border-t border-gray-200 pt-4 dark:border-gray-700'
+          >
+            <BounceButton
+              variant='secondary'
+              size='md'
+              onClick={closeModal}
+              disabled={loading}
+            >
+              Cancel
+            </BounceButton>
+            <BounceButton
+              variant='primary'
+              size='md'
+              onClick={handleSubmit}
+              disabled={!text.trim() || loading}
+            >
+              {loading ? (
+                <span className='flex items-center gap-2'>
+                  <Loader2 className='h-4 w-4 animate-spin' />
+                  Sharing...
+                </span>
+              ) : (
+                'Share Moment 🌱'
+              )}
+            </BounceButton>
+          </motion.div>
         </div>
-      </div>
-    </Modal>
+      </Modal>
+    </>
   );
 }
