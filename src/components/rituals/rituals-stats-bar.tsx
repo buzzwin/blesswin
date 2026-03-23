@@ -30,7 +30,7 @@ export function RitualsStatsBar({
         className
       )}
     >
-      <div className='mx-auto flex max-w-6xl items-center justify-between gap-3 md:gap-6'>
+      <div className='mx-auto flex max-w-6xl flex-wrap items-stretch justify-center gap-2 sm:items-center sm:justify-between sm:gap-3 md:gap-6'>
         {/* Progress Stat */}
         <button
           onClick={() => onNavigateToTab('progress')}

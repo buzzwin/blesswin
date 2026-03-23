@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useRouter, type NextRouter } from 'next/router';
 import { Sparkles, Plus, BookOpen, Calendar } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import { useRequireAuth } from '@lib/hooks/useRequireAuth';
@@ -29,13 +29,110 @@ import type { SortOption } from '@components/rituals/rituals-sort';
 import type { RitualDefinition, TodayRituals, RitualStats, RitualCompletion, Achievement, LeaderboardEntry } from '@lib/types/ritual';
 import type { ReactElement, ReactNode } from 'react';
 
+type AutomationTab = 'create' | 'registry' | 'my-automations' | 'rituals';
+type RitualViewParam =
+  | 'today'
+  | 'all'
+  | 'create'
+  | 'progress'
+  | 'achievements'
+  | 'leaderboard';
+
+function qFirst(v: string | string[] | undefined): string | undefined {
+  if (Array.isArray(v)) return v[0];
+  return v;
+}
+
+function parseAutomationsQuery(
+  query: NextRouter['query'],
+  isReady: boolean
+): {
+  activeTab: AutomationTab;
+  ritualView: RitualViewParam;
+  filterType: 'joined' | 'available' | 'created';
+} {
+  if (!isReady) {
+    return {
+      activeTab: 'create',
+      ritualView: 'today',
+      filterType: 'joined'
+    };
+  }
+
+  const tab = qFirst(query.tab);
+  let activeTab: AutomationTab = 'create';
+  if (tab === 'registry') activeTab = 'registry';
+  else if (tab === 'my-automations') activeTab = 'my-automations';
+  else if (tab === 'rituals') activeTab = 'rituals';
+  else if (tab === 'create') activeTab = 'create';
+
+  const viewRaw = qFirst(query.view);
+  let ritualView: RitualViewParam = 'today';
+  if (
+    viewRaw === 'progress' ||
+    viewRaw === 'achievements' ||
+    viewRaw === 'leaderboard' ||
+    viewRaw === 'all' ||
+    viewRaw === 'create'
+  ) {
+    ritualView = viewRaw;
+  }
+
+  const filterRaw = qFirst(query.filter);
+  let filterType: 'joined' | 'available' | 'created' = 'joined';
+  if (filterRaw === 'available' || filterRaw === 'created') filterType = filterRaw;
+
+  return { activeTab, ritualView, filterType };
+}
+
 export default function AutomationsPage(): JSX.Element {
   useRequireAuth('/login');
   const { user } = useAuth();
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<'create' | 'registry' | 'my-automations' | 'rituals'>('create');
-  const [ritualView, setRitualView] = useState<'today' | 'all' | 'create' | 'progress' | 'achievements' | 'leaderboard'>('today');
-  
+
+  const { activeTab, ritualView, filterType } = useMemo(
+    () => parseAutomationsQuery(router.query, router.isReady),
+    [router.query, router.isReady]
+  );
+
+  const pushTab = useCallback(
+    (tab: AutomationTab) => {
+      if (tab === 'create') {
+        void router.replace('/automations?tab=create', undefined, { shallow: true });
+      } else if (tab === 'registry') {
+        void router.replace('/automations?tab=registry', undefined, { shallow: true });
+      } else if (tab === 'my-automations') {
+        void router.replace('/automations?tab=my-automations', undefined, {
+          shallow: true
+        });
+      } else if (tab === 'rituals') {
+        void router.replace('/automations?tab=rituals', undefined, { shallow: true });
+      }
+    },
+    [router]
+  );
+
+  const pushRitualView = useCallback(
+    (
+      view: RitualViewParam,
+      filter: 'joined' | 'available' | 'created' = 'joined'
+    ) => {
+      const params = new URLSearchParams();
+      params.set('tab', 'rituals');
+      if (view !== 'today') {
+        params.set('view', view);
+      }
+      if (view === 'all' && filter !== 'joined') {
+        params.set('filter', filter);
+      }
+      const qs = params.toString();
+      void router.replace(`/automations${qs ? `?${qs}` : ''}`, undefined, {
+        shallow: true
+      });
+    },
+    [router]
+  );
+
   // Ritual state
   const [todayRituals, setTodayRituals] = useState<TodayRituals | null>(null);
   const [stats, setStats] = useState<RitualStats | null>(null);
@@ -48,77 +145,13 @@ export default function AutomationsPage(): JSX.Element {
   const [editingRitual, setEditingRitual] = useState<RitualDefinition | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState<SortOption>('popularity');
-  const [filterType, setFilterType] = useState<'joined' | 'available' | 'created'>('joined');
-  
+
   // Modals
   const { open: completeModalOpen, openModal: openCompleteModal, closeModal: closeCompleteModal } = useModal();
   const { open: ritualFormModalOpen, openModal: openRitualFormModal, closeModal: closeRitualFormModal } = useModal();
 
-  // Handle query params for tab and view
-  useEffect(() => {
-    if (!router.isReady) return;
-    const { tab, view, filter } = router.query;
-    if (tab === 'rituals') {
-      if (activeTab !== 'rituals') {
-        setActiveTab('rituals');
-      }
-      if (view === 'progress' || view === 'achievements' || view === 'leaderboard' || view === 'all' || view === 'create') {
-        if (ritualView !== view) {
-          setRitualView(view as typeof ritualView);
-        }
-      }
-      if (filter === 'joined' || filter === 'available' || filter === 'created') {
-        if (filterType !== filter) {
-          setFilterType(filter);
-        }
-      }
-    } else if (tab === 'create' || tab === 'registry' || tab === 'my-automations') {
-      if (activeTab !== tab) {
-        setActiveTab(tab as typeof activeTab);
-      }
-    }
-  }, [router.isReady, router.query, activeTab, ritualView, filterType]);
-
-  // Update URL when tabs/views change (only if not already set from query params)
-  useEffect(() => {
-    if (!router.isReady) return;
-    const { tab, view, filter } = router.query;
-    const currentTab = tab as string;
-    const currentView = view as string;
-    const currentFilter = filter as string;
-
-    if (activeTab === 'rituals') {
-      const params = new URLSearchParams();
-      params.set('tab', 'rituals');
-      if (ritualView !== 'today') {
-        params.set('view', ritualView);
-      }
-      if (ritualView === 'all' && filterType !== 'joined') {
-        params.set('filter', filterType);
-      }
-      const newUrl = `/automations?${params.toString()}`;
-      // Only update if URL doesn't match current state
-      if (
-        router.asPath !== newUrl &&
-        (currentTab !== 'rituals' ||
-          (ritualView !== 'today' && currentView !== ritualView) ||
-          (ritualView === 'all' && filterType !== 'joined' && currentFilter !== filterType))
-      ) {
-        void router.replace(newUrl, undefined, { shallow: true });
-      }
-    } else if (activeTab !== currentTab) {
-      const params = new URLSearchParams();
-      params.set('tab', activeTab);
-      const newUrl = `/automations?${params.toString()}`;
-      if (router.asPath !== newUrl) {
-        void router.replace(newUrl, undefined, { shallow: true });
-      }
-    }
-  }, [activeTab, ritualView, filterType, router]);
-
-  const handleAutomationCreated = (automation: Automation): void => {
-    // Switch to My Automations tab to show the newly created automation
-    setActiveTab('my-automations');
+  const handleAutomationCreated = (_automation: Automation): void => {
+    void router.replace('/automations?tab=my-automations', undefined, { shallow: true });
   };
 
   // Fetch today's rituals
@@ -254,6 +287,27 @@ export default function AutomationsPage(): JSX.Element {
   const userKarma = user?.karmaPoints ?? 0;
   const totalRitualsCount = todayRitualsForStack.length;
 
+  if (!router.isReady) {
+    return (
+      <MainContainer>
+        <SEO
+          title='Automations – Plan, Simulate, Execute / Buzzwin'
+          description='Desire → Plan with AI. Expectation → Simulate and prepare. Belief → Execute and adapt. Your AI co-pilot for clear goals and lasting change.'
+        />
+        <MainHeader title='Automations' useMobileSidebar />
+        <div
+          className='animate-pulse space-y-4 py-4'
+          aria-busy='true'
+          aria-label='Loading automations'
+        >
+          <div className='h-28 rounded-[28px] bg-gray-200 dark:bg-gray-800' />
+          <div className='h-12 w-full rounded-lg bg-gray-200 dark:bg-gray-800' />
+          <div className='h-64 w-full rounded-lg bg-gray-200 dark:bg-gray-800' />
+        </div>
+      </MainContainer>
+    );
+  }
+
   return (
     <MainContainer>
       <SEO
@@ -280,12 +334,18 @@ export default function AutomationsPage(): JSX.Element {
         </p>
       </div>
 
-      {/* Tabs */}
-      <div className='mb-6 flex gap-2 border-b border-gray-200 dark:border-gray-700 overflow-x-auto'>
+      {/* Tabs — horizontal scroll on narrow screens to avoid layout break */}
+      <div
+        className={cn(
+          'mb-6 flex flex-nowrap gap-1 border-b border-gray-200 dark:border-gray-700 sm:gap-2',
+          'overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+        )}
+      >
         <button
-          onClick={() => setActiveTab('create')}
+          type='button'
+          onClick={() => pushTab('create')}
           className={cn(
-            'border-b-2 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+            'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'create'
               ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
               : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -297,9 +357,10 @@ export default function AutomationsPage(): JSX.Element {
           </div>
         </button>
         <button
-          onClick={() => setActiveTab('registry')}
+          type='button'
+          onClick={() => pushTab('registry')}
           className={cn(
-            'border-b-2 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+            'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'registry'
               ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
               : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -311,9 +372,10 @@ export default function AutomationsPage(): JSX.Element {
           </div>
         </button>
         <button
-          onClick={() => setActiveTab('my-automations')}
+          type='button'
+          onClick={() => pushTab('my-automations')}
           className={cn(
-            'border-b-2 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+            'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'my-automations'
               ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
               : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -325,9 +387,10 @@ export default function AutomationsPage(): JSX.Element {
           </div>
         </button>
         <button
-          onClick={() => setActiveTab('rituals')}
+          type='button'
+          onClick={() => pushTab('rituals')}
           className={cn(
-            'border-b-2 px-4 py-2 text-sm font-medium transition-colors whitespace-nowrap',
+            'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'rituals'
               ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
               : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -383,22 +446,27 @@ export default function AutomationsPage(): JSX.Element {
               karmaPoints={userKarma}
               ritualsCount={totalRitualsCount}
               onNavigateToTab={(tab) => {
-                if (tab === 'progress') setRitualView('progress');
-                else if (tab === 'achievements') setRitualView('achievements');
-                else if (tab === 'leaderboard') setRitualView('leaderboard');
+                if (tab === 'progress') pushRitualView('progress');
+                else if (tab === 'achievements') pushRitualView('achievements');
+                else if (tab === 'leaderboard') pushRitualView('leaderboard');
                 else if (tab === 'joined' || tab === 'available' || tab === 'created') {
-                  setRitualView('all');
-                  setFilterType(tab);
+                  pushRitualView('all', tab);
                 }
               }}
             />
 
             {/* View Navigation */}
-            <div className='flex gap-2 border-b border-gray-200 dark:border-gray-700'>
+            <div
+              className={cn(
+                'flex flex-nowrap gap-1 border-b border-gray-200 dark:border-gray-700 sm:gap-2',
+                'overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
+              )}
+            >
               <button
-                onClick={() => setRitualView('today')}
+                type='button'
+                onClick={() => pushRitualView('today')}
                 className={cn(
-                  'border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'today'
                     ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
                     : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -407,12 +475,12 @@ export default function AutomationsPage(): JSX.Element {
                 Today
               </button>
               <button
+                type='button'
                 onClick={() => {
-                  setRitualView('all');
-                  setFilterType('joined');
+                  pushRitualView('all', 'joined');
                 }}
                 className={cn(
-                  'border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'all'
                     ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
                     : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -421,9 +489,10 @@ export default function AutomationsPage(): JSX.Element {
                 All Rituals
               </button>
               <button
-                onClick={() => setRitualView('progress')}
+                type='button'
+                onClick={() => pushRitualView('progress')}
                 className={cn(
-                  'border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'progress'
                     ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
                     : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -432,9 +501,10 @@ export default function AutomationsPage(): JSX.Element {
                 Progress
               </button>
               <button
-                onClick={() => setRitualView('achievements')}
+                type='button'
+                onClick={() => pushRitualView('achievements')}
                 className={cn(
-                  'border-b-2 px-4 py-2 text-sm font-medium transition-colors',
+                  'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'achievements'
                     ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
                     : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
@@ -454,8 +524,7 @@ export default function AutomationsPage(): JSX.Element {
                     rituals={todayRitualsForStack}
                     onComplete={handleRitualComplete}
                     onViewAll={() => {
-                      setRitualView('all');
-                      setFilterType('joined');
+                      pushRitualView('all', 'joined');
                     }}
                   />
                 ) : (
@@ -483,9 +552,10 @@ export default function AutomationsPage(): JSX.Element {
             {ritualView === 'all' && (
               <div className='space-y-4'>
                 {/* Filter buttons */}
-                <div className='flex gap-2'>
+                <div className='flex flex-wrap gap-2'>
                   <button
-                    onClick={() => setFilterType('joined')}
+                    type='button'
+                    onClick={() => pushRitualView('all', 'joined')}
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                       filterType === 'joined'
@@ -496,7 +566,8 @@ export default function AutomationsPage(): JSX.Element {
                     Joined
                   </button>
                   <button
-                    onClick={() => setFilterType('available')}
+                    type='button'
+                    onClick={() => pushRitualView('all', 'available')}
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                       filterType === 'available'
@@ -507,7 +578,8 @@ export default function AutomationsPage(): JSX.Element {
                     Available
                   </button>
                   <button
-                    onClick={() => setFilterType('created')}
+                    type='button'
+                    onClick={() => pushRitualView('all', 'created')}
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                       filterType === 'created'
