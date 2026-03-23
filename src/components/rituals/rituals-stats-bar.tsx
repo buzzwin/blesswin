@@ -1,7 +1,7 @@
 import { TrendingUp, Sparkles, Calendar } from 'lucide-react';
 import { cn } from '@lib/utils';
 
-export type RitualTab = 'joined' | 'available' | 'created' | 'progress' | 'achievements' | 'leaderboard';
+export type RitualTab = 'joined' | 'available' | 'created' | 'automations' | 'progress' | 'achievements' | 'leaderboard';
 
 interface RitualsStatsBarProps {
   dailyProgress: number;
@@ -25,8 +25,8 @@ export function RitualsStatsBar({
   return (
     <div
       className={cn(
-        'border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900',
-        'py-2 px-3 md:py-3 md:px-4',
+        'rounded-[28px] border-2 border-gray-100 bg-white shadow-[0_14px_36px_rgba(14,14,14,0.08)] dark:border-gray-800 dark:bg-gray-900',
+        'py-3 px-3 md:py-4 md:px-4',
         className
       )}
     >
@@ -34,7 +34,7 @@ export function RitualsStatsBar({
         {/* Progress Stat */}
         <button
           onClick={() => onNavigateToTab('progress')}
-          className='flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 md:gap-3 md:px-3'
+          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-gray-800 md:gap-3 md:px-4'
         >
           <TrendingUp className='h-4 w-4 text-blue-600 dark:text-blue-400 md:h-5 md:w-5' />
           <div className='flex-1 text-left'>
@@ -48,7 +48,7 @@ export function RitualsStatsBar({
         {/* Karma Points Stat */}
         <button
           onClick={() => onNavigateToTab('progress')}
-          className='flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 md:gap-3 md:px-3'
+          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-gray-800 md:gap-3 md:px-4'
         >
           <Sparkles className='h-4 w-4 text-yellow-600 dark:text-yellow-400 md:h-5 md:w-5' />
           <div className='flex-1 text-left'>
@@ -62,7 +62,7 @@ export function RitualsStatsBar({
         {/* Rituals Count Stat */}
         <button
           onClick={() => onNavigateToTab('joined')}
-          className='flex flex-1 items-center gap-2 rounded-lg px-2 py-1.5 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800 md:gap-3 md:px-3'
+          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-gray-800 md:gap-3 md:px-4'
         >
           <Calendar className='h-4 w-4 text-purple-600 dark:text-purple-400 md:h-5 md:w-5' />
           <div className='flex-1 text-left'>
@@ -76,4 +76,3 @@ export function RitualsStatsBar({
     </div>
   );
 }
-

@@ -38,6 +38,12 @@ export interface ImpactMoment {
   fromRealStory?: boolean; // Whether this Impact Moment was inspired by a Real Story
   storyId?: string; // Identifier of the story that inspired this moment
   storyTitle?: string; // Title of the story (for display)
+  automationId?: string; // ID of the automation being shared
+  automationShare?: {
+    automationId: string;
+    sourceUserId: string;
+    title: string;
+  }; // Automation sharing metadata
 }
 
 export interface ImpactMomentWithUser extends ImpactMoment {

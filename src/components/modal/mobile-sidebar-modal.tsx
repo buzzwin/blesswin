@@ -14,7 +14,8 @@ import {
   Bookmark,
   Home,
   BookOpen,
-  Calendar
+  Calendar,
+  MessageCircle
 } from 'lucide-react';
 import cn from 'clsx';
 import { useModal } from '@lib/hooks/useModal';
@@ -43,9 +44,9 @@ const getNavLinks = (username: string): Readonly<MobileNavLink[]> => [
     disabled: false
   },
   {
-    href: '/rituals',
-    linkName: 'Rituals',
-    iconName: 'calendar',
+    href: '/ask',
+    linkName: 'Ask Buzzwin',
+    iconName: 'message',
     disabled: false
   },
   {
@@ -125,7 +126,7 @@ export function MobileSidebarModal({
   const navLinks = user
     ? allNavLinks
     : allNavLinks.filter((link) =>
-        ['/', '/home', '/feed', '/blog', '/real-stories', '/rituals'].includes(
+        ['/', '/home', '/feed', '/blog', '/real-stories', '/ask'].includes(
           link.href
         )
       );
@@ -154,6 +155,8 @@ export function MobileSidebarModal({
         return <Heart className='h-6 w-6' />;
       case 'calendar':
         return <Calendar className='h-6 w-6' />;
+      case 'message':
+        return <MessageCircle className='h-6 w-6' />;
       case 'sparkles':
         return <Sparkles className='h-6 w-6' />;
       case 'star':

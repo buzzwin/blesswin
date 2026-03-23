@@ -29,7 +29,9 @@ import {
   Globe,
   Lock,
   Edit2,
-  Trash2
+  Trash2,
+  Zap,
+  Clock
 } from 'lucide-react';
 import { WeeklyTracker } from './weekly-tracker';
 
@@ -463,12 +465,31 @@ export function RitualCard({
           {ritual.icon || '🌱'}
         </motion.div>
         <div className='flex-1'>
-          <h3 className='mb-1 text-base font-bold text-gray-900 dark:text-white md:mb-2 md:text-lg'>
-            {ritual.title}
-          </h3>
+          <div className='mb-1 flex items-center gap-2 md:mb-2'>
+            <h3 className='text-base font-bold text-gray-900 dark:text-white md:text-lg'>
+              {ritual.title}
+            </h3>
+            {(ritual as any)._isAutomation && (
+              <span className='flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+                <Zap className='h-3 w-3' />
+                Automation
+              </span>
+            )}
+          </div>
           <p className='text-xs text-gray-600 dark:text-gray-400 md:text-sm'>
             {ritual.description}
           </p>
+          {/* Show trigger info for automations */}
+          {(ritual as any)._automationTriggers && Array.isArray((ritual as any)._automationTriggers) && (ritual as any)._automationTriggers.length > 0 && (
+            <div className='mt-2 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500'>
+              <Clock className='h-3 w-3' />
+              <span>
+                {((ritual as any)._automationTriggers as any[]).some((t: any) => t.type === 'time') && 'Time-based'}
+                {((ritual as any)._automationTriggers as any[]).some((t: any) => t.type === 'location') && 'Location-based'}
+                {((ritual as any)._automationTriggers as any[]).some((t: any) => t.type === 'condition') && 'Condition-based'}
+              </span>
+            </div>
+          )}
         </div>
       </motion.div>
 

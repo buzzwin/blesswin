@@ -42,3 +42,6 @@ next-env.d.ts
 # python
 /.mypy_cache
 *.py
+
+# instagram-video secrets
+/instagram-video/.secrets/

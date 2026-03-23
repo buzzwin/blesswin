@@ -1,6 +1,7 @@
 import type { Theme, Accent } from './theme';
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 import type { KarmaBreakdown } from './karma';
+import type { AgentPreferences } from './agent';
 
 export type User = {
   id: string;
@@ -31,6 +32,8 @@ export type User = {
     ritualReminders?: boolean; // Daily ritual reminder emails
     weeklySummary?: boolean; // Weekly progress summary emails
   };
+  /** Opt-in preferences injected into Ask Buzzwin / agent chat for personalization */
+  agentPreferences?: AgentPreferences;
 };
 
 export type EditableData = Extract<

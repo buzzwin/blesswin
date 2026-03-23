@@ -79,7 +79,13 @@ export default function RitualRipplesPage(): JSX.Element {
         setRippleCount(ripples);
 
         // Get all impact moments created from this ritual
-        const moments = await getRitualMoments(ritualData.id!);
+        if (!ritualData.id) {
+          toast.error('Ritual not found');
+          router.push('/rituals');
+          return;
+        }
+
+        const moments = await getRitualMoments(ritualData.id);
         
         // Fetch user data for each moment
         const momentsWithUsers: ImpactMomentWithUser[] = [];
@@ -302,4 +308,3 @@ export default function RitualRipplesPage(): JSX.Element {
     </>
   );
 }
-

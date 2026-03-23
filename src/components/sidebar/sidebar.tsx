@@ -29,9 +29,15 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     disabled: false
   },
   {
-    href: '/rituals',
-    linkName: 'Rituals',
-    iconName: 'CalendarIcon',
+    href: '/ask',
+    linkName: 'Ask Buzzwin',
+    iconName: 'ChatBubbleLeftRightIcon',
+    disabled: false
+  },
+  {
+    href: '/automations',
+    linkName: 'Automations',
+    iconName: 'SparklesIcon',
     disabled: false
   },
   {

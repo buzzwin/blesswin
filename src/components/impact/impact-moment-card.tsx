@@ -36,6 +36,7 @@ import { toast } from 'react-hot-toast';
 import { useAuth } from '@lib/context/auth-context';
 import { EditMomentModal } from './edit-moment-modal';
 import { ActionShareModal } from './action-share-modal';
+import { SharedAutomationCard } from '@components/automation/shared-automation-card';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -175,7 +176,7 @@ export function ImpactMomentCard({
                         </a>
                       </Link>
                     ) : (
-                      <Link href='/rituals'>
+                      <Link href='/automations?tab=rituals'>
                         <a className='inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:from-emerald-700 hover:to-teal-700 hover:shadow-md md:px-3.5 md:py-2 md:text-sm'>
                           <span className='text-sm md:text-base'>🌱</span>
                           <span>View Rituals</span>
@@ -264,6 +265,20 @@ export function ImpactMomentCard({
               </>
             )}
           </div>
+
+          {/* Shared Automation Card */}
+          {moment.automationId && moment.automationShare && (
+            <div className='mb-3'>
+              <SharedAutomationCard
+                automationId={moment.automationShare.automationId}
+                sourceUserId={moment.automationShare.sourceUserId}
+                title={moment.automationShare.title}
+                creatorName={moment.user.name}
+                creatorUsername={moment.user.username}
+                creatorPhotoURL={moment.user.photoURL}
+              />
+            </div>
+          )}
 
           {/* Ritual Participation Text */}
           <p className='mb-3 whitespace-pre-wrap break-words text-gray-900 dark:text-white'>

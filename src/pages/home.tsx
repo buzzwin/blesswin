@@ -27,11 +27,16 @@ import { RitualStatsWidget } from '@components/rituals/ritual-stats-widget';
 import { RitualSettings } from '@components/rituals/ritual-settings';
 import { UserKarmaDisplay } from '@components/user/user-karma-display';
 import { StoryFeedCard } from '@components/stories/story-feed-card';
+import { FamilyWatchMode } from '@components/recommendations/family-watch-mode';
+import { TodayStack } from '@components/rituals/today-stack';
+import { WindDownRitual } from '@components/rituals/wind-down-ritual';
+import { DailyBriefing } from '@components/home/daily-briefing';
 import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
-import { Sparkles } from 'lucide-react';
+import Link from 'next/link';
+import { Sparkles, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getDoc } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
@@ -47,9 +52,31 @@ import type { RitualDefinition, RitualStats } from '@lib/types/ritual';
 import type { RealStory } from '@lib/types/real-story';
 import type { ReactElement, ReactNode } from 'react';
 
+const AGENT_BANNER_KEY = 'buzzwin-agent-upgrade-banner-dismissed';
+
 export default function HomeFeed(): JSX.Element {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+  const [showAgentBanner, setShowAgentBanner] = useState(false);
+
+  useEffect(() => {
+    if (typeof window === 'undefined' || !user) return;
+    try {
+      const dismissed = localStorage.getItem(AGENT_BANNER_KEY);
+      setShowAgentBanner(dismissed !== '1');
+    } catch {
+      setShowAgentBanner(true);
+    }
+  }, [user?.id]);
+
+  const dismissAgentBanner = (): void => {
+    try {
+      localStorage.setItem(AGENT_BANNER_KEY, '1');
+    } catch {
+      // ignore
+    }
+    setShowAgentBanner(false);
+  };
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -75,6 +102,8 @@ export default function HomeFeed(): JSX.Element {
   } | null>(null);
   const [featuredStories, setFeaturedStories] = useState<RealStory[]>([]);
   const [storiesLoading, setStoriesLoading] = useState(false);
+  const [windDownExpanded, setWindDownExpanded] = useState(false);
+  const [dayContext, setDayContext] = useState<'busy' | 'calm' | 'travel' | 'weekend' | 'stress'>('calm');
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -458,49 +487,138 @@ export default function HomeFeed(): JSX.Element {
     void fetchMoments();
   };
 
+  // Determine day context (simplified - could be enhanced with calendar/activity data)
+  useEffect(() => {
+    const dayOfWeek = new Date().getDay();
+    const hour = new Date().getHours();
+    
+    if (dayOfWeek === 0 || dayOfWeek === 6) {
+      setDayContext('weekend');
+    } else if (hour >= 7 && hour <= 9) {
+      setDayContext('busy');
+    } else if (hour >= 18) {
+      setDayContext('calm');
+    } else {
+      setDayContext('calm');
+    }
+  }, []);
+
+  // Get today's rituals for the stack
+  const [todayRitualsForStack, setTodayRitualsForStack] = useState<RitualDefinition[]>([]);
+
+  // Fetch all today's rituals for the stack
+  useEffect(() => {
+    const fetchTodayRituals = async (): Promise<void> => {
+      if (!user?.id) return;
+      
+      try {
+        const response = await fetch(`/api/rituals/today?userId=${user.id}`);
+        if (response.ok) {
+          const data = await response.json();
+          const rituals: RitualDefinition[] = [];
+          
+          if (data.rituals?.globalRitual) {
+            rituals.push(data.rituals.globalRitual);
+          }
+          
+          if (data.rituals?.personalizedRituals) {
+            rituals.push(...data.rituals.personalizedRituals);
+          }
+          
+          setTodayRitualsForStack(rituals);
+        }
+      } catch (error) {
+        console.error('Error fetching today\'s rituals:', error);
+      }
+    };
+
+    void fetchTodayRituals();
+  }, [user?.id]);
+
+  const handleRitualComplete = async (ritual: RitualDefinition): Promise<void> => {
+    // Navigate to automations page with rituals tab for completion
+    window.location.href = '/automations?tab=rituals';
+  };
+
   return (
     <MainContainer>
       <SEO
-        title='Community Feed - Stories of Good / Buzzwin'
-        description='A social feed amplifying stories of creativity, kindness, and community impact. Share meditation insights, yoga practices, and positive news from do-gooders around the world.'
+        title='Home - What Matters Today / Buzzwin'
+        description='Decide and act — not just discover. Your daily briefing, rituals, and connections on Buzzwin.'
       />
-      <MainHeader title='Community Feed' useMobileSidebar />
+      <MainHeader title='Home' useMobileSidebar />
 
-      {/* Feed Description */}
-      <div className='border-b border-light-border py-2 dark:border-dark-border'>
-        <div className='flex items-start gap-3'>
-          <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-            <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
-          </div>
-          <div className='flex-1'>
-            <h3 className='mb-1 text-sm font-semibold text-gray-900 dark:text-white'>
-              Amplify Stories of Good
-            </h3>
-            <p className='text-xs text-gray-600 dark:text-gray-400'>
-              Share meditation insights, yoga practices, acts of kindness, and
-              community impact stories. Together we're building a more hopeful
-              world.
+      {user && showAgentBanner && (
+        <div className='mb-4 flex items-start gap-3 rounded-xl border border-purple-200 bg-purple-50/90 p-3 text-sm text-gray-800 dark:border-purple-800 dark:bg-purple-950/40 dark:text-gray-100'>
+          <Sparkles className='mt-0.5 h-5 w-5 shrink-0 text-purple-600 dark:text-purple-400' />
+          <div className='min-w-0 flex-1'>
+            <p className='font-medium'>We&apos;ve upgraded Buzzwin</p>
+            <p className='mt-1 text-gray-700 dark:text-gray-300'>
+              Tell it what you want — and it helps you get it done. Try Ask Buzzwin for plans, options, and next steps.
             </p>
+            <Link
+              href='/ask'
+              className='mt-2 inline-block font-semibold text-purple-700 underline decoration-purple-400 underline-offset-2 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200'
+            >
+              Open Ask Buzzwin
+            </Link>
           </div>
+          <button
+            type='button'
+            onClick={dismissAgentBanner}
+            className='shrink-0 rounded-lg p-1 text-gray-500 hover:bg-purple-100 hover:text-gray-800 dark:hover:bg-purple-900/50 dark:hover:text-gray-200'
+            aria-label='Dismiss'
+          >
+            <X className='h-5 w-5' />
+          </button>
         </div>
+      )}
+
+      {/* Daily Briefing */}
+      <div className='mb-4'>
+        <DailyBriefing
+          userName={user?.name || user?.username}
+          dayContext={dayContext}
+        />
       </div>
 
-      {/* Karma Display */}
+      {/* Today's Rituals Stack */}
+      {todayRitualsForStack.length > 0 && (
+        <div className='mb-4'>
+          <TodayStack
+            rituals={todayRitualsForStack}
+            onComplete={handleRitualComplete}
+            onViewAll={() => {
+              window.location.href = '/automations?tab=rituals';
+            }}
+          />
+        </div>
+      )}
+
+      {/* Wind-Down Ritual (Entertainment) */}
+      <div className='mb-4'>
+        <WindDownRitual
+          isExpanded={windDownExpanded}
+          onToggle={() => setWindDownExpanded(!windDownExpanded)}
+        />
+      </div>
+
+      {/* Karma Display - Compact */}
       {userKarma && user?.id && (
-        <div className='border-b border-gray-200 py-2 dark:border-gray-700'>
+        <div className='mb-4 border-b border-gray-200 pb-4 dark:border-gray-700'>
           <UserKarmaDisplay
             karmaPoints={userKarma.karmaPoints}
             karmaBreakdown={userKarma.karmaBreakdown}
             userId={user.id}
-            compact={false}
-            showBreakdown={true}
+            compact={true}
+            showBreakdown={false}
             showEncouragement={true}
           />
         </div>
       )}
 
-      {/* Ritual Stats Widget */}
-      <div className='border-b border-gray-200 py-2 dark:border-gray-700'>
+      {/* Ritual Stats Widget - Compact */}
+      <div className='mb-4 border-b border-gray-200 pb-4 dark:border-gray-700'>
         <RitualStatsWidget
           stats={ritualStats}
           loading={ritualStatsLoading}
@@ -508,24 +626,21 @@ export default function HomeFeed(): JSX.Element {
         />
       </div>
 
-      {/* Rituals Banner */}
-      {todayRitual && !ritualCompleted && (
-        <RitualsBanner
-          ritual={todayRitual}
-          completed={ritualCompleted}
-          onDismiss={() => setTodayRitual(null)}
-          onComplete={() => {
-            // Navigate to rituals page or open completion flow
-            window.location.href = '/rituals';
-          }}
-          onViewAll={() => {
-            window.location.href = '/rituals';
-          }}
-        />
-      )}
-
-      <div className='py-2'>
-        <ImpactMomentInput onSuccess={handleMomentCreated} />
+      {/* Community Feed Section */}
+      <div className='mb-4'>
+        <div className='mb-3 flex items-center justify-between'>
+          <div>
+            <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
+              Community Stories
+            </h2>
+            <p className='mt-0.5 text-xs text-gray-600 dark:text-gray-400'>
+              Share and discover moments of impact
+            </p>
+          </div>
+        </div>
+        <div className='mb-3'>
+          <ImpactMomentInput onSuccess={handleMomentCreated} />
+        </div>
       </div>
 
       <section>

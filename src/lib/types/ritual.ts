@@ -1,6 +1,11 @@
 import type { Timestamp, FirestoreDataConverter } from 'firebase/firestore';
 import type { ImpactTag, EffortLevel } from './impact-moment';
 
+/**
+ * @deprecated Use UnifiedRitual from './unified-ritual' instead.
+ * This type is kept for backward compatibility during migration.
+ */
+
 export type RitualScope = 'global' | 'personalized' | 'public';
 export type RitualTimeOfDay = 'morning' | 'afternoon' | 'evening' | 'anytime';
 export type DayOfWeek = 0 | 1 | 2 | 3 | 4 | 5 | 6; // 0 = Sunday, 1 = Monday, ..., 6 = Saturday

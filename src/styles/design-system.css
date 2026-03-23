@@ -24,17 +24,17 @@
 }
 
 /* Typography System */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
 
 /* Typography Scale */
 .text-display {
-  font-family: 'Fraunces', serif;
+  font-family: 'Nunito', sans-serif;
   font-weight: 700;
   letter-spacing: -0.02em;
 }
 
 .text-heading {
-  font-family: 'Fraunces', serif;
+  font-family: 'Nunito', sans-serif;
   font-weight: 600;
   letter-spacing: -0.01em;
 }
@@ -171,4 +171,3 @@
     transition-duration: 0.01ms !important;
   }
 }
-

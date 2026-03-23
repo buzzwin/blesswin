@@ -16,6 +16,7 @@ import type { Comment } from '@lib/types/comment';
 import { ritualDefinitionConverter, userRitualStateConverter, ritualCompletionConverter } from '@lib/types/ritual';
 import type { RitualDefinition, UserRitualState, RitualCompletion } from '@lib/types/ritual';
 import type { StoryBookmark, StoryCollection } from '@lib/types/story-bookmark';
+import type { RitualCard } from '@lib/types/ritual-card';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -52,6 +53,13 @@ export function impactMomentCommentsCollection(momentId: string): CollectionRefe
 }
 
 export const ritualsCollection = collection(db, 'rituals').withConverter(ritualDefinitionConverter);
+
+// Unified rituals collection (same as rituals, but supports both rituals and automations)
+// This will eventually replace the separate automations collection
+export const unifiedRitualsCollection = collection(db, 'rituals') as CollectionReference<any>;
+
+// Dedicated ritual cards collection for easier lookup
+export const ritualCardsCollection = collection(db, 'ritual_cards') as CollectionReference<RitualCard>;
 
 export function userRitualStateDoc(userId: string): DocumentReference<UserRitualState> {
   return doc(db, `users/${userId}/ritual_state/${userId}`).withConverter(userRitualStateConverter);

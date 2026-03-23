@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { useAuth } from '@lib/context/auth-context';
+import { useModal } from '@lib/hooks/useModal';
 import { RitualCard } from './ritual-card';
 import { Loading } from '@components/ui/loading';
 import { Plus, Edit2, Users, Sparkles, Trash2 } from 'lucide-react';
@@ -7,6 +8,7 @@ import type { RitualDefinition, RitualCompletion } from '@lib/types/ritual';
 import { filterAndSortRituals } from '@lib/utils/ritual-filtering';
 import type { SortOption } from '@components/rituals/rituals-sort';
 import { toast } from 'react-hot-toast';
+import { CreateCardModal } from '@components/ritual-cards/create-card-modal';
 
 interface MyRitualsSectionProps {
   onCreateRitual: () => void;
@@ -48,6 +50,7 @@ export function MyRitualsSection({
   allCompletions = []
 }: MyRitualsSectionProps): JSX.Element {
   const { user } = useAuth();
+  const { open: createCardModalOpen, openModal: openCreateCardModal, closeModal: closeCreateCardModal } = useModal();
   const [createdRituals, setCreatedRituals] = useState<RitualDefinition[]>([]);
   const [joinedRituals, setJoinedRituals] = useState<RitualDefinition[]>([]);
   const [availableRituals, setAvailableRituals] = useState<RitualDefinition[]>(
@@ -385,13 +388,22 @@ export function MyRitualsSection({
                 </span>
               )}
             </div>
-            <button
-              onClick={onCreateRitual}
-              className='flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:gap-2 md:px-4 md:py-2 md:text-sm'
-            >
-              <Plus className='h-3 w-3 md:h-4 md:w-4' />
-              <span className='hidden sm:inline'>New Ritual</span>
-            </button>
+            <div className='flex items-center gap-2'>
+              <button
+                onClick={openCreateCardModal}
+                className='flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-pink-500 to-rose-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:from-pink-600 hover:to-rose-700 md:gap-2 md:px-4 md:py-2 md:text-sm'
+                title='Create a greeting card'
+              >
+                💌 Card
+              </button>
+              <button
+                onClick={onCreateRitual}
+                className='flex items-center gap-1.5 rounded-lg bg-gradient-to-r from-purple-600 to-pink-600 px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:from-purple-700 hover:to-pink-700 md:gap-2 md:px-4 md:py-2 md:text-sm'
+              >
+                <Plus className='h-3 w-3 md:h-4 md:w-4' />
+                <span className='hidden sm:inline'>New Ritual</span>
+              </button>
+            </div>
           </div>
           {filteredAndSortedCreated.length > 0 ? (
             <div className='space-y-2 md:space-y-3 lg:space-y-4'>
@@ -462,6 +474,19 @@ export function MyRitualsSection({
           </div>
         </div>
       )}
+
+      {/* Create Card Modal */}
+      <CreateCardModal
+        open={createCardModalOpen}
+        closeModal={closeCreateCardModal}
+        onSuccess={() => {
+          // Refresh rituals after creating card
+          if (onRefetch) {
+            void onRefetch();
+          }
+          void fetchMyRituals();
+        }}
+      />
     </div>
   );
 }

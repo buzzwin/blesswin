@@ -33,9 +33,10 @@ function AppContent({ Component, pageProps }: AppPropsWithLayout): JSX.Element {
       /iPhone|iPad|iPod/i.test(navigator.userAgent) &&
       /Safari/i.test(navigator.userAgent) &&
       !/Chrome|CriOS|FxiOS/i.test(navigator.userAgent);
+    const isOffline = !navigator.onLine;
 
     // Skip analytics on login page or mobile Safari to prevent interference
-    if (isLoginPage || isMobileSafari) {
+    if (isLoginPage || isMobileSafari || isOffline) {
       return;
     }
 

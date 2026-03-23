@@ -14,7 +14,7 @@ module.exports = {
       fontFamily: {
         'twitter-chirp': ['TwitterChirp', 'sans-serif'],
         'twitter-chirp-extended': ['TwitterChirpExtendedHeavy', 'sans-serif'],
-        'display': ['Fraunces', 'serif'],
+        'display': ['Nunito', 'sans-serif'],
         'body': ['Inter', 'sans-serif']
       },
       // prettier-ignore

@@ -11,7 +11,8 @@ import {
   Heart,
   Calendar,
   Bookmark,
-  Settings
+  Settings,
+  MessageCircle
 } from 'lucide-react';
 import { useAuth } from '@lib/context/auth-context';
 import LogoIcon from '@components/ui/logo';
@@ -41,7 +42,7 @@ export function GlobalDesktopHeader(): JSX.Element {
     <header className='sticky top-0 z-50 hidden border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900 md:block'>
       <div className='mx-auto flex max-w-6xl items-center justify-between px-4 py-3'>
         {/* Logo and Brand */}
-        <Link href={user ? '/rituals' : '/'}>
+        <Link href={user ? '/automations' : '/'}>
           <a className='flex items-center gap-2 sm:gap-3'>
             <div className='flex h-7 w-7 items-center justify-center rounded-lg bg-gray-900 dark:bg-white sm:h-8 sm:w-8'>
               <LogoIcon className='h-3.5 w-3.5 text-white dark:text-gray-900 sm:h-4 sm:w-4' />
@@ -54,10 +55,18 @@ export function GlobalDesktopHeader(): JSX.Element {
 
         {/* Navigation Links */}
         <nav className='flex items-center gap-2 sm:gap-4'>
-          <Link href='/rituals'>
+          {user && (
+            <Link href='/ask'>
+              <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
+                <MessageCircle className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+                <span className='hidden sm:inline'>Ask Buzzwin</span>
+              </a>
+            </Link>
+          )}
+          <Link href='/automations'>
             <a className='flex items-center gap-1.5 text-xs font-medium text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:gap-2 sm:text-sm'>
-              <Calendar className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
-              <span className='hidden sm:inline'>Rituals</span>
+              <Sparkles className='h-3.5 w-3.5 sm:h-4 sm:w-4' />
+              <span className='hidden sm:inline'>Automations</span>
             </a>
           </Link>
           <Link href='/home'>

@@ -8,6 +8,7 @@ interface RitualsTabsProps {
     'joined'?: number;
     'available'?: number;
     'created'?: number;
+    'automations'?: number;
     'progress'?: number;
     'achievements'?: number;
     'leaderboard'?: number;
@@ -19,6 +20,7 @@ const tabLabels: Record<RitualTab, string> = {
   'joined': 'Joined',
   'available': 'Available',
   'created': 'Created',
+  'automations': 'Automations',
   'progress': 'Progress',
   'achievements': 'Achievements',
   'leaderboard': 'Leaderboard'
@@ -30,7 +32,7 @@ export function RitualsTabs({
   tabCounts,
   className
 }: RitualsTabsProps): JSX.Element {
-  const tabs: RitualTab[] = ['joined', 'available', 'created', 'progress', 'achievements', 'leaderboard'];
+  const tabs: RitualTab[] = ['joined', 'available', 'created', 'automations', 'progress', 'achievements', 'leaderboard'];
 
   return (
     <div

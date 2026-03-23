@@ -2,6 +2,8 @@
 
 Buzzwin is a transformative wellness platform dedicated to promoting **world peace, good thoughts, happiness, and positive vibes** through AI-powered guidance. Our mission is to help individuals find inner peace, which contributes to global harmony.
 
+**Product direction:** Buzzwin now helps you **decide and act** — not just discover. The same login and app you already use are evolving with an AI layer: ask for plans, simulate options, save what works, and adapt as life changes. See [AGENT_PIVOT.md](AGENT_PIVOT.md) for how existing features map to this agent model.
+
 ## ✨ Features
 
 - 🧘 **AI Yoga Guide** - Personalized yoga poses, sequences, and breathing techniques

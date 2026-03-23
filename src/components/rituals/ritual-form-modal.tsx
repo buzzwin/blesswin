@@ -2,10 +2,11 @@ import { useState, useEffect } from 'react';
 import { Modal } from '@components/modal/modal';
 import { useAuth } from '@lib/context/auth-context';
 import { toast } from 'react-hot-toast';
-import { Sparkles, Loader2 } from 'lucide-react';
+import { Sparkles, Loader2, Zap, Clock, MapPin, Bell, Settings } from 'lucide-react';
 import type { RitualDefinition, RitualTimeOfDay, RitualScope, DayOfWeek, DayOfMonth } from '@lib/types/ritual';
 import { generateRRULE, parseRRULE, dayOfWeekToICal, iCalToDayOfWeek } from '@lib/utils/rrule';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
+import type { AutomationTrigger, AutomationAction } from '@lib/types/automation';
 
 interface RitualFormModalProps {
   open: boolean;
@@ -34,6 +35,13 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
   const [aiInput, setAiInput] = useState('');
   const [generating, setGenerating] = useState(false);
   const [showAiAssist, setShowAiAssist] = useState(false);
+  // Automation mode
+  const [isAutomation, setIsAutomation] = useState(false);
+  const [triggers, setTriggers] = useState<AutomationTrigger[]>([]);
+  const [actions, setActions] = useState<AutomationAction[]>([]);
+  const [isCompletable, setIsCompletable] = useState(true);
+  const [isJoinable, setIsJoinable] = useState(false);
+  const [category, setCategory] = useState<'wellness' | 'productivity' | 'relationships' | 'health' | 'finance' | 'learning' | 'other'>('wellness');
 
   const isEditing = !!ritual;
 
@@ -98,6 +106,22 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
         setSelectedDaysOfMonth([]);
       }
       setScope(ritual.scope || 'personalized');
+      // Check if this is an automation (has triggers)
+      const ritualData = ritual as any;
+      if (ritualData.triggers && Array.isArray(ritualData.triggers) && ritualData.triggers.length > 0) {
+        setIsAutomation(true);
+        setTriggers(ritualData.triggers);
+        setActions(ritualData.actions || []);
+        setIsCompletable(ritualData.isCompletable !== false);
+        setIsJoinable(ritualData.isJoinable || false);
+        setCategory(ritualData.category || 'wellness');
+      } else {
+        setIsAutomation(false);
+        setTriggers([]);
+        setActions([]);
+        setIsCompletable(true);
+        setIsJoinable(scope === 'public');
+      }
     } else {
       // Reset form for new ritual
       setTitle('');
@@ -116,8 +140,14 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
       setScope('personalized'); // Default to private
       setAiInput('');
       setShowAiAssist(false);
+      setIsAutomation(false);
+      setTriggers([]);
+      setActions([]);
+      setIsCompletable(true);
+      setIsJoinable(false);
+      setCategory('wellness');
     }
-  }, [ritual, open]);
+  }, [ritual, open, scope]);
 
   const handleGenerateWithAI = async (): Promise<void> => {
     if (!user?.id) {
@@ -228,36 +258,54 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
           throw new Error(data.error || 'Failed to update ritual');
         }
       } else {
-        // Create new ritual
+        // Create new ritual (unified - supports both manual rituals and automations)
+        const requestBody: any = {
+          userId: user.id,
+          title: title.trim(),
+          description: description.trim(),
+          tags,
+          effortLevel,
+          suggestedTimeOfDay,
+          durationEstimate,
+          frequency: frequencyType === 'daily'
+            ? generateRRULE({ freq: 'DAILY', interval: dailyInterval })
+            : frequencyType === 'weekly'
+            ? generateRRULE({
+                freq: 'WEEKLY',
+                byday: selectedDaysOfWeek.map(day => dayOfWeekToICal(day))
+              })
+            : monthlyType === 'dates'
+            ? generateRRULE({
+                freq: 'MONTHLY',
+                bymonthday: selectedDaysOfMonth
+              })
+            : generateRRULE({
+                freq: 'MONTHLY',
+                byday: [`${monthlyOrdinal}${dayOfWeekToICal(monthlyOrdinalDay)}`]
+              }),
+          scope
+        };
+
+        // Add automation fields if in automation mode
+        if (isAutomation && triggers.length > 0) {
+          requestBody.triggers = triggers;
+          requestBody.actions = actions.length > 0 ? actions : [{ type: 'ritual', config: { ritualTitle: title.trim() } }];
+          requestBody.category = category;
+          requestBody.isPublic = scope === 'public';
+          requestBody.isJoinable = isJoinable;
+          requestBody.isCompletable = isCompletable;
+          requestBody.isActive = true;
+        } else {
+          // Manual ritual - ensure these are set
+          requestBody.isCompletable = isCompletable;
+          requestBody.isJoinable = scope === 'public' || scope === 'global';
+          requestBody.isPublic = scope === 'public' || scope === 'global';
+        }
+
         const response = await fetch('/api/rituals/create', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: user.id,
-            title: title.trim(),
-            description: description.trim(),
-            tags,
-            effortLevel,
-            suggestedTimeOfDay,
-            durationEstimate,
-            frequency: frequencyType === 'daily'
-              ? generateRRULE({ freq: 'DAILY', interval: dailyInterval })
-              : frequencyType === 'weekly'
-              ? generateRRULE({
-                  freq: 'WEEKLY',
-                  byday: selectedDaysOfWeek.map(day => dayOfWeekToICal(day))
-                })
-              : monthlyType === 'dates'
-              ? generateRRULE({
-                  freq: 'MONTHLY',
-                  bymonthday: selectedDaysOfMonth
-                })
-              : generateRRULE({
-                  freq: 'MONTHLY',
-                  byday: [`${monthlyOrdinal}${dayOfWeekToICal(monthlyOrdinalDay)}`]
-                }),
-            scope
-          })
+          body: JSON.stringify(requestBody)
         });
 
         const data = await response.json();
@@ -714,6 +762,169 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
             </div>
           </div>
 
+          {/* Automation Mode Toggle */}
+          {!isEditing && (
+            <div>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+                Type
+              </label>
+              <div className='flex gap-2'>
+                <button
+                  type='button'
+                  onClick={() => {
+                    setIsAutomation(false);
+                    setTriggers([]);
+                    setActions([]);
+                  }}
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    !isAutomation
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  📝 Manual Ritual
+                </button>
+                <button
+                  type='button'
+                  onClick={() => setIsAutomation(true)}
+                  className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
+                    isAutomation
+                      ? 'bg-purple-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  ⚡ Automation
+                </button>
+              </div>
+              <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+                {isAutomation 
+                  ? 'Automation runs automatically based on triggers' 
+                  : 'Manual ritual - you complete it when you choose'}
+              </p>
+            </div>
+          )}
+
+          {/* Automation Triggers Section */}
+          {isAutomation && (
+            <div className='space-y-4 rounded-lg border-2 border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
+              <h3 className='flex items-center gap-2 text-sm font-semibold text-purple-900 dark:text-purple-100'>
+                <Zap className='h-4 w-4' />
+                Triggers
+              </h3>
+              <p className='text-xs text-purple-800 dark:text-purple-200'>
+                When should this automation run?
+              </p>
+              
+              {/* Time Trigger */}
+              <div className='space-y-2'>
+                <label className='flex items-center gap-2 text-sm font-medium text-purple-900 dark:text-purple-100'>
+                  <Clock className='h-4 w-4' />
+                  Time-based Trigger
+                </label>
+                <div className='grid grid-cols-2 gap-2'>
+                  <input
+                    type='time'
+                    value={triggers.find(t => t.type === 'time')?.config?.time || '09:00'}
+                    onChange={(e) => {
+                      const timeTrigger = triggers.find(t => t.type === 'time');
+                      if (timeTrigger) {
+                        setTriggers(triggers.map(t => 
+                          t.type === 'time' 
+                            ? { ...t, config: { ...t.config, time: e.target.value } }
+                            : t
+                        ));
+                      } else {
+                        setTriggers([...triggers, {
+                          type: 'time',
+                          config: { time: e.target.value, frequency: 'daily' }
+                        }]);
+                      }
+                    }}
+                    className='rounded-lg border border-purple-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none dark:border-purple-700 dark:bg-gray-800 dark:text-white'
+                  />
+                  <select
+                    value={triggers.find(t => t.type === 'time')?.config?.frequency || 'daily'}
+                    onChange={(e) => {
+                      const timeTrigger = triggers.find(t => t.type === 'time');
+                      if (timeTrigger) {
+                        setTriggers(triggers.map(t => 
+                          t.type === 'time' 
+                            ? { ...t, config: { ...t.config, frequency: e.target.value as any } }
+                            : t
+                        ));
+                      } else {
+                        setTriggers([...triggers, {
+                          type: 'time',
+                          config: { time: '09:00', frequency: e.target.value as any }
+                        }]);
+                      }
+                    }}
+                    className='rounded-lg border border-purple-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none dark:border-purple-700 dark:bg-gray-800 dark:text-white'
+                  >
+                    <option value='daily'>Daily</option>
+                    <option value='weekly'>Weekly</option>
+                    <option value='monthly'>Monthly</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Automation Actions Section */}
+          {isAutomation && (
+            <div className='space-y-4 rounded-lg border-2 border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
+              <h3 className='flex items-center gap-2 text-sm font-semibold text-purple-900 dark:text-purple-100'>
+                <Sparkles className='h-4 w-4' />
+                Actions
+              </h3>
+              <p className='text-xs text-purple-800 dark:text-purple-200'>
+                What should happen when triggered?
+              </p>
+              
+              {/* Default action: Complete ritual */}
+              {actions.length === 0 && (
+                <div className='rounded-lg border border-purple-300 bg-white p-3 dark:border-purple-700 dark:bg-gray-800'>
+                  <p className='text-sm text-gray-700 dark:text-gray-300'>
+                    Default: Complete this ritual automatically
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Social Features (for both rituals and automations) */}
+          <div className='space-y-3'>
+            <div>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+                Social Features
+              </label>
+              <div className='space-y-2'>
+                <label className='flex items-center gap-2'>
+                  <input
+                    type='checkbox'
+                    checked={isCompletable}
+                    onChange={(e) => setIsCompletable(e.target.checked)}
+                    className='rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                  />
+                  <span className='text-sm text-gray-700 dark:text-gray-300'>
+                    Can be completed and create impact moments
+                  </span>
+                </label>
+                <label className='flex items-center gap-2'>
+                  <input
+                    type='checkbox'
+                    checked={isJoinable}
+                    onChange={(e) => setIsJoinable(e.target.checked)}
+                    className='rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                  />
+                  <span className='text-sm text-gray-700 dark:text-gray-300'>
+                    Others can join this {isAutomation ? 'automation' : 'ritual'}
+                  </span>
+                </label>
+              </div>
+            </div>
+          </div>
+
           {/* Visibility */}
           <div>
             <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
@@ -722,7 +933,10 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
             <div className='flex gap-2'>
               <button
                 type='button'
-                onClick={() => setScope('personalized')}
+                onClick={() => {
+                  setScope('personalized');
+                  setIsJoinable(false);
+                }}
                 className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   scope === 'personalized'
                     ? 'bg-purple-600 text-white'
@@ -733,7 +947,10 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               </button>
               <button
                 type='button'
-                onClick={() => setScope('public')}
+                onClick={() => {
+                  setScope('public');
+                  setIsJoinable(true);
+                }}
                 className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   scope === 'public'
                     ? 'bg-purple-600 text-white'
@@ -745,8 +962,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
             </div>
             <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
               {scope === 'public' 
-                ? 'Others can discover and join this ritual' 
-                : 'Only you can see and use this ritual'}
+                ? 'Others can discover and join this ' + (isAutomation ? 'automation' : 'ritual')
+                : 'Only you can see and use this ' + (isAutomation ? 'automation' : 'ritual')}
             </p>
           </div>
 

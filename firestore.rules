@@ -328,5 +328,42 @@ service cloud.firestore {
       allow update: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.userId == userId);
       allow delete: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.userId == userId);
     }
+
+    // User saved plans (Ask Buzzwin / agent)
+    match /users/{userId}/saved_plans/{planId} {
+      allow read: if (isSignedIn() && request.auth.uid == userId) || request.auth == null;
+      allow create: if request.auth == null || (isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.userId == userId
+        && request.resource.data.title is string
+        && request.resource.data.content is string);
+      allow update, delete: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.userId == userId);
+    }
+
+    // User automations subcollection
+    match /users/{userId}/automations/{automationId} {
+      // Allow read for authenticated users reading their own automations, or when auth is null (server-side API)
+      allow read: if (isSignedIn() && request.auth.uid == userId) || request.auth == null;
+      // Allow create when auth is null (server-side API) OR when user matches
+      // Note: API routes use client SDK server-side, so request.auth may be null
+      allow create: if request.auth == null || (isSignedIn() && request.auth.uid == userId);
+      // Allow update when auth is null (server-side API) OR when user matches and they're the creator
+      allow update: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.userId == request.auth.uid);
+      // Allow delete when auth is null (server-side API) OR when user matches and they're the creator
+      allow delete: if request.auth == null || (isSignedIn() && request.auth.uid == userId && resource.data.userId == request.auth.uid);
+    }
+
+    // Automations registry collection (public automations)
+    match /automations_registry/{registryId} {
+      // Allow public read for browsing automations
+      allow read: if true;
+      // Allow create when auth is null (server-side API) OR when user matches the creator
+      // Note: API routes use client SDK server-side, so request.auth may be null
+      allow create: if request.auth == null || (isSignedIn() && request.resource.data.userId == request.auth.uid);
+      // Allow update when auth is null (server-side API) OR when updating stats only
+      allow update: if request.auth == null || (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stats']));
+      // Don't allow deletion (only server-side cleanup if needed)
+      allow delete: if request.auth == null;
+    }
   }
 }

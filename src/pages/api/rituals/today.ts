@@ -3,14 +3,45 @@ import { getDoc, query, where, getDocs, setDoc, serverTimestamp, doc, collection
 import { ritualsCollection, userRitualStateDoc, impactMomentsCollection, ritualCompletionsCollection } from '@lib/firebase/collections';
 import { db } from '@lib/firebase/app';
 import { getGlobalRituals, getPersonalizedRitualsByTag } from '@lib/data/ritual-definitions';
-import type { RitualDefinition, TodayRituals, RitualFrequency } from '@lib/types/ritual';
+import type { RitualDefinition, TodayRituals, RitualFrequency, RitualScope, RitualTimeOfDay } from '@lib/types/ritual';
+import type { AutomationTrigger } from '@lib/types/automation';
 import { isDateMatchingRRULE } from '@lib/utils/rrule';
-import type { ImpactTag } from '@lib/types/impact-moment';
+import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
+import { isAutomation } from '@lib/types/unified-ritual';
 
 interface TodayRitualsResponse {
   rituals: TodayRituals;
   error?: string;
 }
+
+const impactTagValues: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
+const effortLevels: EffortLevel[] = ['tiny', 'medium', 'deep'];
+const ritualScopes: RitualScope[] = ['global', 'personalized', 'public'];
+const ritualTimes: RitualTimeOfDay[] = ['morning', 'afternoon', 'evening', 'anytime'];
+
+const asString = (value: unknown, fallback: string): string =>
+  typeof value === 'string' ? value : fallback;
+
+const asStringArray = (value: unknown, fallback: string[] = []): string[] =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : fallback;
+
+const asImpactTags = (value: unknown, fallback: ImpactTag[] = ['mind']): ImpactTag[] => {
+  if (!Array.isArray(value)) {
+    return fallback;
+  }
+
+  const tags = value.filter((item): item is ImpactTag => impactTagValues.includes(item as ImpactTag));
+  return tags.length ? tags : fallback;
+};
+
+const asEffortLevel = (value: unknown, fallback: EffortLevel = 'tiny'): EffortLevel =>
+  effortLevels.includes(value as EffortLevel) ? (value as EffortLevel) : fallback;
+
+const asRitualScope = (value: unknown, fallback: RitualScope = 'personalized'): RitualScope =>
+  ritualScopes.includes(value as RitualScope) ? (value as RitualScope) : fallback;
+
+const asRitualTime = (value: unknown, fallback: RitualTimeOfDay = 'anytime'): RitualTimeOfDay =>
+  ritualTimes.includes(value as RitualTimeOfDay) ? (value as RitualTimeOfDay) : fallback;
 
 /**
  * Get today's date in YYYY-MM-DD format
@@ -273,13 +304,104 @@ export default async function handler(
     // Get today's rituals
     const globalRitual = await getTodaysGlobalRitual();
     
-    // Get user's custom rituals (only custom rituals, no personalized rituals)
+    // Get user's custom rituals (including automations)
     const customRitualsCollection = collection(db, 'users', userId, 'custom_rituals');
     const customRitualsSnapshot = await getDocs(customRitualsCollection);
     const customRituals: RitualDefinition[] = customRitualsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     } as RitualDefinition));
+
+    // Get automations from user's automations collection (for backward compatibility)
+    const userAutomationsCollection = collection(db, 'users', userId, 'automations');
+    const automationsSnapshot = await getDocs(userAutomationsCollection);
+    const automations = automationsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      data: doc.data() as Record<string, unknown>
+    }));
+
+    // Filter automations with time triggers that match current time
+    const now = new Date();
+    const currentHour = now.getHours();
+    const currentMinute = now.getMinutes();
+    const currentDayOfWeek = now.getDay(); // 0 = Sunday, 6 = Saturday
+    const currentTimeString = `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
+
+    const triggeredAutomations = automations.filter(({ data }) => {
+      if (data.isActive === false) {
+        return false;
+      }
+
+      const triggers = Array.isArray(data.triggers) ? data.triggers : [];
+      if (triggers.length === 0) {
+        return false;
+      }
+
+      return triggers.some((trigger: unknown) => {
+        if (!trigger || typeof trigger !== 'object') {
+          return false;
+        }
+
+        const typedTrigger = trigger as AutomationTrigger;
+        if (typedTrigger.type !== 'time') return false;
+        
+        const config = typedTrigger.config;
+        if (!config?.time) return false;
+
+        // Check if time matches (simple HH:MM comparison)
+        const triggerTime = config.time;
+        if (triggerTime === currentTimeString) {
+          // Check frequency
+          if (config.frequency === 'daily') {
+            return true;
+          } else if (config.frequency === 'weekly' && config.daysOfWeek) {
+            return config.daysOfWeek.includes(currentDayOfWeek);
+          } else if (config.frequency === 'monthly') {
+            // For monthly, check if it's the same day of month
+            return now.getDate() === 1; // Simple: trigger on 1st of month
+          }
+        }
+        return false;
+      });
+    });
+
+    // Convert triggered automations to ritual format for today's list
+    const automationRituals: RitualDefinition[] = triggeredAutomations
+      .filter(({ data }) => {
+        // Only include if automation has a ritual action or is completable
+        const actions = Array.isArray(data.actions) ? data.actions : [];
+        const hasRitualAction = actions.some(action => {
+          if (!action || typeof action !== 'object') {
+            return false;
+          }
+
+          return (action as Record<string, unknown>).type === 'ritual';
+        });
+        return hasRitualAction || data.isCompletable === true;
+      })
+      .map(({ id, data }) => ({
+        id,
+        title: asString(data.title, 'Untitled automation'),
+        description: asString(data.description, ''),
+        tags: asImpactTags(data.tags),
+        effortLevel: asEffortLevel(data.effortLevel),
+        scope: asRitualScope(data.scope),
+        suggestedTimeOfDay: asRitualTime(data.suggestedTimeOfDay),
+        durationEstimate: asString(data.durationEstimate, '5 minutes'),
+        prefillTemplate: asString(
+          data.prefillTemplate,
+          `Completed automation: ${asString(data.title, 'automation')}`
+        ),
+        frequency: typeof data.frequency === 'string' ? data.frequency : undefined,
+        createdAt: data.createdAt as RitualDefinition['createdAt'],
+        usageCount: typeof data.usageCount === 'number' ? data.usageCount : 0,
+        completionRate: typeof data.completionRate === 'number' ? data.completionRate : 0,
+        joinedByUsers: asStringArray(data.joinedByUsers),
+        // Mark as automation for UI
+        _isAutomation: true,
+        _automationTriggers: data.triggers,
+        _automationActions: data.actions
+      } as RitualDefinition));
 
     // Get joined rituals from main collection (rituals where user is in joinedByUsers)
     // Since joined rituals are no longer copied to custom_rituals, we need to fetch them from main collection
@@ -377,9 +499,12 @@ export default async function handler(
       }
     }
     
-    // Deduplicate custom rituals and exclude global ritual if it appears
+    // Combine custom rituals and automation-triggered rituals
+    const allDueRituals = [...dueCustomRituals, ...automationRituals];
+
+    // Deduplicate and exclude global ritual if it appears
     const seenIds = new Set<string>();
-    const uniqueCustomRituals = dueCustomRituals.filter((ritual) => {
+    const uniqueCustomRituals = allDueRituals.filter((ritual) => {
       if (!ritual.id) return false; // Skip rituals without IDs
       
       // Exclude global ritual from custom list
@@ -418,4 +543,3 @@ export default async function handler(
     });
   }
 }
-

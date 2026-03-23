@@ -22,6 +22,12 @@ interface CreateImpactMomentRequest {
   fromRealStory?: boolean;
   storyId?: string;
   storyTitle?: string;
+  automationId?: string;
+  automationShare?: {
+    automationId: string;
+    sourceUserId: string;
+    title: string;
+  };
 }
 
 export default async function handler(
@@ -35,7 +41,7 @@ export default async function handler(
   }
 
   try {
-    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, isPublic, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle } = req.body as CreateImpactMomentRequest;
+    const { text, tags, effortLevel, moodCheckIn, images, videoUrl, userId, isPublic, fromDailyRitual, ritualId, ritualTitle, fromRealStory, storyId, storyTitle, automationId, automationShare } = req.body as CreateImpactMomentRequest;
 
     if (!userId) {
       res.status(401).json({ error: 'Unauthorized. User ID required.' });
@@ -115,6 +121,14 @@ export default async function handler(
     }
     if (storyTitle !== undefined) {
       impactMomentData.storyTitle = storyTitle;
+    }
+    
+    // Add automation-related fields if provided
+    if (automationId !== undefined) {
+      impactMomentData.automationId = automationId;
+    }
+    if (automationShare !== undefined) {
+      impactMomentData.automationShare = automationShare;
     }
 
     // Only include optional fields if they have values

@@ -94,19 +94,18 @@
     -webkit-tap-highlight-color: transparent;
   }
 
+  html {
+    @apply bg-main-background dark:bg-black;
+  }
+
   body {
-    @apply hover-animation bg-main-background font-twitter-chirp text-light-primary dark:text-dark-primary;
+    @apply hover-animation bg-main-background dark:bg-black font-body text-light-primary dark:text-dark-primary;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   /* Ensure dark mode uses pure black background */
   .dark {
     color-scheme: dark;
-  }
-
-  .dark body,
-  .dark html {
-    background-color: rgb(0, 0, 0);
   }
 
   /* Dark mode support for web components (media-controller, etc.) */

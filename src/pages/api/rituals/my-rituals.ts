@@ -2,7 +2,8 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDocs, query, where, collection } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { ritualsCollection } from '@lib/firebase/collections';
-import type { RitualDefinition } from '@lib/types/ritual';
+import type { RitualDefinition, RitualScope, RitualTimeOfDay } from '@lib/types/ritual';
+import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 import { getAllRitualDefinitions } from '@lib/data/ritual-definitions';
 
 interface MyRitualsResponse {
@@ -15,6 +16,35 @@ interface MyRitualsResponse {
 // User custom rituals collection
 const userCustomRitualsCollection = (userId: string) =>
   collection(db, 'users', userId, 'custom_rituals');
+
+const impactTagValues: ImpactTag[] = ['mind', 'body', 'relationships', 'nature', 'community', 'chores'];
+const effortLevels: EffortLevel[] = ['tiny', 'medium', 'deep'];
+const ritualScopes: RitualScope[] = ['global', 'personalized', 'public'];
+const ritualTimes: RitualTimeOfDay[] = ['morning', 'afternoon', 'evening', 'anytime'];
+
+const asString = (value: unknown, fallback: string): string =>
+  typeof value === 'string' ? value : fallback;
+
+const asStringArray = (value: unknown, fallback: string[] = []): string[] =>
+  Array.isArray(value) ? value.filter((item): item is string => typeof item === 'string') : fallback;
+
+const asImpactTags = (value: unknown, fallback: ImpactTag[] = ['mind']): ImpactTag[] => {
+  if (!Array.isArray(value)) {
+    return fallback;
+  }
+
+  const tags = value.filter((item): item is ImpactTag => impactTagValues.includes(item as ImpactTag));
+  return tags.length ? tags : fallback;
+};
+
+const asEffortLevel = (value: unknown, fallback: EffortLevel = 'tiny'): EffortLevel =>
+  effortLevels.includes(value as EffortLevel) ? (value as EffortLevel) : fallback;
+
+const asRitualScope = (value: unknown, fallback: RitualScope = 'personalized'): RitualScope =>
+  ritualScopes.includes(value as RitualScope) ? (value as RitualScope) : fallback;
+
+const asRitualTime = (value: unknown, fallback: RitualTimeOfDay = 'anytime'): RitualTimeOfDay =>
+  ritualTimes.includes(value as RitualTimeOfDay) ? (value as RitualTimeOfDay) : fallback;
 
 export default async function handler(
   req: NextApiRequest,
@@ -44,12 +74,47 @@ export default async function handler(
       return;
     }
 
-    // Fetch rituals created by the user (custom rituals)
+    // Fetch rituals created by the user (custom rituals, including automations)
     const customRitualsSnapshot = await getDocs(userCustomRitualsCollection(userId));
     const customRituals: RitualDefinition[] = customRitualsSnapshot.docs.map(doc => ({
       id: doc.id,
       ...doc.data()
     } as RitualDefinition));
+
+    // Also fetch automations from automations collection (for backward compatibility)
+    const userAutomationsCollection = collection(db, 'users', userId, 'automations');
+    const automationsSnapshot = await getDocs(userAutomationsCollection);
+    const automations = automationsSnapshot.docs.map(doc => ({
+      id: doc.id,
+      data: doc.data() as Record<string, unknown>
+    }));
+
+    // Convert automations to ritual format for unified display
+    const automationRituals: RitualDefinition[] = automations.map(({ id, data }) => ({
+      id,
+      title: asString(data.title, 'Untitled automation'),
+      description: asString(data.description, ''),
+      tags: asImpactTags(data.tags),
+      effortLevel: asEffortLevel(data.effortLevel),
+      scope: asRitualScope(data.scope),
+      suggestedTimeOfDay: asRitualTime(data.suggestedTimeOfDay),
+      durationEstimate: asString(data.durationEstimate, '5 minutes'),
+      prefillTemplate: asString(
+        data.prefillTemplate,
+        `Completed automation: ${asString(data.title, 'automation')}`
+      ),
+      frequency: typeof data.frequency === 'string' ? data.frequency : undefined,
+      createdAt: data.createdAt as RitualDefinition['createdAt'],
+      usageCount: typeof data.usageCount === 'number' ? data.usageCount : 0,
+      completionRate: typeof data.completionRate === 'number' ? data.completionRate : 0,
+      joinedByUsers: asStringArray(data.joinedByUsers),
+      _isAutomation: true,
+      _automationTriggers: data.triggers,
+      _automationActions: data.actions
+    } as RitualDefinition));
+
+    // Combine custom rituals and automations
+    const allCustomRituals = [...customRituals, ...automationRituals];
 
     // Fetch all rituals from Firestore
     const allRitualsSnapshot = await getDocs(ritualsCollection);
@@ -63,9 +128,9 @@ export default async function handler(
       } as RitualDefinition;
     });
 
-    // Combine custom rituals with Firestore rituals for joined check
+    // Combine custom rituals (including automations) with Firestore rituals for joined check
     // Custom rituals where user is in joinedByUsers should appear in joined rituals
-    const allRitualsForJoinedCheck = [...allFirestoreRituals, ...customRituals];
+    const allRitualsForJoinedCheck = [...allFirestoreRituals, ...allCustomRituals];
 
     // Get user-created rituals from main collection (by createdBy or sourceUserId)
     const userCreatedFromMain: RitualDefinition[] = allFirestoreRituals.filter((ritual): ritual is RitualDefinition => {
@@ -73,12 +138,12 @@ export default async function handler(
       return ritualData.createdBy === userId || ritualData.sourceUserId === userId;
     });
 
-    // Combine custom rituals and user-created rituals from main collection
+    // Combine custom rituals (including automations) and user-created rituals from main collection
     // Deduplicate by ID and sourceRitualId to avoid showing the same ritual twice
     const createdRitualsMap = new Map<string, RitualDefinition>();
     
-    // Add custom rituals first
-    customRituals.forEach(ritual => {
+    // Add custom rituals first (includes automations)
+    allCustomRituals.forEach(ritual => {
       if (ritual.id) {
         createdRitualsMap.set(ritual.id, ritual);
       }
@@ -92,7 +157,7 @@ export default async function handler(
       // Only add if not already in custom rituals (by ID or sourceRitualId)
       if (ritual.id && !createdRitualsMap.has(ritual.id)) {
         // Check if any custom ritual has this as sourceRitualId
-        const isDuplicate = customRituals.some(cr => {
+        const isDuplicate = allCustomRituals.some(cr => {
           const crData = cr as any;
           return cr.id === sourceId || crData.sourceRitualId === ritual.id;
         });
@@ -107,11 +172,12 @@ export default async function handler(
 
     console.log('[MY-RITUALS] Debug:', {
       userId,
-      customRitualsCount: customRituals.length,
+      customRitualsCount: allCustomRituals.length,
+      automationsCount: automations.length,
       userCreatedFromMainCount: userCreatedFromMain.length,
       totalCreatedCount: createdRituals.length,
       allFirestoreRitualsCount: allFirestoreRituals.length,
-      customRitualIds: customRituals.map(r => r.id),
+      customRitualIds: allCustomRituals.map(r => r.id),
       mainCollectionRitualIds: userCreatedFromMain.map(r => r.id),
       finalCreatedRitualIds: createdRituals.map(r => r.id),
       allRitualScopes: allFirestoreRituals.map(r => ({ 
@@ -166,10 +232,10 @@ export default async function handler(
 
       // Check if this is a custom ritual created by the user
       // Creator is automatically considered as joined
-      // A ritual is a custom ritual if it's in the customRituals array
-      const isCustomRitual = customRituals.some(cr => cr.id === ritual.id);
+      // A ritual is a custom ritual if it's in the allCustomRituals array
+      const isCustomRitual = allCustomRituals.some(cr => cr.id === ritual.id);
       const isCustomRitualCreatedByUser = isCustomRitual && 
-        (ritualData.createdBy === userId || (customRituals.find(cr => cr.id === ritual.id) as any)?.createdBy === userId);
+        (ritualData.createdBy === userId || (allCustomRituals.find(cr => cr.id === ritual.id) as any)?.createdBy === userId);
 
       // Handle joined rituals (regardless of scope)
       // Include custom rituals where user is in joinedByUsers OR user is the creator
@@ -177,7 +243,7 @@ export default async function handler(
         console.log('[MY-RITUALS] Found joined ritual:', {
           id: ritual.id,
           title: ritual.title,
-          isCustom: customRituals.some(cr => cr.id === ritual.id),
+          isCustom: allCustomRituals.some(cr => cr.id === ritual.id),
           isJoined: isJoined,
           isCustomRitualCreatedByUser: isCustomRitualCreatedByUser,
           joinedByUsers: joinedByUsers,
@@ -196,7 +262,7 @@ export default async function handler(
 
       // For available rituals, only check Firestore rituals (not custom rituals)
       // Custom rituals are private to the user
-      const isFromCustomRituals = customRituals.some(cr => cr.id === ritual.id);
+      const isFromCustomRituals = allCustomRituals.some(cr => cr.id === ritual.id);
       if (isFromCustomRituals) {
         return; // Skip custom rituals for available list
       }
@@ -235,4 +301,3 @@ export default async function handler(
     });
   }
 }
-

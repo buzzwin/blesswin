@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDoc, doc } from 'firebase/firestore';
 import { usersCollection } from '@lib/firebase/collections';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 
 interface ShareRitualRequest {
@@ -165,10 +165,18 @@ Effort: ${effortDisplay}
 Try it: ${siteURL}/rituals`;
 
           // Send SMS via Twilio
+          if (!friendPhone) {
+            res.status(400).json({
+              success: false,
+              error: 'Friend phone number is required for SMS sharing.'
+            });
+            return;
+          }
+
           await client.messages.create({
             body: smsBody,
             from: twilioPhoneNumber,
-            to: friendPhone!
+            to: friendPhone
           });
 
           res.status(200).json({
@@ -351,7 +359,7 @@ This ritual was shared by ${userName}. If you didn't expect this email, you can 
     const cleanPassword = emailPassword.replace(/\s/g, '');
 
     // Create transporter
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       service: 'gmail',
       auth: {
         user: emailApi,
@@ -400,4 +408,3 @@ This ritual was shared by ${userName}. If you didn't expect this email, you can 
     });
   }
 }
-

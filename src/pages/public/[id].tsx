@@ -89,6 +89,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
   // };
   useEffect(() => {
     if (typeof window !== 'undefined') {
+      if (!navigator.onLine) return;
       isSupported()
         .then((supported) => {
           if (supported) {
