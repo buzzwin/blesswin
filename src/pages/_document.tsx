@@ -17,7 +17,7 @@ export default function Document(): JSX.Element {
 
         {/* Fonts */}
         <link
-          href='https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap'
+          href='https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;0,8..60,700;1,8..60,400&display=swap'
           rel='stylesheet'
         />
       </Head>

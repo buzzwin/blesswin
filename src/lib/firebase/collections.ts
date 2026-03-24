@@ -80,3 +80,7 @@ export function userStoryBookmarksCollection(userId: string): CollectionReferenc
 export function userStoryCollectionsCollection(userId: string): CollectionReference<StoryCollection> {
   return collection(db, `users/${userId}/story_collections`).withConverter(storyCollectionConverter);
 }
+
+
+// Creator workflow proposals (human-in-the-loop queue)
+export const creatorProposalsCollection = collection(db, 'creator_proposals');

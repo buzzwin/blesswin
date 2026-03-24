@@ -1,16 +1,8 @@
 import { GetStaticPaths, GetStaticProps } from 'next';
 import Link from 'next/link';
-import {
-  ArrowLeft,
-  Calendar,
-  Flower2,
-  Moon,
-  Waves,
-  Heart
-} from 'lucide-react';
+import { ArrowLeft, Calendar } from 'lucide-react';
 import { SEO } from '@components/common/seo';
-import { HomeLayout } from '@components/layout/common-layout';
-import { SectionShell } from '@components/layout/section-shell';
+import { PublicationLayout } from '@components/layout/publication-layout';
 import {
   blogPosts,
   getBlogPostBySlug,
@@ -19,79 +11,72 @@ import {
 } from '@lib/data/blog-posts';
 import { siteURL } from '@lib/env';
 import Head from 'next/head';
-import { BlogCard } from '@components/blog/blog-card';
+import { PublicationSubscribe } from '@components/blog/publication-subscribe';
 
 interface BlogPostPageProps {
   post: BlogPost;
   relatedPosts: BlogPost[];
 }
 
-const categoryColors = {
-  yoga: 'from-green-500 to-emerald-600',
-  meditation: 'from-purple-500 to-violet-600',
-  harmony: 'from-teal-500 to-cyan-600',
-  wellness: 'from-pink-500 to-rose-600'
-};
-
-const categoryLabels = {
+const categoryLabels: Record<string, string> = {
   yoga: 'Yoga',
   meditation: 'Meditation',
+  mindfulness: 'Mindfulness',
   harmony: 'Harmony',
   wellness: 'Wellness'
 };
+
+function formatContent(content: string): string {
+  return content
+    .split('\n')
+    .map((line) => {
+      if (line.startsWith('# ')) {
+        return `<h1 class="font-publication text-3xl font-bold text-charcoal dark:text-gray-100 mb-4 mt-10 first:mt-0 sm:text-4xl">${line.substring(
+          2
+        )}</h1>`;
+      }
+      if (line.startsWith('## ')) {
+        return `<h2 class="font-publication text-2xl font-semibold text-charcoal dark:text-gray-100 mb-3 mt-10 sm:text-3xl">${line.substring(
+          3
+        )}</h2>`;
+      }
+      if (line.startsWith('### ')) {
+        return `<h3 class="font-publication text-xl font-semibold text-charcoal dark:text-gray-100 mb-2 mt-8 sm:text-2xl">${line.substring(
+          4
+        )}</h3>`;
+      }
+      let processed = line;
+      processed = processed.replace(
+        /\*\*(.*?)\*\*/g,
+        '<strong class="font-semibold text-charcoal dark:text-gray-100">$1</strong>'
+      );
+      processed = processed.replace(
+        /\*(.*?)\*/g,
+        '<em class="italic text-charcoal/90 dark:text-gray-300">$1</em>'
+      );
+      if (processed.trim() === '') {
+        return '<br />';
+      }
+      return `<p class="font-publication mb-5 text-lg leading-[1.75] text-charcoal/90 dark:text-gray-300">${processed}</p>`;
+    })
+    .join('');
+}
 
 export default function BlogPostPage({
   post,
   relatedPosts
 }: BlogPostPageProps): JSX.Element {
-  // Map mindfulness to meditation
-  const category = post.category === 'mindfulness' ? 'meditation' : post.category;
-  const gradient = (category in categoryColors ? categoryColors[category] : null) || categoryColors.wellness;
-  const categoryLabel = (category in categoryLabels ? categoryLabels[category] : null) || 'Wellness';
+  const categoryLabel =
+    categoryLabels[post.category] ?? categoryLabels.wellness ?? 'Wellness';
 
-  const publishedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  });
-
-  // Convert markdown-like content to HTML (simple implementation)
-  const formatContent = (content: string): string => {
-    return content
-      .split('\n')
-      .map((line) => {
-        // Headers
-        if (line.startsWith('# ')) {
-          return `<h1 class="text-4xl font-black text-gray-900 dark:text-white mb-6 mt-8">${line.substring(
-            2
-          )}</h1>`;
-        }
-        if (line.startsWith('## ')) {
-          return `<h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-4 mt-8">${line.substring(
-            3
-          )}</h2>`;
-        }
-        if (line.startsWith('### ')) {
-          return `<h3 class="text-2xl font-bold text-gray-900 dark:text-white mb-3 mt-6">${line.substring(
-            4
-          )}</h3>`;
-        }
-        // Bold text
-        line = line.replace(
-          /\*\*(.*?)\*\*/g,
-          '<strong class="font-bold text-gray-900 dark:text-white">$1</strong>'
-        );
-        // Italic text
-        line = line.replace(/\*(.*?)\*/g, '<em class="italic">$1</em>');
-        // Empty lines
-        if (line.trim() === '') {
-          return '<br />';
-        }
-        // Regular paragraphs
-        return `<p class="mb-4 text-lg leading-relaxed text-gray-700 dark:text-gray-300">${line}</p>`;
-      })
-      .join('');
-  };
+  const publishedDate = new Date(post.publishedAt).toLocaleDateString(
+    'en-US',
+    {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }
+  );
 
   const structuredData = {
     '@context': 'https://schema.org',
@@ -120,9 +105,9 @@ export default function BlogPostPage({
   };
 
   return (
-    <HomeLayout>
+    <PublicationLayout>
       <SEO
-        title={`${post.title} | Buzzwin Blog`}
+        title={`${post.title} | Buzzwin Journal`}
         description={post.excerpt}
         keywords={post.tags.join(', ')}
         structuredData={structuredData}
@@ -134,66 +119,73 @@ export default function BlogPostPage({
         />
       </Head>
 
-      {/* Simple Header */}
-      <SectionShell className='py-8'>
-        <div className='mx-auto max-w-3xl px-6'>
-          <Link href='/blog'>
-            <a className='mb-6 inline-flex items-center gap-1.5 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
-              <ArrowLeft className='h-3.5 w-3.5' />
-              <span>Back</span>
-            </a>
-          </Link>
+      <Link href='/blog'>
+        <a className='mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-charcoal/60 transition-colors hover:text-charcoal dark:text-gray-500 dark:hover:text-gray-200'>
+          <ArrowLeft className='h-3.5 w-3.5' aria-hidden />
+          All posts
+        </a>
+      </Link>
 
-          {/* Category Badge */}
-          <div className='mb-4'>
-            <span
-              className={`inline-block rounded-full bg-gradient-to-r ${gradient} px-3 py-1 text-xs font-medium text-white`}
-            >
+      <article>
+        <header className='mb-10'>
+          <p className='text-sm text-charcoal/50 dark:text-gray-500'>
+            <span className='rounded-full bg-charcoal/5 px-2 py-0.5 text-xs font-medium text-charcoal/70 dark:bg-white/10 dark:text-gray-400'>
               {categoryLabel}
             </span>
-          </div>
-
-          {/* Title */}
-          <h1 className='mb-4 text-3xl font-light leading-tight text-gray-900 dark:text-white sm:text-4xl'>
+          </p>
+          <h1 className='mt-3 font-publication text-3xl font-bold leading-tight tracking-tight text-charcoal dark:text-gray-100 sm:text-4xl sm:leading-tight'>
             {post.title}
           </h1>
-
-          {/* Meta Information */}
-          <div className='mb-8 flex items-center gap-3 text-xs text-gray-500 dark:text-gray-400'>
-            <div className='flex items-center gap-1'>
-              <Calendar className='h-3 w-3' />
-              <span>{publishedDate}</span>
-            </div>
+          <div className='mt-4 flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-charcoal/55 dark:text-gray-500'>
+            <span>{post.author}</span>
+            <span aria-hidden>·</span>
+            <span className='inline-flex items-center gap-1'>
+              <Calendar className='h-3.5 w-3.5' aria-hidden />
+              <time dateTime={post.publishedAt}>{publishedDate}</time>
+            </span>
+            <span aria-hidden>·</span>
+            <span>{post.readingTime} min read</span>
           </div>
-        </div>
-      </SectionShell>
+        </header>
 
-      {/* Article Content */}
-      <SectionShell className='py-8'>
-        <article className='mx-auto max-w-3xl px-6'>
-          <div
-            className='prose prose-lg dark:prose-invert max-w-none'
-            dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
-          />
-        </article>
-      </SectionShell>
-
-      {/* Related Posts */}
-      {relatedPosts.length > 0 && (
-        <SectionShell variant='dark' className='py-12'>
-          <div className='mx-auto max-w-6xl px-6'>
-            <h2 className='mb-6 text-xl font-light text-gray-900 dark:text-white'>
-              Related Articles
-            </h2>
-            <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>
-              {relatedPosts.map((relatedPost) => (
-                <BlogCard key={relatedPost.slug} post={relatedPost} />
-              ))}
-            </div>
+        {post.image ? (
+          <div className='mb-10 overflow-hidden rounded-lg border border-charcoal/10 dark:border-white/10'>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={post.image}
+              alt=''
+              className='w-full object-cover'
+            />
           </div>
-        </SectionShell>
-      )}
-    </HomeLayout>
+        ) : null}
+
+        <div
+          className='article-body max-w-none'
+          dangerouslySetInnerHTML={{ __html: formatContent(post.content) }}
+        />
+
+        <PublicationSubscribe className='mt-14' />
+      </article>
+
+      {relatedPosts.length > 0 ? (
+        <section className='mt-16 border-t border-charcoal/10 pt-10 dark:border-white/10'>
+          <h2 className='font-display text-sm font-semibold uppercase tracking-wide text-charcoal/50 dark:text-gray-500'>
+            More from the journal
+          </h2>
+          <ul className='mt-4 space-y-3'>
+            {relatedPosts.map((relatedPost) => (
+              <li key={relatedPost.slug}>
+                <Link href={`/blog/${relatedPost.slug}`}>
+                  <a className='group block font-publication text-base font-medium text-charcoal transition-colors hover:underline dark:text-gray-200'>
+                    {relatedPost.title}
+                  </a>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+    </PublicationLayout>
   );
 }
 
@@ -218,8 +210,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     };
   }
 
-  // Get related posts (same category, excluding current post)
-  // Also include mindfulness posts when looking for meditation posts
   const relatedPosts = blogPosts
     .filter((p) => {
       if (p.slug === post.slug) return false;
@@ -230,7 +220,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     })
     .slice(0, 3);
 
-  // If not enough related posts, add recent posts
   if (relatedPosts.length < 3) {
     const recentPosts = getRecentBlogPosts(3 - relatedPosts.length).filter(
       (p) =>

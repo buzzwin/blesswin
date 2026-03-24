@@ -6,9 +6,9 @@ import {
   Heart
 } from 'lucide-react';
 import { SEO } from '@components/common/seo';
-import { HomeLayout } from '@components/layout/common-layout';
-import { SectionShell } from '@components/layout/section-shell';
-import { BlogCard } from '@components/blog/blog-card';
+import { PublicationLayout } from '@components/layout/publication-layout';
+import { BlogArchiveRow } from '@components/blog/blog-archive-row';
+import { PublicationSubscribe } from '@components/blog/publication-subscribe';
 import {
   blogPosts,
   getBlogPostsByCategory,
@@ -39,22 +39,22 @@ export default function BlogPage(): JSX.Element {
       new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
   );
 
-  // Filter posts
   const filteredPosts =
     selectedCategory === 'all'
       ? allPosts
       : selectedCategory === 'meditation'
       ? allPosts.filter(
-          (post) => post.category === 'meditation' || post.category === 'mindfulness'
+          (post) =>
+            post.category === 'meditation' || post.category === 'mindfulness'
         )
       : getBlogPostsByCategory(selectedCategory);
 
   const structuredData = {
     '@context': 'https://schema.org',
     '@type': 'Blog',
-    name: 'Buzzwin Wellness Blog',
+    name: 'Buzzwin Journal',
     description:
-      'Wellness articles about yoga, mindfulness, meditation, harmony, and world peace',
+      'Wellness writing — decide and act, not just discover. Articles on yoga, mindfulness, and rhythm.',
     url: `${siteURL || 'https://Buzzwin.com'}/blog`,
     blogPost: blogPosts.map((post) => ({
       '@type': 'BlogPosting',
@@ -69,11 +69,11 @@ export default function BlogPage(): JSX.Element {
   };
 
   return (
-    <HomeLayout>
+    <PublicationLayout wide>
       <SEO
-        title='Wellness Blog - Articles on Yoga, Mindfulness & Peace | Buzzwin'
-        description='Discover wellness articles, insights, and tips on yoga, mindfulness, meditation, harmony, and world peace. Learn practical tips for your wellness journey.'
-        keywords='wellness blog, yoga articles, mindfulness tips, meditation AI pal, harmony, world peace, wellness content'
+        title='Buzzwin Journal — wellness & rituals'
+        description='Read the Buzzwin journal: practical wellness writing. Subscribe for free — no account required to read.'
+        keywords='wellness blog, yoga, mindfulness, Buzzwin journal'
         structuredData={structuredData}
       />
       <Head>
@@ -83,60 +83,58 @@ export default function BlogPage(): JSX.Element {
         />
       </Head>
 
-      {/* Simple Header */}
-      <SectionShell className='min-h-0 py-6 sm:py-8'>
-        <div className='mx-auto max-w-6xl px-4 sm:px-6'>
-          <div className='mb-4 text-center'>
-            <h1 className='mb-2 text-2xl font-semibold text-gray-900 dark:text-white sm:text-3xl'>
-              Wellness Blog
-            </h1>
-            <p className='mx-auto max-w-2xl text-sm text-gray-600 dark:text-gray-300'>
-              Articles and insights for your wellness journey
-            </p>
-          </div>
+      <header className='mb-8 border-b border-charcoal/10 pb-8 dark:border-white/10'>
+        <h1 className='font-publication text-3xl font-bold tracking-tight text-charcoal dark:text-gray-100 sm:text-4xl'>
+          Buzzwin Journal
+        </h1>
+        <p className='mt-2 max-w-xl text-sm leading-relaxed text-charcoal/70 dark:text-gray-400 sm:text-base'>
+          Ideas and guides for a calmer week — readable by anyone. Sign in is
+          optional if you use the Buzzwin app.
+        </p>
+      </header>
 
-          {/* Category Filters */}
-          <div className='mb-4 flex flex-wrap items-center justify-center gap-2'>
-            {categories.map((category) => {
-              const Icon = category.icon;
-              const isActive = selectedCategory === category.value;
-              return (
-                <button
-                  key={category.value}
-                  onClick={() => setSelectedCategory(category.value)}
-                  className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-all ${
-                    isActive
-                      ? 'bg-gradient-to-r from-green-500 to-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400 dark:hover:bg-gray-700'
-                  }`}
-                >
-                  <Icon className='h-3 w-3' />
-                  {category.label}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-      </SectionShell>
+      <PublicationSubscribe className='mb-10' />
 
-      {/* Posts Grid */}
-      <SectionShell className='min-h-0 py-4 sm:py-6'>
-        <div className='mx-auto max-w-6xl px-4 sm:px-6'>
-          {filteredPosts.length > 0 ? (
-            <div className='grid grid-cols-1 gap-3 sm:gap-4 md:grid-cols-2 lg:grid-cols-3'>
-              {filteredPosts.map((post) => (
-                <BlogCard key={post.slug} post={post} />
-              ))}
-            </div>
-          ) : (
-            <div className='py-8 text-center'>
-              <p className='text-sm text-gray-600 dark:text-gray-400'>
-                No articles found.
-              </p>
-            </div>
-          )}
-        </div>
-      </SectionShell>
-    </HomeLayout>
+      <div className='mb-6 flex flex-wrap items-center gap-2'>
+        <span className='w-full text-xs font-medium uppercase tracking-wide text-charcoal/45 dark:text-gray-500 sm:w-auto'>
+          Filter
+        </span>
+        {categories.map((category) => {
+          const Icon = category.icon;
+          const isActive = selectedCategory === category.value;
+          return (
+            <button
+              key={category.value}
+              type='button'
+              onClick={() => setSelectedCategory(category.value)}
+              className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
+                isActive
+                  ? 'bg-charcoal text-cream dark:bg-white dark:text-gray-900'
+                  : 'bg-charcoal/5 text-charcoal/70 hover:bg-charcoal/10 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10'
+              }`}
+            >
+              <Icon className='h-3 w-3' aria-hidden />
+              {category.label}
+            </button>
+          );
+        })}
+      </div>
+
+      <div>
+        {filteredPosts.length > 0 ? (
+          <div className='flex flex-col'>
+            {filteredPosts.map((post) => (
+              <BlogArchiveRow key={post.slug} post={post} />
+            ))}
+          </div>
+        ) : (
+          <p className='py-12 text-center text-sm text-charcoal/60 dark:text-gray-500'>
+            No posts in this category yet.
+          </p>
+        )}
+      </div>
+
+      <PublicationSubscribe className='mt-12' />
+    </PublicationLayout>
   );
 }

@@ -15,7 +15,14 @@ module.exports = {
         'twitter-chirp': ['TwitterChirp', 'sans-serif'],
         'twitter-chirp-extended': ['TwitterChirpExtendedHeavy', 'sans-serif'],
         'display': ['Nunito', 'sans-serif'],
-        'body': ['Inter', 'sans-serif']
+        'body': ['Inter', 'sans-serif'],
+        'publication': [
+          '"Source Serif 4"',
+          'Georgia',
+          'Cambria',
+          'Times New Roman',
+          'serif'
+        ]
       },
       // prettier-ignore
       colors: {
