@@ -121,6 +121,13 @@ export function CreateBuzzForm(): JSX.Element {
         createdBy: user.id
       });
 
+      // Buzz created — show done state immediately
+      const url = `${window.location.origin}/b/${shareToken}`;
+      setShareUrl(url);
+      setStep('done');
+      toast.success('Buzz created!');
+
+      // Secondary ops: fire-and-forget (failures don't block the user)
       const tweetUser = {
         id: user.id,
         name: user.name,
@@ -129,18 +136,17 @@ export function CreateBuzzForm(): JSX.Element {
         verified: user.verified
       };
 
-      const tweetId = await sendBuzzTweet(
+      sendBuzzTweet(
         { id: buzzId, shareToken, occasion: form.occasion, recipientName: form.recipientName, title: form.title },
         tweetUser
-      );
-      await setBuzzFeedTweetId(buzzId, tweetId);
-      await awardBuzzKarma(user.id, 10);
+      )
+        .then((tweetId) => setBuzzFeedTweetId(buzzId, tweetId))
+        .catch(() => undefined);
 
-      const url = `${window.location.origin}/b/${shareToken}`;
-      setShareUrl(url);
-      setStep('done');
-      toast.success('Buzz created!');
-    } catch {
+      awardBuzzKarma(user.id, 10).catch(() => undefined);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('createBuzz failed:', err);
       toast.error('Could not create Buzz — try again');
     } finally {
       setLoading(false);

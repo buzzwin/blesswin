@@ -112,7 +112,7 @@ export async function setBuzzRevealTweetId(buzzId: string, tweetId: string): Pro
 
 export async function awardBuzzKarma(userId: string, points: number): Promise<void> {
   const userRef = doc(db, 'users', userId);
-  await updateDoc(userRef, { karmaTotal: increment(points) });
+  await updateDoc(userRef, { karmaPoints: increment(points) });
 }
 
 export async function uploadBuzzMedia(
