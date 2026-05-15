@@ -53,29 +53,33 @@ import type { RealStory } from '@lib/types/real-story';
 import type { ReactElement, ReactNode } from 'react';
 
 const AGENT_BANNER_KEY = 'buzzwin-agent-upgrade-banner-dismissed';
+const BUZZ_BANNER_KEY = 'buzzwin-buzz-banner-dismissed';
 
 export default function HomeFeed(): JSX.Element {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
   const [showAgentBanner, setShowAgentBanner] = useState(false);
+  const [showBuzzBanner, setShowBuzzBanner] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined' || !user) return;
     try {
-      const dismissed = localStorage.getItem(AGENT_BANNER_KEY);
-      setShowAgentBanner(dismissed !== '1');
+      setShowAgentBanner(localStorage.getItem(AGENT_BANNER_KEY) !== '1');
+      setShowBuzzBanner(localStorage.getItem(BUZZ_BANNER_KEY) !== '1');
     } catch {
       setShowAgentBanner(true);
+      setShowBuzzBanner(true);
     }
   }, [user?.id]);
 
   const dismissAgentBanner = (): void => {
-    try {
-      localStorage.setItem(AGENT_BANNER_KEY, '1');
-    } catch {
-      // ignore
-    }
+    try { localStorage.setItem(AGENT_BANNER_KEY, '1'); } catch { /* ignore */ }
     setShowAgentBanner(false);
+  };
+
+  const dismissBuzzBanner = (): void => {
+    try { localStorage.setItem(BUZZ_BANNER_KEY, '1'); } catch { /* ignore */ }
+    setShowBuzzBanner(false);
   };
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
@@ -574,6 +578,32 @@ export default function HomeFeed(): JSX.Element {
         </div>
       )}
 
+      {user && showBuzzBanner && (
+        <div className='mb-4 flex items-start gap-3 rounded-xl border border-emerald-200 bg-emerald-50/90 p-3 text-sm text-gray-800 dark:border-emerald-800 dark:bg-emerald-950/40 dark:text-gray-100'>
+          <span className='mt-0.5 shrink-0 text-xl leading-none'>📖</span>
+          <div className='min-w-0 flex-1'>
+            <p className='font-medium'>Celebrate someone with a Buzzbook</p>
+            <p className='mt-1 text-gray-700 dark:text-gray-300'>
+              Collect messages and photos from friends — revealed together on the big day.
+            </p>
+            <Link
+              href='/buzzes/new'
+              className='mt-2 inline-block font-semibold text-emerald-700 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200'
+            >
+              Start a Buzz →
+            </Link>
+          </div>
+          <button
+            type='button'
+            onClick={dismissBuzzBanner}
+            className='shrink-0 rounded-lg p-1 text-gray-500 hover:bg-emerald-100 hover:text-gray-800 dark:hover:bg-emerald-900/50 dark:hover:text-gray-200'
+            aria-label='Dismiss'
+          >
+            <X className='h-5 w-5' />
+          </button>
+        </div>
+      )}
+
       {/* Daily Briefing */}
       <div className='mb-4'>
         <DailyBriefing
@@ -641,6 +671,24 @@ export default function HomeFeed(): JSX.Element {
         <div className='mb-3'>
           <ImpactMomentInput onSuccess={handleMomentCreated} />
         </div>
+        {/* Buzz nudge */}
+        <Link
+          href='/buzzes/new'
+          className='mb-3 flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 transition hover:border-emerald-300 hover:bg-emerald-100 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/50'
+        >
+          <span className='text-2xl'>🎂</span>
+          <div className='min-w-0 flex-1'>
+            <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
+              Someone&apos;s birthday or big day coming up?
+            </p>
+            <p className='text-xs text-emerald-600 dark:text-emerald-500'>
+              Start a Buzzbook — collect pages from friends, reveal together
+            </p>
+          </div>
+          <span className='shrink-0 text-sm font-semibold text-emerald-700 dark:text-emerald-400'>
+            Start →
+          </span>
+        </Link>
       </div>
 
       <section>

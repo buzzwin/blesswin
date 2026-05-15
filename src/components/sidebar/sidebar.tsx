@@ -35,6 +35,12 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     disabled: false
   },
   {
+    href: '/buzzes',
+    linkName: 'My Buzzes',
+    iconName: 'GiftIcon',
+    disabled: false
+  },
+  {
     href: '/automations',
     linkName: 'Automations',
     iconName: 'SparklesIcon',
@@ -56,12 +62,6 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     href: '/people',
     linkName: 'Discover',
     iconName: 'UsersIcon',
-    disabled: false
-  },
-  {
-    href: '/buzzes',
-    linkName: 'My Buzzes',
-    iconName: 'GiftIcon',
     disabled: false
   },
   {

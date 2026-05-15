@@ -25,6 +25,11 @@ export function LoginMain(): JSX.Element {
       title: 'Tuned To You',
       description:
         'Get recommendations shaped by your watchlist and the people you trust.'
+    },
+    {
+      title: '📖 Buzzbooks',
+      description:
+        'Collect messages and photos from friends for birthdays and celebrations — revealed together on the day.'
     }
   ];
 
@@ -89,6 +94,9 @@ export function LoginMain(): JSX.Element {
               <span className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1'>
                 <HeroIcon iconName='ChatBubbleOvalLeftEllipsisIcon' className='h-4 w-4' />
                 Community pulse
+              </span>
+              <span className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1'>
+                📖 Buzzbooks
               </span>
             </div>
             {userCount > 0 && (
