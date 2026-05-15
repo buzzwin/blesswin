@@ -586,11 +586,10 @@ export default function HomeFeed(): JSX.Element {
             <p className='mt-1 text-gray-700 dark:text-gray-300'>
               Collect messages and photos from friends — revealed together on the big day.
             </p>
-            <Link
-              href='/buzzes/new'
-              className='mt-2 inline-block font-semibold text-emerald-700 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200'
-            >
-              Start a Buzz →
+            <Link href='/buzzes/new'>
+              <a className='mt-2 inline-block font-semibold text-emerald-700 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200'>
+                Start a Buzz →
+              </a>
             </Link>
           </div>
           <button
@@ -672,22 +671,21 @@ export default function HomeFeed(): JSX.Element {
           <ImpactMomentInput onSuccess={handleMomentCreated} />
         </div>
         {/* Buzz nudge */}
-        <Link
-          href='/buzzes/new'
-          className='mb-3 flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 transition hover:border-emerald-300 hover:bg-emerald-100 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/50'
-        >
-          <span className='text-2xl'>🎂</span>
-          <div className='min-w-0 flex-1'>
-            <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
-              Someone&apos;s birthday or big day coming up?
-            </p>
-            <p className='text-xs text-emerald-600 dark:text-emerald-500'>
-              Start a Buzzbook — collect pages from friends, reveal together
-            </p>
-          </div>
-          <span className='shrink-0 text-sm font-semibold text-emerald-700 dark:text-emerald-400'>
-            Start →
-          </span>
+        <Link href='/buzzes/new'>
+          <a className='mb-3 flex items-center gap-3 rounded-xl border border-emerald-100 bg-emerald-50 px-4 py-3 transition hover:border-emerald-300 hover:bg-emerald-100 dark:border-emerald-900/40 dark:bg-emerald-950/30 dark:hover:border-emerald-700 dark:hover:bg-emerald-950/50'>
+            <span className='text-2xl'>🎂</span>
+            <div className='min-w-0 flex-1'>
+              <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
+                Someone&apos;s birthday or big day coming up?
+              </p>
+              <p className='text-xs text-emerald-600 dark:text-emerald-500'>
+                Start a Buzzbook — collect pages from friends, reveal together
+              </p>
+            </div>
+            <span className='shrink-0 text-sm font-semibold text-emerald-700 dark:text-emerald-400'>
+              Start →
+            </span>
+          </a>
         </Link>
       </div>
 
