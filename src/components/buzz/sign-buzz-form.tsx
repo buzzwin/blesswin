@@ -77,7 +77,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         type,
         text: type === 'text' ? text.trim() : null,
         mediaURL,
-        mediaThumbnailURL: null,
+        mediaThumbnailURL: null
       });
 
       await awardBuzzKarma(uid, 5);
@@ -114,7 +114,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
             {buzz.revealAt.toDate().toLocaleDateString('en-US', {
               month: 'long',
               day: 'numeric',
-              year: 'numeric',
+              year: 'numeric'
             })}
             .
           </p>

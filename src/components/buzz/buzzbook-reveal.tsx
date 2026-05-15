@@ -14,7 +14,7 @@ const OCCASION_EMOJI: Record<string, string> = {
   christmas: '🎄',
   eid: '🌙',
   anniversary: '💍',
-  custom: '✨',
+  custom: '✨'
 };
 
 // Soft pastel backgrounds cycling per page
@@ -23,7 +23,7 @@ const PAGE_BACKGROUNDS = [
   'from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30',
   'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
   'from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-950/30',
-  'from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30',
+  'from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30'
 ];
 
 function bgFor(index: number): string {
@@ -114,7 +114,7 @@ export function BuzzbookReveal({ buzz, signatures }: Props): JSX.Element {
     if (touchStartX === null) return;
     const dx = e.changedTouches[0].clientX - touchStartX;
     if (Math.abs(dx) > 40) {
-      dx < 0 ? next() : prev();
+      if (dx < 0) { next(); } else { prev(); }
     }
     setTouchStartX(null);
   }

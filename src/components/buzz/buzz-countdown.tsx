@@ -20,7 +20,7 @@ function getTimeLeft(revealAt: Timestamp): TimeLeft {
     days: Math.floor(diff / 86_400_000),
     hours: Math.floor((diff % 86_400_000) / 3_600_000),
     minutes: Math.floor((diff % 3_600_000) / 60_000),
-    seconds: Math.floor((diff % 60_000) / 1_000),
+    seconds: Math.floor((diff % 60_000) / 1_000)
   };
 }
 
@@ -48,7 +48,7 @@ export function BuzzCountdown({ revealAt, recipientName, onReveal }: Props): JSX
     weekday: 'long',
     month: 'long',
     day: 'numeric',
-    year: 'numeric',
+    year: 'numeric'
   });
 
   return (
@@ -69,7 +69,7 @@ export function BuzzCountdown({ revealAt, recipientName, onReveal }: Props): JSX
           { value: timeLeft.days, label: 'days' },
           { value: timeLeft.hours, label: 'hrs' },
           { value: timeLeft.minutes, label: 'min' },
-          { value: timeLeft.seconds, label: 'sec' },
+          { value: timeLeft.seconds, label: 'sec' }
         ].map(({ value, label }, i) => (
           <div key={label} className='flex items-end gap-3'>
             {i > 0 && (

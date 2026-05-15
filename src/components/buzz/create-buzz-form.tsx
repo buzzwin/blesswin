@@ -25,7 +25,7 @@ const OCCASIONS: OccasionOption[] = [
   { value: 'christmas',   label: 'Christmas',   emoji: '🎄', defaultTitle: (n) => `Merry Christmas ${n}!` },
   { value: 'eid',         label: 'Eid',         emoji: '🌙', defaultTitle: (n) => `Eid Mubarak ${n}!` },
   { value: 'anniversary', label: 'Anniversary', emoji: '💍', defaultTitle: (n) => `Happy Anniversary ${n}!` },
-  { value: 'custom',      label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` },
+  { value: 'custom',      label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` }
 ];
 
 function minRevealDate(): string {
@@ -44,7 +44,7 @@ const STEP_LABELS: Record<Step, string> = {
   occasion: 'Occasion',
   recipient: 'Who',
   reveal: 'When',
-  done: 'Done',
+  done: 'Done'
 };
 
 const STEP_ORDER: Step[] = ['occasion', 'recipient', 'reveal', 'done'];
@@ -64,7 +64,7 @@ const INITIAL: FormState = {
   boardMode: 'personal',
   recipientName: '',
   title: '',
-  revealAt: '',
+  revealAt: ''
 };
 
 export function CreateBuzzForm(): JSX.Element {
@@ -80,11 +80,11 @@ export function CreateBuzzForm(): JSX.Element {
   const stepIndex = STEP_ORDER.indexOf(step);
 
   function pickOccasion(occ: BuzzOccasion): void {
-    const obj = OCCASIONS.find((o) => o.value === occ)!;
+    const obj = OCCASIONS.find((o) => o.value === occ) ?? OCCASIONS[0];
     setForm((f) => ({
       ...f,
       occasion: occ,
-      title: obj.defaultTitle(f.recipientName || 'You'),
+      title: obj.defaultTitle(f.recipientName || 'You')
     }));
     setStep('recipient');
   }
@@ -94,7 +94,7 @@ export function CreateBuzzForm(): JSX.Element {
     setForm((f) => ({
       ...f,
       recipientName: name,
-      title: obj ? obj.defaultTitle(name || 'You') : f.title,
+      title: obj ? obj.defaultTitle(name || 'You') : f.title
     }));
   }
 
@@ -118,7 +118,7 @@ export function CreateBuzzForm(): JSX.Element {
         recipientUserId: null,
         revealAt: revealTimestamp,
         coverImageURL: null,
-        createdBy: user.id,
+        createdBy: user.id
       });
 
       const tweetUser = {
@@ -126,7 +126,7 @@ export function CreateBuzzForm(): JSX.Element {
         name: user.name,
         username: user.username,
         photoURL: user.photoURL,
-        verified: user.verified,
+        verified: user.verified
       };
 
       const tweetId = await sendBuzzTweet(
