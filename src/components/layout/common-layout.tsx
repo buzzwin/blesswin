@@ -1,4 +1,3 @@
-import { Toaster } from 'react-hot-toast';
 import { WindowContextProvider } from '@lib/context/window-context';
 import { useRequireAuth } from '@lib/hooks/useRequireAuth';
 import { Placeholder } from '@components/common/placeholder';
@@ -22,7 +21,6 @@ export function CommonLayout({
   return (
     <WindowContextProvider>
       <MainLayout>{children}</MainLayout>
-      <Toaster position='bottom-center' />
     </WindowContextProvider>
   );
 }

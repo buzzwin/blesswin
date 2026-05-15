@@ -150,7 +150,7 @@ export function LoginMain(): JSX.Element {
               </div>
             </div>
             <div className='rounded-3xl border border-white/10 bg-white/5 p-2 shadow-[0_20px_60px_rgba(15,23,42,0.55)] backdrop-blur'>
-              <TrendingShows limit={5} variant='dark' />
+              <ActivityFeed />
             </div>
           </div>
 

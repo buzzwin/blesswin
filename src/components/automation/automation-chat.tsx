@@ -56,8 +56,9 @@ export function AutomationChat({
     scrollToBottom();
   }, [messages]);
 
-  const handleSend = async (): Promise<void> => {
-    if (!input.trim() || loading) return;
+  const handleSend = async (overrideText?: string): Promise<void> => {
+    const text = (overrideText ?? input).trim();
+    if (!text || loading) return;
 
     if (!user?.id) {
       toast.error('Please sign in to create automations');
@@ -66,14 +67,14 @@ export function AutomationChat({
 
     const userMessage: ConversationMessage = {
       role: 'user',
-      content: input.trim(),
+      content: text,
       timestamp: new Date()
     };
 
     const historyForApi = [...messages, userMessage];
 
     setMessages(prev => [...prev, userMessage]);
-    setInput('');
+    if (!overrideText) setInput('');
     setLoading(true);
 
     try {
@@ -83,7 +84,7 @@ export function AutomationChat({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           userId: user.id,
-          message: input.trim(),
+          message: text,
           conversationHistory: historyForApi,
           agentPreferences: agentPreferences ?? undefined
         })
@@ -192,8 +193,7 @@ export function AutomationChat({
   };
 
   const applySuggestedPrompt = (text: string): void => {
-    setInput(text);
-    inputRef.current?.focus();
+    void handleSend(text);
   };
 
   return (
@@ -302,7 +302,7 @@ export function AutomationChat({
 
       {/* Input */}
       <div className='p-4 border-t border-gray-200 dark:border-gray-700'>
-        {enableSavePlan && messages.some((m) => m.role === 'assistant') && (
+        {enableSavePlan && messages.some((m) => m.role === 'user') && (
           <div className='mb-3 flex justify-end'>
             <button
               type='button'
