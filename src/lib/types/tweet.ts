@@ -11,6 +11,14 @@ export type TweetUser = {
   verified: boolean;
 };
 
+export type BuzzRef = {
+  buzzId: string;
+  shareToken: string;
+  occasion: string;
+  recipientName: string;
+  title: string;
+};
+
 export type Tweet = {
   id: string;
   text: string | null;
@@ -30,6 +38,7 @@ export type Tweet = {
   userWatching: string[];
   totalWatchers: number;
   user: TweetUser;
+  buzzRef?: BuzzRef;
 };
 
 export type TweetWithUser = Tweet & { user: User };

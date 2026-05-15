@@ -1,4 +1,5 @@
 import cn from 'clsx';
+import type { CSSProperties } from 'react';
 import { useEffect, useState } from 'react';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
@@ -9,6 +10,23 @@ import JustLogin from './justlogin';
 
 export function LoginMain(): JSX.Element {
   const [userCount, setUserCount] = useState<number>(0);
+  const featureHighlights = [
+    {
+      title: 'Track in Seconds',
+      description:
+        'Log what you watch and keep a clean, searchable history across TV and film.'
+    },
+    {
+      title: 'Signal Over Noise',
+      description:
+        'See what people are actually finishing, not just scrolling past.'
+    },
+    {
+      title: 'Tuned To You',
+      description:
+        'Get recommendations shaped by your watchlist and the people you trust.'
+    }
+  ];
 
   useEffect(() => {
     const getUserCount = async () => {
@@ -26,109 +44,153 @@ export function LoginMain(): JSX.Element {
   }, []);
 
   return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-900 via-[#1a1f35] to-gray-900 dark:from-black dark:via-gray-900 dark:to-black'>
-      {/* Hero Section */}
-      <div className='relative min-h-[30vh] w-full overflow-hidden'>
-        <ActivityFeed />
+    <div
+      className='relative min-h-screen overflow-hidden bg-[#0b0e14] text-white'
+      style={
+        {
+          '--login-aurora': '56 189 248',
+          '--login-ember': '244 114 182',
+          '--login-lime': '52 211 153'
+        } as CSSProperties
+      }
+    >
+      <div className='pointer-events-none absolute inset-0'>
+        <div className='absolute -top-32 left-1/2 h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-[radial-gradient(circle_at_center,rgba(var(--login-aurora),0.35),transparent_60%)] blur-3xl animate-soft-float'></div>
+        <div className='absolute bottom-[-20%] right-[-10%] h-[28rem] w-[28rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(var(--login-ember),0.3),transparent_60%)] blur-3xl'></div>
+        <div className='absolute top-[15%] left-[-10%] h-[26rem] w-[26rem] rounded-full bg-[radial-gradient(circle_at_center,rgba(var(--login-lime),0.25),transparent_60%)] blur-3xl'></div>
+        <div className='absolute inset-0 bg-[linear-gradient(120deg,rgba(9,10,16,0.95),rgba(15,23,42,0.7),rgba(2,6,23,0.9))]'></div>
+        <div className='absolute inset-0 bg-[linear-gradient(90deg,rgba(255,255,255,0.06)_1px,transparent_1px),linear-gradient(180deg,rgba(255,255,255,0.04)_1px,transparent_1px)] bg-[size:48px_48px] opacity-40'></div>
+      </div>
 
-        {/* Overlay Content */}
-        <div className='absolute inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm dark:bg-black/60'>
-          <div className='mx-auto max-w-4xl px-4 text-center'>
-            <div className='mb-2 transform transition-all duration-700 hover:scale-105'>
-              <h2 className='bg-gradient-to-r from-emerald-400 to-blue-500 bg-clip-text text-2xl font-bold text-transparent md:text-3xl lg:text-4xl'>
-                Welcome to Buzzwin
-              </h2>
+      <div className='relative mx-auto flex w-full max-w-7xl flex-col gap-12 px-6 pb-16 pt-12 lg:pb-24 lg:pt-20'>
+        <div className='grid items-center gap-10 lg:grid-cols-[1.1fr,0.9fr]'>
+          <div className='space-y-6'>
+            <div className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-emerald-200/90 shadow-[0_0_25px_rgba(52,211,153,0.18)] animate-fade-up'>
+              New this season
+              <span className='h-1 w-1 rounded-full bg-emerald-300'></span>
+              Live community
             </div>
-            <h1 className='text-3xl font-bold text-white transition-all duration-700 hover:text-emerald-400 md:text-4xl lg:text-5xl xl:text-6xl'>
-              Your Next Favorite Show Awaits
+            <h1 className='font-twitter-chirp-extended text-4xl leading-tight md:text-5xl lg:text-6xl animate-fade-up-delay-1'>
+              Find the next show you will actually finish.
             </h1>
-            <p className='mx-auto mt-4 max-w-2xl text-lg text-gray-300 transition-colors duration-500 hover:text-white md:text-xl lg:text-2xl'>
-              Join thousands of TV enthusiasts discovering and sharing their
-              watching experience.
+            <p className='max-w-xl text-lg text-slate-200/80 md:text-xl animate-fade-up-delay-2'>
+              Buzzwin turns your watch history into a personal radar, surfacing
+              what is trending, what friends love, and what fits tonight.
             </p>
+            <div className='flex flex-wrap items-center gap-4 text-sm text-slate-300/80'>
+              <span className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1'>
+                <HeroIcon iconName='SparklesIcon' className='h-4 w-4' />
+                Real-time picks
+              </span>
+              <span className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1'>
+                <HeroIcon iconName='BoltIcon' className='h-4 w-4' />
+                One-tap logging
+              </span>
+              <span className='inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1'>
+                <HeroIcon iconName='ChatBubbleOvalLeftEllipsisIcon' className='h-4 w-4' />
+                Community pulse
+              </span>
+            </div>
             {userCount > 0 && (
-              <div className='mt-6 flex items-center justify-center gap-2 text-emerald-400'>
-                <HeroIcon iconName='UsersIcon' className='h-6 w-6' />
-                <span className='text-lg font-medium'>
-                  {userCount.toLocaleString()} users and growing!
+              <div className='flex items-center gap-3 text-emerald-200/90'>
+                <span className='inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/20'>
+                  <HeroIcon iconName='UsersIcon' className='h-5 w-5' />
                 </span>
+                <div>
+                  <p className='text-lg font-semibold'>
+                    {userCount.toLocaleString()} members
+                  </p>
+                  <p className='text-sm text-slate-300/80'>
+                    Watching together right now
+                  </p>
+                </div>
               </div>
             )}
           </div>
-        </div>
-      </div>
 
-      {/* Login Section */}
-      <div className='relative mx-auto -mt-20 w-full max-w-screen-2xl px-4 pb-12 md:-mt-32'>
-        <div className='grid gap-8 lg:grid-cols-2'>
-          {/* Left Side - Features */}
           <div className='space-y-6'>
-            {/* AI Recommendations placeholder */}
-            <div className='transform transition-all duration-500 hover:scale-[1.02]'>
-              <div className='rounded-2xl border border-white/5 bg-white/5 p-6 backdrop-blur-sm hover:border-emerald-500/20 hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40'>
-                <h3 className='mb-2 text-xl font-bold text-white'>
-                  AI Recommendations
-                </h3>
-                <p className='text-gray-400'>
-                  Get personalized show recommendations powered by AI
-                </p>
-              </div>
+            <div
+              className={cn(
+                'rounded-3xl border border-white/10 bg-white/5 p-8 shadow-[0_30px_80px_rgba(15,23,42,0.6)]',
+                'backdrop-blur-xl'
+              )}
+            >
+              <JustLogin />
             </div>
-
-            <div className='hidden space-y-6 lg:block'>
-              {[
-                {
-                  title: 'Track Your Shows',
-                  description:
-                    'Keep a record of everything you watch and discover new content based on your taste.'
-                },
-                {
-                  title: 'Join the Community',
-                  description:
-                    'Connect with other TV enthusiasts, share recommendations, and discuss your favorite shows.'
-                },
-                {
-                  title: 'Personalized Experience',
-                  description:
-                    'Get tailored recommendations and stay updated with what your friends are watching.'
-                }
-              ].map((feature, index) => (
+            <div className='grid gap-4 sm:grid-cols-3 lg:grid-cols-1'>
+              {featureHighlights.map((feature) => (
                 <div
                   key={feature.title}
-                  className={cn(
-                    'group rounded-2xl p-6 transition-all duration-500',
-                    'bg-white/5 hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40',
-                    'backdrop-blur-sm hover:backdrop-blur-lg',
-                    'border border-white/5 hover:border-emerald-500/20',
-                    'transform hover:-translate-y-1 hover:shadow-xl hover:shadow-emerald-500/10'
-                  )}
-                  style={{
-                    transitionDelay: `${index * 100}ms`
-                  }}
+                  className='rounded-2xl border border-white/10 bg-white/5 p-4 text-sm text-slate-200/80 backdrop-blur'
                 >
-                  <h2 className='text-2xl font-bold text-white transition-colors duration-500 group-hover:text-emerald-400'>
+                  <p className='text-base font-semibold text-white'>
                     {feature.title}
-                  </h2>
-                  <p className='mt-2 text-gray-400 transition-colors duration-500 group-hover:text-gray-300'>
-                    {feature.description}
                   </p>
+                  <p className='mt-2'>{feature.description}</p>
                 </div>
               ))}
             </div>
           </div>
+        </div>
 
-          {/* Right Side - Login Form */}
-          <div
-            className={cn(
-              'transform transition-all duration-700 hover:scale-[1.02]',
-              'rounded-2xl p-8',
-              'bg-white/5 hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40',
-              'backdrop-blur-lg',
-              'border border-white/10 hover:border-emerald-500/20',
-              'shadow-xl hover:shadow-2xl hover:shadow-emerald-500/10'
-            )}
-          >
-            <JustLogin />
+        <div className='grid gap-8 lg:grid-cols-[1.2fr,0.8fr]'>
+          <div className='space-y-4'>
+            <div className='flex items-center justify-between'>
+              <div>
+                <p className='text-sm uppercase tracking-[0.35em] text-slate-300/70'>
+                  Trending Now
+                </p>
+                <h2 className='text-2xl font-semibold text-white'>
+                  The most watched this week
+                </h2>
+              </div>
+              <div className='hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200/80 md:flex'>
+                <span className='h-2 w-2 rounded-full bg-emerald-400'></span>
+                Updated live
+              </div>
+            </div>
+            <div className='rounded-3xl border border-white/10 bg-white/5 p-2 shadow-[0_20px_60px_rgba(15,23,42,0.55)] backdrop-blur'>
+              <TrendingShows limit={5} variant='dark' />
+            </div>
+          </div>
+
+          <div className='space-y-4'>
+            <p className='text-sm uppercase tracking-[0.35em] text-slate-300/70'>
+              Why Buzzwin
+            </p>
+            <div className='space-y-4'>
+              {featureHighlights.map((feature, index) => (
+                <div
+                  key={`${feature.title}-${index}`}
+                  className='rounded-2xl border border-white/10 bg-white/5 p-5 text-slate-200/80 backdrop-blur transition-all duration-500 hover:-translate-y-1 hover:border-emerald-400/40 hover:text-white'
+                >
+                  <h3 className='text-lg font-semibold text-white'>
+                    {feature.title}
+                  </h3>
+                  <p className='mt-2 text-sm'>{feature.description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className='space-y-4'>
+          <div className='flex items-center justify-between'>
+            <div>
+              <p className='text-sm uppercase tracking-[0.35em] text-slate-300/70'>
+                Live Activity
+              </p>
+              <h2 className='text-2xl font-semibold text-white'>
+                Watch what everyone is watching
+              </h2>
+            </div>
+            <div className='hidden items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-200/80 md:flex'>
+              <span className='h-2 w-2 animate-pulse rounded-full bg-emerald-400'></span>
+              Streaming now
+            </div>
+          </div>
+          <div className='overflow-hidden rounded-3xl border border-white/10 shadow-[0_30px_80px_rgba(15,23,42,0.6)]'>
+            <ActivityFeed />
           </div>
         </div>
       </div>

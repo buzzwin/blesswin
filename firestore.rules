@@ -78,6 +78,7 @@ service cloud.firestore {
       allow write: if isOwner(userId);
     }
 
+<<<<<<< HEAD
     // User stats subcollection
     match /users/{userId}/stats/{statsId} {
       allow read: if isSignedIn() && request.auth.uid == userId;
@@ -364,6 +365,31 @@ service cloud.firestore {
       allow update: if request.auth == null || (isSignedIn() && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['stats']));
       // Don't allow deletion (only server-side cleanup if needed)
       allow delete: if request.auth == null;
+    }
+
+    // Buzzes collection
+    match /buzzes/{buzzId} {
+      allow read: if true;
+      allow create: if isSignedIn()
+        && request.resource.data.createdBy == request.auth.uid;
+      allow update: if isSignedIn()
+        && resource.data.createdBy == request.auth.uid;
+      allow delete: if isSignedIn()
+        && resource.data.createdBy == request.auth.uid;
+
+      match /signatures/{signatureId} {
+        allow read: if request.time >= get(/databases/$(database)/documents/buzzes/$(buzzId)).data.revealAt
+          || (isSignedIn() && get(/databases/$(database)/documents/buzzes/$(buzzId)).data.createdBy == request.auth.uid);
+
+        allow create: if isSignedIn()
+          && request.resource.data.authorId == request.auth.uid
+          && !(request.auth.uid in get(/databases/$(database)/documents/buzzes/$(buzzId)).data.signedBy);
+
+        allow update: if isSignedIn() && (
+          resource.data.authorId == request.auth.uid
+          || get(/databases/$(database)/documents/buzzes/$(buzzId)).data.createdBy == request.auth.uid
+        );
+      }
     }
   }
 }

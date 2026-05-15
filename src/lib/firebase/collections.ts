@@ -4,6 +4,7 @@ import { tweetConverter } from '@lib/types/tweet';
 import { bookmarkConverter, watchlistConverter } from '@lib/types/bookmark';
 import { statsConverter } from '@lib/types/stats';
 import { storyBookmarkConverter, storyCollectionConverter } from '@lib/types/story-bookmark';
+import { buzzConverter, signatureConverter } from '@lib/types/buzz';
 import { db } from './app';
 import type { CollectionReference, DocumentReference } from 'firebase/firestore';
 import type { Bookmark } from '@lib/types/bookmark';
@@ -17,6 +18,7 @@ import { ritualDefinitionConverter, userRitualStateConverter, ritualCompletionCo
 import type { RitualDefinition, UserRitualState, RitualCompletion } from '@lib/types/ritual';
 import type { StoryBookmark, StoryCollection } from '@lib/types/story-bookmark';
 import type { RitualCard } from '@lib/types/ritual-card';
+import type { Signature } from '@lib/types/buzz';
 
 export const usersCollection = collection(db, 'users').withConverter(
   userConverter
@@ -54,11 +56,8 @@ export function impactMomentCommentsCollection(momentId: string): CollectionRefe
 
 export const ritualsCollection = collection(db, 'rituals').withConverter(ritualDefinitionConverter);
 
-// Unified rituals collection (same as rituals, but supports both rituals and automations)
-// This will eventually replace the separate automations collection
 export const unifiedRitualsCollection = collection(db, 'rituals') as CollectionReference<any>;
 
-// Dedicated ritual cards collection for easier lookup
 export const ritualCardsCollection = collection(db, 'ritual_cards') as CollectionReference<RitualCard>;
 
 export function userRitualStateDoc(userId: string): DocumentReference<UserRitualState> {
@@ -81,6 +80,10 @@ export function userStoryCollectionsCollection(userId: string): CollectionRefere
   return collection(db, `users/${userId}/story_collections`).withConverter(storyCollectionConverter);
 }
 
-
-// Creator workflow proposals (human-in-the-loop queue)
 export const creatorProposalsCollection = collection(db, 'creator_proposals');
+
+export const buzzesCollection = collection(db, 'buzzes').withConverter(buzzConverter);
+
+export function buzzSignaturesCollection(buzzId: string): CollectionReference<Signature> {
+  return collection(db, `buzzes/${buzzId}/signatures`).withConverter(signatureConverter);
+}

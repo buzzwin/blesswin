@@ -59,6 +59,12 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     disabled: false
   },
   {
+    href: '/buzzes',
+    linkName: 'My Buzzes',
+    iconName: 'GiftIcon',
+    disabled: false
+  },
+  {
     href: '/settings',
     linkName: 'Settings',
     iconName: 'CogIcon',

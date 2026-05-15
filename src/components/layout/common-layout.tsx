@@ -80,3 +80,7 @@ export function BookmarksLayout({
 }): JSX.Element {
   return <CommonLayout>{children}</CommonLayout>;
 }
+
+export function BuzzesLayout({ children }: { children: ReactNode }): JSX.Element {
+  return <CommonLayout>{children}</CommonLayout>;
+}
