@@ -49,7 +49,7 @@ export function MainHeader({
       {title && (
         <div className='flex gap-8'>
           {useMobileSidebar && <MobileSidebar />}
-          <h2 className='text-xl font-bold' key={title}>
+          <h2 className='font-display text-xl font-bold' key={title}>
             {title}
           </h2>
         </div>

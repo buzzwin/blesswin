@@ -100,8 +100,10 @@ module.exports = {
         '3': '3px',
       },
       boxShadow: {
-        'brutal': '8px 8px 0px rgba(44, 44, 44, 0.1)',
-        'brutal-lg': '12px 12px 0px rgba(44, 44, 44, 0.15)',
+        'brutal': '4px 4px 0px #111827',
+        'brutal-lg': '6px 6px 0px #111827',
+        'brutal-dark': '4px 4px 0px rgba(255,255,255,0.12)',
+        'brutal-dark-lg': '6px 6px 0px rgba(255,255,255,0.12)',
       }
     }
   },

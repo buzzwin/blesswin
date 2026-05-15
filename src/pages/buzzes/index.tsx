@@ -3,7 +3,6 @@ import Link from 'next/link';
 import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { MainHeader } from '@components/home/main-header';
 import { SEO } from '@components/common/seo';
-import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
@@ -58,12 +57,12 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
 
   return (
     <Link href={`/buzzes/${buzz.id}`}>
-      <a className='block rounded-2xl border border-gray-100 bg-white p-5 transition hover:border-emerald-200 hover:shadow-sm dark:border-gray-800 dark:bg-gray-900 dark:hover:border-emerald-800'>
+      <a className='block rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:shadow dark:border-gray-700 dark:bg-gray-900 dark:hover:border-emerald-600'>
         <div className='flex items-start justify-between gap-3'>
           <div className='flex items-center gap-3'>
             <span className='text-2xl'>{emoji}</span>
             <div>
-              <p className='font-semibold text-gray-900 dark:text-white line-clamp-1'>
+              <p className='font-display font-bold text-gray-900 dark:text-white line-clamp-1'>
                 {buzz.title}
               </p>
               <p className='text-sm text-gray-500'>
@@ -112,13 +111,11 @@ export default function MyBuzzes(): JSX.Element {
       <SEO title='My Buzzes / Buzzwin' />
       <MainHeader>
         <div className='flex w-full items-center justify-between px-4'>
-          <h2 className='text-xl font-bold'>My Buzzes</h2>
+          <h2 className='font-display text-xl font-bold'>My Buzzes</h2>
           <Link href='/buzzes/new'>
-            <a>
-              <Button className='flex items-center gap-2 rounded-xl bg-emerald-500 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-600'>
-                <HeroIcon iconName='PlusIcon' className='h-4 w-4' />
-                Start a Buzz
-              </Button>
+            <a className='btn-pop px-4 py-2 text-sm'>
+              <HeroIcon iconName='PlusIcon' className='mr-1.5 h-4 w-4' />
+              Start a Buzz
             </a>
           </Link>
         </div>
@@ -133,17 +130,15 @@ export default function MyBuzzes(): JSX.Element {
           <div className='flex flex-col items-center gap-4 py-20 text-center'>
             <span className='text-5xl'>📖</span>
             <div>
-              <p className='font-semibold text-gray-700 dark:text-gray-200'>No Buzzes yet</p>
+              <p className='font-display font-bold text-gray-700 dark:text-gray-200'>No Buzzes yet</p>
               <p className='mt-1 text-sm text-gray-400'>
                 Start one and share the link — friends add their pages, you reveal the Buzzbook.
               </p>
             </div>
             <Link href='/buzzes/new'>
-              <a>
-                <Button className='flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 font-semibold text-white hover:bg-emerald-600'>
-                  <HeroIcon iconName='SparklesIcon' className='h-4 w-4' />
-                  Start your first Buzz
-                </Button>
+              <a className='btn-pop px-5 py-2.5 text-sm'>
+                <HeroIcon iconName='SparklesIcon' className='mr-1.5 h-4 w-4' />
+                Start your first Buzz
               </a>
             </Link>
           </div>

@@ -220,6 +220,23 @@
     opacity: 0.5; /* Add this to adjust the image opacity */
     filter: brightness(70%); /* Add this to adjust the image brightness */
   }
+
+  /* Bold expressive design system */
+  .text-display {
+    @apply font-display font-extrabold leading-tight tracking-tight;
+  }
+
+  .card-pop {
+    @apply bg-white dark:bg-dark-surface rounded-2xl border-3 border-gray-900 dark:border-gray-700
+           shadow-brutal dark:shadow-brutal-dark;
+  }
+
+  .btn-pop {
+    @apply inline-flex items-center justify-center font-bold rounded-xl border-3 border-gray-900
+           bg-accent-green text-white shadow-brutal
+           transition-transform duration-150 hover:-translate-y-0.5 active:translate-y-0
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+  }
 }
 
 @layer utilities {
@@ -262,6 +279,17 @@
 
   .animate-soft-float {
     animation: soft-float 6s ease-in-out infinite;
+  }
+
+  @keyframes bounce-in {
+    0% { transform: scale(0.85); opacity: 0; }
+    60% { transform: scale(1.05); }
+    80% { transform: scale(0.97); }
+    100% { transform: scale(1); opacity: 1; }
+  }
+
+  .animate-bounce-in {
+    animation: bounce-in 0.45s cubic-bezier(0.22, 1, 0.36, 1) both;
   }
 }
 

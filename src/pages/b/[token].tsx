@@ -72,13 +72,28 @@ export default function SignBuzzPage(): JSX.Element {
             <a className='text-lg font-bold text-emerald-500'>Buzzwin</a>
           </Link>
           <Link href='/buzzes/new'>
-            <a className='text-sm text-gray-400 hover:text-emerald-500 transition'>
+            <a className='text-sm text-gray-400 transition hover:text-emerald-500'>
               Start your own Buzz →
             </a>
           </Link>
         </header>
 
-        <main className='mx-auto max-w-md px-4 py-8'>
+        {/* Hero banner */}
+        {!loading && buzz && (
+          <div className='bg-gradient-to-b from-emerald-600 to-emerald-700 px-4 py-10 text-center text-white'>
+            <span className='text-5xl'>{emoji}</span>
+            <h1 className='mt-3 font-display text-3xl font-extrabold leading-tight sm:text-4xl'>
+              {buzz.recipientName}&apos;s Buzzbook
+            </h1>
+            <p className='mt-2 text-emerald-100'>
+              {buzz.totalSignatures}{' '}
+              {buzz.totalSignatures === 1 ? 'page' : 'pages'} added · Reveals{' '}
+              {revealDate}
+            </p>
+          </div>
+        )}
+
+        <main className='mx-auto max-w-md px-4 py-6'>
           {/* ── Loading ── */}
           {loading && (
             <div className='flex flex-col items-center gap-3 py-24 text-gray-400'>
@@ -109,29 +124,16 @@ export default function SignBuzzPage(): JSX.Element {
 
           {/* ── Buzz found ── */}
           {!loading && buzz && (
-            <div className='space-y-6'>
-              {/* Header card */}
-              <div className='rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm dark:border-gray-800 dark:bg-gray-900'>
-                <span className='text-4xl'>{emoji}</span>
-                <h1 className='mt-2 text-xl font-bold text-gray-900 dark:text-white'>
-                  {buzz.title}
-                </h1>
-                <p className='mt-1 text-sm text-gray-500'>
-                  {buzz.totalSignatures}{' '}
-                  {buzz.totalSignatures === 1 ? 'page' : 'pages'} added ·
-                  Buzzbook reveals {revealDate}
-                </p>
-              </div>
-
+            <div className='space-y-4'>
               {/* ── Already revealed ── */}
               {(isRevealed || isPastReveal) && (
-                <div className='rounded-2xl border border-emerald-100 bg-emerald-50 p-6 text-center dark:border-emerald-900/40 dark:bg-emerald-900/20'>
+                <div className='rounded-2xl border-2 border-emerald-400 bg-emerald-50 p-6 text-center dark:border-emerald-600 dark:bg-emerald-900/20'>
                   <span className='text-3xl'>📖</span>
-                  <p className='mt-2 font-semibold text-emerald-700 dark:text-emerald-400'>
+                  <p className='mt-2 font-display font-bold text-emerald-700 dark:text-emerald-400'>
                     The Buzzbook is open!
                   </p>
                   <Link href={`/buzzes/${buzz.id}/reveal`}>
-                    <a className='mt-3 inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-emerald-600 transition'>
+                    <a className='mt-3 inline-flex items-center gap-1.5 rounded-xl bg-emerald-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-600'>
                       Open the Buzzbook
                       <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
                     </a>
@@ -141,9 +143,9 @@ export default function SignBuzzPage(): JSX.Element {
 
               {/* ── Already signed ── */}
               {!isRevealed && !isPastReveal && alreadySigned && (
-                <div className='rounded-2xl border border-blue-100 bg-blue-50 p-6 text-center dark:border-blue-900/40 dark:bg-blue-900/20'>
+                <div className='rounded-2xl border-2 border-blue-300 bg-blue-50 p-6 text-center dark:border-blue-700 dark:bg-blue-900/20'>
                   <span className='text-3xl'>✅</span>
-                  <p className='mt-2 font-semibold text-blue-700 dark:text-blue-400'>
+                  <p className='mt-2 font-display font-bold text-blue-700 dark:text-blue-400'>
                     You&apos;ve already added your page!
                   </p>
                   <p className='mt-1 text-sm text-blue-600 dark:text-blue-300'>
@@ -151,7 +153,7 @@ export default function SignBuzzPage(): JSX.Element {
                   </p>
                   <button
                     onClick={() => void navigator.clipboard.writeText(shareUrl)}
-                    className='mt-3 inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-medium text-blue-600 hover:bg-blue-50 transition dark:bg-blue-900/30 dark:border-blue-700 dark:text-blue-300'
+                    className='mt-3 inline-flex items-center gap-1.5 rounded-xl border border-blue-200 bg-white px-4 py-2 text-sm font-medium text-blue-600 transition hover:bg-blue-50 dark:border-blue-700 dark:bg-blue-900/30 dark:text-blue-300'
                   >
                     <HeroIcon iconName='LinkIcon' className='h-3.5 w-3.5' />
                     Copy link to share
@@ -161,9 +163,9 @@ export default function SignBuzzPage(): JSX.Element {
 
               {/* ── Sign form ── */}
               {!isRevealed && !isPastReveal && !alreadySigned && (
-                <div className='rounded-2xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-800 dark:bg-gray-900'>
-                  <h2 className='mb-5 text-base font-semibold text-gray-900 dark:text-white'>
-                    Add your page to the Buzzbook
+                <div className='rounded-2xl border border-gray-200 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-900'>
+                  <h2 className='mb-5 font-display text-lg font-bold text-gray-900 dark:text-white'>
+                    Add your page to {buzz.recipientName}&apos;s Buzzbook
                   </h2>
                   <SignBuzzForm buzz={buzz} shareUrl={shareUrl} />
                 </div>

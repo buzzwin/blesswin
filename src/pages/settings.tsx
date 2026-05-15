@@ -189,7 +189,7 @@ export default function SettingsPage(): JSX.Element {
             <div className='rounded-full bg-purple-100 p-2 dark:bg-purple-900/30'>
               <Settings className='h-6 w-6 text-purple-600 dark:text-purple-400' />
             </div>
-            <h1 className='text-3xl font-bold text-gray-900 dark:text-white'>
+            <h1 className='font-display text-3xl font-extrabold text-gray-900 dark:text-white'>
               Settings
             </h1>
           </div>
@@ -203,7 +203,7 @@ export default function SettingsPage(): JSX.Element {
           <section className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
             <div className='mb-6 flex items-center gap-2'>
               <Mail className='h-5 w-5 text-gray-600 dark:text-gray-400' />
-              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+              <h2 className='font-display text-xl font-bold text-gray-900 dark:text-white'>
                 Email Notifications
               </h2>
             </div>
@@ -291,7 +291,7 @@ export default function SettingsPage(): JSX.Element {
           <section className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
             <div className='mb-6 flex items-center gap-2'>
               <Bell className='h-5 w-5 text-gray-600 dark:text-gray-400' />
-              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+              <h2 className='font-display text-xl font-bold text-gray-900 dark:text-white'>
                 Push Notifications
               </h2>
             </div>
@@ -457,7 +457,7 @@ export default function SettingsPage(): JSX.Element {
           <section className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
             <div className='mb-4 flex items-center gap-2'>
               <UserPlus className='h-5 w-5 text-gray-600 dark:text-gray-400' />
-              <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
+              <h2 className='font-display text-xl font-bold text-gray-900 dark:text-white'>
                 Invite Friends
               </h2>
             </div>

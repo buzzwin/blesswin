@@ -57,7 +57,7 @@ export function UserHeader(): JSX.Element {
           <div className='h-4 w-12' />
         </motion.div>
       ) : !user ? (
-        <motion.h2 className='text-xl font-bold' {...variants} key={`not-found-${id as string}`}>
+        <motion.h2 className='font-display text-xl font-bold' {...variants} key={`not-found-${id as string}`}>
           {isInFollowPage ? `@${id as string}` : 'User'}
         </motion.h2>
       ) : (

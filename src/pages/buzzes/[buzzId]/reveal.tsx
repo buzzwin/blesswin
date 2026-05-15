@@ -79,7 +79,7 @@ export default function RevealPage(): JSX.Element {
         {/* Top bar */}
         <header className='flex shrink-0 items-center justify-between border-b border-gray-100 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900'>
           <Link href='/'>
-            <a className='text-lg font-bold text-emerald-500'>Buzzwin</a>
+            <a className='font-display text-lg font-bold text-emerald-500'>Buzzwin</a>
           </Link>
           {buzz && (
             <Link href={`/b/${buzz.shareToken}`}>
