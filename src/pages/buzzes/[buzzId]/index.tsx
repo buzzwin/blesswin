@@ -20,7 +20,7 @@ import type { ReactElement, ReactNode } from 'react';
 
 const OCCASION_EMOJI: Record<string, string> = {
   birthday: '🎂', diwali: '🪔', christmas: '🎄',
-  eid: '🌙', anniversary: '💍', custom: '✨',
+  eid: '🌙', anniversary: '💍', custom: '✨'
 };
 
 function SignatureRow({ sig, buzzId }: { sig: Signature; buzzId: string }): JSX.Element {
@@ -113,7 +113,7 @@ export default function BuzzManagement(): JSX.Element {
   const isPastReveal = buzz ? Date.now() >= buzz.revealAt.toMillis() : false;
 
   const revealDate = buzz?.revealAt.toDate().toLocaleDateString('en-US', {
-    month: 'long', day: 'numeric', year: 'numeric',
+    month: 'long', day: 'numeric', year: 'numeric'
   });
 
   function copyLink(): void {

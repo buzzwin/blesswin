@@ -56,7 +56,7 @@ export default function RevealPage(): JSX.Element {
         name: user.name,
         username: user.username,
         photoURL: user.photoURL,
-        verified: user.verified,
+        verified: user.verified
       };
       void sendBuzzRevealTweet(buzz, tweetUser).then((tweetId) =>
         setBuzzRevealTweetId(buzz.id, tweetId)

@@ -17,14 +17,14 @@ const OCCASION_EMOJI: Record<string, string> = {
   christmas: '🎄',
   eid: '🌙',
   anniversary: '💍',
-  custom: '✨',
+  custom: '✨'
 };
 
 function statusBadge(buzz: Buzz): { label: string; className: string } {
   if (buzz.status === 'revealed') {
     return {
       label: 'Revealed',
-      className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400',
+      className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
     };
   }
   const now = Date.now();
@@ -32,12 +32,12 @@ function statusBadge(buzz: Buzz): { label: string; className: string } {
   if (now >= revealMs) {
     return {
       label: 'Ready to open',
-      className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
+      className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
     };
   }
   return {
     label: 'Collecting',
-    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
+    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
   };
 }
 
@@ -47,7 +47,7 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
   const revealDate = buzz.revealAt.toDate().toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric',
+    year: 'numeric'
   });
 
   function copyLink(e: React.MouseEvent): void {

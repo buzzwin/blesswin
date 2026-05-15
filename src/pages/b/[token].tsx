@@ -12,7 +12,7 @@ const OCCASION_EMOJI: Record<string, string> = {
   christmas: '🎄',
   eid: '🌙',
   anniversary: '💍',
-  custom: '✨',
+  custom: '✨'
 };
 
 export default function SignBuzzPage(): JSX.Element {
@@ -34,7 +34,7 @@ export default function SignBuzzPage(): JSX.Element {
   const revealDate = buzz?.revealAt.toDate().toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
-    year: 'numeric',
+    year: 'numeric'
   });
 
   return (
