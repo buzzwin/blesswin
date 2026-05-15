@@ -45,3 +45,8 @@ next-env.d.ts
 
 # instagram-video secrets
 /instagram-video/.secrets/
+
+# Playwright
+/test-results/
+/playwright-report/
+/playwright/.cache/
