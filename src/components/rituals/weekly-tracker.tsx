@@ -64,7 +64,7 @@ export function WeeklyTracker({
         {weekDates.map(({ dayName }) => (
           <div
             key={dayName}
-            className='text-center text-[10px] font-medium text-gray-600 dark:text-gray-400 md:text-xs'
+            className='text-center text-[10px] font-medium text-gray-600 dark:text-[#9E8B76] md:text-xs'
           >
             {dayName}
           </div>
@@ -91,8 +91,8 @@ export function WeeklyTracker({
                 isCompleted
                   ? 'bg-green-500 dark:bg-green-600'
                   : isToday
-                  ? 'border-2 border-purple-500 bg-purple-100 dark:bg-purple-900/20'
-                  : 'bg-gray-200 dark:bg-gray-700',
+                  ? 'border-2 border-[#C9A96E] bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'
+                  : 'bg-gray-200 dark:bg-[#231a10]',
                 isClickable && 'cursor-pointer transition-all hover:scale-105 hover:shadow-md hover:bg-purple-200 dark:hover:bg-purple-800/30'
               )}
               title={date}
@@ -103,8 +103,8 @@ export function WeeklyTracker({
                   isCompleted
                     ? 'text-white'
                     : isToday
-                    ? 'text-purple-600 dark:text-purple-400'
-                    : 'text-gray-700 dark:text-gray-300'
+                    ? 'text-[#C9A96E] dark:text-[#C9A96E]'
+                    : 'text-gray-700 dark:text-[#C4B5A0]'
                 )}
               >
                 {dayNumber}
@@ -115,13 +115,13 @@ export function WeeklyTracker({
       </div>
 
       {/* Legend - compact for mobile */}
-      <div className='mt-1.5 flex items-center justify-center gap-3 text-[10px] text-gray-500 dark:text-gray-400 md:mt-2 md:gap-4 md:text-xs'>
+      <div className='mt-1.5 flex items-center justify-center gap-3 text-[10px] text-gray-500 dark:text-[#9E8B76] md:mt-2 md:gap-4 md:text-xs'>
         <div className='flex items-center gap-1'>
           <div className='h-2 w-2 rounded bg-green-500 dark:bg-green-600 md:h-2.5 md:w-2.5' />
           <span>Done</span>
         </div>
         <div className='flex items-center gap-1'>
-          <div className='h-2 w-2 rounded border border-purple-500 bg-purple-100 dark:bg-purple-900/20 md:h-2.5 md:w-2.5' />
+          <div className='h-2 w-2 rounded border border-[#C9A96E] bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)] md:h-2.5 md:w-2.5' />
           <span>Today</span>
         </div>
       </div>

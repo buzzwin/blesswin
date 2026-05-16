@@ -95,9 +95,9 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
 
   const inputCls = cn(
     'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
-    'border-gray-200 bg-white text-gray-900 placeholder:text-gray-400',
-    'dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500',
-    'focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20'
+    'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
+    'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
+    'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
   );
 
   if (done) {
@@ -105,10 +105,10 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
       <div className='space-y-5 text-center'>
         <div>
           <span className='text-5xl'>🎉</span>
-          <h3 className='mt-3 text-xl font-bold text-gray-900 dark:text-white'>
+          <h3 className='mt-3 text-xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
             Your page is in!
           </h3>
-          <p className='mt-1 text-sm text-gray-500'>
+          <p className='mt-1 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             The Buzzbook for <strong>{buzz.recipientName}</strong> will be
             revealed on{' '}
             {buzz.revealAt.toDate().toLocaleDateString('en-US', {
@@ -120,7 +120,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
           </p>
         </div>
 
-        <div className='rounded-xl border border-gray-100 bg-gray-50 p-4 text-sm text-gray-600 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300'>
+        <div className='rounded-xl border border-[#e8d8c4] bg-[#faf8f4] p-4 text-sm text-[#6b5744] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0]'>
           Know someone else who should add their page?
         </div>
 
@@ -142,7 +142,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
     <form onSubmit={handleSubmit} className='space-y-5'>
       {/* Name */}
       <div>
-        <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
           Your name <span className='text-red-400'>*</span>
         </label>
         <input
@@ -159,10 +159,10 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
 
       {/* Type toggle */}
       <div>
-        <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
           What are you adding?
         </label>
-        <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700'>
+        <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-[#2a1d10]'>
           {(['text', 'photo'] as SignType[]).map((t) => (
             <button
               key={t}
@@ -171,8 +171,8 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
               className={cn(
                 'flex-1 py-2.5 text-sm font-medium transition',
                 type === t
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                  ? 'bg-[#C97D60] text-white'
+                  : 'bg-[#faf8f4] text-[#6b5744] hover:bg-[rgba(201,169,110,0.06)] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
               )}
             >
               {t === 'text' ? '💬 Message' : '📷 Photo / Meme'}
@@ -192,7 +192,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
             maxLength={500}
             required
           />
-          <p className='mt-1 text-right text-xs text-gray-400'>
+          <p className='mt-1 text-right text-xs text-[#9E8B76]'>
             {text.length}/500
           </p>
         </div>
@@ -222,8 +222,8 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
               onClick={() => fileInputRef.current?.click()}
               className={cn(
                 'flex h-36 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition',
-                'border-gray-200 bg-gray-50 text-gray-400 hover:border-emerald-400 hover:bg-emerald-50 hover:text-emerald-500',
-                'dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-500 dark:hover:bg-emerald-900/20'
+                'border-[#e8d8c4] bg-[#faf8f4] text-[#9E8B76] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] hover:text-[#C9A96E]',
+                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[#C9A96E] dark:hover:bg-emerald-900/20'
               )}
             >
               <HeroIcon iconName='PhotoIcon' className='h-8 w-8' />
@@ -247,7 +247,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         loading={loading}
         className={cn(
           'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold transition',
-          'bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-40'
+          'bg-[#C97D60] text-white hover:bg-[#C97D60] disabled:opacity-40'
         )}
       >
         {!loading && <HeroIcon iconName='PencilSquareIcon' className='h-4 w-4' />}

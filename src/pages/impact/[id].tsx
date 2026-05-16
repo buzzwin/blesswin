@@ -151,7 +151,7 @@ export default function ImpactMomentPage(): JSX.Element {
     return (
       <MainContainer>
         <MainHeader title='Impact Moment' useMobileSidebar />
-        <div className='p-4 text-center text-gray-500 dark:text-gray-400'>
+        <div className='p-4 text-center text-gray-500 dark:text-[#9E8B76]'>
           Impact moment not found
         </div>
       </MainContainer>
@@ -167,9 +167,9 @@ export default function ImpactMomentPage(): JSX.Element {
       <MainHeader title='Impact Moment' useMobileSidebar />
       
       {/* Back Button */}
-      <div className='border-b border-gray-200 px-4 py-3 dark:border-gray-700'>
+      <div className='border-b border-gray-200 px-4 py-3 dark:border-[#2a1d10]'>
         <Link href='/home'>
-          <a className='inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+          <a className='inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
             <ArrowLeft className='h-4 w-4' />
             Back to Feed
           </a>
@@ -187,7 +187,7 @@ export default function ImpactMomentPage(): JSX.Element {
         {commentsLoading ? (
           <Loading className='mt-5' />
         ) : comments.length === 0 ? (
-          <div className='p-8 text-center text-gray-500 dark:text-gray-400'>
+          <div className='p-8 text-center text-gray-500 dark:text-[#9E8B76]'>
             No comments yet. Be the first to comment!
           </div>
         ) : (

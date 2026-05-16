@@ -20,7 +20,7 @@ export function GlobalMobileHeader(): JSX.Element {
   };
 
   return (
-    <header className='sticky top-0 z-50 border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900 md:hidden'>
+    <header className='sticky top-0 z-50 border-b border-gray-200 bg-white dark:border-[#2a1d10] dark:bg-[#1c1510] md:hidden'>
       <div className='flex items-center justify-between px-4 py-3'>
         {/* Logo */}
         <Link href={user ? '/rituals' : '/'}>

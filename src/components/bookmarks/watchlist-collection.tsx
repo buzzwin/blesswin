@@ -165,7 +165,7 @@ export function WatchlistCollection({
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className='h-48 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700'
+              className='h-48 animate-pulse rounded-lg bg-gray-200 dark:bg-[#231a10]'
             />
           ))}
         </div>
@@ -183,7 +183,7 @@ export function WatchlistCollection({
           <h2 className='text-2xl font-bold text-foreground dark:text-white'>
             Watchlist Collection
           </h2>
-          <p className='mt-1 text-sm text-muted-foreground dark:text-gray-400'>
+          <p className='mt-1 text-sm text-muted-foreground dark:text-[#9E8B76]'>
             {totalItems} items across {watchlists.length} watchlist
             {watchlists.length !== 1 ? 's' : ''}
           </p>
@@ -236,7 +236,7 @@ export function WatchlistCollection({
               return (
                 <Card
                   key={watchlist.id}
-                  className='border-border dark:border-gray-700'
+                  className='border-border dark:border-[#2a1d10]'
                 >
                   <CardHeader>
                     <div className='flex items-center justify-between'>
@@ -250,13 +250,13 @@ export function WatchlistCollection({
                       </Link>
                     </div>
                     {watchlist.description && (
-                      <p className='mt-1 text-sm text-muted-foreground dark:text-gray-400'>
+                      <p className='mt-1 text-sm text-muted-foreground dark:text-[#9E8B76]'>
                         {watchlist.description}
                       </p>
                     )}
                   </CardHeader>
                   <CardContent>
-                    <div className='mb-2 text-sm text-muted-foreground dark:text-gray-400'>
+                    <div className='mb-2 text-sm text-muted-foreground dark:text-[#9E8B76]'>
                       {items.length} item{items.length !== 1 ? 's' : ''}
                     </div>
                     <div className='grid grid-cols-4 gap-2'>
@@ -276,7 +276,7 @@ export function WatchlistCollection({
                         </div>
                       ))}
                       {items.length > 4 && (
-                        <div className='flex aspect-[2/3] items-center justify-center rounded bg-gray-100 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400'>
+                        <div className='flex aspect-[2/3] items-center justify-center rounded bg-gray-100 text-xs font-medium text-gray-600 dark:bg-[#231a10] dark:text-[#9E8B76]'>
                           +{items.length - 4}
                         </div>
                       )}
@@ -303,9 +303,9 @@ export function WatchlistCollection({
             selectedCategory === null ? true : (item.mediaType === selectedCategory)
           )
           .length === 0 ? (
-          <div className='rounded-lg border border-border bg-card p-8 text-center dark:border-gray-700'>
+          <div className='rounded-lg border border-border bg-card p-8 text-center dark:border-[#2a1d10]'>
             <Bookmark className='mx-auto h-12 w-12 text-gray-400' />
-            <p className='mt-4 text-muted-foreground dark:text-gray-400'>
+            <p className='mt-4 text-muted-foreground dark:text-[#9E8B76]'>
               No items found in this category
             </p>
           </div>
@@ -320,9 +320,9 @@ export function WatchlistCollection({
               .map((item) => (
                 <div
                   key={item.id}
-                  className='group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:shadow-lg dark:border-gray-700'
+                  className='group relative overflow-hidden rounded-lg border border-border bg-card transition-all hover:shadow-lg dark:border-[#2a1d10]'
                 >
-                  <div className='relative aspect-[2/3] overflow-hidden bg-gray-200 dark:bg-gray-700'>
+                  <div className='relative aspect-[2/3] overflow-hidden bg-gray-200 dark:bg-[#231a10]'>
                     <ImageWithFallback
                       src={getImageUrl(item.posterPath || '', 'w300')}
                       alt={item.title}
@@ -350,7 +350,7 @@ export function WatchlistCollection({
                       {item.title}
                     </h4>
                     {item.mediaType && (
-                      <div className='mt-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400'>
+                      <div className='mt-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-[#9E8B76]'>
                         {item.mediaType === 'movie' ? (
                           <Film className='h-3 w-3' />
                         ) : (
@@ -367,12 +367,12 @@ export function WatchlistCollection({
       </div>
 
       {watchlists.length === 0 && (
-        <div className='rounded-lg border border-border bg-card p-8 text-center dark:border-gray-700'>
+        <div className='rounded-lg border border-border bg-card p-8 text-center dark:border-[#2a1d10]'>
           <Bookmark className='mx-auto h-12 w-12 text-gray-400' />
           <h3 className='mt-4 text-lg font-semibold text-foreground dark:text-white'>
             No Watchlists Yet
           </h3>
-          <p className='mt-2 text-muted-foreground dark:text-gray-400'>
+          <p className='mt-2 text-muted-foreground dark:text-[#9E8B76]'>
             Create your first watchlist to start organizing your favorite movies
             and TV shows
           </p>

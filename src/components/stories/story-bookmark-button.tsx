@@ -138,8 +138,8 @@ export function StoryBookmarkButton({
       disabled={loading}
       className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors ${
         bookmarked
-          ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50'
-          : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+          ? 'bg-[rgba(201,169,110,0.1)] text-[#8a6520] hover:bg-purple-200 dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E] dark:hover:bg-purple-900/50'
+          : 'text-gray-600 hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
       } ${loading ? 'opacity-50 cursor-not-allowed' : ''} ${className}`}
     >
       {bookmarked ? (

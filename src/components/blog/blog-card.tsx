@@ -33,7 +33,7 @@ export function BlogCard({ post }: BlogCardProps): JSX.Element {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <article className='group relative overflow-hidden rounded-lg border border-gray-200 bg-white transition-all hover:shadow-md dark:border-gray-700 dark:bg-gray-800'>
+      <article className='group relative overflow-hidden rounded-lg border border-gray-200 bg-white transition-all hover:shadow-md dark:border-[#2a1d10] dark:bg-[#1c1510]'>
         {/* Content */}
         <div className='relative p-4'>
           {/* Category Badge */}
@@ -51,12 +51,12 @@ export function BlogCard({ post }: BlogCardProps): JSX.Element {
           </h2>
 
           {/* Excerpt */}
-          <p className='mb-3 text-sm text-gray-600 dark:text-gray-300 leading-relaxed line-clamp-2'>
+          <p className='mb-3 text-sm text-gray-600 dark:text-[#C4B5A0] leading-relaxed line-clamp-2'>
             {post.excerpt}
           </p>
 
           {/* Meta Information */}
-          <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
+          <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
             <div className='flex items-center gap-1'>
               <Calendar className='h-3 w-3' />
               <span>{publishedDate}</span>
@@ -64,7 +64,7 @@ export function BlogCard({ post }: BlogCardProps): JSX.Element {
           </div>
 
           {/* Read More */}
-          <div className='mt-3 flex items-center gap-1 text-xs font-medium text-gray-700 transition-colors group-hover:text-gray-900 dark:text-gray-300 dark:group-hover:text-white'>
+          <div className='mt-3 flex items-center gap-1 text-xs font-medium text-gray-700 transition-colors group-hover:text-gray-900 dark:text-[#C4B5A0] dark:group-hover:text-white'>
             <span>Read</span>
             <ArrowRight className='h-3 w-3 transition-transform group-hover:translate-x-1' />
           </div>

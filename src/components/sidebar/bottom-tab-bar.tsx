@@ -8,7 +8,6 @@ type Tab = {
   href: string;
   label: string;
   icon: IconName;
-  emoji?: string;
   match?: (pathname: string) => boolean;
 };
 
@@ -23,11 +22,6 @@ const TABS: Tab[] = [
     label: 'Buzzbook',
     icon: 'GiftIcon',
     match: (p) => p.startsWith('/buzzes') || p.startsWith('/b/')
-  },
-  {
-    href: '/ask',
-    label: 'Ask',
-    icon: 'ChatBubbleLeftRightIcon'
   },
   {
     href: '/people',
@@ -53,7 +47,7 @@ export function BottomTabBar(): JSX.Element {
   ];
 
   return (
-    <nav className='fixed bottom-0 left-0 right-0 z-50 flex h-16 items-stretch border-t border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-950 xs:hidden'>
+    <nav className='fixed bottom-0 left-0 right-0 z-50 flex h-16 items-stretch border-t bg-[#0f0b06] border-[#2a1d10] xs:hidden'>
       {allTabs.map(({ href, label, icon, match }) => {
         const isActive = match
           ? match(pathname)
@@ -64,8 +58,8 @@ export function BottomTabBar(): JSX.Element {
             <a
               className={`relative flex flex-1 flex-col items-center justify-center gap-0.5 transition-colors ${
                 isActive
-                  ? 'text-emerald-500'
-                  : 'text-gray-400 dark:text-gray-500'
+                  ? 'text-[#C9A96E]'
+                  : 'text-[#6b5744]'
               }`}
             >
               <HeroIcon
@@ -77,7 +71,7 @@ export function BottomTabBar(): JSX.Element {
                 {label}
               </span>
               {isActive && (
-                <span className='absolute bottom-1 h-0.5 w-5 rounded-full bg-emerald-500' />
+                <span className='absolute bottom-1 h-0.5 w-5 rounded-full bg-[#C9A96E]' />
               )}
             </a>
           </Link>

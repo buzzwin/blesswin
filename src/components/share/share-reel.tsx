@@ -103,12 +103,12 @@ export function ShareReel({
 
   return (
     <Modal open={isOpen} closeModal={onClose}>
-      <div className='w-full max-w-lg p-6 bg-white rounded-xl dark:bg-gray-900'>
+      <div className='w-full max-w-lg p-6 bg-white rounded-xl dark:bg-[#1c1510]'>
         <div className='flex items-center justify-between mb-4'>
           <h2 className='text-xl font-bold'>Create Instagram Story</h2>
           <button
             onClick={onClose}
-            className='p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800'
+            className='p-1 rounded-full hover:bg-gray-100 dark:hover:bg-[#231a10]'
           >
             <HeroIcon className='w-5 h-5' iconName='XMarkIcon' />
           </button>
@@ -124,12 +124,12 @@ export function ShareReel({
               onClick={() =>
                 setSelectedBookmarks(selectedBookmarks.length ? [] : bookmarks)
               }
-              className='text-sm text-blue-500 hover:text-blue-600'
+              className='text-sm text-[#C9A96E] hover:text-[#8a6520]'
             >
               {selectedBookmarks.length ? 'Deselect All' : 'Select All'}
             </button>
           </div>
-          <div className='grid grid-cols-4 gap-2 p-2 overflow-y-auto rounded-lg max-h-40 bg-gray-50 dark:bg-gray-800'>
+          <div className='grid grid-cols-4 gap-2 p-2 overflow-y-auto rounded-lg max-h-40 bg-gray-50 dark:bg-[#1c1510]'>
             {bookmarks.map((bookmark) => (
               <button
                 key={bookmark.id}
@@ -137,7 +137,7 @@ export function ShareReel({
                 className={cn(
                   'relative aspect-[2/3] overflow-hidden rounded-md transition-all',
                   selectedBookmarks.some((b) => b.id === bookmark.id)
-                    ? 'ring-2 ring-blue-500'
+                    ? 'ring-2 ring-[#C9A96E]'
                     : 'opacity-50 hover:opacity-75'
                 )}
               >
@@ -151,7 +151,7 @@ export function ShareReel({
                     unoptimized
                   />
                 ) : (
-                  <div className='flex items-center justify-center h-full bg-gray-200 dark:bg-gray-700'>
+                  <div className='flex items-center justify-center h-full bg-gray-200 dark:bg-[#231a10]'>
                     <HeroIcon
                       className='w-6 h-6 text-gray-400'
                       iconName='PhotoIcon'
@@ -185,7 +185,7 @@ export function ShareReel({
                         prev === 0 ? selectedBookmarks.length - 1 : prev - 1
                       )
                     }
-                    className='p-1 hover:text-blue-400'
+                    className='p-1 hover:text-[#9E8B76]'
                   >
                     <HeroIcon className='w-5 h-5' iconName='ChevronLeftIcon' />
                   </button>
@@ -198,7 +198,7 @@ export function ShareReel({
                         prev === selectedBookmarks.length - 1 ? 0 : prev + 1
                       )
                     }
-                    className='p-1 hover:text-blue-400'
+                    className='p-1 hover:text-[#9E8B76]'
                   >
                     <HeroIcon className='w-5 h-5' iconName='ChevronRightIcon' />
                   </button>
@@ -216,14 +216,14 @@ export function ShareReel({
         <div className='flex justify-end gap-3 mt-6'>
           <button
             onClick={onClose}
-            className='px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            className='px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
           >
             Cancel
           </button>
           <button
             onClick={downloadStory}
             disabled={loading ?? !selectedBookmarks.length}
-            className='flex items-center gap-2 px-4 py-2 text-white bg-blue-500 rounded-lg hover:bg-blue-600 disabled:opacity-50'
+            className='flex items-center gap-2 px-4 py-2 text-white bg-[rgba(201,169,110,0.06)]0 rounded-lg hover:bg-[#C97D60] disabled:opacity-50'
           >
             {loading ? (
               <HeroIcon

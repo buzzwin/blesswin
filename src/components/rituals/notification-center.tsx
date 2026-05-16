@@ -39,10 +39,10 @@ const notificationIcons = {
 };
 
 const notificationColors = {
-  friend_joined: 'text-blue-600 dark:text-blue-400',
+  friend_joined: 'text-[#8a6520] dark:text-[#9E8B76]',
   achievement_unlocked: 'text-yellow-600 dark:text-yellow-400',
   streak_reminder: 'text-orange-600 dark:text-orange-400',
-  level_up: 'text-purple-600 dark:text-purple-400'
+  level_up: 'text-[#C9A96E] dark:text-[#C9A96E]'
 };
 
 export function NotificationCenter({
@@ -60,7 +60,7 @@ export function NotificationCenter({
       {/* Notification Bell Button */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className='relative rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+        className='relative rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-gray-200'
         aria-label='Notifications'
       >
         <Bell className='h-5 w-5' />
@@ -81,9 +81,9 @@ export function NotificationCenter({
           />
           
           {/* Dropdown */}
-          <div className='absolute right-0 top-12 z-50 w-80 rounded-xl border border-gray-200 bg-white shadow-xl dark:border-gray-700 dark:bg-gray-800'>
+          <div className='absolute right-0 top-12 z-50 w-80 rounded-xl border border-gray-200 bg-white shadow-xl dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             {/* Header */}
-            <div className='flex items-center justify-between border-b border-gray-200 p-4 dark:border-gray-700'>
+            <div className='flex items-center justify-between border-b border-gray-200 p-4 dark:border-[#2a1d10]'>
               <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
                 Notifications
               </h3>
@@ -93,14 +93,14 @@ export function NotificationCenter({
                     onClick={() => {
                       onMarkAllAsRead();
                     }}
-                    className='text-xs font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'
+                    className='text-xs font-medium text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E] dark:hover:text-purple-300'
                   >
                     Mark all read
                   </button>
                 )}
                 <button
                   onClick={() => setIsOpen(false)}
-                  className='rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300'
+                  className='rounded-full p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-[#231a10] dark:hover:text-gray-300'
                 >
                   <X className='h-4 w-4' />
                 </button>
@@ -112,7 +112,7 @@ export function NotificationCenter({
               {notifications.length === 0 ? (
                 <div className='p-8 text-center'>
                   <Bell className='mx-auto mb-2 h-12 w-12 text-gray-400' />
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                     No notifications yet
                   </p>
                 </div>
@@ -127,7 +127,7 @@ export function NotificationCenter({
                         key={notification.id}
                         className={cn(
                           'p-4 transition-colors hover:bg-gray-50 dark:hover:bg-gray-900',
-                          !notification.read && 'bg-purple-50/50 dark:bg-purple-900/10'
+                          !notification.read && 'bg-[rgba(201,169,110,0.06)]/50 dark:bg-[rgba(201,169,110,0.08)]/10'
                         )}
                         onClick={() => {
                           if (!notification.read) {
@@ -149,13 +149,13 @@ export function NotificationCenter({
                                 {notification.title}
                               </h4>
                               {!notification.read && (
-                                <div className='ml-2 h-2 w-2 shrink-0 rounded-full bg-purple-600' />
+                                <div className='ml-2 h-2 w-2 shrink-0 rounded-full bg-[#C97D60]' />
                               )}
                             </div>
-                            <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+                            <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
                               {notification.message}
                             </p>
-                            <p className='mt-1 text-xs text-gray-500 dark:text-gray-500'>
+                            <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                               {formatDistanceToNow(notification.createdAt)}
                             </p>
                           </div>
@@ -169,13 +169,13 @@ export function NotificationCenter({
 
             {/* Footer */}
             {notifications.length > 0 && (
-              <div className='border-t border-gray-200 p-3 dark:border-gray-700'>
+              <div className='border-t border-gray-200 p-3 dark:border-[#2a1d10]'>
                 <button
                   onClick={() => {
                     onClear();
                     setIsOpen(false);
                   }}
-                  className='w-full rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                  className='w-full rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                 >
                   Clear all
                 </button>

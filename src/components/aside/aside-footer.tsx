@@ -36,7 +36,7 @@ export function AsideFooter(): JSX.Element {
         })}
       </nav>
       <p className='text-xs sm:text-sm'>© 2023 Buzzwin.</p>
-      <p className='text-xs text-gray-500 dark:text-gray-400 sm:text-sm'>
+      <p className='text-xs text-gray-500 dark:text-[#9E8B76] sm:text-sm'>
         A storytelling studio that amplifies good causes
       </p>
     </footer>

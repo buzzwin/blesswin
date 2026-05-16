@@ -41,7 +41,7 @@ export function InputField({
           'backdrop-blur-lg',
           'ring-1 ring-white/10 dark:ring-black/10',
           'hover:ring-white/20 dark:hover:ring-black/20',
-          'focus-within:ring-2 focus-within:ring-emerald-500/50',
+          'focus-within:ring-2 focus-within:ring-[rgba(201,169,110,0.35)]/50',
           errorMessage && 'ring-2 ring-red-500/50 dark:ring-red-500/50'
         )}
       >
@@ -88,12 +88,12 @@ export function InputField({
             'pointer-events-none',
             errorMessage
               ? 'text-red-500 dark:text-red-400'
-              : 'text-gray-500 dark:text-gray-400',
+              : 'text-gray-500 dark:text-[#9E8B76]',
             'peer-placeholder-shown:top-4',
             'peer-placeholder-shown:text-base',
             'peer-focus:top-2',
             'peer-focus:text-sm',
-            'peer-focus:text-emerald-500 dark:peer-focus:text-emerald-400'
+            'peer-focus:text-[#C9A96E] dark:peer-focus:text-[#C9A96E]'
           )}
           htmlFor={inputId}
         >
@@ -107,7 +107,7 @@ export function InputField({
               'transition-all duration-200',
               inputLength > inputLimit * 0.9
                 ? 'text-red-500 dark:text-red-400'
-                : 'text-gray-400 dark:text-gray-500'
+                : 'text-gray-400 dark:text-[#9E8B76]'
             )}
           >
             {inputLength} / {inputLimit}

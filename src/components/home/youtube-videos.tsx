@@ -170,7 +170,7 @@ export function YouTubeVideos({
   if (videos.length === 0) {
     return (
       <div className='py-8 text-center'>
-        <p className='text-sm text-gray-600 dark:text-gray-400'>
+        <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
           No videos found at this time. This may be due to API quota limits or no recent videos matching the search criteria.
         </p>
       </div>
@@ -229,7 +229,7 @@ export function YouTubeVideos({
               onClick={() => openVideo(video.videoId)}
               className='group w-full text-left transition-opacity hover:opacity-70'
             >
-              <div className='relative mb-3 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700'>
+              <div className='relative mb-3 aspect-video overflow-hidden rounded-lg bg-gray-200 dark:bg-[#231a10]'>
                 <Image
                   src={video.thumbnail}
                   alt={video.title}
@@ -240,7 +240,7 @@ export function YouTubeVideos({
               <h4 className='mb-1 line-clamp-2 text-base font-medium leading-snug text-gray-900 dark:text-white'>
                 {video.title}
               </h4>
-              <p className='text-sm text-gray-600 dark:text-gray-400'>
+              <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                 {video.channelTitle}
               </p>
             </button>

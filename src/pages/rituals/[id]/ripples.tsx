@@ -176,9 +176,9 @@ export default function RitualRipplesPage(): JSX.Element {
             />
             <MainHeader title='Ritual Ripples' />
             <div className='mt-5 text-center'>
-              <p className='text-gray-600 dark:text-gray-400'>Ritual not found</p>
+              <p className='text-gray-600 dark:text-[#9E8B76]'>Ritual not found</p>
               <Link href='/rituals'>
-                <a className='mt-4 inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+                <a className='mt-4 inline-flex items-center gap-2 text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'>
                   <ArrowLeft className='h-4 w-4' />
                   Back to Rituals
                 </a>
@@ -205,7 +205,7 @@ export default function RitualRipplesPage(): JSX.Element {
             <MainHeader title='Ritual Ripples' />
 
             {/* Ritual Header */}
-            <div className='mb-6 rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+            <div className='mb-6 rounded-xl border border-gray-200 bg-[#faf8f4] p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
               <div className='mb-4 flex items-start justify-between'>
                 <div className='flex-1'>
                   <div className='mb-2 flex items-center gap-3'>
@@ -214,21 +214,21 @@ export default function RitualRipplesPage(): JSX.Element {
                       {ritualTitle}
                     </h1>
                   </div>
-                  <p className='text-gray-600 dark:text-gray-400'>
+                  <p className='text-gray-600 dark:text-[#9E8B76]'>
                     {ritual.description}
                   </p>
                 </div>
                 <Link href='/rituals'>
-                  <a className='flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'>
+                  <a className='flex items-center gap-2 rounded-full p-2 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-gray-200'>
                     <ArrowLeft className='h-5 w-5' />
                   </a>
                 </Link>
               </div>
 
               {/* Ripple Count */}
-              <div className='flex items-center justify-between border-t border-gray-200 pt-4 dark:border-gray-700'>
+              <div className='flex items-center justify-between border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
                 <div className='flex items-center gap-2'>
-                  <Users className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                  <Users className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
                   <span className='text-lg font-semibold text-gray-900 dark:text-white'>
                     {rippleCount} {rippleCount === 1 ? 'ripple' : 'ripples'}
                   </span>
@@ -250,7 +250,7 @@ export default function RitualRipplesPage(): JSX.Element {
                 <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4'>
                   {joinedUsers.map((joinedUser) => (
                     <Link key={joinedUser.id} href={`/user/${joinedUser.username}`}>
-                      <a className='flex flex-col items-center gap-2 rounded-lg border border-gray-200 bg-white p-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700'>
+                      <a className='flex flex-col items-center gap-2 rounded-lg border border-gray-200 bg-[#faf8f4] p-4 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[#231a10]'>
                         <img
                           src={joinedUser.photoURL || '/default-avatar.png'}
                           alt={joinedUser.name}
@@ -259,7 +259,7 @@ export default function RitualRipplesPage(): JSX.Element {
                         <span className='text-sm font-medium text-gray-900 dark:text-white'>
                           {joinedUser.name}
                         </span>
-                        <span className='text-xs text-gray-500 dark:text-gray-400'>
+                        <span className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                           @{joinedUser.username}
                         </span>
                       </a>
@@ -276,11 +276,11 @@ export default function RitualRipplesPage(): JSX.Element {
               </h2>
               
               {ritualMoments.length === 0 ? (
-                <div className='rounded-lg border border-gray-200 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-                  <p className='text-gray-600 dark:text-gray-400'>
+                <div className='rounded-lg border border-gray-200 bg-gray-50 p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+                  <p className='text-gray-600 dark:text-[#9E8B76]'>
                     No impact moments have been created from this ritual yet.
                   </p>
-                  <p className='mt-2 text-sm text-gray-500 dark:text-gray-500'>
+                  <p className='mt-2 text-sm text-gray-500 dark:text-[#9E8B76]'>
                     Complete the ritual to create your first impact moment!
                   </p>
                 </div>

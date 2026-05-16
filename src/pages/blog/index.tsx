@@ -84,10 +84,10 @@ export default function BlogPage(): JSX.Element {
       </Head>
 
       <header className='mb-8 border-b border-charcoal/10 pb-8 dark:border-white/10'>
-        <h1 className='font-publication text-3xl font-bold tracking-tight text-charcoal dark:text-gray-100 sm:text-4xl'>
+        <h1 className='font-publication text-3xl font-bold tracking-tight text-charcoal dark:text-[#F5EFE6] sm:text-4xl'>
           Buzzwin Journal
         </h1>
-        <p className='mt-2 max-w-xl text-sm leading-relaxed text-charcoal/70 dark:text-gray-400 sm:text-base'>
+        <p className='mt-2 max-w-xl text-sm leading-relaxed text-charcoal/70 dark:text-[#9E8B76] sm:text-base'>
           Ideas and guides for a calmer week — readable by anyone. Sign in is
           optional if you use the Buzzwin app.
         </p>
@@ -96,7 +96,7 @@ export default function BlogPage(): JSX.Element {
       <PublicationSubscribe className='mb-10' />
 
       <div className='mb-6 flex flex-wrap items-center gap-2'>
-        <span className='w-full text-xs font-medium uppercase tracking-wide text-charcoal/45 dark:text-gray-500 sm:w-auto'>
+        <span className='w-full text-xs font-medium uppercase tracking-wide text-charcoal/45 dark:text-[#9E8B76] sm:w-auto'>
           Filter
         </span>
         {categories.map((category) => {
@@ -110,7 +110,7 @@ export default function BlogPage(): JSX.Element {
               className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-medium transition-colors ${
                 isActive
                   ? 'bg-charcoal text-cream dark:bg-white dark:text-gray-900'
-                  : 'bg-charcoal/5 text-charcoal/70 hover:bg-charcoal/10 dark:bg-white/5 dark:text-gray-400 dark:hover:bg-white/10'
+                  : 'bg-charcoal/5 text-charcoal/70 hover:bg-charcoal/10 dark:bg-white/5 dark:text-[#9E8B76] dark:hover:bg-white/10'
               }`}
             >
               <Icon className='h-3 w-3' aria-hidden />
@@ -128,7 +128,7 @@ export default function BlogPage(): JSX.Element {
             ))}
           </div>
         ) : (
-          <p className='py-12 text-center text-sm text-charcoal/60 dark:text-gray-500'>
+          <p className='py-12 text-center text-sm text-charcoal/60 dark:text-[#9E8B76]'>
             No posts in this category yet.
           </p>
         )}

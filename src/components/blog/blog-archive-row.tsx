@@ -41,17 +41,17 @@ export function BlogArchiveRow({ post }: BlogArchiveRowProps): JSX.Element {
         <div className='min-w-0 flex-1'>
           <time
             dateTime={post.publishedAt}
-            className='text-xs text-charcoal/50 dark:text-gray-500'
+            className='text-xs text-charcoal/50 dark:text-[#9E8B76]'
           >
             {publishedDate}
           </time>
-          <h2 className='mt-1 font-publication text-lg font-semibold leading-snug text-charcoal group-hover:underline dark:text-gray-100 sm:text-xl'>
+          <h2 className='mt-1 font-publication text-lg font-semibold leading-snug text-charcoal group-hover:underline dark:text-[#F5EFE6] sm:text-xl'>
             {post.title}
           </h2>
-          <p className='mt-1 line-clamp-2 text-sm leading-relaxed text-charcoal/70 dark:text-gray-400'>
+          <p className='mt-1 line-clamp-2 text-sm leading-relaxed text-charcoal/70 dark:text-[#9E8B76]'>
             {post.excerpt}
           </p>
-          <p className='mt-2 text-xs text-charcoal/45 dark:text-gray-500'>
+          <p className='mt-2 text-xs text-charcoal/45 dark:text-[#9E8B76]'>
             {categoryLabel}
             {post.author ? ` · ${post.author}` : ''}
           </p>

@@ -18,7 +18,7 @@ const buttonVariants = cva(
         ghost: 'hover:bg-accent hover:text-accent-foreground',
         link: 'text-primary underline-offset-4 hover:underline',
         emerald:
-          'bg-emerald-500 text-white hover:bg-emerald-600 dark:bg-emerald-600 dark:hover:bg-emerald-700',
+          'bg-[#C97D60] text-white hover:bg-[#C97D60] dark:bg-[#C97D60] dark:hover:bg-[#B56540]',
         amber:
           'bg-amber-600 text-white hover:bg-amber-700 dark:bg-amber-600 dark:hover:bg-amber-700',
         amberOutline:

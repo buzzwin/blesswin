@@ -155,8 +155,8 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
   if (loading) {
     return (
       <div className='flex items-center gap-2'>
-        <div className='h-5 w-5 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700' />
-        <span className='text-sm text-gray-500 dark:text-gray-400'>Loading...</span>
+        <div className='h-5 w-5 animate-pulse rounded-full bg-gray-200 dark:bg-[#231a10]' />
+        <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>Loading...</span>
       </div>
     );
   }
@@ -176,7 +176,7 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
         className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
           userReaction
             ? `${storyReactionColors[userReaction]} bg-opacity-10 hover:bg-opacity-20`
-            : 'text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            : 'text-gray-600 hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
         } ${reacting ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         <Sparkles className={`h-4 w-4 ${userReaction ? storyReactionColors[userReaction] : ''}`} />
@@ -192,7 +192,7 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
       {menuOpen && (
         <div
           ref={menuRef}
-          className='absolute left-0 top-full z-10 mt-2 w-56 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'
+          className='absolute left-0 top-full z-10 mt-2 w-56 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'
         >
           <div className='p-2'>
             {(['inspired', 'matters_to_me'] as StoryReactionType[]).map(
@@ -207,8 +207,8 @@ export function StoryReactions({ storyId, storyTitle, onReactionChange }: StoryR
                     }}
                     className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                       isActive
-                        ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                        : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                        ? 'bg-[rgba(201,169,110,0.06)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                        : 'hover:bg-gray-100 dark:hover:bg-[#231a10]'
                     }`}
                   >
                     <span className='text-lg'>{storyReactionIcons[reactionType]}</span>

@@ -411,7 +411,7 @@ export function SwipeInterface({
           <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
             Loading Content
           </h3>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
             {user
               ? 'Getting personalized recommendations...'
               : 'Fetching popular shows and movies...'}
@@ -432,7 +432,7 @@ export function SwipeInterface({
           </CardTitle>
         </CardHeader>
         <CardContent className='space-y-4 text-center'>
-          <p className='text-gray-600'>
+          <p className='text-[#6b5744] dark:text-[#9E8B76]'>
             {mediaCards.length === 0
               ? 'Unable to load content. This might be due to API issues or network problems.'
               : "You've gone through all the available shows and movies."}
@@ -455,7 +455,7 @@ export function SwipeInterface({
             </div>
 
             {/* Compact Social Share */}
-            <div className='border-t border-gray-200 pt-4 dark:border-gray-700'>
+            <div className='border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
               <SocialShare
                 title="I'm discovering shows and movies on Buzzwin!"
                 description='Join me in rating and discovering the best content with AI-powered recommendations!'
@@ -497,7 +497,7 @@ export function SwipeInterface({
 
         {/* Loading indicator for fetching more content */}
         {fetchingMore && (
-          <div className='absolute bottom-4 right-4 rounded-full bg-white/90 p-2 shadow-lg dark:bg-gray-800/90'>
+          <div className='absolute bottom-4 right-4 rounded-full bg-white/90 p-2 shadow-lg dark:bg-[#1c1510]/90'>
             <div className='h-4 w-4 animate-spin rounded-full border-b-2 border-amber-500'></div>
           </div>
         )}
@@ -506,7 +506,7 @@ export function SwipeInterface({
       {/* Prominent Sign-In Prompt Modal */}
       {showSignInPrompt && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-          <div className='w-full max-w-md rounded-xl bg-white p-6 shadow-2xl dark:bg-gray-800'>
+          <div className='w-full max-w-md rounded-xl bg-[#faf8f4] p-6 shadow-2xl dark:bg-[#1c1510]'>
             <div className='text-center'>
               {/* Icon */}
               <div className='mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 dark:bg-amber-900/30'>
@@ -519,7 +519,7 @@ export function SwipeInterface({
               </h3>
 
               {/* Description */}
-              <p className='mb-6 text-sm text-gray-600 dark:text-gray-300'>
+              <p className='mb-6 text-sm text-gray-600 dark:text-[#C4B5A0]'>
                 Join thousands of users who are sharing wellness practices and good deeds. Your actions inspire others to do good!
               </p>
 
@@ -527,19 +527,19 @@ export function SwipeInterface({
               <div className='mb-6 space-y-2 text-left'>
                 <div className='flex items-center gap-2'>
                   <Heart className='h-4 w-4 text-red-500' />
-                  <span className='text-sm text-gray-600 dark:text-gray-300'>
+                  <span className='text-sm text-gray-600 dark:text-[#C4B5A0]'>
                     Share wellness practices you love
                   </span>
                 </div>
                 <div className='flex items-center gap-2'>
                   <TrendingUp className='h-4 w-4 text-green-500' />
-                  <span className='text-sm text-gray-600 dark:text-gray-300'>
+                  <span className='text-sm text-gray-600 dark:text-[#C4B5A0]'>
                     Get personalized recommendations
                   </span>
                 </div>
                 <div className='flex items-center gap-2'>
                   <Star className='h-4 w-4 text-amber-500' />
-                  <span className='text-sm text-gray-600 dark:text-gray-300'>
+                  <span className='text-sm text-gray-600 dark:text-[#C4B5A0]'>
                     Discover great content
                   </span>
                 </div>

@@ -121,11 +121,11 @@ export function TweetStats({
       >
         <TweetOption
           className={cn(
-            'hover:text-emerald-500 focus-visible:text-emerald-500',
-            isWatching && 'text-emerald-500 [&>i>svg]:[stroke-width:2px]'
+            'hover:text-[#C9A96E] focus-visible:text-[#C9A96E]',
+            isWatching && 'text-[#C9A96E] [&>i>svg]:[stroke-width:2px]'
           )}
-          iconClassName='group-hover:bg-emerald-500/10 group-active:bg-emerald-500/20
-                         group-focus-visible:bg-emerald-500/10 group-focus-visible:ring-emerald-500/80'
+          iconClassName='group-hover:bg-[#C97D60]/10 group-active:bg-[#C97D60]/20
+                         group-focus-visible:bg-[#C97D60]/10 group-focus-visible:ring-[#C9A96E]/80'
           tip={isWatching ? 'Watching' : 'Watch this'}
           move={watchingMove}
           stats={totalWatchers}

@@ -25,16 +25,16 @@ export function ForgotPassword(): JSX.Element {
   };
 
   return (
-    <div className='w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-900'>
+    <div className='w-full max-w-md space-y-8 rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-8 shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'>
       <div className='text-center'>
         <HeroIcon
           iconName='KeyIcon'
-          className='mx-auto h-12 w-12 text-emerald-500'
+          className='mx-auto h-12 w-12 text-[#C9A96E]'
         />
-        <h2 className='mt-6 text-3xl font-bold text-gray-900 dark:text-white'>
+        <h2 className='mt-6 font-display text-3xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
           Reset your password
         </h2>
-        <p className='mt-2 text-gray-600 dark:text-gray-400'>
+        <p className='mt-2 text-[#6b5744] dark:text-[#9E8B76]'>
           Enter your email and we&apos;ll send you a reset link
         </p>
       </div>
@@ -50,7 +50,7 @@ export function ForgotPassword(): JSX.Element {
             value={email}
             onChange={(e): void => setEmail(e.target.value)}
             placeholder='Enter your email'
-            className='w-full rounded-xl border border-gray-300 bg-white px-4 py-3 text-gray-900 placeholder-gray-500 focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:border-gray-700 dark:bg-gray-800 dark:text-white'
+            className='w-full rounded-xl border border-[#e8d8c4] bg-[#faf8f4] px-4 py-3 text-[#1a1108] placeholder-[#9E8B76] focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[rgba(201,169,110,0.25)] dark:border-[#2a1d10] dark:bg-[#110d07] dark:text-[#F5EFE6] dark:placeholder-[#6b5744]'
             required
           />
         </div>
@@ -61,7 +61,7 @@ export function ForgotPassword(): JSX.Element {
 
         <div className='text-center'>
           <Link href='/login'>
-            <a className='text-sm text-emerald-600 hover:text-emerald-500 dark:text-emerald-400'>
+            <a className='text-sm text-[#C9A96E] hover:text-[#E8B86D]'>
               Back to login
             </a>
           </Link>

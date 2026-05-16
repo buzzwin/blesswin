@@ -246,12 +246,12 @@ export default function JoinActionPage(): JSX.Element {
       >
         <MainHeader title='Join Action' />
         <div className='mx-auto max-w-2xl px-4 py-8'>
-          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-            <p className='mb-4 text-gray-600 dark:text-gray-400'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
               Action not found
             </p>
             <Link href='/'>
-              <a className='inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+              <a className='inline-flex items-center gap-2 text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'>
                 <ArrowLeft className='h-4 w-4' />
                 Back to Home
               </a>
@@ -273,12 +273,12 @@ export default function JoinActionPage(): JSX.Element {
       <PublicLayout title={seoTitle} description={seoDescription}>
         <MainHeader title='Join Action' />
         <div className='mx-auto min-h-screen max-w-2xl bg-main-background px-4 py-8 dark:bg-dark-background'>
-          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-            <p className='mb-4 text-gray-600 dark:text-gray-400'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
               You created this action! View the ripple to see who joined.
             </p>
             <Link href={`/impact/${id}/ripple`}>
-              <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
+              <a className='inline-flex items-center gap-2 rounded-full bg-[#C97D60] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#B56540] dark:bg-[#C97D60] dark:hover:bg-[#B56540]'>
                 View Ripple
               </a>
             </Link>
@@ -299,7 +299,7 @@ export default function JoinActionPage(): JSX.Element {
           {/* Back Button */}
           <div className='mb-4'>
             <Link href={`/impact/${id}/ripple`}>
-              <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+              <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
                 <ArrowLeft className='h-4 w-4' />
                 Back to Ripple
               </a>
@@ -325,7 +325,7 @@ export default function JoinActionPage(): JSX.Element {
                 <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white'>
                   Join This Action 🌱
                 </h2>
-                <p className='mb-8 text-lg text-gray-700 dark:text-gray-300'>
+                <p className='mb-8 text-lg text-gray-700 dark:text-[#C4B5A0]'>
                   Share how you're joining and inspire others to do the same.
                 </p>
                 <button
@@ -362,7 +362,7 @@ export default function JoinActionPage(): JSX.Element {
                   Join This Action
                 </button>
                 {joinedCount > 0 && (
-                  <p className='mt-6 text-sm text-gray-600 dark:text-gray-400'>
+                  <p className='mt-6 text-sm text-gray-600 dark:text-[#9E8B76]'>
                     {joinedCount}{' '}
                     {joinedCount === 1 ? 'person has' : 'people have'} already
                     joined
@@ -374,7 +374,7 @@ export default function JoinActionPage(): JSX.Element {
                 <h2 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white'>
                   Join This Action 🌱
                 </h2>
-                <p className='mb-8 text-lg text-gray-700 dark:text-gray-300'>
+                <p className='mb-8 text-lg text-gray-700 dark:text-[#C4B5A0]'>
                   Sign in to join this action and be part of the ripple.
                 </p>
                 <Link href={`/login?redirect=/impact/${id}/join`}>

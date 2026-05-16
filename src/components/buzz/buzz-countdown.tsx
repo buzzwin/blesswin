@@ -73,12 +73,12 @@ export function BuzzCountdown({ revealAt, recipientName, onReveal }: Props): JSX
         ].map(({ value, label }, i) => (
           <div key={label} className='flex items-end gap-3'>
             {i > 0 && (
-              <span className='mb-3 text-2xl font-bold text-gray-300 dark:text-gray-600'>
+              <span className='mb-3 text-2xl font-bold text-[#e8d8c4] dark:text-[#3d2e1e]'>
                 :
               </span>
             )}
             <div className='flex flex-col items-center'>
-              <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 dark:bg-gray-800 dark:ring-gray-700'>
+              <div className='flex h-16 w-16 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-gray-100 dark:bg-[#1c1510] dark:ring-gray-700'>
                 <span className='text-2xl font-bold tabular-nums text-gray-900 dark:text-white'>
                   {pad(value)}
                 </span>

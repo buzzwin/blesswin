@@ -149,18 +149,18 @@ export function RitualCompleteModal({
         onComplete={() => setShowCelebration(false)}
       />
       <Modal
-        modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+        modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
         open={open}
         closeModal={closeModal}
       >
         <div className='space-y-4'>
           {/* Header */}
-          <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+          <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
             <div>
               <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
                 Share Your Ritual Completion
               </h2>
-              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 Complete & share: {ritual.title}
               </p>
             </div>
@@ -173,14 +173,14 @@ export function RitualCompleteModal({
           </div>
 
           {/* Ritual Preview */}
-          <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <div className='flex items-start gap-3'>
               <div className='text-2xl'>{ritual.icon || '🌱'}</div>
               <div className='flex-1'>
                 <h3 className='mb-1 text-sm font-semibold text-gray-900 dark:text-white'>
                   {ritual.title}
                 </h3>
-                <p className='text-xs text-gray-600 dark:text-gray-400'>
+                <p className='text-xs text-gray-600 dark:text-[#9E8B76]'>
                   {ritual.description}
                 </p>
               </div>
@@ -203,15 +203,15 @@ export function RitualCompleteModal({
                 className={cn(
                   'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
                   'text-gray-900 placeholder-gray-500',
-                  'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                  'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                  'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                   'transition-colors'
                 )}
                 rows={3}
                 maxLength={inputLimit}
                 disabled={loading}
               />
-              <div className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+              <div className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                 {text.length} / {inputLimit}
               </div>
             </div>
@@ -219,7 +219,7 @@ export function RitualCompleteModal({
 
           {/* Tags (read-only) */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Tags
             </label>
             <div className='flex flex-wrap gap-2'>
@@ -239,7 +239,7 @@ export function RitualCompleteModal({
 
           {/* Effort Level (read-only) */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Effort Level
             </label>
             <div className='flex items-center gap-2'>
@@ -254,12 +254,12 @@ export function RitualCompleteModal({
 
           {/* Mood Check-in (Optional) */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Mood Check-in (optional)
             </label>
             <div className='grid grid-cols-2 gap-4'>
               <div>
-                <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
+                <label className='mb-1 block text-xs text-gray-600 dark:text-[#9E8B76]'>
                   Before
                 </label>
                 <div className='flex items-center gap-2'>
@@ -283,7 +283,7 @@ export function RitualCompleteModal({
                 </div>
               </div>
               <div>
-                <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
+                <label className='mb-1 block text-xs text-gray-600 dark:text-[#9E8B76]'>
                   After
                 </label>
                 <div className='flex items-center gap-2'>
@@ -310,12 +310,12 @@ export function RitualCompleteModal({
           </div>
 
           {/* Privacy Toggle */}
-          <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/50'>
+          <div className='flex items-center justify-between rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-[#2a1d10] dark:bg-[#231a10]'>
             <div className='flex-1'>
-              <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Visibility
               </label>
-              <p className='mt-0.5 text-xs text-gray-500 dark:text-gray-400'>
+              <p className='mt-0.5 text-xs text-gray-500 dark:text-[#9E8B76]'>
                 {isPublic
                   ? 'This moment will be visible to everyone in the feed'
                   : 'This moment will only be visible to you'}
@@ -326,8 +326,8 @@ export function RitualCompleteModal({
               onClick={() => setIsPublic(!isPublic)}
               disabled={loading}
               className={cn(
-                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2',
-                isPublic ? 'bg-purple-600' : 'bg-gray-300 dark:bg-gray-600',
+                'relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 focus:ring-offset-2',
+                isPublic ? 'bg-[#C97D60]' : 'bg-gray-300 dark:bg-[#3d2e1e]',
                 loading && 'cursor-not-allowed opacity-50'
               )}
             >
@@ -345,7 +345,7 @@ export function RitualCompleteModal({
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className='flex items-center justify-end gap-2 border-t border-gray-200 pt-4 dark:border-gray-700'
+            className='flex items-center justify-end gap-2 border-t border-gray-200 pt-4 dark:border-[#2a1d10]'
           >
             <BounceButton
               variant='secondary'

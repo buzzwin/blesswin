@@ -35,15 +35,15 @@ export function RitualsSearch({
           className={cn(
             'w-full rounded-lg border border-gray-200 bg-white py-2 pl-10 pr-10 text-sm',
             'placeholder:text-gray-400',
-            'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1',
-            'dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100 dark:placeholder:text-gray-500',
+            'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 focus:ring-offset-1',
+            'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#F5EFE6] dark:placeholder:text-[#6b5744]',
             'dark:focus:border-purple-400 dark:focus:ring-purple-400'
           )}
         />
         {query && (
           <button
             onClick={clearSearch}
-            className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300'
+            className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full p-1 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-600 dark:hover:bg-[#231a10] dark:hover:text-gray-300'
             aria-label='Clear search'
           >
             <X className='h-4 w-4' />

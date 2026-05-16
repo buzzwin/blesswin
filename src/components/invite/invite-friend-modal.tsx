@@ -75,16 +75,16 @@ export function InviteFriendModal({
 
   return (
     <Modal
-      modalClassName='max-w-lg bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+      modalClassName='max-w-lg bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-6'>
         {/* Header */}
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-3'>
-            <div className='rounded-full bg-purple-100 p-2 dark:bg-purple-900/30'>
-              <Mail className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+            <div className='rounded-full bg-[rgba(201,169,110,0.1)] p-2 dark:bg-[rgba(201,169,110,0.08)]'>
+              <Mail className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
             </div>
             <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
               Invite a Friend
@@ -92,9 +92,9 @@ export function InviteFriendModal({
           </div>
           <button
             onClick={closeModal}
-            className='rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors'
+            className='rounded-full p-2 hover:bg-gray-100 dark:hover:bg-[#231a10] transition-colors'
           >
-            <X className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <X className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
           </button>
         </div>
 
@@ -102,7 +102,7 @@ export function InviteFriendModal({
         <form onSubmit={handleSubmit} className='space-y-4'>
           {/* Friend's Email */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Friend's Email Address <span className='text-red-500'>*</span>
             </label>
             <input
@@ -111,13 +111,13 @@ export function InviteFriendModal({
               onChange={(e) => setFriendEmail(e.target.value)}
               placeholder='friend@example.com'
               required
-              className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+              className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-[#C9A96E] focus:ring-2 focus:ring-[#C9A96E]/50 focus:outline-none dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
             />
           </div>
 
           {/* Friend's Name (Optional) */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Friend's Name <span className='text-gray-400 text-xs'>(Optional)</span>
             </label>
             <input
@@ -125,13 +125,13 @@ export function InviteFriendModal({
               value={friendName}
               onChange={(e) => setFriendName(e.target.value)}
               placeholder='John'
-              className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+              className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-[#C9A96E] focus:ring-2 focus:ring-[#C9A96E]/50 focus:outline-none dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
             />
           </div>
 
           {/* Personal Message (Optional) */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Personal Message <span className='text-gray-400 text-xs'>(Optional)</span>
             </label>
             <textarea
@@ -140,26 +140,26 @@ export function InviteFriendModal({
               placeholder='Add a personal note...'
               rows={4}
               maxLength={500}
-              className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:ring-2 focus:ring-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400 resize-none'
+              className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-[#C9A96E] focus:ring-2 focus:ring-[#C9A96E]/50 focus:outline-none dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400 resize-none'
             />
-            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
               {message.length}/500 characters
             </p>
           </div>
 
           {/* Info Box */}
-          <div className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
-            <p className='text-sm text-purple-900 dark:text-purple-100'>
+          <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+            <p className='text-sm text-[#5a3d0a] dark:text-[#F5EFE6]'>
               <strong>What happens next?</strong> Your friend will receive an email invitation with a link to join Buzzwin. They'll be able to create an account and start sharing their ritual participations!
             </p>
           </div>
 
           {/* Actions */}
-          <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700'>
+          <div className='flex gap-3 pt-4 border-t border-gray-200 dark:border-[#2a1d10]'>
             <button
               type='button'
               onClick={closeModal}
-              className='flex-1 rounded-full border border-gray-300 px-4 py-2.5 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800 transition-colors'
+              className='flex-1 rounded-full border border-gray-300 px-4 py-2.5 font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10] transition-colors'
             >
               Cancel
             </button>

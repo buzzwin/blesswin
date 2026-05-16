@@ -76,7 +76,7 @@ export function RitualsOnboarding({
   return (
     <>
       <Modal
-        modalClassName='max-w-lg bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+        modalClassName='max-w-lg bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
         open={open}
         closeModal={handleSkip}
       >
@@ -85,26 +85,26 @@ export function RitualsOnboarding({
           {step === 'welcome' && (
             <>
               <div className='text-center'>
-                <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
+                <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'>
                   <span className='text-3xl'>🌱</span>
                 </div>
                 <h2 className='mb-2 text-2xl font-bold text-gray-900 dark:text-white'>
                   Welcome to Daily Rituals
                 </h2>
-                <p className='text-gray-600 dark:text-gray-400'>
+                <p className='text-gray-600 dark:text-[#9E8B76]'>
                   Small actions, big impact. We'll suggest one tiny thing each day to help you build positive habits.
                 </p>
               </div>
               <div className='flex gap-3'>
                 <button
                   onClick={handleSkip}
-                  className='flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+                  className='flex-1 rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 >
                   Maybe Later
                 </button>
                 <button
                   onClick={handleNext}
-                  className='flex-1 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700'
+                  className='flex-1 rounded-full bg-[#C97D60] px-4 py-2 text-sm font-semibold text-white hover:bg-[#B56540]'
                 >
                   Get Started
                   <ArrowRight className='ml-2 inline h-4 w-4' />
@@ -120,7 +120,7 @@ export function RitualsOnboarding({
                 <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
                   What matters to you?
                 </h2>
-                <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+                <p className='mb-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
                   We'll personalize suggestions based on what you care about.
                 </p>
                 <div className='space-y-2'>
@@ -131,8 +131,8 @@ export function RitualsOnboarding({
                       className={cn(
                         'w-full rounded-lg border-2 p-3 text-left transition-all',
                         selectedTags.includes(tag)
-                          ? 'border-purple-500 bg-purple-50 dark:border-purple-400 dark:bg-purple-900/20'
-                          : 'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
+                          ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] dark:border-[rgba(201,169,110,0.45)] dark:bg-[rgba(201,169,110,0.08)]'
+                          : 'border-gray-200 bg-white hover:border-gray-300 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-gray-600'
                       )}
                     >
                       <div className='flex items-center justify-between'>
@@ -143,7 +143,7 @@ export function RitualsOnboarding({
                           {impactTagLabels[tag]}
                         </span>
                         {selectedTags.includes(tag) && (
-                          <Check className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                          <Check className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
                         )}
                       </div>
                     </button>
@@ -158,7 +158,7 @@ export function RitualsOnboarding({
               <div className='flex gap-3'>
                 <button
                   onClick={() => setStep('welcome')}
-                  className='rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+                  className='rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 >
                   Back
                 </button>
@@ -166,7 +166,7 @@ export function RitualsOnboarding({
                   onClick={handleNext}
                   disabled={selectedTags.length === 0}
                   className={cn(
-                    'flex-1 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
+                    'flex-1 rounded-full bg-[#C97D60] px-4 py-2 text-sm font-semibold text-white hover:bg-[#B56540]',
                     selectedTags.length === 0 && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -184,14 +184,14 @@ export function RitualsOnboarding({
                 <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
                   When would you like gentle reminders?
                 </h2>
-                <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+                <p className='mb-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
                   You can always change this later in settings.
                 </p>
                 <div className='space-y-3'>
-                  <label className='flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700'>
+                  <label className='flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-[#2a1d10]'>
                     <div>
                       <div className='font-medium text-gray-900 dark:text-white'>Morning</div>
-                      <div className='text-xs text-gray-500 dark:text-gray-400'>8:00 AM</div>
+                      <div className='text-xs text-gray-500 dark:text-[#9E8B76]'>8:00 AM</div>
                     </div>
                     <input
                       type='checkbox'
@@ -199,13 +199,13 @@ export function RitualsOnboarding({
                       onChange={(e) =>
                         setNotifications((prev) => ({ ...prev, morning: e.target.checked }))
                       }
-                      className='h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                      className='h-5 w-5 rounded border-gray-300 text-[#C9A96E] focus:ring-[#C9A96E]/50'
                     />
                   </label>
-                  <label className='flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700'>
+                  <label className='flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-[#2a1d10]'>
                     <div>
                       <div className='font-medium text-gray-900 dark:text-white'>Evening</div>
-                      <div className='text-xs text-gray-500 dark:text-gray-400'>7:00 PM</div>
+                      <div className='text-xs text-gray-500 dark:text-[#9E8B76]'>7:00 PM</div>
                     </div>
                     <input
                       type='checkbox'
@@ -213,13 +213,13 @@ export function RitualsOnboarding({
                       onChange={(e) =>
                         setNotifications((prev) => ({ ...prev, evening: e.target.checked }))
                       }
-                      className='h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                      className='h-5 w-5 rounded border-gray-300 text-[#C9A96E] focus:ring-[#C9A96E]/50'
                     />
                   </label>
-                  <label className='flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-gray-700'>
+                  <label className='flex items-center justify-between rounded-lg border border-gray-200 p-3 dark:border-[#2a1d10]'>
                     <div>
                       <div className='font-medium text-gray-900 dark:text-white'>Streak Milestones</div>
-                      <div className='text-xs text-gray-500 dark:text-gray-400'>Celebrate your progress</div>
+                      <div className='text-xs text-gray-500 dark:text-[#9E8B76]'>Celebrate your progress</div>
                     </div>
                     <input
                       type='checkbox'
@@ -227,7 +227,7 @@ export function RitualsOnboarding({
                       onChange={(e) =>
                         setNotifications((prev) => ({ ...prev, milestones: e.target.checked }))
                       }
-                      className='h-5 w-5 rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                      className='h-5 w-5 rounded border-gray-300 text-[#C9A96E] focus:ring-[#C9A96E]/50'
                     />
                   </label>
                 </div>
@@ -235,13 +235,13 @@ export function RitualsOnboarding({
               <div className='flex gap-3'>
                 <button
                   onClick={() => setStep('interests')}
-                  className='rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+                  className='rounded-full border border-gray-300 px-4 py-2 text-sm font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 >
                   Back
                 </button>
                 <button
                   onClick={handleNext}
-                  className='flex-1 rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700'
+                  className='flex-1 rounded-full bg-[#C97D60] px-4 py-2 text-sm font-semibold text-white hover:bg-[#B56540]'
                 >
                   Start My Rituals
                   <ArrowRight className='ml-2 inline h-4 w-4' />
@@ -259,7 +259,7 @@ export function RitualsOnboarding({
               <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
                 You're all set!
               </h2>
-              <p className='text-gray-600 dark:text-gray-400'>
+              <p className='text-gray-600 dark:text-[#9E8B76]'>
                 Your first ritual is ready. Let's get started!
               </p>
             </div>

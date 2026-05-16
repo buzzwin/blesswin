@@ -44,11 +44,11 @@ export function RitualsBanner({
   return (
     <div className={cn(
       'border-b border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 px-4 py-3',
-      'dark:border-gray-700 dark:from-purple-900/20 dark:to-pink-900/20'
+      'dark:border-[#2a1d10] dark:from-purple-900/20 dark:to-pink-900/20'
     )}>
       <div className='mx-auto flex max-w-6xl items-center gap-3'>
         {/* Icon */}
-        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
+        <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'>
           {completed ? (
             <Check className='h-5 w-5 text-green-600 dark:text-green-400' />
           ) : (
@@ -64,7 +64,7 @@ export function RitualsBanner({
             </h3>
           </div>
           {!completed && (
-            <p className='mt-0.5 text-xs text-gray-600 dark:text-gray-400 line-clamp-1'>
+            <p className='mt-0.5 text-xs text-gray-600 dark:text-[#9E8B76] line-clamp-1'>
               {ritual.description}
             </p>
           )}
@@ -76,7 +76,7 @@ export function RitualsBanner({
             <>
               {onViewAll && (
                 <Link href='/rituals'>
-                  <a className='text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200'>
+                  <a className='text-xs font-medium text-[#C9A96E] hover:text-[#7a5a18] dark:text-[#C9A96E] dark:hover:text-purple-200'>
                     View All
                   </a>
                 </Link>
@@ -87,14 +87,14 @@ export function RitualsBanner({
               {onComplete && (
                 <button
                   onClick={onComplete}
-                  className='rounded-full bg-purple-600 px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-purple-700'
+                  className='rounded-full bg-[#C97D60] px-4 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[#B56540]'
                 >
                   Do It Now
                 </button>
               )}
               {onViewAll && (
                 <Link href='/rituals'>
-                  <a className='text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200'>
+                  <a className='text-xs font-medium text-[#C9A96E] hover:text-[#7a5a18] dark:text-[#C9A96E] dark:hover:text-purple-200'>
                     View All
                   </a>
                 </Link>
@@ -103,7 +103,7 @@ export function RitualsBanner({
           )}
           <button
             onClick={handleDismiss}
-            className='rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-gray-700 dark:hover:text-gray-300'
+            className='rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-600 dark:hover:bg-[#231a10] dark:hover:text-gray-300'
             aria-label='Dismiss banner'
           >
             <X className='h-4 w-4' />

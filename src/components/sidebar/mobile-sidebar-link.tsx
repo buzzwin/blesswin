@@ -3,7 +3,12 @@ import cn from 'clsx';
 import { Sparkles, Clock, User, Star } from 'lucide-react';
 import { preventBubbling } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
-import type { MobileNavLink } from '@components/modal/mobile-sidebar-modal';
+type MobileNavLink = {
+  href: string;
+  linkName: string;
+  iconName: string;
+  disabled?: boolean;
+};
 
 type MobileSidebarLinkProps = MobileNavLink & {
   bottom?: boolean;

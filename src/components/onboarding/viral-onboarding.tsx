@@ -235,10 +235,10 @@ export function ViralOnboarding({
                 <h3 className='mb-2 text-2xl font-bold text-white'>
                   {currentShow.title}
                 </h3>
-                <p className='mb-4 text-blue-200'>
+                <p className='mb-4 text-[#C4B5A0]'>
                   {currentShow.genre} • ⭐ {currentShow.rating}
                 </p>
-                <p className='mb-6 text-blue-200'>
+                <p className='mb-6 text-[#C4B5A0]'>
                   Swipe left to pass, right to love!
                 </p>
 
@@ -259,7 +259,7 @@ export function ViralOnboarding({
                   </Button>
                 </div>
 
-                <div className='mt-4 text-sm text-blue-200'>
+                <div className='mt-4 text-sm text-[#C4B5A0]'>
                   Swipes: {swipeCount} • Show {currentShowIndex + 1} of{' '}
                   {demoShows.length}
                 </div>
@@ -277,7 +277,7 @@ export function ViralOnboarding({
             <div className='mb-6'>
               <div className='mb-4 text-6xl'>🎉</div>
               <h3 className='mb-4 text-2xl font-bold text-white'>Perfect!</h3>
-              <p className='mb-6 text-blue-200'>
+              <p className='mb-6 text-[#C4B5A0]'>
                 We've learned your taste! Now let's create your account to start
                 getting personalized recommendations.
               </p>
@@ -291,7 +291,7 @@ export function ViralOnboarding({
                 {selectedGenres.map((genre) => (
                   <span
                     key={genre.id}
-                    className='rounded-full bg-purple-500/30 px-3 py-1 text-sm text-white'
+                    className='rounded-full bg-[#C97D60]/30 px-3 py-1 text-sm text-white'
                   >
                     {genre.emoji} {genre.name}
                   </span>
@@ -301,7 +301,7 @@ export function ViralOnboarding({
                 {selectedPlatforms.map((platform) => (
                   <span
                     key={platform.id}
-                    className='rounded-full bg-blue-500/30 px-3 py-1 text-sm text-white'
+                    className='rounded-full bg-[rgba(201,169,110,0.06)]0/30 px-3 py-1 text-sm text-white'
                   >
                     {platform.logo} {platform.name}
                   </span>
@@ -309,7 +309,7 @@ export function ViralOnboarding({
               </div>
             </div>
 
-            <div className='text-sm text-blue-200'>
+            <div className='text-sm text-[#C4B5A0]'>
               <Check className='mr-1 inline h-4 w-4' />
               {swipeCount} swipes completed
             </div>
@@ -331,7 +331,7 @@ export function ViralOnboarding({
             <span className='font-semibold text-white'>
               Step {currentStep + 1} of {steps.length}
             </span>
-            <span className='text-blue-200'>
+            <span className='text-[#C4B5A0]'>
               {Math.round(((currentStep + 1) / steps.length) * 100)}%
             </span>
           </div>
@@ -355,7 +355,7 @@ export function ViralOnboarding({
               <h2 className='mb-2 text-3xl font-bold text-white'>
                 {steps[currentStep].title}
               </h2>
-              <p className='text-blue-200'>{steps[currentStep].subtitle}</p>
+              <p className='text-[#C4B5A0]'>{steps[currentStep].subtitle}</p>
             </div>
 
             {renderStep()}
@@ -378,7 +378,7 @@ export function ViralOnboarding({
             <Button
               onClick={onSkip}
               variant='ghost'
-              className='text-blue-200 hover:text-white'
+              className='text-[#C4B5A0] hover:text-white'
             >
               Skip for now
             </Button>

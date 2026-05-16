@@ -20,12 +20,12 @@ export function TodayStack({
 
   if (rituals.length === 0) {
     return (
-      <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-900/50'>
+      <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]/50'>
         <Sparkles className='mx-auto mb-3 h-8 w-8 text-gray-400' />
-        <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+        <p className='text-sm font-medium text-gray-600 dark:text-[#9E8B76]'>
           No rituals for today
         </p>
-        <p className='mt-1 text-xs text-gray-500 dark:text-gray-500'>
+        <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
           Your day is open for new intentions
         </p>
       </div>
@@ -39,14 +39,14 @@ export function TodayStack({
           <h2 className='text-lg font-semibold text-gray-900 dark:text-white'>
             Today's Rituals
           </h2>
-          <p className='mt-0.5 text-xs text-gray-600 dark:text-gray-400'>
+          <p className='mt-0.5 text-xs text-gray-600 dark:text-[#9E8B76]'>
             Small actions, big impact
           </p>
         </div>
         {onViewAll && (
           <button
             onClick={onViewAll}
-            className='text-xs font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400'
+            className='text-xs font-medium text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'
           >
             View All
           </button>
@@ -70,7 +70,7 @@ export function TodayStack({
                   'group relative overflow-hidden rounded-lg border-2 transition-all',
                   isCompleted
                     ? 'border-green-200 bg-green-50/50 dark:border-green-800 dark:bg-green-900/20'
-                    : 'border-gray-200 bg-white hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600',
+                    : 'border-gray-200 bg-white hover:border-[rgba(201,169,110,0.4)] hover:shadow-md dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[#C9A96E]',
                   isExpanded && 'shadow-lg'
                 )}
               >
@@ -91,7 +91,7 @@ export function TodayStack({
                       'flex h-8 w-8 shrink-0 items-center justify-center rounded-full border-2 transition-all',
                       isCompleted
                         ? 'border-green-500 bg-green-500 text-white'
-                        : 'border-gray-300 hover:border-purple-500 hover:bg-purple-50 dark:border-gray-600 dark:hover:border-purple-600'
+                        : 'border-gray-300 hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:hover:border-[#C9A96E]'
                     )}
                   >
                     {isCompleted ? (
@@ -117,7 +117,7 @@ export function TodayStack({
                           {ritual.title}
                         </h3>
                         {!isExpanded && (
-                          <p className='mt-0.5 line-clamp-1 text-xs text-gray-600 dark:text-gray-400'>
+                          <p className='mt-0.5 line-clamp-1 text-xs text-gray-600 dark:text-[#9E8B76]'>
                             {ritual.description}
                           </p>
                         )}
@@ -125,7 +125,7 @@ export function TodayStack({
 
                       {/* Time/Duration */}
                       {ritual.durationEstimate && (
-                        <div className='flex shrink-0 items-center gap-1 text-xs text-gray-500 dark:text-gray-500'>
+                        <div className='flex shrink-0 items-center gap-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                           <Clock className='h-3 w-3' />
                           <span>{ritual.durationEstimate}</span>
                         </div>
@@ -140,7 +140,7 @@ export function TodayStack({
                         exit={{ height: 0, opacity: 0 }}
                         className='mt-2 space-y-2'
                       >
-                        <p className='text-xs text-gray-600 dark:text-gray-400'>
+                        <p className='text-xs text-gray-600 dark:text-[#9E8B76]'>
                           {ritual.description}
                         </p>
                         {ritual.tags && ritual.tags.length > 0 && (
@@ -148,7 +148,7 @@ export function TodayStack({
                             {ritual.tags.map((tag) => (
                               <span
                                 key={tag}
-                                className='rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+                                className='rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
                               >
                                 {tag}
                               </span>

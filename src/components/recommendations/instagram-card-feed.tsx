@@ -98,8 +98,8 @@ export function InstagramCardFeed({
     return (
       <div className='flex min-h-screen items-center justify-center'>
         <div className='text-center'>
-          <div className='mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent'></div>
-          <p className='text-gray-600 dark:text-gray-400'>Loading recommendations...</p>
+          <div className='mb-4 inline-block h-8 w-8 animate-spin rounded-full border-4 border-[#C9A96E] border-t-transparent'></div>
+          <p className='text-gray-600 dark:text-[#9E8B76]'>Loading recommendations...</p>
         </div>
       </div>
     );
@@ -109,11 +109,11 @@ export function InstagramCardFeed({
     return (
       <div className='flex min-h-screen items-center justify-center'>
         <div className='text-center'>
-          <Sparkles className='mx-auto mb-4 h-12 w-12 text-purple-500' />
+          <Sparkles className='mx-auto mb-4 h-12 w-12 text-[#C9A96E]' />
           <h3 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
             All caught up!
           </h3>
-          <p className='mb-4 text-gray-600 dark:text-gray-400'>
+          <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
             We're finding more recommendations based on your preferences.
           </p>
           {hasMore && (
@@ -139,10 +139,10 @@ export function InstagramCardFeed({
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9 }}
             transition={{ duration: 0.3, delay: index * 0.05 }}
-            className='overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-gray-800'
+            className='overflow-hidden rounded-2xl bg-white shadow-lg dark:bg-[#1c1510]'
           >
             {/* Header */}
-            <div className='flex items-center gap-3 border-b border-gray-200 p-4 dark:border-gray-700'>
+            <div className='flex items-center gap-3 border-b border-gray-200 p-4 dark:border-[#2a1d10]'>
               <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500'>
                 <ItemIcon className='h-5 w-5 text-white' />
               </div>
@@ -152,15 +152,15 @@ export function InstagramCardFeed({
                     {item.title}
                   </h3>
                   {item.confidence && (
-                    <div className='flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 dark:bg-purple-900/30'>
-                      <Sparkles className='h-3 w-3 text-purple-600 dark:text-purple-400' />
-                      <span className='text-xs font-medium text-purple-700 dark:text-purple-300'>
+                    <div className='flex items-center gap-1 rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-0.5 dark:bg-[rgba(201,169,110,0.08)]'>
+                      <Sparkles className='h-3 w-3 text-[#C9A96E] dark:text-[#C9A96E]' />
+                      <span className='text-xs font-medium text-[#8a6520] dark:text-[#C9A96E]'>
                         {Math.round(item.confidence * 100)}% match
                       </span>
                     </div>
                   )}
                 </div>
-                <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
+                <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
                   <span className='capitalize'>{item.itemType}</span>
                   {item.brand && (
                     <>
@@ -179,7 +179,7 @@ export function InstagramCardFeed({
             </div>
 
             {/* Image */}
-            <div className='relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-gray-900'>
+            <div className='relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-[#1c1510]'>
               <ImageWithFallback
                 src={item.imageUrl}
                 alt={item.title}
@@ -198,19 +198,19 @@ export function InstagramCardFeed({
             {/* Content */}
             <div className='p-4'>
               {item.description && (
-                <p className='mb-3 line-clamp-3 text-sm text-gray-700 dark:text-gray-300'>
+                <p className='mb-3 line-clamp-3 text-sm text-gray-700 dark:text-[#C4B5A0]'>
                   {item.description}
                 </p>
               )}
 
               {/* Metadata */}
-              <div className='mb-4 flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
+              <div className='mb-4 flex flex-wrap items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
                 {item.genres && item.genres.length > 0 && (
                   <div className='flex flex-wrap gap-1'>
                     {item.genres.slice(0, 3).map((genre, idx) => (
                       <span
                         key={idx}
-                        className='rounded-full bg-gray-100 px-2 py-1 dark:bg-gray-700'
+                        className='rounded-full bg-gray-100 px-2 py-1 dark:bg-[#231a10]'
                       >
                         {genre}
                       </span>

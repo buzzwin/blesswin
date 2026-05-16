@@ -24,7 +24,7 @@ export function TruncatedText({
     return (
       <p
         className={cn(
-          'text-[15px] leading-relaxed text-gray-600 dark:text-gray-400',
+          'text-[15px] leading-relaxed text-gray-600 dark:text-[#9E8B76]',
           className
         )}
       >
@@ -37,7 +37,7 @@ export function TruncatedText({
     <div className='space-y-2'>
       <p
         className={cn(
-          'text-[15px] leading-relaxed text-gray-600 dark:text-gray-400',
+          'text-[15px] leading-relaxed text-gray-600 dark:text-[#9E8B76]',
           className
         )}
       >

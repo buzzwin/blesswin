@@ -114,18 +114,18 @@ export function CreateRitualFromMomentModal({
 
   return (
     <Modal
-      modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+      modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-4'>
         {/* Header */}
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
           <div>
             <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
               Make this recurring
             </h2>
-            <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+            <p className='text-sm text-gray-600 dark:text-[#9E8B76] mt-1'>
               Create a ritual to do this regularly
             </p>
           </div>
@@ -138,7 +138,7 @@ export function CreateRitualFromMomentModal({
         </div>
 
         {/* Moment Preview */}
-        <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+        <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
           <div className='flex items-start gap-3'>
             <UserAvatar
               src={moment.user.photoURL ?? ''}
@@ -146,7 +146,7 @@ export function CreateRitualFromMomentModal({
               username={moment.user.username ?? 'user'}
             />
             <div className='flex-1'>
-              <p className='text-sm text-gray-700 dark:text-gray-300'>
+              <p className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                 {moment.text}
               </p>
               <div className='mt-2 flex flex-wrap gap-2'>
@@ -170,7 +170,7 @@ export function CreateRitualFromMomentModal({
         <div className='space-y-4'>
           {/* Title */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Ritual Title
             </label>
             <input
@@ -181,8 +181,8 @@ export function CreateRitualFromMomentModal({
               className={cn(
                 'w-full rounded-lg border border-gray-300 bg-gray-50 p-3',
                 'text-gray-900 placeholder-gray-500',
-                'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                 'transition-colors'
               )}
               maxLength={100}
@@ -192,7 +192,7 @@ export function CreateRitualFromMomentModal({
 
           {/* Description */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Description
             </label>
             <textarea
@@ -203,8 +203,8 @@ export function CreateRitualFromMomentModal({
               className={cn(
                 'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
                 'text-gray-900 placeholder-gray-500',
-                'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                 'transition-colors'
               )}
               rows={4}
@@ -214,7 +214,7 @@ export function CreateRitualFromMomentModal({
 
           {/* Time of Day */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Suggested Time
             </label>
             <div className='grid grid-cols-4 gap-2'>
@@ -225,8 +225,8 @@ export function CreateRitualFromMomentModal({
                   className={cn(
                     'rounded-lg border px-3 py-2 text-sm font-medium transition-colors',
                     suggestedTimeOfDay === option.value
-                      ? 'border-purple-500 bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300'
-                      : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                      ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                      : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                   )}
                   disabled={loading}
                 >
@@ -238,7 +238,7 @@ export function CreateRitualFromMomentModal({
 
           {/* Duration */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Duration Estimate
             </label>
             <input
@@ -249,8 +249,8 @@ export function CreateRitualFromMomentModal({
               className={cn(
                 'w-full rounded-lg border border-gray-300 bg-gray-50 p-3',
                 'text-gray-900 placeholder-gray-500',
-                'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                 'transition-colors'
               )}
               disabled={loading}
@@ -258,8 +258,8 @@ export function CreateRitualFromMomentModal({
           </div>
 
           {/* Tags and Effort Level (read-only from moment) */}
-          <div className='rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800'>
-            <div className='mb-2 text-xs font-medium text-gray-600 dark:text-gray-400'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-3 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <div className='mb-2 text-xs font-medium text-gray-600 dark:text-[#9E8B76]'>
               Tags & Effort Level (from moment)
             </div>
             <div className='flex items-center gap-3'>
@@ -285,13 +285,13 @@ export function CreateRitualFromMomentModal({
         </div>
 
         {/* Action Buttons */}
-        <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
+        <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-[#2a1d10]'>
           <button
             onClick={closeModal}
             disabled={loading}
             className={cn(
               'rounded-full px-4 py-2 text-sm font-semibold',
-              'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+              'text-gray-700 hover:bg-gray-100 dark:text-[#C4B5A0] dark:hover:bg-[#231a10]',
               loading && 'opacity-50 cursor-not-allowed'
             )}
           >
@@ -301,7 +301,7 @@ export function CreateRitualFromMomentModal({
             onClick={handleSubmit}
             disabled={!title.trim() || !description.trim() || loading}
             className={cn(
-              'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
+              'rounded-full bg-[#C97D60] px-4 py-2 text-sm font-semibold text-white hover:bg-[#B56540]',
               'flex items-center gap-2',
               (!title.trim() || !description.trim() || loading) && 'opacity-50 cursor-not-allowed'
             )}

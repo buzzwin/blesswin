@@ -7,16 +7,16 @@ export default function VerifyEmail(): JSX.Element {
 
   return (
     <div className='flex min-h-screen flex-col items-center justify-center bg-main-background p-4'>
-      <div className='w-full max-w-md space-y-8 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-900'>
+      <div className='w-full max-w-md space-y-8 rounded-2xl bg-[#faf8f4] p-8 shadow-lg dark:bg-[#1c1510]'>
         <div className='text-center'>
           <HeroIcon
             iconName='EnvelopeIcon'
-            className='mx-auto h-12 w-12 text-emerald-500'
+            className='mx-auto h-12 w-12 text-[#C9A96E]'
           />
           <h2 className='mt-6 text-3xl font-bold text-gray-900 dark:text-white'>
             Verify your email
           </h2>
-          <p className='mt-2 text-gray-600 dark:text-gray-400'>
+          <p className='mt-2 text-gray-600 dark:text-[#9E8B76]'>
             We sent a verification email to {userEmail}
           </p>
         </div>

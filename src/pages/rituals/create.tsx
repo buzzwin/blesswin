@@ -234,8 +234,8 @@ export default function CreateRitualPage(): JSX.Element {
         <MainHeader title='Create Ritual' useMobileSidebar />
         <div className='flex items-center justify-center py-20'>
           <div className='text-center'>
-            <div className='mb-4 h-8 w-8 animate-spin rounded-full border-4 border-purple-600 border-t-transparent mx-auto' />
-            <p className='text-gray-600 dark:text-gray-400'>Loading...</p>
+            <div className='mb-4 h-8 w-8 animate-spin rounded-full border-4 border-[#C9A96E] border-t-transparent mx-auto' />
+            <p className='text-gray-600 dark:text-[#9E8B76]'>Loading...</p>
           </div>
         </div>
       </MainContainer>
@@ -252,14 +252,14 @@ export default function CreateRitualPage(): JSX.Element {
 
       {/* Story Context */}
       {story && (
-        <div className='mb-6 rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
+        <div className='mb-6 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
           <div className='mb-2 flex items-center gap-2'>
-            <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
-            <h3 className='font-semibold text-purple-900 dark:text-purple-100'>
+            <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
+            <h3 className='font-semibold text-[#5a3d0a] dark:text-[#F5EFE6]'>
               Inspired by: {story.title}
             </h3>
           </div>
-          <p className='text-sm text-purple-800 dark:text-purple-200'>
+          <p className='text-sm text-[#7a5a18] dark:text-[#C4B5A0]'>
             {story.description}
           </p>
         </div>
@@ -270,17 +270,17 @@ export default function CreateRitualPage(): JSX.Element {
         <div className='mb-6'>
           <button
             onClick={() => void fetchSuggestions(story)}
-            className='w-full rounded-lg border-2 border-purple-200 bg-purple-50 p-4 text-left transition-colors hover:border-purple-300 hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'
+            className='w-full rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 text-left transition-colors hover:border-[rgba(201,169,110,0.4)] hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:hover:bg-[rgba(201,169,110,0.09)]'
           >
             <div className='flex items-center gap-3'>
-              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-purple-600'>
+              <div className='flex h-10 w-10 items-center justify-center rounded-full bg-[#C97D60]'>
                 <Calendar className='h-5 w-5 text-white' />
               </div>
               <div className='flex-1'>
                 <h3 className='font-semibold text-gray-900 dark:text-white'>
                   Get AI Suggestions
                 </h3>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                   Get personalized ritual suggestions based on this story
                 </p>
               </div>
@@ -291,9 +291,9 @@ export default function CreateRitualPage(): JSX.Element {
 
       {/* Loading Suggestions */}
       {fetchingSuggestions && (
-        <div className='mb-6 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800/50'>
-          <Loader2 className='mr-3 h-5 w-5 animate-spin text-purple-600' />
-          <span className='text-gray-600 dark:text-gray-400'>Fetching ritual suggestions...</span>
+        <div className='mb-6 flex items-center justify-center rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-[#2a1d10] dark:bg-[#231a10]'>
+          <Loader2 className='mr-3 h-5 w-5 animate-spin text-[#C9A96E]' />
+          <span className='text-gray-600 dark:text-[#9E8B76]'>Fetching ritual suggestions...</span>
         </div>
       )}
 
@@ -310,18 +310,18 @@ export default function CreateRitualPage(): JSX.Element {
                 onClick={() => handleSelectSuggestion(idx)}
                 className={`w-full rounded-lg border-2 p-3 text-left transition-all ${
                   selectedSuggestionIndex === idx
-                    ? 'border-purple-500 bg-purple-50 dark:border-purple-400 dark:bg-purple-900/30'
-                    : 'border-gray-200 bg-white hover:border-purple-300 hover:bg-purple-50/50 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-700 dark:hover:bg-purple-900/20'
+                    ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] dark:border-[rgba(201,169,110,0.45)] dark:bg-[rgba(201,169,110,0.08)]'
+                    : 'border-gray-200 bg-white hover:border-[rgba(201,169,110,0.4)] hover:bg-[rgba(201,169,110,0.06)]/50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.35)] dark:hover:bg-[rgba(201,169,110,0.06)]'
                 }`}
               >
                 <h4 className='font-medium text-gray-900 dark:text-white'>
                   {suggestion.title}
                 </h4>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                   {suggestion.description}
                 </p>
                 {analysis?.whyTheseRituals?.[idx] && (
-                  <p className='mt-1 text-xs italic text-purple-600 dark:text-purple-400'>
+                  <p className='mt-1 text-xs italic text-[#C9A96E] dark:text-[#C9A96E]'>
                     {analysis.whyTheseRituals[idx]}
                   </p>
                 )}
@@ -329,7 +329,7 @@ export default function CreateRitualPage(): JSX.Element {
             ))}
           </div>
           {analysis?.connection && (
-            <p className='mt-3 text-sm text-gray-600 dark:text-gray-400'>
+            <p className='mt-3 text-sm text-gray-600 dark:text-[#9E8B76]'>
               {analysis.connection}
             </p>
           )}
@@ -337,7 +337,7 @@ export default function CreateRitualPage(): JSX.Element {
       )}
 
       {/* Create Ritual Form */}
-      <div className='mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+      <div className='mb-6 rounded-lg border border-gray-200 bg-[#faf8f4] p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
         <h2 className='mb-4 text-xl font-semibold text-gray-900 dark:text-white'>
           Create Your Ritual
         </h2>
@@ -346,7 +346,7 @@ export default function CreateRitualPage(): JSX.Element {
           {/* Title */}
           <div>
             <div className='mb-2 flex items-center justify-between'>
-              <label className='block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Title *
               </label>
               {story && (
@@ -376,7 +376,7 @@ export default function CreateRitualPage(): JSX.Element {
                     }
                   }}
                   disabled={fetchingTextSuggestions}
-                  className='text-xs font-medium text-purple-600 hover:text-purple-700 disabled:opacity-50 dark:text-purple-400 dark:hover:text-purple-300'
+                  className='text-xs font-medium text-[#C9A96E] hover:text-[#8a6520] disabled:opacity-50 dark:text-[#C9A96E] dark:hover:text-purple-300'
                 >
                   {fetchingTextSuggestions ? 'Getting suggestions...' : '✨ Get AI Suggestions'}
                 </button>
@@ -393,12 +393,12 @@ export default function CreateRitualPage(): JSX.Element {
                       setDescription(suggestion.description);
                       toast.success('Form updated with suggestion!');
                     }}
-                    className='w-full rounded border border-purple-200 bg-purple-50 p-2 text-left text-xs transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'
+                    className='w-full rounded border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-2 text-left text-xs transition-colors hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:hover:bg-[rgba(201,169,110,0.09)]'
                   >
-                    <div className='font-medium text-purple-900 dark:text-purple-100'>
+                    <div className='font-medium text-[#5a3d0a] dark:text-[#F5EFE6]'>
                       {suggestion.title}
                     </div>
-                    <div className='mt-1 text-purple-700 dark:text-purple-300'>
+                    <div className='mt-1 text-[#8a6520] dark:text-[#C9A96E]'>
                       {suggestion.description.substring(0, 80)}...
                     </div>
                   </button>
@@ -410,13 +410,13 @@ export default function CreateRitualPage(): JSX.Element {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder='e.g., Morning Gratitude Practice'
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Description *
             </label>
             <textarea
@@ -424,13 +424,13 @@ export default function CreateRitualPage(): JSX.Element {
               onChange={(e) => setDescription(e.target.value)}
               placeholder='Describe what this ritual involves...'
               rows={4}
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
             />
           </div>
 
           {/* Tags */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Tags
             </label>
             <div className='flex flex-wrap gap-2'>
@@ -447,8 +447,8 @@ export default function CreateRitualPage(): JSX.Element {
                   }}
                   className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                     tags.includes(tag)
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   {tag}
@@ -459,7 +459,7 @@ export default function CreateRitualPage(): JSX.Element {
 
           {/* Effort Level */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Effort Level
             </label>
             <div className='flex gap-2'>
@@ -470,8 +470,8 @@ export default function CreateRitualPage(): JSX.Element {
                   onClick={() => setEffortLevel(level)}
                   className={`rounded-lg px-4 py-2 text-sm font-medium capitalize transition-colors ${
                     effortLevel === level
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   {level}
@@ -482,13 +482,13 @@ export default function CreateRitualPage(): JSX.Element {
 
           {/* Time of Day */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Best Time
             </label>
             <select
               value={suggestedTimeOfDay}
               onChange={(e) => setSuggestedTimeOfDay(e.target.value as RitualTimeOfDay)}
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
             >
               {timeOfDayOptions.map(time => (
                 <option key={time} value={time}>
@@ -500,7 +500,7 @@ export default function CreateRitualPage(): JSX.Element {
 
           {/* Duration */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Duration Estimate
             </label>
             <input
@@ -508,13 +508,13 @@ export default function CreateRitualPage(): JSX.Element {
               value={durationEstimate}
               onChange={(e) => setDurationEstimate(e.target.value)}
               placeholder='e.g., 5 minutes'
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
             />
           </div>
 
           {/* Frequency */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Frequency (RRULE)
             </label>
             <div className='space-y-3'>
@@ -525,8 +525,8 @@ export default function CreateRitualPage(): JSX.Element {
                   onClick={() => setFrequencyType('daily')}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     frequencyType === 'daily'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   Daily
@@ -536,8 +536,8 @@ export default function CreateRitualPage(): JSX.Element {
                   onClick={() => setFrequencyType('weekly')}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     frequencyType === 'weekly'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   Weekly
@@ -547,8 +547,8 @@ export default function CreateRitualPage(): JSX.Element {
                   onClick={() => setFrequencyType('monthly')}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     frequencyType === 'monthly'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   Monthly
@@ -559,7 +559,7 @@ export default function CreateRitualPage(): JSX.Element {
               {frequencyType === 'daily' && (
                 <div className='space-y-2'>
                   <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600 dark:text-gray-400'>Repeat every</span>
+                    <span className='text-sm text-gray-600 dark:text-[#9E8B76]'>Repeat every</span>
                     <input
                       type='number'
                       min={1}
@@ -571,11 +571,11 @@ export default function CreateRitualPage(): JSX.Element {
                           setDailyInterval(val);
                         }
                       }}
-                      className='w-20 rounded-lg border border-gray-300 bg-white px-3 py-2 text-center text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                      className='w-20 rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-center text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
                     />
-                    <span className='text-sm text-gray-600 dark:text-gray-400'>day(s)</span>
+                    <span className='text-sm text-gray-600 dark:text-[#9E8B76]'>day(s)</span>
                   </div>
-                  <p className='text-xs text-gray-500 dark:text-gray-400'>
+                  <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                     RRULE: {generateRRULE({ freq: 'DAILY', interval: dailyInterval })}
                   </p>
                 </div>
@@ -584,7 +584,7 @@ export default function CreateRitualPage(): JSX.Element {
               {/* Weekly Selector */}
               {frequencyType === 'weekly' && (
                 <div className='space-y-2'>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                     Select the days of the week:
                   </p>
                   <div className='grid grid-cols-7 gap-2'>
@@ -611,8 +611,8 @@ export default function CreateRitualPage(): JSX.Element {
                           }}
                           className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                             isSelected
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                              ? 'bg-[#C97D60] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                           }`}
                           title={label}
                         >
@@ -628,7 +628,7 @@ export default function CreateRitualPage(): JSX.Element {
                     </p>
                   )}
                   {selectedDaysOfWeek.length > 0 && (
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                       RRULE: {generateRRULE({
                         freq: 'WEEKLY',
                         byday: selectedDaysOfWeek.map(day => dayOfWeekToICal(day))
@@ -648,8 +648,8 @@ export default function CreateRitualPage(): JSX.Element {
                       onClick={() => setMonthlyType('dates')}
                       className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                         monthlyType === 'dates'
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                          ? 'bg-[#C97D60] text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                       }`}
                     >
                       Specific Dates
@@ -659,8 +659,8 @@ export default function CreateRitualPage(): JSX.Element {
                       onClick={() => setMonthlyType('ordinal')}
                       className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                         monthlyType === 'ordinal'
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                          ? 'bg-[#C97D60] text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                       }`}
                     >
                       Ordinal Day (e.g., 2nd Friday)
@@ -670,7 +670,7 @@ export default function CreateRitualPage(): JSX.Element {
                   {/* Monthly Dates */}
                   {monthlyType === 'dates' && (
                     <div className='space-y-2'>
-                      <p className='text-sm text-gray-600 dark:text-gray-400'>
+                      <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                         Select the dates of the month:
                       </p>
                       <div className='grid grid-cols-7 gap-2 max-h-64 overflow-y-auto'>
@@ -689,8 +689,8 @@ export default function CreateRitualPage(): JSX.Element {
                               }}
                               className={`rounded-lg px-2 py-2 text-sm font-medium transition-colors ${
                                 isSelected
-                                  ? 'bg-purple-600 text-white'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                                  ? 'bg-[#C97D60] text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                               }`}
                               title={`Day ${date}`}
                             >
@@ -705,7 +705,7 @@ export default function CreateRitualPage(): JSX.Element {
                         </p>
                       )}
                       {selectedDaysOfMonth.length > 0 && (
-                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                           RRULE: {generateRRULE({
                             freq: 'MONTHLY',
                             bymonthday: selectedDaysOfMonth
@@ -722,7 +722,7 @@ export default function CreateRitualPage(): JSX.Element {
                         <select
                           value={monthlyOrdinal}
                           onChange={(e) => setMonthlyOrdinal(parseInt(e.target.value, 10))}
-                          className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                          className='rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
                         >
                           <option value={1}>1st</option>
                           <option value={2}>2nd</option>
@@ -734,7 +734,7 @@ export default function CreateRitualPage(): JSX.Element {
                         <select
                           value={monthlyOrdinalDay}
                           onChange={(e) => setMonthlyOrdinalDay(parseInt(e.target.value, 10) as DayOfWeek)}
-                          className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                          className='rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
                         >
                           {[
                             { day: 0, label: 'Sunday' },
@@ -751,7 +751,7 @@ export default function CreateRitualPage(): JSX.Element {
                           ))}
                         </select>
                       </div>
-                      <p className='text-xs text-gray-500 dark:text-gray-400'>
+                      <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                         RRULE: {generateRRULE({
                           freq: 'MONTHLY',
                           byday: [`${monthlyOrdinal}${dayOfWeekToICal(monthlyOrdinalDay)}`]
@@ -770,7 +770,7 @@ export default function CreateRitualPage(): JSX.Element {
       <div className='flex gap-4'>
         <Link
           href='/rituals'
-          className='flex items-center justify-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+          className='flex items-center justify-center gap-2 rounded-lg border-2 border-gray-300 bg-[#faf8f4] px-6 py-3 font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
         >
           <span className='flex items-center gap-2'>
             <ArrowLeft className='h-5 w-5' />

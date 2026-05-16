@@ -19,9 +19,9 @@ import type { StoryBookmark } from '@lib/types/story-bookmark';
 // RealStory type imported from @lib/types/real-story
 
 const categoryColors = {
-  community: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  community: 'bg-[rgba(201,169,110,0.1)] text-[#5a3d08] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   environment: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  education: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  education: 'bg-[rgba(201,169,110,0.1)] text-[#7a5a18] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   health: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
   'social-justice': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
   innovation: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
@@ -206,7 +206,7 @@ export default function RealStoriesPage(): JSX.Element {
       <SectionShell className='min-h-0'>
         <div className='mx-auto w-full max-w-3xl px-6 py-6'>
           <Link href='/'>
-            <a className='mb-3 inline-flex items-center gap-2 text-base text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+            <a className='mb-3 inline-flex items-center gap-2 text-base text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
               <ArrowLeft className='h-5 w-5' />
               Back to Home
             </a>
@@ -216,7 +216,7 @@ export default function RealStoriesPage(): JSX.Element {
             <h1 className='mb-2 text-4xl font-bold leading-tight text-gray-900 dark:text-white md:text-5xl'>
               Real Stories of Good
             </h1>
-            <p className='mx-auto max-w-2xl text-xl leading-relaxed text-gray-700 dark:text-gray-300'>
+            <p className='mx-auto max-w-2xl text-xl leading-relaxed text-gray-700 dark:text-[#C4B5A0]'>
               Inspiring stories of people and communities making a positive impact in the world.
             </p>
           </div>
@@ -229,7 +229,7 @@ export default function RealStoriesPage(): JSX.Element {
                 className={`rounded-lg px-6 py-2.5 text-base font-semibold transition-colors ${
                   filter === 'all'
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 }`}
               >
                 All Stories
@@ -239,7 +239,7 @@ export default function RealStoriesPage(): JSX.Element {
                 className={`inline-flex items-center gap-2 rounded-lg px-6 py-2.5 text-base font-semibold transition-colors ${
                   filter === 'my'
                     ? 'bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 }`}
               >
                 <Bookmark className='h-4 w-4' />
@@ -259,11 +259,11 @@ export default function RealStoriesPage(): JSX.Element {
               <p className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
                 Loading Inspiring Stories
               </p>
-              <p className='mb-3 text-base text-gray-600 dark:text-gray-400'>
+              <p className='mb-3 text-base text-gray-600 dark:text-[#9E8B76]'>
                 Fetching real stories of people making a difference...
               </p>
               {/* Progress bar */}
-              <div className='mx-auto h-2 w-full max-w-md overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700'>
+              <div className='mx-auto h-2 w-full max-w-md overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10]'>
                 <div className='h-full animate-pulse bg-action' style={{ width: '60%' }} />
               </div>
             </div>
@@ -272,7 +272,7 @@ export default function RealStoriesPage(): JSX.Element {
               <p className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
                 Unable to Load Stories
               </p>
-              <p className='mb-3 text-base text-gray-600 dark:text-gray-400'>{error}</p>
+              <p className='mb-3 text-base text-gray-600 dark:text-[#9E8B76]'>{error}</p>
               <button
                 onClick={() => window.location.reload()}
                 className='rounded-lg bg-action px-8 py-3 text-base font-semibold text-white transition-opacity hover:opacity-90'
@@ -288,7 +288,7 @@ export default function RealStoriesPage(): JSX.Element {
                   <p className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
                     No Bookmarked Stories Yet
                   </p>
-                  <p className='mb-4 text-lg text-gray-600 dark:text-gray-400'>
+                  <p className='mb-4 text-lg text-gray-600 dark:text-[#9E8B76]'>
                     Start bookmarking inspiring stories to see them here!
                   </p>
                   <button
@@ -299,7 +299,7 @@ export default function RealStoriesPage(): JSX.Element {
                   </button>
                 </>
               ) : (
-                <p className='text-lg text-gray-600 dark:text-gray-400'>
+                <p className='text-lg text-gray-600 dark:text-[#9E8B76]'>
                   No stories found at this time. Please check back later.
                 </p>
               )}
@@ -314,7 +314,7 @@ export default function RealStoriesPage(): JSX.Element {
                 return (
                   <article
                     key={index}
-                    className='rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 md:p-6'
+                    className='rounded-xl border border-gray-200 bg-[#faf8f4] p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-6'
                   >
                     {/* Story Content - Clickable if URL exists */}
                     {hasValidUrl ? (
@@ -329,13 +329,13 @@ export default function RealStoriesPage(): JSX.Element {
                             {categoryLabel}
                           </span>
                           {story.location && (
-                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-gray-400'>
+                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                               <MapPin className='h-4 w-4' />
                               {story.location}
                             </span>
                           )}
                           {story.date && formatDate(story.date) && (
-                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-gray-400'>
+                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                               <Calendar className='h-4 w-4' />
                               {formatDate(story.date)}
                             </span>
@@ -344,11 +344,11 @@ export default function RealStoriesPage(): JSX.Element {
                         <h2 className='mb-2 text-2xl font-bold leading-tight text-gray-900 dark:text-white md:text-3xl'>
                           {story.title}
                         </h2>
-                        <p className='mb-3 text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
+                        <p className='mb-3 text-lg leading-relaxed text-gray-700 dark:text-[#C4B5A0]'>
                           {story.description}
                         </p>
                         {story.source && (
-                          <p className='mb-2 text-base text-gray-600 dark:text-gray-400'>
+                          <p className='mb-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                             Source: <span className='font-medium'>{story.source}</span>
                           </p>
                         )}
@@ -360,13 +360,13 @@ export default function RealStoriesPage(): JSX.Element {
                             {categoryLabel}
                           </span>
                           {story.location && (
-                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-gray-400'>
+                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                               <MapPin className='h-4 w-4' />
                               {story.location}
                             </span>
                           )}
                           {story.date && formatDate(story.date) && (
-                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-gray-400'>
+                            <span className='flex items-center gap-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                               <Calendar className='h-4 w-4' />
                               {formatDate(story.date)}
                             </span>
@@ -375,11 +375,11 @@ export default function RealStoriesPage(): JSX.Element {
                         <h2 className='mb-2 text-2xl font-bold leading-tight text-gray-900 dark:text-white md:text-3xl'>
                           {story.title}
                         </h2>
-                        <p className='mb-3 text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
+                        <p className='mb-3 text-lg leading-relaxed text-gray-700 dark:text-[#C4B5A0]'>
                           {story.description}
                         </p>
                         {story.source && (
-                          <p className='mb-2 text-base text-gray-600 dark:text-gray-400'>
+                          <p className='mb-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                             Source: <span className='font-medium'>{story.source}</span>
                           </p>
                         )}
@@ -400,7 +400,7 @@ export default function RealStoriesPage(): JSX.Element {
                           target='_blank'
                           rel='noopener noreferrer'
                           onClick={(e) => e.stopPropagation()}
-                          className='inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                          className='inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-[#faf8f4] px-6 py-3 text-base font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                         >
                           Read Full Story
                           <ExternalLink className='h-5 w-5' />

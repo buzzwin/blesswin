@@ -15,7 +15,7 @@ export function MessageWithLinks({ text }: { text: string }): JSX.Element {
             href={part}
             target='_blank'
             rel='noopener noreferrer'
-            className='break-all font-medium text-purple-600 underline decoration-purple-600/40 underline-offset-2 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'
+            className='break-all font-medium text-[#C9A96E] underline decoration-purple-600/40 underline-offset-2 hover:text-[#8a6520] dark:text-[#C9A96E] dark:hover:text-purple-300'
           >
             {part}
           </a>

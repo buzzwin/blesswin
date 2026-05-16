@@ -187,7 +187,7 @@ export function ViralShareGenerator({
           <h3 className='mb-2 text-2xl font-bold text-white'>
             Share Your Journey
           </h3>
-          <p className='text-blue-200'>
+          <p className='text-[#C4B5A0]'>
             Generate shareable content about your entertainment taste
           </p>
         </div>
@@ -231,19 +231,19 @@ export function ViralShareGenerator({
               <div className='text-2xl font-bold text-yellow-400'>
                 {userStats?.totalRatings || 127}
               </div>
-              <div className='text-sm text-blue-200'>Shows Rated</div>
+              <div className='text-sm text-[#C4B5A0]'>Shows Rated</div>
             </div>
             <div>
               <div className='text-2xl font-bold text-green-400'>
                 {userStats?.matchRate || 94}%
               </div>
-              <div className='text-sm text-blue-200'>Match Rate</div>
+              <div className='text-sm text-[#C4B5A0]'>Match Rate</div>
             </div>
           </div>
         </div>
 
         <div className='text-center'>
-          <p className='text-sm text-blue-200'>
+          <p className='text-sm text-[#C4B5A0]'>
             Share your journey and help friends discover their next obsession!
             🎬
           </p>

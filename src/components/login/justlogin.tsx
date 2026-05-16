@@ -27,7 +27,6 @@ export default function JustLogin(): JSX.Element {
         toast.success('Signed in successfully!');
       }
     } catch (error) {
-      // console.error('Auth error:', error);
       toast.error(
         error instanceof Error ? error.message : 'Authentication failed'
       );
@@ -39,12 +38,11 @@ export default function JustLogin(): JSX.Element {
   return (
     <div className='space-y-6'>
       <div className='space-y-3'>
-        <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
+        <h2 className='font-display text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
           {isSignUp ? 'Create your account' : 'Welcome back'}
         </h2>
-        <p className='text-gray-600 dark:text-gray-300'>
-          Connect with others on their wellness journey, share your positive
-          actions, and inspire others to do good.
+        <p className='text-[#6b5744] dark:text-[#9E8B76]'>
+          Create Buzzbooks, celebrate your people, and join your community.
         </p>
       </div>
 
@@ -59,10 +57,10 @@ export default function JustLogin(): JSX.Element {
               onChange={(e) => setEmail(e.target.value)}
               className={cn(
                 'w-full rounded-lg px-4 py-2',
-                'bg-white dark:bg-white/10',
-                'border border-gray-300 dark:border-white/10',
-                'text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
-                'focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+                'bg-[#faf8f4] dark:bg-white/10',
+                'border border-[#e8d8c4] dark:border-white/10',
+                'text-[#1a1108] dark:text-[#F5EFE6] placeholder-[#9E8B76] dark:placeholder-[#6b5744]',
+                'focus:border-[#C9A96E] focus:outline-none focus:ring-1 focus:ring-[#C9A96E]/50'
               )}
               required
             />
@@ -73,10 +71,10 @@ export default function JustLogin(): JSX.Element {
               onChange={(e) => setPassword(e.target.value)}
               className={cn(
                 'w-full rounded-lg px-4 py-2',
-                'bg-white dark:bg-white/10',
-                'border border-gray-300 dark:border-white/10',
-                'text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
-                'focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
+                'bg-[#faf8f4] dark:bg-white/10',
+                'border border-[#e8d8c4] dark:border-white/10',
+                'text-[#1a1108] dark:text-[#F5EFE6] placeholder-[#9E8B76] dark:placeholder-[#6b5744]',
+                'focus:border-[#C9A96E] focus:outline-none focus:ring-1 focus:ring-[#C9A96E]/50'
               )}
               required
               minLength={6}
@@ -88,7 +86,7 @@ export default function JustLogin(): JSX.Element {
               {/* existing remember me checkbox */}
             </div>
             <Link href='/forgot-password'>
-              <a className='text-sm text-emerald-700 hover:text-emerald-600 dark:text-emerald-400'>
+              <a className='text-sm text-[#C9A96E] hover:text-[#E8B86D]'>
                 Forgot password?
               </a>
             </Link>
@@ -99,8 +97,8 @@ export default function JustLogin(): JSX.Element {
             disabled={loading}
             className={cn(
               'w-full rounded-lg px-4 py-2',
-              'bg-emerald-700 text-white',
-              'hover:bg-emerald-800',
+              'bg-[#C97D60] text-white',
+              'hover:bg-[#B56540]',
               'transition-colors duration-200',
               'font-medium',
               'flex items-center justify-center gap-2',
@@ -119,10 +117,10 @@ export default function JustLogin(): JSX.Element {
 
         <div className='relative'>
           <div className='absolute inset-0 flex items-center'>
-            <div className='w-full border-t border-gray-300 dark:border-gray-600'></div>
+            <div className='w-full border-t border-[#e8d8c4] dark:border-[#2a1d10]'></div>
           </div>
           <div className='relative flex justify-center'>
-            <span className='bg-white px-2 text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-400'>
+            <span className='bg-[#faf8f4] px-2 text-sm text-[#6b5744] dark:bg-[#1c1510] dark:text-[#9E8B76]'>
               or continue with
             </span>
           </div>
@@ -134,15 +132,15 @@ export default function JustLogin(): JSX.Element {
           className={cn(
             'flex items-center justify-center gap-2',
             'w-full rounded-lg px-4 py-2.5',
-            'bg-white text-gray-900 dark:bg-gray-800 dark:text-white',
-            'border border-gray-300 dark:border-gray-600',
-            'hover:bg-gray-100 dark:hover:bg-gray-700',
-            'active:bg-gray-200 dark:active:bg-gray-600',
+            'bg-[#faf8f4] text-[#1a1108] dark:bg-[#1c1510] dark:text-[#F5EFE6]',
+            'border border-[#e8d8c4] dark:border-[#2a1d10]',
+            'hover:bg-[#f5f1ea] dark:hover:bg-[#231a10]',
+            'active:bg-[#ede8de] dark:active:bg-[#2a1d10]',
             'transition-colors duration-200',
             'font-medium',
-            'touch-manipulation', // Better touch handling on iOS
+            'touch-manipulation',
             'cursor-pointer',
-            'select-none' // Prevent text selection on tap
+            'select-none'
           )}
           onClick={async (e) => {
             e.preventDefault();
@@ -165,14 +163,14 @@ export default function JustLogin(): JSX.Element {
         <button
           type='button'
           onClick={() => setIsSignUp(!isSignUp)}
-          className='text-sm text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300'
+          className='text-sm text-[#C9A96E] hover:text-[#E8B86D]'
         >
           {isSignUp
             ? 'Already have an account? Sign in'
             : "Don't have an account? Sign up"}
         </button>
 
-        <p className='text-center text-sm text-gray-600 dark:text-gray-400'>
+        <p className='text-center text-sm text-[#6b5744] dark:text-[#9E8B76]'>
           By signing up, you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>

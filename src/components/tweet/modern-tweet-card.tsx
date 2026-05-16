@@ -22,7 +22,7 @@ export function ModernTweetCard({
         'transition-all duration-200 hover:shadow-lg',
         'border-amber-200 dark:border-amber-800/30',
         'hover:border-amber-300 dark:hover:border-amber-700',
-        'bg-white dark:bg-gray-800',
+        'bg-white dark:bg-[#1c1510]',
         'dark:hover:bg-amber-950/10 hover:bg-amber-50/30',
         'group flex h-full flex-col',
         className
@@ -57,7 +57,7 @@ export function ModernTweetList({
 }: ModernTweetListProps): JSX.Element {
   if (loading) {
     return (
-      <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-gray-800'>
+      <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-[#1c1510]'>
         <CardContent className='flex min-h-[200px] items-center justify-center p-6'>
           <div className='text-center'>
             <Loading className='mt-5' />
@@ -72,7 +72,7 @@ export function ModernTweetList({
 
   if (error ?? !tweets) {
     return (
-      <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-gray-800'>
+      <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-[#1c1510]'>
         <CardContent className='flex min-h-[200px] items-center justify-center p-6'>
           <div className='text-center'>
             <Error message='Something went wrong' />
@@ -87,14 +87,14 @@ export function ModernTweetList({
 
   if (tweets.length === 0) {
     return (
-      <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-gray-800'>
+      <Card className='border-amber-200 bg-white dark:border-amber-800/30 dark:bg-[#1c1510]'>
         <CardContent className='flex min-h-[200px] items-center justify-center p-6'>
           <div className='text-center'>
             <BookOpen className='mx-auto mb-4 h-12 w-12 text-amber-400' />
-            <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100'>
+            <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-[#F5EFE6]'>
               No reviews yet
             </h3>
-            <p className='text-gray-600 dark:text-gray-400'>
+            <p className='text-gray-600 dark:text-[#9E8B76]'>
               Be the first to share what you&apos;re watching!
             </p>
           </div>

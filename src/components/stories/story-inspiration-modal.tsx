@@ -70,7 +70,7 @@ export function StoryInspirationModal({
           <div className='mb-4 flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-                <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
               </div>
               <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
                 Get Inspired
@@ -78,35 +78,35 @@ export function StoryInspirationModal({
             </div>
             <button
               onClick={closeModal}
-              className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+              className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
             >
               <X className='h-5 w-5' />
             </button>
           </div>
 
-          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <h3 className='mb-2 font-semibold text-gray-900 dark:text-white'>
               {story.title}
             </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400'>
+            <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
               {story.description}
             </p>
           </div>
 
-          <p className='mb-6 text-gray-600 dark:text-gray-400'>
+          <p className='mb-6 text-gray-600 dark:text-[#9E8B76]'>
             Sign in to create an Impact Moment inspired by this story and share how it motivates you to take action.
           </p>
 
           <div className='flex gap-3'>
             <button
               onClick={() => void router.push('/login')}
-              className='flex-1 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-700'
+              className='flex-1 rounded-lg bg-[#C97D60] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#B56540]'
             >
               Sign In to Get Started
             </button>
             <button
               onClick={closeModal}
-              className='rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+              className='rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
             >
               Cancel
             </button>
@@ -123,7 +123,7 @@ export function StoryInspirationModal({
           <div className='mb-4 flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-                <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
               </div>
               <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
                 Get Inspired by This Story
@@ -131,40 +131,40 @@ export function StoryInspirationModal({
             </div>
             <button
               onClick={closeModal}
-              className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+              className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
             >
               <X className='h-5 w-5' />
             </button>
           </div>
 
-          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <h3 className='mb-2 font-semibold text-gray-900 dark:text-white'>
               {story.title}
             </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400'>
+            <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
               {story.description}
             </p>
             {story.location && (
-              <p className='mt-2 text-xs text-gray-500 dark:text-gray-400'>
+              <p className='mt-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
                 📍 {story.location}
               </p>
             )}
           </div>
 
-          <p className='mb-6 text-gray-600 dark:text-gray-400'>
+          <p className='mb-6 text-gray-600 dark:text-[#9E8B76]'>
             Share how this story inspires you to take action. Create an Impact Moment to document your response and inspire others.
           </p>
 
           <div className='flex gap-3'>
             <button
               onClick={handleGetStarted}
-              className='flex-1 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-700'
+              className='flex-1 rounded-lg bg-[#C97D60] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#B56540]'
             >
               Create Impact Moment
             </button>
             <button
               onClick={closeModal}
-              className='rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+              className='rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
             >
               Cancel
             </button>
@@ -181,7 +181,7 @@ export function StoryInspirationModal({
         <div className='mb-4 flex items-center justify-between'>
           <div className='flex items-center gap-3'>
             <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-              <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+              <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
             </div>
             <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
               Create Impact Moment
@@ -189,14 +189,14 @@ export function StoryInspirationModal({
           </div>
           <button
             onClick={handleCancel}
-            className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+            className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
           >
             <X className='h-5 w-5' />
           </button>
         </div>
 
-        <div className='mb-4 rounded-lg border border-purple-200 bg-purple-50 p-3 dark:border-purple-800 dark:bg-purple-900/20'>
-          <p className='text-sm text-purple-800 dark:text-purple-200'>
+        <div className='mb-4 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-3 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+          <p className='text-sm text-[#7a5a18] dark:text-[#C4B5A0]'>
             ✨ Inspired by: <span className='font-semibold'>{story.title}</span>
           </p>
         </div>

@@ -90,9 +90,9 @@ export default function RitualPage(): JSX.Element {
             />
             <MainHeader title='Ritual' />
             <div className='mt-5 text-center'>
-              <p className='text-gray-600 dark:text-gray-400'>Ritual not found</p>
+              <p className='text-gray-600 dark:text-[#9E8B76]'>Ritual not found</p>
               <Link href='/rituals'>
-                <a className='mt-4 inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+                <a className='mt-4 inline-flex items-center gap-2 text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'>
                   <ArrowLeft className='h-4 w-4' />
                   Back to Rituals
                 </a>
@@ -123,7 +123,7 @@ export default function RitualPage(): JSX.Element {
             {/* Back Button */}
             <div className='mb-4'>
               <Link href='/rituals'>
-                <a className='inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+                <a className='inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
                   <ArrowLeft className='h-4 w-4' />
                   Back to Rituals
                 </a>
@@ -152,14 +152,14 @@ export default function RitualPage(): JSX.Element {
             {/* Quick Links */}
             <div className='flex flex-wrap gap-3'>
               <Link href={`/rituals/${id}/ripples`}>
-                <a className='inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'>
+                <a className='inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-[#faf8f4] px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'>
                   <Share2 className='h-4 w-4' />
                   View Ripples
                 </a>
               </Link>
               {joinedCount > 0 && (
                 <Link href={`/rituals/${id}/participants`}>
-                  <a className='inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'>
+                  <a className='inline-flex items-center gap-2 rounded-lg border border-gray-200 bg-[#faf8f4] px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'>
                     <Users className='h-4 w-4' />
                     View Participants ({joinedCount})
                   </a>

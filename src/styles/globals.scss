@@ -21,19 +21,19 @@
     --main-background: var(--dark-background);
     --main-search-background: var(--dark-search-background);
     --main-sidebar-background: var(--dark-sidebar-background);
-    --main-accent: var(--accent-green);
+    --main-accent: var(--accent-amber);
 
-    --dark-background: 0 0 0;
-    --dim-background: 22 33 44;
-    --light-background: 255 255 255;
+    --dark-background: 17 13 7;
+    --dim-background: 26 20 12;
+    --light-background: 247 245 240;
 
-    --dark-search-background: 32 35 39;
-    --dim-search-background: 39 51 64;
-    --light-search-background: 239 243 244;
+    --dark-search-background: 28 22 14;
+    --dim-search-background: 36 28 18;
+    --light-search-background: 239 235 228;
 
-    --dark-sidebar-background: 22 24 28;
-    --dim-sidebar-background: 30 39 50;
-    --light-sidebar-background: 247 249 249;
+    --dark-sidebar-background: 20 15 9;
+    --dim-sidebar-background: 30 23 14;
+    --light-sidebar-background: 250 248 244;
 
     --accent-yellow: 255 213 0;
     --accent-blue: 0 184 122;
@@ -41,6 +41,8 @@
     --accent-purple: 120 87 255;
     --accent-orange: 255 122 0;
     --accent-green: 0 184 122;
+    --accent-amber: 201 169 110;
+    --accent-terracotta: 181 96 60;
 
     // shadcn/ui design tokens
     --background: 0 0% 100%;
@@ -66,25 +68,25 @@
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 98%;
+    --background: 33 43% 5%;
+    --foreground: 35 60% 93%;
+    --card: 33 40% 7%;
+    --card-foreground: 35 60% 93%;
+    --popover: 33 40% 7%;
+    --popover-foreground: 35 60% 93%;
+    --primary: 35 60% 93%;
+    --primary-foreground: 33 43% 5%;
+    --secondary: 33 30% 12%;
+    --secondary-foreground: 35 60% 93%;
+    --muted: 33 25% 14%;
+    --muted-foreground: 35 30% 60%;
+    --accent: 35 50% 50%;
+    --accent-foreground: 33 43% 5%;
     --destructive: 0 62.8% 50%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 15%;
-    --ring: 0 0% 83%;
+    --destructive-foreground: 35 60% 93%;
+    --border: 33 30% 18%;
+    --input: 33 25% 14%;
+    --ring: 35 50% 50%;
   }
 
   a,
@@ -95,11 +97,11 @@
   }
 
   html {
-    @apply bg-main-background dark:bg-black;
+    @apply bg-main-background;
   }
 
   body {
-    @apply hover-animation bg-main-background dark:bg-black font-body text-light-primary dark:text-dark-primary;
+    @apply hover-animation bg-main-background font-body text-light-primary dark:text-dark-primary;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -232,15 +234,18 @@
            shadow-[0_4px_24px_rgba(0,0,0,0.08)] dark:shadow-[0_4px_24px_rgba(0,0,0,0.5)];
   }
 
-  /* Refined primary CTA — warm, elevated, no brutalist border */
+  /* Primary CTA — warm terracotta, elevated */
   .btn-pop {
     @apply inline-flex items-center justify-center font-semibold rounded-xl
-           bg-accent-green text-white
-           shadow-[0_2px_0_rgba(0,0,0,0.25),0_4px_16px_rgba(0,184,122,0.25)]
+           text-white
            transition-all duration-200
-           hover:-translate-y-px hover:shadow-[0_4px_0_rgba(0,0,0,0.2),0_6px_20px_rgba(0,184,122,0.35)]
-           active:translate-y-0 active:shadow-[0_1px_0_rgba(0,0,0,0.3),0_2px_8px_rgba(0,184,122,0.2)]
+           hover:-translate-y-px
+           active:translate-y-0
            disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0;
+    background: linear-gradient(135deg, #C97D60 0%, #B56540 100%);
+    box-shadow: 0 2px 0 rgba(0,0,0,0.3), 0 4px 16px rgba(181,96,60,0.3);
+    &:hover { box-shadow: 0 4px 0 rgba(0,0,0,0.25), 0 6px 20px rgba(181,96,60,0.4); }
+    &:active { box-shadow: 0 1px 0 rgba(0,0,0,0.35), 0 2px 8px rgba(181,96,60,0.2); }
   }
 
   /* Warm ghost button for secondary actions */

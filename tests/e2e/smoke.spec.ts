@@ -1,8 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 const PUBLIC_ROUTES: Array<{ path: string; heading: string | RegExp }> = [
-  // The / route renders the rituals pitch page (PublicLayout), not LoginMain
-  { path: '/', heading: /rituals|effortless|wellness/i },
+  { path: '/', heading: /celebrate|buzzbook|matter/i },
   { path: '/login', heading: /sign in|log in|welcome|buzzwin/i },
   { path: '/forgot-password', heading: /forgot|reset|password/i },
   { path: '/how-it-works', heading: /how it works|how buzzwin/i },

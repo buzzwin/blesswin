@@ -13,9 +13,9 @@ import Head from 'next/head';
 import type { RealStory } from '@lib/types/real-story';
 
 const categoryColors = {
-  community: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  community: 'bg-[rgba(201,169,110,0.1)] text-[#5a3d08] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   environment: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  education: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  education: 'bg-[rgba(201,169,110,0.1)] text-[#7a5a18] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   health: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
   'social-justice': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
   innovation: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
@@ -115,8 +115,8 @@ export default function StoryPage(): JSX.Element {
         <SEO title='Loading Story...' />
         <SectionShell className='min-h-screen'>
           <div className='mx-auto flex max-w-3xl flex-col items-center justify-center px-6 py-12'>
-            <Loader2 className='mb-4 h-10 w-10 animate-spin text-purple-600' />
-            <p className='text-lg text-gray-600 dark:text-gray-400'>Loading story...</p>
+            <Loader2 className='mb-4 h-10 w-10 animate-spin text-[#C9A96E]' />
+            <p className='text-lg text-gray-600 dark:text-[#9E8B76]'>Loading story...</p>
           </div>
         </SectionShell>
       </HomeLayout>
@@ -130,11 +130,11 @@ export default function StoryPage(): JSX.Element {
         <SectionShell className='min-h-screen'>
           <div className='mx-auto max-w-3xl px-6 py-12'>
             <h1 className='mb-4 text-3xl font-bold text-gray-900 dark:text-white'>Story Not Found</h1>
-            <p className='mb-6 text-lg text-gray-600 dark:text-gray-400'>
+            <p className='mb-6 text-lg text-gray-600 dark:text-[#9E8B76]'>
               {error || 'The story you\'re looking for doesn\'t exist or has been removed.'}
             </p>
             <Link href='/real-stories'>
-              <a className='inline-flex items-center gap-2 rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-700'>
+              <a className='inline-flex items-center gap-2 rounded-lg bg-[#C97D60] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#B56540]'>
                 <ArrowLeft className='h-5 w-5' />
                 Back to Stories
               </a>
@@ -189,7 +189,7 @@ export default function StoryPage(): JSX.Element {
       <SectionShell className='min-h-0'>
         <div className='mx-auto w-full max-w-3xl px-6 py-6'>
           <Link href='/real-stories'>
-            <a className='mb-6 inline-flex items-center gap-2 text-base text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+            <a className='mb-6 inline-flex items-center gap-2 text-base text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
               <ArrowLeft className='h-5 w-5' />
               Back to Stories
             </a>
@@ -200,20 +200,20 @@ export default function StoryPage(): JSX.Element {
       {/* Story Content */}
       <SectionShell variant='dark' className='min-h-0'>
         <div className='mx-auto w-full max-w-3xl px-6 py-6'>
-          <article className='rounded-xl border border-gray-200 bg-white p-6 shadow-lg dark:border-gray-700 dark:bg-gray-800 md:p-8'>
+          <article className='rounded-xl border border-gray-200 bg-[#faf8f4] p-6 shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-8'>
             {/* Category and Metadata */}
             <div className='mb-4 flex flex-wrap items-center gap-3'>
               <span className={`rounded-full px-4 py-1.5 text-sm font-semibold ${categoryColor}`}>
                 {categoryLabel}
               </span>
               {story.location && (
-                <span className='flex items-center gap-2 text-base text-gray-600 dark:text-gray-400'>
+                <span className='flex items-center gap-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                   <MapPin className='h-4 w-4' />
                   {story.location}
                 </span>
               )}
               {formattedDate && (
-                <span className='flex items-center gap-2 text-base text-gray-600 dark:text-gray-400'>
+                <span className='flex items-center gap-2 text-base text-gray-600 dark:text-[#9E8B76]'>
                   <Calendar className='h-4 w-4' />
                   {formattedDate}
                 </span>
@@ -226,19 +226,19 @@ export default function StoryPage(): JSX.Element {
             </h1>
 
             {/* Description */}
-            <div className='mb-6 text-lg leading-relaxed text-gray-700 dark:text-gray-300'>
+            <div className='mb-6 text-lg leading-relaxed text-gray-700 dark:text-[#C4B5A0]'>
               <p>{story.description}</p>
             </div>
 
             {/* Source */}
             {story.source && (
-              <p className='mb-6 text-base text-gray-600 dark:text-gray-400'>
+              <p className='mb-6 text-base text-gray-600 dark:text-[#9E8B76]'>
                 Source: <span className='font-medium'>{story.source}</span>
               </p>
             )}
 
             {/* Action Buttons */}
-            <div className='mb-6 flex flex-wrap items-center gap-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
+            <div className='mb-6 flex flex-wrap items-center gap-3 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
               <StoryActionFlow story={story} />
               <StoryBookmarkButton story={story} />
               <StoryShareButton story={story} />
@@ -247,7 +247,7 @@ export default function StoryPage(): JSX.Element {
                   href={story.url}
                   target='_blank'
                   rel='noopener noreferrer'
-                  className='inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-white px-6 py-3 text-base font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                  className='inline-flex items-center gap-2 rounded-lg border-2 border-gray-300 bg-[#faf8f4] px-6 py-3 text-base font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 >
                   Read Full Story
                   <ExternalLink className='h-5 w-5' />

@@ -149,18 +149,18 @@ export function CreateCardModal({
 
   return (
     <Modal
-      modalClassName='max-w-3xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
+      modalClassName='max-w-3xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-6'>
         {/* Header */}
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
           <div>
             <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
               Create a Ritual Card 💌
             </h2>
-            <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+            <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
               Invite friends to sign a beautiful greeting card
             </p>
           </div>
@@ -174,7 +174,7 @@ export function CreateCardModal({
 
         {/* Card Type */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Card Type
           </label>
           <div className='grid grid-cols-5 gap-2'>
@@ -185,8 +185,8 @@ export function CreateCardModal({
                 className={cn(
                   'p-3 rounded-lg border-2 transition-all',
                   cardType === type.value
-                    ? 'border-purple-500 bg-purple-50 dark:bg-purple-900/20'
-                    : 'border-gray-200 hover:border-gray-300 dark:border-gray-700'
+                    ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] dark:bg-[rgba(201,169,110,0.08)]'
+                    : 'border-gray-200 hover:border-gray-300 dark:border-[#2a1d10]'
                 )}
               >
                 <div className='text-2xl mb-1'>{type.icon}</div>
@@ -198,7 +198,7 @@ export function CreateCardModal({
 
         {/* Title */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Card Title *
           </label>
           <input
@@ -206,28 +206,28 @@ export function CreateCardModal({
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder='e.g., Join me in wishing Paul a very happy birthday'
-            className='w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none'
+            className='w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#C9A96E] focus:outline-none'
             maxLength={100}
           />
         </div>
 
         {/* Description */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Description *
           </label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder='Add a message or description for the card...'
-            className='w-full h-24 px-4 py-2 border-2 border-gray-300 rounded-lg resize-none focus:border-purple-500 focus:outline-none'
+            className='w-full h-24 px-4 py-2 border-2 border-gray-300 rounded-lg resize-none focus:border-[#C9A96E] focus:outline-none'
             maxLength={500}
           />
         </div>
 
         {/* Recipient Name */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Recipient Name (Optional)
           </label>
           <input
@@ -235,26 +235,26 @@ export function CreateCardModal({
             value={recipientName}
             onChange={(e) => setRecipientName(e.target.value)}
             placeholder='e.g., Paul'
-            className='w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none'
+            className='w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#C9A96E] focus:outline-none'
           />
         </div>
 
         {/* Event Date */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Event Date (Optional)
           </label>
           <input
             type='date'
             value={eventDate}
             onChange={(e) => setEventDate(e.target.value)}
-            className='w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none'
+            className='w-full px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#C9A96E] focus:outline-none'
           />
         </div>
 
         {/* Invited Emails */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Invite People by Email *
           </label>
           <div className='flex gap-2 mb-2'>
@@ -264,7 +264,7 @@ export function CreateCardModal({
               onChange={(e) => setEmailInput(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleAddEmail()}
               placeholder='Enter email address'
-              className='flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-purple-500 focus:outline-none'
+              className='flex-1 px-4 py-2 border-2 border-gray-300 rounded-lg focus:border-[#C9A96E] focus:outline-none'
             />
             <BounceButton variant='primary' onClick={handleAddEmail}>
               Add
@@ -275,12 +275,12 @@ export function CreateCardModal({
               {invitedEmails.map((email) => (
                 <span
                   key={email}
-                  className='inline-flex items-center gap-1 px-3 py-1 bg-purple-100 text-purple-700 rounded-full text-sm'
+                  className='inline-flex items-center gap-1 px-3 py-1 bg-[rgba(201,169,110,0.1)] text-[#8a6520] rounded-full text-sm'
                 >
                   {email}
                   <button
                     onClick={() => handleRemoveEmail(email)}
-                    className='hover:text-purple-900'
+                    className='hover:text-[#5a3d0a]'
                   >
                     <X className='h-3 w-3' />
                   </button>
@@ -292,13 +292,13 @@ export function CreateCardModal({
 
         {/* Card Design */}
         <div>
-          <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+          <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
             Card Design
           </label>
           <div className='space-y-4'>
             {/* Color Presets */}
             <div>
-              <p className='text-xs text-gray-600 dark:text-gray-400 mb-2'>Color Theme</p>
+              <p className='text-xs text-gray-600 dark:text-[#9E8B76] mb-2'>Color Theme</p>
               <div className='flex gap-2'>
                 {colorPresets.map((color) => (
                   <button
@@ -307,7 +307,7 @@ export function CreateCardModal({
                     className={cn(
                       'w-16 h-16 rounded-lg border-4 transition-all',
                       selectedColor.name === color.name
-                        ? 'border-purple-500 scale-110'
+                        ? 'border-[#C9A96E] scale-110'
                         : 'border-gray-300 hover:scale-105'
                     )}
                     style={{
@@ -321,7 +321,7 @@ export function CreateCardModal({
 
             {/* Pattern */}
             <div>
-              <p className='text-xs text-gray-600 dark:text-gray-400 mb-2'>Pattern</p>
+              <p className='text-xs text-gray-600 dark:text-[#9E8B76] mb-2'>Pattern</p>
               <div className='flex gap-2'>
                 {patterns.map((p) => (
                   <button
@@ -330,7 +330,7 @@ export function CreateCardModal({
                     className={cn(
                       'px-4 py-2 rounded-lg border-2 transition-all',
                       pattern === p.value
-                        ? 'border-purple-500 bg-purple-50'
+                        ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)]'
                         : 'border-gray-200 hover:border-gray-300'
                     )}
                   >
@@ -343,7 +343,7 @@ export function CreateCardModal({
         </div>
 
         {/* Submit Button */}
-        <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
+        <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-[#2a1d10]'>
           <BounceButton variant='secondary' onClick={closeModal} disabled={loading}>
             Cancel
           </BounceButton>

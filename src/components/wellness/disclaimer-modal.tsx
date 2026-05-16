@@ -140,9 +140,9 @@ export function DisclaimerModal({
 
   return (
     <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm'>
-      <div className='relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-gray-700 dark:bg-gray-900'>
+      <div className='relative max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-2xl border border-gray-200 bg-white shadow-2xl dark:border-[#2a1d10] dark:bg-[#1c1510]'>
         {/* Header */}
-        <div className='sticky top-0 flex items-center justify-between border-b border-gray-200 bg-white px-6 py-4 dark:border-gray-700 dark:bg-gray-900'>
+        <div className='sticky top-0 flex items-center justify-between border-b border-gray-200 bg-[#faf8f4] px-6 py-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
           <div className='flex items-center gap-3'>
             <div className='flex h-10 w-10 items-center justify-center rounded-full bg-yellow-100 dark:bg-yellow-900/30'>
               <AlertTriangle className='h-5 w-5 text-yellow-600 dark:text-yellow-400' />
@@ -164,7 +164,7 @@ export function DisclaimerModal({
             </p>
           </div>
 
-          <div className='space-y-4 text-sm text-gray-700 dark:text-gray-300'>
+          <div className='space-y-4 text-sm text-gray-700 dark:text-[#C4B5A0]'>
             <div>
               <h3 className='mb-2 font-semibold text-gray-900 dark:text-white'>
                 Medical Disclaimer
@@ -223,7 +223,7 @@ export function DisclaimerModal({
               <Link
                 href='/disclaimer'
                 target='_blank'
-                className='text-sm font-medium text-blue-600 hover:underline dark:text-blue-400'
+                className='text-sm font-medium text-[#8a6520] hover:underline dark:text-[#9E8B76]'
               >
                 Read full disclaimer →
               </Link>
@@ -232,7 +232,7 @@ export function DisclaimerModal({
         </div>
 
         {/* Footer */}
-        <div className='sticky bottom-0 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-gray-700 dark:bg-gray-800'>
+        <div className='sticky bottom-0 border-t border-gray-200 bg-gray-50 px-6 py-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
           <div className='flex flex-col gap-3 sm:flex-row sm:justify-end'>
             <Button
               onClick={handleDecline}
@@ -242,7 +242,7 @@ export function DisclaimerModal({
               Decline
             </Button>
             {!hasScrolled && (
-              <p className='w-full text-center text-xs text-gray-500 dark:text-gray-400 sm:hidden'>
+              <p className='w-full text-center text-xs text-gray-500 dark:text-[#9E8B76] sm:hidden'>
                 Please scroll to read the full disclaimer
               </p>
             )}
@@ -255,7 +255,7 @@ export function DisclaimerModal({
             </Button>
           </div>
           {!hasScrolled && (
-            <p className='mt-2 text-center text-xs text-gray-500 dark:text-gray-400'>
+            <p className='mt-2 text-center text-xs text-gray-500 dark:text-[#9E8B76]'>
               Please scroll to read the full disclaimer before accepting
             </p>
           )}

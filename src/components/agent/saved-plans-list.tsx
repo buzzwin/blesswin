@@ -39,13 +39,13 @@ export function SavedPlansList(): JSX.Element | null {
   if (!user?.id) return null;
 
   return (
-    <div className='rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800'>
+    <div className='rounded-xl border border-gray-200 bg-[#faf8f4] p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
       <div className='flex items-center justify-between gap-2'>
         <h3 className='text-sm font-semibold text-gray-900 dark:text-white'>Saved plans</h3>
         <button
           type='button'
           onClick={() => void load()}
-          className='text-xs font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400'
+          className='text-xs font-medium text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'
         >
           Refresh
         </button>
@@ -58,7 +58,7 @@ export function SavedPlansList(): JSX.Element | null {
       )}
       {error && <p className='py-2 text-sm text-red-600 dark:text-red-400'>{error}</p>}
       {!loading && !error && plans.length === 0 && (
-        <p className='py-4 text-sm text-gray-600 dark:text-gray-400'>
+        <p className='py-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
           No saved plans yet. Use &quot;Save last response as plan&quot; after a reply.
         </p>
       )}
@@ -67,10 +67,10 @@ export function SavedPlansList(): JSX.Element | null {
           {plans.map((p) => (
             <li
               key={p.id}
-              className='rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm dark:border-gray-600 dark:bg-gray-900/40'
+              className='rounded-lg border border-gray-100 bg-gray-50 p-3 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510]/40'
             >
               <div className='font-medium text-gray-900 dark:text-white'>{p.title}</div>
-              <p className='mt-1 line-clamp-3 whitespace-pre-wrap text-gray-600 dark:text-gray-400'>
+              <p className='mt-1 line-clamp-3 whitespace-pre-wrap text-gray-600 dark:text-[#9E8B76]'>
                 {p.content}
               </p>
             </li>

@@ -39,7 +39,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <h2
           className={cn(
             'text-2xl font-bold',
-            'text-gray-900 dark:text-white',
+            'text-[#1a1108] dark:text-[#F5EFE6]',
             'transition-colors duration-200'
           )}
         >
@@ -47,7 +47,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         </h2>
         <p
           className={cn(
-            'text-gray-600 dark:text-gray-400',
+            'text-[#6b5744] dark:text-[#9E8B76]',
             'transition-colors duration-200'
           )}
         >
@@ -58,8 +58,8 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         className={cn(
           'w-full overflow-hidden',
           'rounded-2xl',
-          'bg-white dark:bg-gray-800',
-          'border border-gray-100 dark:border-gray-700',
+          'bg-[#faf8f4] dark:bg-[#1c1510]',
+          'border border-[#e8d8c4] dark:border-[#2a1d10]',
           'shadow-sm dark:shadow-gray-900/10',
           'transition-all duration-200',
           'hover:shadow-md dark:hover:shadow-gray-900/20',
@@ -79,7 +79,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
               <div
                 className={cn(
                   'flex items-center gap-1',
-                  'text-gray-500 dark:text-gray-400',
+                  'text-[#6b5744] dark:text-[#9E8B76]',
                   'transition-colors duration-200'
                 )}
               >
@@ -90,12 +90,12 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
             <p
               className={cn(
                 'whitespace-pre-line break-words',
-                'text-gray-700 dark:text-gray-300',
+                'text-[#3d2c1a] dark:text-[#C4B5A0]',
                 'transition-colors duration-200'
               )}
             >
-              Buzzwin is a social media platform that allows you to connect with
-              like-minded people and share what you are watching with the world.
+              Create Buzzbooks for birthdays, Diwali, Eid, and every occasion
+              that matters. Your tribe adds messages — revealed together.
             </p>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <p
           className={cn(
             'text-sm font-semibold',
-            'text-gray-600 dark:text-gray-400',
+            'text-[#6b5744] dark:text-[#9E8B76]',
             'transition-colors duration-200'
           )}
         >
@@ -115,7 +115,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
             'grid grid-cols-3 xs:grid-cols-6',
             'gap-3 p-4',
             'rounded-2xl',
-            'bg-gray-50 dark:bg-gray-800/50',
+            'bg-gray-50 dark:bg-[#231a10]',
             'transition-colors duration-200'
           )}
         >
@@ -128,7 +128,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
         <p
           className={cn(
             'text-sm font-semibold',
-            'text-gray-600 dark:text-gray-400',
+            'text-[#6b5744] dark:text-[#9E8B76]',
             'transition-colors duration-200'
           )}
         >
@@ -139,7 +139,7 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
             'grid grid-rows-3 xs:grid-cols-3 xs:grid-rows-none',
             'gap-3 p-4',
             'rounded-2xl',
-            'bg-gray-50 dark:bg-gray-800/50',
+            'bg-gray-50 dark:bg-[#231a10]',
             'transition-colors duration-200'
           )}
         >
@@ -153,12 +153,12 @@ export function DisplayModal({ closeModal }: DisplayModalProps): JSX.Element {
           'px-8 py-2',
           'font-semibold',
           'rounded-full',
-          'bg-emerald-500 dark:bg-emerald-600',
+          'bg-[#C97D60] dark:bg-[#C97D60]',
           'text-white',
           'transition-all duration-200',
-          'hover:bg-emerald-600 dark:hover:bg-emerald-700',
+          'hover:bg-[#C97D60] dark:hover:bg-[#B56540]',
           'active:bg-emerald-700 dark:active:bg-emerald-800',
-          'focus-visible:ring-2 focus-visible:ring-emerald-500/50'
+          'focus-visible:ring-2 focus-visible:ring-[#C9A96E]/50'
         )}
         onClick={closeModal}
       >

@@ -43,26 +43,26 @@ const DataDeletionInstructions = () => {
           <p className='mb-4'>
             To request the deletion of your personal data, please send an email
             to{' '}
-            <a className='text-blue-800' href='mailto:link2sources@gmail.com'>
+            <a className='text-[#5a3d08]' href='mailto:link2sources@gmail.com'>
               link2sources@gmail.com
             </a>
             <div className='mt-4 grid grid-cols-1 gap-4'>
               <a
-                className='mb-4 text-blue-800 dark:text-white'
+                className='mb-4 text-[#5a3d08] dark:text-white'
                 href='https://www.buzzwin.com/terms'
               >
                 Terms of Service
               </a>
 
               <a
-                className='mb-4 text-blue-800 dark:text-white'
+                className='mb-4 text-[#5a3d08] dark:text-white'
                 href='https://www.buzzwin.com/privacy'
               >
                 Privacy Policy
               </a>
 
               <a
-                className='mb-4 text-blue-800 dark:text-white'
+                className='mb-4 text-[#5a3d08] dark:text-white'
                 href='https://www.buzzwin.com/delete'
               >
                 Data Deletion

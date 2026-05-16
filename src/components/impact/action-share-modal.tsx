@@ -104,12 +104,12 @@ export function ActionShareModal({
 
   return (
     <Modal
-      modalClassName='max-w-md bg-white dark:bg-gray-900 w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
+      modalClassName='max-w-md bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-6'>
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-3'>
             <div className='rounded-full bg-green-100 p-2 dark:bg-green-900/30'>
               <Sparkles className='h-5 w-5 text-green-600 dark:text-green-400' />
@@ -118,7 +118,7 @@ export function ActionShareModal({
               <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
                 🌱 Share Your Ritual Participation
               </h2>
-              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 Share your ritual participation with others to inspire them!
               </p>
             </div>
@@ -144,9 +144,9 @@ export function ActionShareModal({
         </div>
 
         {/* Email Share Section */}
-        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
-            <Mail className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Mail className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Share via Email
             </h3>
@@ -154,7 +154,7 @@ export function ActionShareModal({
 
           {/* Friend Email */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Friend&apos;s Email <span className='text-red-500'>*</span>
             </label>
             <div className='relative'>
@@ -174,7 +174,7 @@ export function ActionShareModal({
 
           {/* Friend Name */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Friend&apos;s Name{' '}
               <span className='text-xs text-gray-400'>(Optional)</span>
             </label>
@@ -188,7 +188,7 @@ export function ActionShareModal({
 
           {/* Personal Message */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Personal Message{' '}
               <span className='text-xs text-gray-400'>(Optional)</span>
             </label>
@@ -212,9 +212,9 @@ export function ActionShareModal({
         </div>
 
         {/* Social Share Section */}
-        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
-            <Share2 className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Share2 className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Share on Social Media
             </h3>
@@ -232,7 +232,7 @@ export function ActionShareModal({
           <Button
             onClick={handleCopyLink}
             variant='outline'
-            className='w-full rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+            className='w-full rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
           >
             {copied ? (
               <>
@@ -248,10 +248,10 @@ export function ActionShareModal({
           </Button>
         </div>
 
-        <div className='flex gap-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
+        <div className='flex gap-3 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
           <Button
             onClick={closeModal}
-            className='flex-1 rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+            className='flex-1 rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
           >
             Close
           </Button>

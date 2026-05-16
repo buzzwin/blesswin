@@ -122,12 +122,12 @@ export function RitualSettings({
   if (loading) {
     return (
       <Modal
-        modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+        modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
         open={open}
         closeModal={closeModal}
       >
         <div className='flex items-center justify-center py-12'>
-          <div className='text-gray-600 dark:text-gray-400'>Loading settings...</div>
+          <div className='text-gray-600 dark:text-[#9E8B76]'>Loading settings...</div>
         </div>
       </Modal>
     );
@@ -136,12 +136,12 @@ export function RitualSettings({
   if (!settings) {
     return (
       <Modal
-        modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+        modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
         open={open}
         closeModal={closeModal}
       >
         <div className='text-center py-12'>
-          <div className='text-gray-600 dark:text-gray-400'>Settings not found</div>
+          <div className='text-gray-600 dark:text-[#9E8B76]'>Settings not found</div>
         </div>
       </Modal>
     );
@@ -151,16 +151,16 @@ export function RitualSettings({
 
   return (
     <Modal
-      modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
+      modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-6'>
         {/* Header */}
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-3'>
-            <div className='rounded-full bg-purple-100 p-2 dark:bg-purple-900/30'>
-              <Settings className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+            <div className='rounded-full bg-[rgba(201,169,110,0.1)] p-2 dark:bg-[rgba(201,169,110,0.08)]'>
+              <Settings className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
             </div>
             <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
               Ritual Settings
@@ -171,14 +171,14 @@ export function RitualSettings({
         {/* Notification Preferences */}
         <div className='space-y-4'>
           <div className='flex items-center gap-2'>
-            <Bell className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Bell className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Notifications
             </h3>
           </div>
 
           {/* Morning Notification */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <div className='flex items-center justify-between mb-3'>
               <div className='flex items-center gap-2'>
                 <Sun className='h-4 w-4 text-orange-500' />
@@ -191,29 +191,29 @@ export function RitualSettings({
                   onChange={(e) => updateNotificationPref('morning', e.target.checked)}
                   className='sr-only peer'
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-[rgba(201,169,110,0.3)] rounded-full peer dark:bg-[#231a10] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-[#2a1d10] peer-checked:bg-[#C97D60]"></div>
               </label>
             </div>
             {settings.notificationPreferences.morning && (
               <div className='mt-3'>
-                <label className='block text-sm text-gray-600 dark:text-gray-400 mb-1'>
+                <label className='block text-sm text-gray-600 dark:text-[#9E8B76] mb-1'>
                   Time
                 </label>
                 <input
                   type='time'
                   value={settings.notificationPreferences.morningTime || '08:00'}
                   onChange={(e) => updateNotificationPref('morningTime', e.target.value)}
-                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent'
+                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white focus:ring-2 focus:ring-[#C9A96E]/50 focus:border-transparent'
                 />
               </div>
             )}
           </div>
 
           {/* Evening Notification */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <div className='flex items-center justify-between mb-3'>
               <div className='flex items-center gap-2'>
-                <Moon className='h-4 w-4 text-blue-500' />
+                <Moon className='h-4 w-4 text-[#C9A96E]' />
                 <span className='font-medium text-gray-900 dark:text-white'>Evening Reminder</span>
               </div>
               <label className='relative inline-flex items-center cursor-pointer'>
@@ -223,32 +223,32 @@ export function RitualSettings({
                   onChange={(e) => updateNotificationPref('evening', e.target.checked)}
                   className='sr-only peer'
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-[rgba(201,169,110,0.3)] rounded-full peer dark:bg-[#231a10] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-[#2a1d10] peer-checked:bg-[#C97D60]"></div>
               </label>
             </div>
             {settings.notificationPreferences.evening && (
               <div className='mt-3'>
-                <label className='block text-sm text-gray-600 dark:text-gray-400 mb-1'>
+                <label className='block text-sm text-gray-600 dark:text-[#9E8B76] mb-1'>
                   Time
                 </label>
                 <input
                   type='time'
                   value={settings.notificationPreferences.eveningTime || '19:00'}
                   onChange={(e) => updateNotificationPref('eveningTime', e.target.value)}
-                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent'
+                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white focus:ring-2 focus:ring-[#C9A96E]/50 focus:border-transparent'
                 />
               </div>
             )}
           </div>
 
           {/* Milestone Notifications */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <div className='flex items-center justify-between'>
               <div className='flex items-center gap-2'>
                 <Clock className='h-4 w-4 text-green-500' />
                 <div>
                   <span className='font-medium text-gray-900 dark:text-white'>Milestone Celebrations</span>
-                  <p className='text-xs text-gray-500 dark:text-gray-400'>Get notified when you reach streak milestones</p>
+                  <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>Get notified when you reach streak milestones</p>
                 </div>
               </div>
               <label className='relative inline-flex items-center cursor-pointer'>
@@ -258,40 +258,40 @@ export function RitualSettings({
                   onChange={(e) => updateNotificationPref('milestones', e.target.checked)}
                   className='sr-only peer'
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-[rgba(201,169,110,0.3)] rounded-full peer dark:bg-[#231a10] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-[#2a1d10] peer-checked:bg-[#C97D60]"></div>
               </label>
             </div>
           </div>
 
           {/* Quiet Hours */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <h4 className='font-medium text-gray-900 dark:text-white mb-3'>
               Quiet Hours
             </h4>
-            <p className='text-sm text-gray-600 dark:text-gray-400 mb-4'>
+            <p className='text-sm text-gray-600 dark:text-[#9E8B76] mb-4'>
               Set times when you don't want to receive notifications
             </p>
             <div className='grid grid-cols-2 gap-4'>
               <div>
-                <label className='block text-sm text-gray-600 dark:text-gray-400 mb-1'>
+                <label className='block text-sm text-gray-600 dark:text-[#9E8B76] mb-1'>
                   Start (e.g., 22:00)
                 </label>
                 <input
                   type='time'
                   value={settings.notificationPreferences.quietHoursStart || '22:00'}
                   onChange={(e) => updateNotificationPref('quietHoursStart', e.target.value)}
-                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent'
+                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white focus:ring-2 focus:ring-[#C9A96E]/50 focus:border-transparent'
                 />
               </div>
               <div>
-                <label className='block text-sm text-gray-600 dark:text-gray-400 mb-1'>
+                <label className='block text-sm text-gray-600 dark:text-[#9E8B76] mb-1'>
                   End (e.g., 07:00)
                 </label>
                 <input
                   type='time'
                   value={settings.notificationPreferences.quietHoursEnd || '07:00'}
                   onChange={(e) => updateNotificationPref('quietHoursEnd', e.target.value)}
-                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-purple-500 focus:border-transparent'
+                  className='w-full rounded-lg border border-gray-300 px-3 py-2 text-gray-900 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white focus:ring-2 focus:ring-[#C9A96E]/50 focus:border-transparent'
                 />
               </div>
             </div>
@@ -299,25 +299,25 @@ export function RitualSettings({
         </div>
 
         {/* Email Preferences */}
-        <div className='space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
-            <Mail className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Mail className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Email Notifications
             </h3>
           </div>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
             Choose which emails you'd like to receive from Buzzwin
           </p>
 
           {/* Joined Ritual Email */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <div className='flex items-center justify-between'>
               <div className='flex-1'>
                 <div className='flex items-center gap-2 mb-1'>
                   <span className='font-medium text-gray-900 dark:text-white'>Someone Joined Your Ritual</span>
                 </div>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                   Get notified when someone joins your ritual
                 </p>
               </div>
@@ -328,19 +328,19 @@ export function RitualSettings({
                   onChange={(e) => updateEmailPref('joinedAction', e.target.checked)}
                   className='sr-only peer'
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-[rgba(201,169,110,0.3)] rounded-full peer dark:bg-[#231a10] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-[#2a1d10] peer-checked:bg-[#C97D60]"></div>
               </label>
             </div>
           </div>
 
           {/* Ritual Reminders Email */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <div className='flex items-center justify-between'>
               <div className='flex-1'>
                 <div className='flex items-center gap-2 mb-1'>
                   <span className='font-medium text-gray-900 dark:text-white'>Daily Ritual Reminders</span>
                 </div>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                   Receive email reminders for your daily rituals
                 </p>
               </div>
@@ -351,19 +351,19 @@ export function RitualSettings({
                   onChange={(e) => updateEmailPref('ritualReminders', e.target.checked)}
                   className='sr-only peer'
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-[rgba(201,169,110,0.3)] rounded-full peer dark:bg-[#231a10] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-[#2a1d10] peer-checked:bg-[#C97D60]"></div>
               </label>
             </div>
           </div>
 
           {/* Weekly Summary Email */}
-          <div className='rounded-lg border border-gray-200 p-4 dark:border-gray-700'>
+          <div className='rounded-lg border border-gray-200 p-4 dark:border-[#2a1d10]'>
             <div className='flex items-center justify-between'>
               <div className='flex-1'>
                 <div className='flex items-center gap-2 mb-1'>
                   <span className='font-medium text-gray-900 dark:text-white'>Weekly Progress Summary</span>
                 </div>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                   Get a weekly digest of your progress and activity
                 </p>
               </div>
@@ -374,18 +374,18 @@ export function RitualSettings({
                   onChange={(e) => updateEmailPref('weeklySummary', e.target.checked)}
                   className='sr-only peer'
                 />
-                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-purple-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-purple-600"></div>
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-purple-300 dark:peer-focus:ring-[rgba(201,169,110,0.3)] rounded-full peer dark:bg-[#231a10] peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-[#2a1d10] peer-checked:bg-[#C97D60]"></div>
               </label>
             </div>
           </div>
         </div>
 
         {/* Preferred Categories */}
-        <div className='space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
           <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
             Preferred Categories
           </h3>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
             Select categories you're most interested in for personalized ritual suggestions
           </p>
           <div className='flex flex-wrap gap-2'>
@@ -398,7 +398,7 @@ export function RitualSettings({
                   className={`rounded-full px-4 py-2 text-sm font-medium transition-all ${
                     isSelected
                       ? impactTagColors[tag] + ' ring-2 ring-purple-500'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                   }`}
                 >
                   {impactTagLabels[tag]}
@@ -409,17 +409,17 @@ export function RitualSettings({
         </div>
 
         {/* Actions */}
-        <div className='flex gap-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
+        <div className='flex gap-3 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
           <button
             onClick={closeModal}
-            className='flex-1 rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+            className='flex-1 rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
             disabled={saving}
-            className='flex-1 rounded-full bg-purple-600 px-4 py-2 font-semibold text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed'
+            className='flex-1 rounded-full bg-[#C97D60] px-4 py-2 font-semibold text-white hover:bg-[#B56540] disabled:opacity-50 disabled:cursor-not-allowed'
           >
             {saving ? 'Saving...' : 'Save Settings'}
           </button>

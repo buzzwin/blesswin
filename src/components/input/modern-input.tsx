@@ -101,7 +101,7 @@ export function ModernInput({
             'cursor-pointer transition-all duration-200 hover:shadow-md',
             'border-amber-200 dark:border-amber-800/30',
             'hover:border-amber-300 dark:hover:border-amber-700',
-            'bg-white dark:bg-gray-800',
+            'bg-white dark:bg-[#1c1510]',
             'dark:hover:bg-amber-950/10 hover:bg-amber-50',
             compact && 'border-0 shadow-none hover:shadow-none'
           )}
@@ -117,7 +117,7 @@ export function ModernInput({
               />
               <p
                 className={cn(
-                  'flex-1 text-gray-500 dark:text-gray-400',
+                  'flex-1 text-gray-500 dark:text-[#9E8B76]',
                   compact ? 'text-xs' : 'text-xs md:text-base'
                 )}
               >
@@ -136,7 +136,7 @@ export function ModernInput({
 
       {/* Expanded view - Goodreads Style */}
       {isExpanded && (
-        <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-gray-800'>
+        <Card className='border-amber-200 bg-white shadow-lg dark:border-amber-800/30 dark:bg-[#1c1510]'>
           <CardContent className='p-3 md:p-6'>
             <form
               onSubmit={(e) => {
@@ -198,13 +198,13 @@ export function ModernInput({
                                   ? String(selectedMedia.title)
                                   : 'Unknown Title'}
                               </h3>
-                              <p className='text-xs text-gray-500 dark:text-gray-400 md:text-sm'>
+                              <p className='text-xs text-gray-500 dark:text-[#9E8B76] md:text-sm'>
                                 {selectedMedia.mediaType === 'movie'
                                   ? 'Movie'
                                   : 'TV Show'}
                               </p>
                               {selectedMedia.releaseDate && (
-                                <p className='text-xs text-gray-400 dark:text-gray-500'>
+                                <p className='text-xs text-gray-400 dark:text-[#9E8B76]'>
                                   {selectedMedia?.releaseDate
                                     ? new Date(
                                         String(selectedMedia.releaseDate)
@@ -229,7 +229,7 @@ export function ModernInput({
                       {/* Review Textarea */}
                       <div className='space-y-2 md:space-y-3'>
                         <div className='flex items-center justify-between'>
-                          <h4 className='text-xs font-medium text-gray-700 dark:text-gray-300 md:text-sm'>
+                          <h4 className='text-xs font-medium text-gray-700 dark:text-[#C4B5A0] md:text-sm'>
                             Write your review
                           </h4>
                         </div>
@@ -242,7 +242,7 @@ export function ModernInput({
                           }...`}
                           value={value}
                           onChange={handleChange}
-                          className='min-h-[80px] resize-none border-0 bg-transparent text-sm text-gray-900 shadow-none placeholder:text-gray-400 focus-visible:ring-0 dark:text-gray-100 dark:placeholder:text-gray-500 md:min-h-[120px] md:text-base'
+                          className='min-h-[80px] resize-none border-0 bg-transparent text-sm text-gray-900 shadow-none placeholder:text-gray-400 focus-visible:ring-0 dark:text-[#F5EFE6] dark:placeholder:text-[#6b5744] md:min-h-[120px] md:text-base'
                           disabled={loading}
                         />
                       </div>

@@ -77,7 +77,7 @@ export function WellnessContentGrid({
             {title}
           </h2>
         )}
-        <p className='mb-6 text-gray-600 dark:text-gray-400'>
+        <p className='mb-6 text-gray-600 dark:text-[#9E8B76]'>
           Ask your wellness AI pal for movie and TV show recommendations!
         </p>
         <Button
@@ -107,7 +107,7 @@ export function WellnessContentGrid({
             {title}
           </h2>
         )}
-        <p className='mb-4 text-gray-600 dark:text-gray-400'>{error}</p>
+        <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>{error}</p>
         <Button
           onClick={fetchWellnessContent}
           variant='outline'
@@ -127,7 +127,7 @@ export function WellnessContentGrid({
             {title}
           </h2>
         )}
-        <p className='mb-4 text-gray-600 dark:text-gray-400'>
+        <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
           No wellness content found. Check back soon!
         </p>
         <Button
@@ -157,10 +157,10 @@ export function WellnessContentGrid({
           return (
             <div
               key={`${item.mediaType}-${item.tmdbId}`}
-              className='group relative overflow-hidden rounded-lg bg-white shadow-md transition-all hover:shadow-xl dark:bg-gray-800'
+              className='group relative overflow-hidden rounded-lg bg-white shadow-md transition-all hover:shadow-xl dark:bg-[#1c1510]'
             >
               {/* Poster */}
-              <div className='relative aspect-[2/3] overflow-hidden bg-gray-200 dark:bg-gray-700'>
+              <div className='relative aspect-[2/3] overflow-hidden bg-gray-200 dark:bg-[#231a10]'>
                 <Image
                   src={item.posterUrl}
                   alt={item.title}
@@ -192,7 +192,7 @@ export function WellnessContentGrid({
                 <h3 className='mb-1 line-clamp-2 text-sm font-semibold text-gray-900 dark:text-white'>
                   {item.title}
                 </h3>
-                <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400'>
+                <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
                   {releaseYear && (
                     <>
                       <Calendar className='h-3 w-3' />

@@ -176,7 +176,7 @@ export function CuratorChat({
     <div className={`flex h-full flex-col ${className ?? ''}`}>
       {/* Header */}
       {onClose && (
-        <div className='flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
             <div className='flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500'>
               <Bot className='h-4 w-4 text-white' />
@@ -185,7 +185,7 @@ export function CuratorChat({
               <h3 className='text-sm font-bold text-gray-900 dark:text-white'>
                 Chat with Your Curator
               </h3>
-              <p className='text-xs text-gray-500 dark:text-gray-400'>
+              <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                 Ask CineWolf-93 anything
               </p>
             </div>
@@ -227,17 +227,17 @@ export function CuratorChat({
                 message.role === 'user'
                   ? 'border border-gray-200 bg-gray-50 dark:border-white/20 dark:bg-white/10'
                   : message.curatorName === 'CineWolf-93'
-                  ? 'border border-purple-400/30 bg-purple-50 dark:border-purple-400/30 dark:bg-purple-500/20'
+                  ? 'border border-purple-400/30 bg-[rgba(201,169,110,0.06)] dark:border-[rgba(201,169,110,0.45)]/30 dark:bg-[#C97D60]/20'
                   : 'border border-gray-200 bg-gray-100 dark:border-white/10 dark:bg-white/5'
               }`}
             >
               {message.role === 'curator' && (
                 <div className='mb-1 flex items-center gap-2'>
-                  <span className='text-[10px] font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-200'>
+                  <span className='text-[10px] font-semibold uppercase tracking-wide text-[#8a6520] dark:text-[#C4B5A0]'>
                     {message.curatorName}
                   </span>
                   {message.curatorName === 'CineWolf-93' && (
-                    <span className='rounded-full bg-purple-200 px-2 py-0.5 text-[9px] font-medium text-purple-700 dark:bg-purple-400/20 dark:text-purple-200'>
+                    <span className='rounded-full bg-purple-200 px-2 py-0.5 text-[9px] font-medium text-[#8a6520] dark:bg-purple-400/20 dark:text-[#C4B5A0]'>
                       Your Curator
                     </span>
                   )}
@@ -249,8 +249,8 @@ export function CuratorChat({
                   message.role === 'user'
                     ? 'text-gray-900 dark:text-white'
                     : message.curatorName === 'CineWolf-93'
-                    ? 'text-purple-900 dark:text-white'
-                    : 'text-gray-700 dark:text-gray-300'
+                    ? 'text-[#5a3d0a] dark:text-white'
+                    : 'text-gray-700 dark:text-[#C4B5A0]'
                 }`}
               >
                 {message.content}
@@ -261,7 +261,7 @@ export function CuratorChat({
                   {message.badges.map((badge, idx) => (
                     <span
                       key={idx}
-                      className='inline-flex items-center gap-1 rounded-full bg-purple-100 px-2 py-1 text-[10px] font-semibold text-purple-700 dark:bg-purple-500/30 dark:text-purple-200'
+                      className='inline-flex items-center gap-1 rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-1 text-[10px] font-semibold text-[#8a6520] dark:bg-[#C97D60]/30 dark:text-[#C4B5A0]'
                     >
                       {badge.icon}
                       {badge.text}
@@ -361,7 +361,7 @@ export function CuratorChat({
                           }
                         }}
                         disabled={loading || showLoginPrompt}
-                        className='dark:hover:bg-purple-950/20 rounded-lg border border-purple-300 bg-white px-3 py-1.5 text-xs font-medium text-purple-700 transition-all hover:border-purple-400 hover:bg-purple-50 disabled:cursor-not-allowed disabled:opacity-50 dark:border-purple-700 dark:bg-gray-800 dark:text-purple-300'
+                        className='dark:hover:bg-purple-950/20 rounded-lg border border-[rgba(201,169,110,0.4)] bg-[#faf8f4] px-3 py-1.5 text-xs font-medium text-[#8a6520] transition-all hover:border-[rgba(201,169,110,0.55)] hover:bg-[rgba(201,169,110,0.06)] disabled:cursor-not-allowed disabled:opacity-50 dark:border-[rgba(201,169,110,0.3)] dark:bg-[#1c1510] dark:text-[#C9A96E]'
                       >
                         {suggestion}
                       </button>
@@ -371,7 +371,7 @@ export function CuratorChat({
             </div>
 
             {message.role === 'user' && (
-              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-blue-500 ring-2 ring-blue-400/50'>
+              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.06)]0 ring-2 ring-[#C9A96E]/50'>
                 <Users className='h-5 w-5 text-white' />
               </div>
             )}
@@ -402,15 +402,15 @@ export function CuratorChat({
 
       {/* Login Prompt */}
       {showLoginPrompt && (
-        <div className='dark:from-purple-950/20 dark:to-pink-950/20 border-t border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 p-4 dark:border-gray-700'>
-          <div className='rounded-lg border border-purple-200 bg-white p-4 dark:border-purple-800 dark:bg-gray-800'>
+        <div className='dark:from-purple-950/20 dark:to-pink-950/20 border-t border-gray-200 bg-gradient-to-r from-purple-50 to-pink-50 p-4 dark:border-[#2a1d10]'>
+          <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-[#faf8f4] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[#1c1510]'>
             <div className='mb-2 flex items-center gap-2'>
-              <Trophy className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+              <Trophy className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
               <p className='text-sm font-semibold text-gray-900 dark:text-white'>
                 Get Personal Recommendations
               </p>
             </div>
-            <p className='mb-3 text-xs text-gray-600 dark:text-gray-400'>
+            <p className='mb-3 text-xs text-gray-600 dark:text-[#9E8B76]'>
               Sign in to get personalized show recommendations based on your
               taste profile. Your Curator learns from your ratings to suggest
               perfect matches.
@@ -428,7 +428,7 @@ export function CuratorChat({
                 Sign In to Continue
               </Button>
             ) : (
-              <p className='text-xs text-gray-500 dark:text-gray-400'>
+              <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                 Sign in to unlock personalized recommendations
               </p>
             )}
@@ -437,10 +437,10 @@ export function CuratorChat({
       )}
 
       {/* Input */}
-      <div className='border-t border-gray-200 p-4 dark:border-gray-700'>
+      <div className='border-t border-gray-200 p-4 dark:border-[#2a1d10]'>
         {showLoginPrompt ? (
-          <div className='dark:bg-purple-950/20 rounded-lg border border-purple-200 bg-purple-50 p-3 text-center dark:border-purple-800'>
-            <p className='text-sm text-gray-700 dark:text-gray-300'>
+          <div className='dark:bg-purple-950/20 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-3 text-center dark:border-[rgba(201,169,110,0.25)]'>
+            <p className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
               👆 Sign in above to continue chatting with your Curator
             </p>
           </div>
@@ -457,7 +457,7 @@ export function CuratorChat({
                 }
               }}
               placeholder='Ask your Curator...'
-              className='flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white'
+              className='flex-1 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
               disabled={loading || showLoginPrompt}
             />
             <Button

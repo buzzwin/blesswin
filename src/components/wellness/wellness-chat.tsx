@@ -180,7 +180,7 @@ export function WellnessChat({
     <div className={`flex h-full flex-col ${className ?? ''}`}>
       {/* Header */}
       {onClose && (
-        <div className='flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 px-4 py-3 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
             <div className={`flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br ${config.color}`}>
               <AgentIcon className='h-4 w-4 text-white' />
@@ -189,7 +189,7 @@ export function WellnessChat({
               <h3 className='text-sm font-bold text-gray-900 dark:text-white'>
                 {config.name}
               </h3>
-              <p className='text-xs text-gray-500 dark:text-gray-400'>
+              <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                 Your AI wellness companion
               </p>
             </div>
@@ -223,12 +223,12 @@ export function WellnessChat({
             <div
               className={`group relative max-w-[85%] flex-1 rounded-2xl p-5 shadow-sm transition-all duration-200 hover:shadow-md ${
                 message.role === 'user'
-                  ? 'border border-gray-100 bg-white text-gray-800 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-100'
+                  ? 'border border-gray-100 bg-white text-gray-800 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#F5EFE6]'
                   : `border border-transparent bg-gradient-to-br ${config.color.replace('from-', 'from-').replace(' to-', '/10 to-').replace('to-', '')}/5 to-white/50 dark:to-gray-900/50`
               }`}
             >
               {message.role === 'agent' && (
-                <div className='mb-2 flex items-center gap-2 border-b border-gray-100 pb-2 dark:border-gray-700/50'>
+                <div className='mb-2 flex items-center gap-2 border-b border-gray-100 pb-2 dark:border-[#2a1d10]/50'>
                   <span className={`text-xs font-bold uppercase tracking-wider bg-gradient-to-r ${config.color} bg-clip-text text-transparent`}>
                     {config.name}
                   </span>
@@ -238,8 +238,8 @@ export function WellnessChat({
               <div
                 className={`prose prose-sm max-w-none leading-relaxed ${
                   message.role === 'user'
-                    ? 'text-gray-700 dark:text-gray-200'
-                    : 'text-gray-800 dark:text-gray-100'
+                    ? 'text-gray-700 dark:text-[#C4B5A0]'
+                    : 'text-gray-800 dark:text-[#F5EFE6]'
                 }`}
               >
                 {message.content.split('\n').map((line, i) => (
@@ -265,7 +265,7 @@ export function WellnessChat({
             </div>
 
             {message.role === 'user' && (
-              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 ring-2 ring-blue-400/50'>
+              <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 ring-2 ring-[#C9A96E]/50'>
                 <Heart className='h-5 w-5 text-white' />
               </div>
             )}
@@ -296,8 +296,8 @@ export function WellnessChat({
 
       {/* Suggestions */}
       {messages.length === 1 && (
-        <div className='border-t border-gray-100 bg-gray-50/50 p-4 backdrop-blur-sm dark:border-gray-800 dark:bg-gray-900/50'>
-          <p className='mb-3 text-xs font-medium text-gray-500 dark:text-gray-400'>
+        <div className='border-t border-gray-100 bg-gray-50/50 p-4 backdrop-blur-sm dark:border-[#2a1d10] dark:bg-[#1c1510]/50'>
+          <p className='mb-3 text-xs font-medium text-gray-500 dark:text-[#9E8B76]'>
             Suggested topics:
           </p>
           <div className='flex flex-wrap gap-2'>
@@ -310,7 +310,7 @@ export function WellnessChat({
                     void handleSend();
                   }, 100);
                 }}
-                className={`rounded-full border border-gray-200 bg-white px-4 py-2 text-xs font-medium text-gray-600 shadow-sm transition-all hover:-translate-y-0.5 hover:border-${config.color.split('-')[1]}-200 hover:text-${config.color.split('-')[1]}-600 hover:shadow-md dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-${config.color.split('-')[1]}-500 dark:hover:text-${config.color.split('-')[1]}-400`}
+                className={`rounded-full border border-gray-200 bg-[#faf8f4] px-4 py-2 text-xs font-medium text-gray-600 shadow-sm transition-all hover:-translate-y-0.5 hover:border-${config.color.split('-')[1]}-200 hover:text-${config.color.split('-')[1]}-600 hover:shadow-md dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:border-${config.color.split('-')[1]}-500 dark:hover:text-${config.color.split('-')[1]}-400`}
               >
                 {suggestion}
               </button>
@@ -321,15 +321,15 @@ export function WellnessChat({
 
       {/* Login Prompt */}
       {showLoginPrompt && (
-        <div className={`border-t border-gray-200 bg-gradient-to-r ${config.color} bg-opacity-10 p-4 dark:border-gray-700`}>
-          <div className='rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800'>
+        <div className={`border-t border-gray-200 bg-gradient-to-r ${config.color} bg-opacity-10 p-4 dark:border-[#2a1d10]`}>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <div className='mb-2 flex items-center gap-2'>
               <Heart className={`h-4 w-4 ${config.color.split(' ')[0].replace('from-', 'text-')}`} />
               <p className='text-sm font-semibold text-gray-900 dark:text-white'>
                 Continue Your Wellness Journey
               </p>
             </div>
-            <p className='mb-3 text-xs text-gray-600 dark:text-gray-400'>
+            <p className='mb-3 text-xs text-gray-600 dark:text-[#9E8B76]'>
               Sign in to save your progress, get personalized recommendations, and access your wellness history.
             </p>
             {onLoginRequest ? (
@@ -341,7 +341,7 @@ export function WellnessChat({
                 Sign In to Continue
               </Button>
             ) : (
-              <p className='text-xs text-gray-500 dark:text-gray-400'>
+              <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                 Sign in to unlock personalized wellness guidance
               </p>
             )}
@@ -350,9 +350,9 @@ export function WellnessChat({
       )}
 
       {/* Disclaimer Notice */}
-      <div className='border-t border-gray-200 bg-gray-50 px-4 py-2 dark:border-gray-700 dark:bg-gray-800/50'>
-        <p className='text-[10px] leading-relaxed text-gray-600 dark:text-gray-400'>
-          <strong className='text-gray-700 dark:text-gray-300'>Disclaimer:</strong> This platform does not provide medical advice. 
+      <div className='border-t border-gray-200 bg-gray-50 px-4 py-2 dark:border-[#2a1d10] dark:bg-[#231a10]'>
+        <p className='text-[10px] leading-relaxed text-gray-600 dark:text-[#9E8B76]'>
+          <strong className='text-gray-700 dark:text-[#C4B5A0]'>Disclaimer:</strong> This platform does not provide medical advice. 
           Consult a healthcare professional before starting any wellness practice. 
           <Link href='/disclaimer' className='ml-1 underline hover:text-gray-900 dark:hover:text-gray-200'>
             Learn more
@@ -361,10 +361,10 @@ export function WellnessChat({
       </div>
 
       {/* Input */}
-      <div className='border-t border-gray-200 p-4 dark:border-gray-700'>
+      <div className='border-t border-gray-200 p-4 dark:border-[#2a1d10]'>
         {showLoginPrompt ? (
-          <div className='rounded-lg border border-gray-200 bg-gray-50 p-3 text-center dark:border-gray-700 dark:bg-gray-800'>
-            <p className='text-sm text-gray-700 dark:text-gray-300'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-3 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <p className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
               👆 Sign in above to continue your wellness journey
             </p>
           </div>
@@ -381,7 +381,7 @@ export function WellnessChat({
                 }
               }}
               placeholder={`Ask ${config.name}...`}
-              className='flex-1 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-white'
+              className='flex-1 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-opacity-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
               disabled={loading || showLoginPrompt}
             />
             <Button

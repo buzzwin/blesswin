@@ -118,7 +118,7 @@ export function ImpactMomentCard({
   };
 
   return (
-    <article className='border-b border-gray-200 py-4 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-800/50'>
+    <article className='border-b border-[#e8d8c4] py-4 transition-colors hover:bg-[rgba(201,169,110,0.03)] dark:border-[#2a1d10] dark:hover:bg-[rgba(201,169,110,0.04)]'>
       <div className='flex gap-3'>
         {/* User Avatar */}
         <Link href={`/user/${moment.user.username}`}>
@@ -135,7 +135,7 @@ export function ImpactMomentCard({
         <div className='min-w-0 flex-1'>
           {/* Ritual Badge - Enhanced with join encouragement (compact mobile-friendly) */}
           {moment.fromDailyRitual && (
-            <div className='mb-3 overflow-hidden rounded-lg border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 shadow-sm transition-shadow hover:shadow-md dark:border-emerald-700/50 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-cyan-900/30'>
+            <div className='mb-3 overflow-hidden rounded-lg border-2 border-[rgba(201,169,110,0.4)] bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 shadow-sm transition-shadow hover:shadow-md dark:border-[rgba(201,169,110,0.35)]/50 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-cyan-900/30'>
               <div className='p-2.5 md:p-3'>
                 <div className='flex items-start gap-2 md:gap-2.5'>
                   {/* Icon */}
@@ -147,10 +147,10 @@ export function ImpactMomentCard({
                   <div className='min-w-0 flex-1'>
                     {/* Header with badge */}
                     <div className='mb-1 flex flex-wrap items-center gap-1.5 md:gap-2'>
-                      <span className='text-xs font-bold text-emerald-800 dark:text-emerald-200 md:text-sm'>
+                      <span className='text-xs font-bold text-[#5a3d08] dark:text-[#C4B5A0] md:text-sm'>
                         Today's Ritual
                       </span>
-                      <span className='flex items-center gap-0.5 rounded-full bg-emerald-100 px-1.5 py-0.5 text-[10px] font-semibold text-emerald-700 dark:bg-emerald-800 dark:text-emerald-200 md:px-2 md:text-xs'>
+                      <span className='flex items-center gap-0.5 rounded-full bg-[rgba(201,169,110,0.1)] px-1.5 py-0.5 text-[10px] font-semibold text-[#7a5510] dark:bg-emerald-800 dark:text-[#C4B5A0] md:px-2 md:text-xs'>
                         <TrendingUp className='h-2.5 w-2.5 md:h-3 md:w-3' />
                         Active
                       </span>
@@ -162,7 +162,7 @@ export function ImpactMomentCard({
                     </h4>
                     
                     {/* Compact description */}
-                    <p className='mb-2 text-xs leading-relaxed text-gray-700 dark:text-gray-300 md:text-sm'>
+                    <p className='mb-2 text-xs leading-relaxed text-gray-700 dark:text-[#C4B5A0] md:text-sm'>
                       Join this ritual to create your own moments and earn karma!
                     </p>
                     
@@ -194,9 +194,9 @@ export function ImpactMomentCard({
 
           {/* Shared Ritual Participation Badge */}
           {moment.joinedFromMomentId && (
-            <div className='mb-3 flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 dark:border-purple-800 dark:bg-purple-900/20'>
+            <div className='mb-3 flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-3 py-2 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
               <span className='text-lg'>🌱</span>
-              <span className='text-sm font-medium text-purple-700 dark:text-purple-300'>
+              <span className='text-sm font-medium text-[#8a6520] dark:text-[#C9A96E]'>
                 Shared ritual participation from{' '}
                 {loadingOriginal
                   ? '...'
@@ -206,7 +206,7 @@ export function ImpactMomentCard({
               </span>
               {originalMoment && (
                 <Link href={`/impact/${moment.joinedFromMomentId}`}>
-                  <a className='ml-auto flex items-center gap-1 text-xs font-medium text-purple-600 hover:text-purple-800 dark:text-purple-400 dark:hover:text-purple-200'>
+                  <a className='ml-auto flex items-center gap-1 text-xs font-medium text-[#C9A96E] hover:text-[#7a5a18] dark:text-[#C9A96E] dark:hover:text-purple-200'>
                     View original
                     <ArrowRight className='h-3 w-3' />
                   </a>
@@ -230,8 +230,8 @@ export function ImpactMomentCard({
             <UserUsername username={moment.user.username} />
             {moment.createdAt && (
               <>
-                <span className='text-gray-500 dark:text-gray-400'>·</span>
-                <time className='text-sm text-gray-500 dark:text-gray-400'>
+                <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
+                <time className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                   {moment.createdAt instanceof Date
                     ? formatDate(
                         moment.createdAt as unknown as Timestamp,
@@ -244,10 +244,10 @@ export function ImpactMomentCard({
             {/* Privacy Indicator */}
             {moment.isPublic === false && (
               <>
-                <span className='text-gray-500 dark:text-gray-400'>·</span>
-                <div className='flex items-center gap-1 rounded-full bg-gray-100 px-2 py-0.5 dark:bg-gray-800'>
-                  <Lock className='h-3 w-3 text-gray-600 dark:text-gray-400' />
-                  <span className='text-xs font-medium text-gray-600 dark:text-gray-400'>
+                <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
+                <div className='flex items-center gap-1 rounded-full bg-[rgba(201,169,110,0.08)] px-2 py-0.5 border border-[rgba(201,169,110,0.2)]'>
+                  <Lock className='h-3 w-3 text-[#9E8B76]' />
+                  <span className='text-xs font-medium text-[#9E8B76]'>
                     Private
                   </span>
                 </div>
@@ -255,10 +255,10 @@ export function ImpactMomentCard({
             )}
             {moment.isPublic !== false && (
               <>
-                <span className='text-gray-500 dark:text-gray-400'>·</span>
-                <div className='flex items-center gap-1 rounded-full bg-blue-100 px-2 py-0.5 dark:bg-blue-900/30'>
-                  <Globe className='h-3 w-3 text-blue-600 dark:text-blue-400' />
-                  <span className='text-xs font-medium text-blue-600 dark:text-blue-400'>
+                <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
+                <div className='flex items-center gap-1 rounded-full bg-[rgba(156,175,136,0.1)] px-2 py-0.5 border border-[rgba(156,175,136,0.25)]'>
+                  <Globe className='h-3 w-3 text-[#9CAF88]' />
+                  <span className='text-xs font-medium text-[#9CAF88]'>
                     Public
                   </span>
                 </div>
@@ -281,7 +281,7 @@ export function ImpactMomentCard({
           )}
 
           {/* Ritual Participation Text */}
-          <p className='mb-3 whitespace-pre-wrap break-words text-gray-900 dark:text-white'>
+          <p className='mb-3 whitespace-pre-wrap break-words text-light-primary dark:text-dark-primary'>
             {moment.text}
           </p>
 
@@ -305,7 +305,7 @@ export function ImpactMomentCard({
             <span className='text-lg'>
               {effortLevelIcons[moment.effortLevel]}
             </span>
-            <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <span className='text-sm font-medium text-[#6b5744] dark:text-[#9E8B76]'>
               {effortLevelLabels[moment.effortLevel]} Effort
             </span>
           </div>
@@ -313,7 +313,7 @@ export function ImpactMomentCard({
           {/* Reaction and Ripple Count Display (for original moments) */}
           {!moment.joinedFromMomentId &&
             (reactionCount > 0 || rippleCount > 0) && (
-              <div className='mb-3 flex items-center gap-3 text-sm text-gray-600 dark:text-gray-400'>
+              <div className='mb-3 flex items-center gap-3 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
                 {reactionCount > 0 && (
                   <span>
                     {reactionCount}{' '}
@@ -323,7 +323,7 @@ export function ImpactMomentCard({
                 {reactionCount > 0 && rippleCount > 0 && <span>•</span>}
                 {rippleCount > 0 && (
                   <Link href={moment.ritualId ? `/rituals/${moment.ritualId}` : `/impact/${moment.id}/ripple`}>
-                    <a className='inline-flex items-center gap-1 text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'>
+                    <a className='inline-flex items-center gap-1 text-[#C9A96E] hover:text-[#E8B86D]'>
                       <span>
                         {moment.ritualId ? (
                           <>View ritual</>
@@ -347,7 +347,7 @@ export function ImpactMomentCard({
               <div className='mb-3'>
                 {moment.ritualId ? (
                   <Link href={`/rituals/${moment.ritualId}`}>
-                    <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
+                    <a className='inline-flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] px-3 py-2 text-sm font-medium text-[#C9A96E] transition-colors hover:bg-[rgba(201,169,110,0.12)]'>
                       <span>🌱</span>
                       <span>View ritual</span>
                       <ArrowRight className='h-4 w-4' />
@@ -355,7 +355,7 @@ export function ImpactMomentCard({
                   </Link>
                 ) : (
                   <Link href={`/impact/${moment.id}/ripple`}>
-                    <a className='inline-flex items-center gap-2 rounded-lg border border-purple-200 bg-purple-50 px-3 py-2 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'>
+                    <a className='inline-flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] px-3 py-2 text-sm font-medium text-[#C9A96E] transition-colors hover:bg-[rgba(201,169,110,0.12)]'>
                       <span>🌱</span>
                       <span>View ripple</span>
                       <ArrowRight className='h-4 w-4' />
@@ -367,22 +367,22 @@ export function ImpactMomentCard({
 
           {/* Mood Check-in */}
           {moment.moodCheckIn && (
-            <div className='mb-3 rounded-lg bg-purple-50 p-3 dark:bg-purple-900/20'>
-              <div className='mb-2 text-xs font-medium text-purple-700 dark:text-purple-300'>
+            <div className='mb-3 rounded-lg bg-[rgba(201,169,110,0.06)] p-3 border border-[rgba(201,169,110,0.15)]'>
+              <div className='mb-2 text-xs font-medium text-[#C9A96E]'>
                 Mood Check-in
               </div>
               <div className='flex items-center gap-4 text-sm'>
                 <div className='flex items-center gap-2'>
-                  <span className='text-gray-600 dark:text-gray-400'>
+                  <span className='text-[#6b5744] dark:text-[#9E8B76]'>
                     Before:
                   </span>
-                  <span className='font-semibold text-gray-900 dark:text-white'>
+                  <span className='font-semibold text-light-primary dark:text-dark-primary'>
                     {moment.moodCheckIn.before}/5
                   </span>
                 </div>
-                <span className='text-gray-400'>→</span>
+                <span className='text-[#9E8B76]'>→</span>
                 <div className='flex items-center gap-2'>
-                  <span className='text-gray-600 dark:text-gray-400'>
+                  <span className='text-[#6b5744] dark:text-[#9E8B76]'>
                     After:
                   </span>
                   <span className='font-semibold text-green-600 dark:text-green-400'>
@@ -421,7 +421,7 @@ export function ImpactMomentCard({
               <div className='relative'>
                 <button
                   onClick={() => setRippleMenuOpen(!rippleMenuOpen)}
-                  className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-purple-100 hover:text-purple-600 dark:text-gray-400 dark:hover:bg-purple-900/30 dark:hover:text-purple-400 md:gap-1.5 md:p-2'
+                  className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2'
                   title='React'
                 >
                   <Sparkles className='h-4 w-4 md:h-4.5 md:w-4.5' />
@@ -432,8 +432,8 @@ export function ImpactMomentCard({
 
                 {/* Reactions Menu */}
                 {rippleMenuOpen && (
-                  <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'>
-                    <div className='border-b border-gray-200 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:border-gray-700 dark:text-gray-400'>
+                  <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-[#e8d8c4] bg-[#faf8f4] shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+                    <div className='border-b border-[#e8d8c4] px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[#6b5744] dark:border-[#2a1d10] dark:text-[#9E8B76]'>
                       Reactions
                     </div>
                     <div className='p-2'>
@@ -448,7 +448,7 @@ export function ImpactMomentCard({
                               void onRipple?.(moment.id, rippleType);
                             }
                           }}
-                          className='flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-gray-100 dark:hover:bg-gray-700'
+                          className='flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-[rgba(201,169,110,0.08)]'
                         >
                           <span className='text-lg'>
                             {rippleTypeIcons[rippleType]}
@@ -470,7 +470,7 @@ export function ImpactMomentCard({
 
               {/* Comment Button */}
               <Link href={`/impact/${moment.id}`}>
-                <a className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 md:gap-1.5 md:p-2' title='Comment'>
+                <a className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2' title='Comment'>
                   <MessageCircle className='h-4 w-4 md:h-4.5 md:w-4.5' />
                   <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Comment</span></span>
                 </a>
@@ -479,7 +479,7 @@ export function ImpactMomentCard({
               {/* Share Button */}
               <button
                 onClick={() => setShareModalOpen(true)}
-                className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-green-100 hover:text-green-600 dark:text-gray-400 dark:hover:bg-green-900/30 dark:hover:text-green-400 md:gap-1.5 md:p-2'
+                className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2'
                 title='Share'
               >
                 <Share2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
@@ -491,7 +491,7 @@ export function ImpactMomentCard({
                 <>
                   <button
                     onClick={() => setEditModalOpen(true)}
-                    className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-blue-100 hover:text-blue-600 dark:text-gray-400 dark:hover:bg-blue-900/30 dark:hover:text-blue-400 md:gap-1.5 md:p-2'
+                    className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2'
                     title='Edit'
                   >
                     <Edit2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
@@ -548,7 +548,7 @@ export function ImpactMomentCard({
                       }
                     }}
                     disabled={deleting}
-                    className='group flex items-center gap-1 rounded-full p-1.5 text-gray-600 transition-colors hover:bg-red-100 hover:text-red-600 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-red-900/30 dark:hover:text-red-400 md:gap-1.5 md:p-2'
+                    className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50 dark:text-[#9E8B76] dark:hover:bg-red-900/20 dark:hover:text-red-400 md:gap-1.5 md:p-2'
                     title='Delete'
                   >
                     <Trash2 className='h-4 w-4 md:h-4.5 md:w-4.5' />

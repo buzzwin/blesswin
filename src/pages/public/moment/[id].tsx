@@ -185,12 +185,12 @@ export default function PublicImpactMomentPage(): JSX.Element {
       >
         <MainHeader title='Ritual Share' />
         <div className='mx-auto max-w-2xl px-4 py-8'>
-          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-            <p className='mb-4 text-gray-600 dark:text-gray-400'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
               Impact moment not found
             </p>
             <Link href='/'>
-              <a className='inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+              <a className='inline-flex items-center gap-2 text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'>
                 <ArrowLeft className='h-4 w-4' />
                 Back to Home
               </a>
@@ -224,7 +224,7 @@ export default function PublicImpactMomentPage(): JSX.Element {
           {/* Back Button */}
           <div className='mb-4'>
             <Link href='/'>
-              <a className='inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+              <a className='inline-flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
                 <ArrowLeft className='h-4 w-4' />
                 Back to Home
               </a>
@@ -250,14 +250,14 @@ export default function PublicImpactMomentPage(): JSX.Element {
           {!moment.joinedFromMomentId && (
             <div className='mb-6'>
               <Link href={`/impact/${moment.id}/ripple`}>
-                <a className='flex items-center justify-between rounded-lg border border-purple-200 bg-purple-50 p-4 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'>
+                <a className='flex items-center justify-between rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 transition-colors hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:hover:bg-[rgba(201,169,110,0.09)]'>
                   <div className='flex items-center gap-3'>
-                    <Users className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                    <Users className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
                     <div>
-                      <div className='font-semibold text-purple-900 dark:text-purple-100'>
+                      <div className='font-semibold text-[#5a3d0a] dark:text-[#F5EFE6]'>
                         View Ripple
                       </div>
-                      <div className='text-sm text-purple-700 dark:text-purple-300'>
+                      <div className='text-sm text-[#8a6520] dark:text-[#C9A96E]'>
                         {joinedCount === 0
                           ? 'No ripples yet'
                           : `${joinedCount} ${
@@ -266,7 +266,7 @@ export default function PublicImpactMomentPage(): JSX.Element {
                       </div>
                     </div>
                   </div>
-                  <ArrowRight className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                  <ArrowRight className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
                 </a>
               </Link>
             </div>
@@ -299,15 +299,15 @@ export default function PublicImpactMomentPage(): JSX.Element {
 
           {/* Sign In CTA (if not authenticated) */}
           {!user && (
-            <div className='mb-6 rounded-lg border border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20'>
+            <div className='mb-6 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-6 text-center dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
                 Join the Community
               </h3>
-              <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mb-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 Sign in to comment, react, and share your own ritual participations!
               </p>
               <Link href={`/login?redirect=/public/moment/${moment.id}`}>
-                <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700'>
+                <a className='inline-flex items-center gap-2 rounded-full bg-[#C97D60] px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-[#B56540]'>
                   <LogIn className='h-5 w-5' />
                   Sign In to Join
                 </a>
@@ -323,8 +323,8 @@ export default function PublicImpactMomentPage(): JSX.Element {
             {commentsLoading ? (
               <Loading className='mt-5' />
             ) : comments.length === 0 ? (
-              <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-                <p className='text-gray-500 dark:text-gray-400'>
+              <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+                <p className='text-gray-500 dark:text-[#9E8B76]'>
                   No comments yet. Sign in to be the first to comment!
                 </p>
               </div>

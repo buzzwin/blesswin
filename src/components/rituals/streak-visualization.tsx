@@ -59,18 +59,18 @@ export function StreakVisualization({
               {currentStreak}
             </span>
           </div>
-          <div className='text-xs text-gray-600 dark:text-gray-400 md:text-sm'>
+          <div className='text-xs text-gray-600 dark:text-[#9E8B76] md:text-sm'>
             day {currentStreak === 1 ? 'streak' : 'streak'}
           </div>
         </div>
         {longestStreak > currentStreak && (
           <>
-            <div className='h-10 w-px bg-gray-300 dark:bg-gray-700 md:h-12' />
+            <div className='h-10 w-px bg-gray-300 dark:bg-[#231a10] md:h-12' />
             <div className='text-center'>
-              <div className='mb-0.5 text-xl font-bold text-gray-600 dark:text-gray-400 md:mb-1 md:text-2xl'>
+              <div className='mb-0.5 text-xl font-bold text-gray-600 dark:text-[#9E8B76] md:mb-1 md:text-2xl'>
                 {longestStreak}
               </div>
-              <div className='text-xs text-gray-500 dark:text-gray-400'>
+              <div className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                 longest streak
               </div>
             </div>
@@ -80,7 +80,7 @@ export function StreakVisualization({
 
       {/* Calendar View */}
       <div>
-        <h3 className='mb-2 text-xs font-semibold text-gray-700 dark:text-gray-300 md:mb-3 md:text-sm'>
+        <h3 className='mb-2 text-xs font-semibold text-gray-700 dark:text-[#C4B5A0] md:mb-3 md:text-sm'>
           Last 30 Days
         </h3>
         <div className='grid grid-cols-7 gap-0.5 md:gap-1'>
@@ -98,26 +98,26 @@ export function StreakVisualization({
                   isCompleted
                     ? 'bg-green-500 dark:bg-green-600'
                     : isToday
-                    ? 'border-2 border-purple-500 bg-purple-100 dark:bg-purple-900/20'
-                    : 'bg-gray-200 dark:bg-gray-700',
+                    ? 'border-2 border-[#C9A96E] bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'
+                    : 'bg-gray-200 dark:bg-[#231a10]',
                   'flex items-center justify-center'
                 )}
                 title={date}
               >
                 {isToday && !isCompleted && (
-                  <span className='text-purple-600 dark:text-purple-400'>•</span>
+                  <span className='text-[#C9A96E] dark:text-[#C9A96E]'>•</span>
                 )}
               </div>
             );
           })}
         </div>
-        <div className='mt-2 flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-gray-400'>
+        <div className='mt-2 flex items-center justify-center gap-4 text-xs text-gray-500 dark:text-[#9E8B76]'>
           <div className='flex items-center gap-1'>
             <div className='h-3 w-3 rounded bg-green-500 dark:bg-green-600' />
             <span>Completed</span>
           </div>
           <div className='flex items-center gap-1'>
-            <div className='h-3 w-3 rounded border-2 border-purple-500 bg-purple-100 dark:bg-purple-900/20' />
+            <div className='h-3 w-3 rounded border-2 border-[#C9A96E] bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]' />
             <span>Today</span>
           </div>
         </div>

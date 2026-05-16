@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 
 interface Props {
   companyName: string;
@@ -7,7 +8,17 @@ interface Props {
 const PrivacyPolicy: React.FC<Props> = () => {
   const companyName = 'Buzzwin';
   return (
-    <div className='mx-auto max-w-5xl px-4 sm:px-6 lg:px-8'>
+    <div className='min-h-screen bg-main-background text-light-primary dark:text-dark-primary'>
+      <nav className='border-b border-light-border dark:border-dark-border'>
+        <div className='mx-auto flex max-w-5xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8'>
+          <Link href='/'>
+            <a className='font-display text-lg font-bold text-light-primary dark:text-dark-primary'>
+              ← Buzzwin
+            </a>
+          </Link>
+        </div>
+      </nav>
+    <div className='mx-auto max-w-5xl px-4 py-8 sm:px-6 lg:px-8'>
       <div className='light:text-gray-900 mb-8 text-3xl font-extrabold leading-9 dark:text-white sm:text-4xl sm:leading-10'>
         {companyName} Privacy Policy
       </div>
@@ -135,6 +146,7 @@ const PrivacyPolicy: React.FC<Props> = () => {
           .
         </p>
       </div>
+    </div>
     </div>
   );
 };

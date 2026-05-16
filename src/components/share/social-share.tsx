@@ -142,7 +142,7 @@ export function SocialShare({
           <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
             Share Buzzwin
           </h3>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
             Help others discover wellness and positive actions
           </p>
         </div>
@@ -150,9 +150,9 @@ export function SocialShare({
 
       <div className='flex flex-wrap justify-center gap-3'>
         <FacebookShareButton url={shareUrl} quote={shareText}>
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <FacebookIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               Facebook
             </span>
           </div>
@@ -163,36 +163,36 @@ export function SocialShare({
           title={shareText}
           hashtags={hashtags}
         >
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <TwitterIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               Twitter
             </span>
           </div>
         </TwitterShareButton>
 
         <WhatsappShareButton url={shareUrl} title={shareText}>
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <WhatsappIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               WhatsApp
             </span>
           </div>
         </WhatsappShareButton>
 
         <LinkedinShareButton url={shareUrl} title={shareText}>
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <LinkedinIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               LinkedIn
             </span>
           </div>
         </LinkedinShareButton>
 
         <RedditShareButton url={shareUrl} title={shareText}>
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <RedditIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               Reddit
             </span>
           </div>
@@ -203,27 +203,27 @@ export function SocialShare({
           media={shareUrl}
           description={shareText}
         >
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <PinterestIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               Pinterest
             </span>
           </div>
         </PinterestShareButton>
 
         <TelegramShareButton url={shareUrl} title={shareText}>
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <TelegramIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               Telegram
             </span>
           </div>
         </TelegramShareButton>
 
         <EmailShareButton url={shareUrl} subject={title} body={shareText}>
-          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'>
+          <div className='flex flex-col items-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'>
             <EmailIcon size={32} round />
-            <span className='text-xs text-gray-600 dark:text-gray-400'>
+            <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
               Email
             </span>
           </div>
@@ -239,7 +239,7 @@ export function SocialShare({
           ) : (
             <Copy className='h-8 w-8' />
           )}
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             {copied ? 'Copied!' : 'Copy Link'}
           </span>
         </Button>

@@ -67,7 +67,7 @@ export function SharedAutomationCard({
 
   if (loading) {
     return (
-      <div className='my-4 flex items-center justify-center rounded-lg border-2 border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
+      <div className='my-4 flex items-center justify-center rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
         <Loading />
       </div>
     );
@@ -112,7 +112,7 @@ export function SharedAutomationCard({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      className='my-4 rounded-lg border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-4 dark:border-purple-800 dark:from-purple-900/20 dark:to-pink-900/20'
+      className='my-4 rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-gradient-to-br from-purple-50 to-pink-50 p-4 dark:border-[rgba(201,169,110,0.25)] dark:from-purple-900/20 dark:to-pink-900/20'
     >
       <div className='mb-3 flex items-start gap-3'>
         <div className={cn('flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br', categoryColor)}>
@@ -130,7 +130,7 @@ export function SharedAutomationCard({
           <h3 className='text-lg font-bold text-gray-900 dark:text-white'>
             {title}
           </h3>
-          <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+          <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
             {automation.description}
           </p>
         </div>
@@ -138,14 +138,14 @@ export function SharedAutomationCard({
 
       {/* Creator Info */}
       {creatorName && (
-        <div className='mb-3 flex items-center gap-2 border-t border-purple-200 pt-3 dark:border-purple-800'>
+        <div className='mb-3 flex items-center gap-2 border-t border-[rgba(201,169,110,0.3)] pt-3 dark:border-[rgba(201,169,110,0.25)]'>
           <UserAvatar src={creatorPhotoURL ?? 'default-avatar'} alt={creatorName} />
           <div className='flex-1'>
             <p className='text-xs font-medium text-gray-900 dark:text-white'>
               Created by {creatorName}
             </p>
             {creatorUsername && (
-              <p className='text-xs text-gray-600 dark:text-gray-400'>
+              <p className='text-xs text-gray-600 dark:text-[#9E8B76]'>
                 @{creatorUsername}
               </p>
             )}

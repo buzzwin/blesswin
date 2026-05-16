@@ -75,15 +75,15 @@ export default function RevealPage(): JSX.Element {
         <meta name='viewport' content='width=device-width, initial-scale=1' />
       </Head>
 
-      <div className='flex min-h-screen flex-col bg-gray-50 dark:bg-gray-950'>
+      <div className='flex min-h-screen flex-col bg-[#f5f1ea] dark:bg-[#110d07]'>
         {/* Top bar */}
-        <header className='flex shrink-0 items-center justify-between border-b border-gray-100 bg-white px-4 py-3 dark:border-gray-800 dark:bg-gray-900'>
+        <header className='flex shrink-0 items-center justify-between border-b border-[#e8d8c4] bg-[#faf8f4] px-4 py-3 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
           <Link href='/'>
-            <a className='font-display text-lg font-bold text-emerald-500'>Buzzwin</a>
+            <a className='font-display text-lg font-bold text-[#C9A96E]'>Buzzwin</a>
           </Link>
           {buzz && (
             <Link href={`/b/${buzz.shareToken}`}>
-              <a className='text-sm text-gray-400 transition hover:text-emerald-500'>
+              <a className='text-sm text-[#6b5744] transition hover:text-[#C9A96E]'>
                 Add your page →
               </a>
             </Link>
@@ -93,7 +93,7 @@ export default function RevealPage(): JSX.Element {
         <main className='flex flex-1 flex-col'>
           {/* Loading */}
           {loading && (
-            <div className='flex flex-1 flex-col items-center justify-center gap-3 text-gray-400'>
+            <div className='flex flex-1 flex-col items-center justify-center gap-3 text-[#9E8B76]'>
               <HeroIcon iconName='ArrowPathIcon' className='h-8 w-8 animate-spin' />
               <span className='text-sm'>Opening Buzzbook…</span>
             </div>
@@ -103,11 +103,11 @@ export default function RevealPage(): JSX.Element {
           {!buzzLoading && !buzz && (
             <div className='flex flex-1 flex-col items-center justify-center gap-4 text-center'>
               <span className='text-5xl'>🤔</span>
-              <p className='font-semibold text-gray-700 dark:text-gray-200'>
+              <p className='font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
                 Buzzbook not found
               </p>
               <Link href='/'>
-                <a className='text-sm text-emerald-500 hover:text-emerald-600'>
+                <a className='text-sm text-[#C9A96E] hover:text-[#E8B86D]'>
                   Go home
                 </a>
               </Link>
@@ -131,10 +131,10 @@ export default function RevealPage(): JSX.Element {
               {signatures.length === 0 ? (
                 <div className='flex flex-1 flex-col items-center justify-center gap-4 text-center'>
                   <span className='text-5xl'>📭</span>
-                  <p className='font-semibold text-gray-700 dark:text-gray-200'>
+                  <p className='font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
                     No pages were added
                   </p>
-                  <p className='text-sm text-gray-400'>
+                  <p className='text-sm text-[#9E8B76]'>
                     The Buzzbook is empty — looks like no one signed in time.
                   </p>
                 </div>

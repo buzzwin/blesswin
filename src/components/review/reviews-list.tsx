@@ -27,7 +27,7 @@ export function ReviewsList({
   if (loading) {
     return (
       <div className='flex justify-center py-4'>
-        <div className='h-8 w-8 animate-spin rounded-full border-4 border-emerald-400 border-t-transparent' />
+        <div className='h-8 w-8 animate-spin rounded-full border-4 border-[#C9A96E] border-t-transparent' />
       </div>
     );
   }
@@ -59,7 +59,7 @@ export function ReviewsList({
   return (
     <div className='space-y-4'>
       {/* Filters and Sort Controls */}
-      <div className='flex flex-wrap items-center justify-between gap-4 rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800'>
+      <div className='flex flex-wrap items-center justify-between gap-4 rounded-xl bg-[#faf8f4] p-4 shadow-sm dark:bg-[#1c1510]'>
         {/* Filter Buttons */}
         <div className='flex gap-2'>
           <button
@@ -70,8 +70,8 @@ export function ReviewsList({
             className={cn(
               'rounded-lg px-3 py-1.5 text-sm font-medium',
               filterBy === 'all'
-                ? 'bg-emerald-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
+                ? 'bg-[#C97D60] text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0]'
             )}
           >
             All
@@ -84,8 +84,8 @@ export function ReviewsList({
             className={cn(
               'rounded-lg px-3 py-1.5 text-sm font-medium',
               filterBy === 'movie'
-                ? 'bg-emerald-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
+                ? 'bg-[#C97D60] text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0]'
             )}
           >
             Movies
@@ -98,8 +98,8 @@ export function ReviewsList({
             className={cn(
               'rounded-lg px-3 py-1.5 text-sm font-medium',
               filterBy === 'tv'
-                ? 'bg-emerald-500 text-white'
-                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300'
+                ? 'bg-[#C97D60] text-white'
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0]'
             )}
           >
             TV Shows
@@ -112,10 +112,10 @@ export function ReviewsList({
           onChange={(e) => setSortBy(e.target.value as SortOption)}
           className={cn(
             'rounded-lg px-3 py-1.5',
-            'bg-gray-100 dark:bg-gray-700',
+            'bg-gray-100 dark:bg-[#231a10]',
             'text-sm font-medium',
             'border-0',
-            'focus:ring-2 focus:ring-emerald-500'
+            'focus:ring-2 focus:ring-[rgba(201,169,110,0.35)]'
           )}
         >
           <option value='latest'>Latest First</option>
@@ -126,15 +126,15 @@ export function ReviewsList({
 
       {/* Reviews List */}
       {sortedReviews.length === 0 ? (
-        <div className='flex flex-col items-center gap-2 rounded-xl bg-white p-8 text-center dark:bg-gray-800'>
+        <div className='flex flex-col items-center gap-2 rounded-xl bg-[#faf8f4] p-8 text-center dark:bg-[#1c1510]'>
           <HeroIcon
             iconName='FilmIcon'
-            className='h-12 w-12 text-gray-400 dark:text-gray-600'
+            className='h-12 w-12 text-gray-400 dark:text-[#3d2e1e]'
           />
           <h3 className='text-lg font-medium text-gray-900 dark:text-white'>
             No reviews found
           </h3>
-          <p className='text-gray-500 dark:text-gray-400'>
+          <p className='text-gray-500 dark:text-[#9E8B76]'>
             {filterBy === 'all'
               ? 'Be the first to share your thoughts!'
               : `No reviews found for ${

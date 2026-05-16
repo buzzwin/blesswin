@@ -201,7 +201,7 @@ export function AchievementSystem({
       case 'common':
         return 'text-gray-400 border-gray-400';
       case 'rare':
-        return 'text-blue-400 border-blue-400';
+        return 'text-[#9E8B76] border-blue-400';
       case 'epic':
         return 'text-purple-400 border-purple-400';
       case 'legendary':
@@ -216,9 +216,9 @@ export function AchievementSystem({
       case 'common':
         return 'bg-gray-500/20';
       case 'rare':
-        return 'bg-blue-500/20';
+        return 'bg-[rgba(201,169,110,0.06)]0/20';
       case 'epic':
-        return 'bg-purple-500/20';
+        return 'bg-[#C97D60]/20';
       case 'legendary':
         return 'bg-yellow-500/20';
       default:
@@ -237,7 +237,7 @@ export function AchievementSystem({
             </div>
           </div>
           <h3 className='mb-2 text-2xl font-bold text-white'>Level {level}</h3>
-          <p className='mb-4 text-blue-200'>{totalPoints} points earned</p>
+          <p className='mb-4 text-[#C4B5A0]'>{totalPoints} points earned</p>
 
           {/* Progress bar to next level */}
           <div className='mb-2 h-3 w-full rounded-full bg-white/20'>
@@ -246,7 +246,7 @@ export function AchievementSystem({
               style={{ width: `${((totalPoints % 100) / 100) * 100}%` }}
             />
           </div>
-          <p className='text-sm text-blue-200'>
+          <p className='text-sm text-[#C4B5A0]'>
             {100 - (totalPoints % 100)} points to next level
           </p>
         </CardContent>
@@ -285,11 +285,11 @@ export function AchievementSystem({
                     >
                       {achievement.title}
                     </h4>
-                    <span className='text-xs text-blue-200'>
+                    <span className='text-xs text-[#C4B5A0]'>
                       {achievement.points} pts
                     </span>
                   </div>
-                  <p className='mb-2 text-xs text-blue-200'>
+                  <p className='mb-2 text-xs text-[#C4B5A0]'>
                     {achievement.description}
                   </p>
 
@@ -304,7 +304,7 @@ export function AchievementSystem({
                       }}
                     />
                   </div>
-                  <p className='mt-1 text-xs text-blue-200'>
+                  <p className='mt-1 text-xs text-[#C4B5A0]'>
                     {achievement.progress}/{achievement.maxProgress}
                   </p>
                 </div>

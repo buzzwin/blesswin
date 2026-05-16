@@ -161,20 +161,20 @@ export function CreateBuzzForm(): JSX.Element {
 
   const inputCls = cn(
     'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
-    'border-gray-200 bg-white text-gray-900 placeholder:text-gray-400',
-    'dark:border-gray-700 dark:bg-gray-800 dark:text-white dark:placeholder:text-gray-500',
-    'focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20'
+    'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
+    'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
+    'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
   );
 
   const primaryBtn = cn(
     'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold transition',
-    'bg-emerald-500 text-white hover:bg-emerald-600 disabled:opacity-40'
+    'bg-[#C97D60] text-white hover:bg-[#C97D60] disabled:opacity-40'
   );
 
   const ghostBtn = cn(
     'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-medium transition',
-    'border border-gray-200 text-gray-600 hover:bg-gray-50',
-    'dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800'
+    'border border-[#e8d8c4] text-[#6b5744] hover:bg-[rgba(201,169,110,0.06)]',
+    'dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
   );
 
   return (
@@ -182,22 +182,22 @@ export function CreateBuzzForm(): JSX.Element {
       {/* Progress bar */}
       {step !== 'done' && (
         <div className='mb-8'>
-          <div className='mb-2 flex justify-between text-xs text-gray-400'>
+          <div className='mb-2 flex justify-between text-xs text-[#9E8B76]'>
             {STEP_ORDER.filter((s) => s !== 'done').map((s, i) => (
               <span
                 key={s}
                 className={cn(
                   'font-medium',
-                  i <= stepIndex ? 'text-emerald-500' : ''
+                  i <= stepIndex ? 'text-[#C9A96E]' : ''
                 )}
               >
                 {STEP_LABELS[s]}
               </span>
             ))}
           </div>
-          <div className='h-1 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-gray-800'>
+          <div className='h-1 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-[#1c1510]'>
             <div
-              className='h-full rounded-full bg-emerald-500 transition-all duration-300'
+              className='h-full rounded-full bg-[#C97D60] transition-all duration-300'
               style={{ width: `${((stepIndex) / 3) * 100}%` }}
             />
           </div>
@@ -207,10 +207,10 @@ export function CreateBuzzForm(): JSX.Element {
       {/* ── Step 0: Occasion ── */}
       {step === 'occasion' && (
         <div>
-          <h2 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
+          <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
             What&apos;s the occasion?
           </h2>
-          <p className='mb-6 text-sm text-gray-500'>
+          <p className='mb-6 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             Pick an occasion and we&apos;ll start a Buzz for it.
           </p>
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
@@ -220,14 +220,14 @@ export function CreateBuzzForm(): JSX.Element {
                 onClick={() => pickOccasion(occ.value)}
                 className={cn(
                   'flex flex-col items-center gap-2 rounded-2xl border-2 p-5 transition',
-                  'border-gray-100 bg-white hover:border-emerald-400 hover:bg-emerald-50',
-                  'dark:border-gray-700 dark:bg-gray-800 dark:hover:border-emerald-500 dark:hover:bg-emerald-900/20',
+                  'border-[#e8d8c4] bg-[#faf8f4] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)]',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)] dark:hover:bg-[rgba(201,169,110,0.06)]',
                   form.occasion === occ.value &&
-                    'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20'
+                    'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] dark:bg-[rgba(201,169,110,0.08)]'
                 )}
               >
                 <span className='text-3xl'>{occ.emoji}</span>
-                <span className='text-sm font-semibold text-gray-700 dark:text-gray-200'>
+                <span className='text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
                   {occ.label}
                 </span>
               </button>
@@ -240,10 +240,10 @@ export function CreateBuzzForm(): JSX.Element {
       {step === 'recipient' && (
         <div className='space-y-5'>
           <div>
-            <h2 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
+            <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
               {occasionObj?.emoji} Who&apos;s it for?
             </h2>
-            <p className='text-sm text-gray-500'>
+            <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
               {form.boardMode === 'personal'
                 ? 'Enter the recipient\'s name. They\'ll see it on the Buzzbook.'
                 : 'Give your group Buzz a name.'}
@@ -251,7 +251,7 @@ export function CreateBuzzForm(): JSX.Element {
           </div>
 
           {/* Personal / Group toggle */}
-          <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700'>
+          <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-[#2a1d10]'>
             {(['personal', 'group'] as BuzzBoardMode[]).map((mode) => (
               <button
                 key={mode}
@@ -259,8 +259,8 @@ export function CreateBuzzForm(): JSX.Element {
                 className={cn(
                   'flex-1 py-2.5 text-sm font-medium capitalize transition',
                   form.boardMode === mode
-                    ? 'bg-emerald-500 text-white'
-                    : 'bg-white text-gray-600 hover:bg-gray-50 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                    ? 'bg-[#C97D60] text-white'
+                    : 'bg-[#faf8f4] text-[#6b5744] hover:bg-[rgba(201,169,110,0.06)] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                 )}
               >
                 {mode === 'personal' ? '👤 Personal' : '👥 Group'}
@@ -270,7 +270,7 @@ export function CreateBuzzForm(): JSX.Element {
 
           {/* Name input */}
           <div>
-            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               {form.boardMode === 'personal' ? 'Recipient name' : 'Group name'}
             </label>
             <input
@@ -287,7 +287,7 @@ export function CreateBuzzForm(): JSX.Element {
           {/* Custom occasion label */}
           {form.occasion === 'custom' && (
             <div>
-              <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 What&apos;s the occasion?
               </label>
               <input
@@ -303,7 +303,7 @@ export function CreateBuzzForm(): JSX.Element {
 
           {/* Title (editable) */}
           <div>
-            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Buzzbook title
             </label>
             <input
@@ -335,16 +335,16 @@ export function CreateBuzzForm(): JSX.Element {
       {step === 'reveal' && (
         <div className='space-y-5'>
           <div>
-            <h2 className='mb-1 text-2xl font-bold text-gray-900 dark:text-white'>
+            <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
               When to reveal?
             </h2>
-            <p className='text-sm text-gray-500'>
+            <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
               The Buzzbook stays hidden until this moment. Pick a date and time.
             </p>
           </div>
 
           <div>
-            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Reveal date &amp; time
             </label>
             <input
@@ -357,7 +357,7 @@ export function CreateBuzzForm(): JSX.Element {
           </div>
 
           {form.revealAt && (
-            <div className='rounded-xl border border-emerald-100 bg-emerald-50 p-4 text-sm text-emerald-700 dark:border-emerald-900/40 dark:bg-emerald-900/20 dark:text-emerald-400'>
+            <div className='rounded-xl border border-emerald-100 bg-[rgba(201,169,110,0.06)] p-4 text-sm text-[#7a5510] dark:border-[rgba(201,169,110,0.35)]/40 dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
               📖 The Buzzbook for <strong>{form.recipientName}</strong> will be
               revealed on <strong>{formatRevealDate(form.revealAt)}</strong>.
             </div>
@@ -385,22 +385,22 @@ export function CreateBuzzForm(): JSX.Element {
         <div className='space-y-6 text-center'>
           <div>
             <span className='text-5xl'>🎉</span>
-            <h2 className='mt-3 text-2xl font-bold text-gray-900 dark:text-white'>
+            <h2 className='mt-3 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
               Your Buzz is live!
             </h2>
-            <p className='mt-1 text-sm text-gray-500'>
+            <p className='mt-1 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
               Share the link so friends can add their page before the Buzzbook is revealed.
             </p>
           </div>
 
           {/* Share URL */}
-          <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700'>
-            <span className='flex-1 truncate bg-gray-50 px-4 py-3 text-left text-sm text-gray-600 dark:bg-gray-800 dark:text-gray-300'>
+          <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-[#2a1d10]'>
+            <span className='flex-1 truncate bg-gray-50 px-4 py-3 text-left text-sm text-gray-600 dark:bg-[#1c1510] dark:text-[#C4B5A0]'>
               {shareUrl}
             </span>
             <button
               onClick={copyLink}
-              className='flex shrink-0 items-center gap-1.5 border-l border-gray-200 bg-white px-4 py-3 text-sm font-medium text-emerald-600 transition hover:bg-emerald-50 dark:border-gray-700 dark:bg-gray-900 dark:hover:bg-emerald-900/20'
+              className='flex shrink-0 items-center gap-1.5 border-l border-[#e8d8c4] bg-[#faf8f4] px-4 py-3 text-sm font-medium text-[#8a6520] transition hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[rgba(201,169,110,0.08)]'
             >
               <HeroIcon iconName='ClipboardDocumentIcon' className='h-4 w-4' />
               Copy

@@ -24,10 +24,10 @@ export function ProgressBars({
   return (
     <div className={cn('space-y-3 md:space-y-4', className)}>
       {/* Daily Progress */}
-      <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
+      <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-3 dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-4'>
         <div className='mb-2 flex items-center justify-between md:mb-3'>
           <div className='flex items-center gap-1.5 md:gap-2'>
-            <Calendar className='h-4 w-4 text-blue-600 dark:text-blue-400 md:h-5 md:w-5' />
+            <Calendar className='h-4 w-4 text-[#8a6520] dark:text-[#9E8B76] md:h-5 md:w-5' />
             <h3 className='text-xs font-semibold text-gray-900 dark:text-white md:text-sm'>
               Daily Goal
             </h3>
@@ -40,14 +40,14 @@ export function ProgressBars({
           )}
         </div>
         <div className='mb-1.5 flex items-center justify-between text-xs md:mb-2'>
-          <span className='text-gray-600 dark:text-gray-400'>
+          <span className='text-gray-600 dark:text-[#9E8B76]'>
             {dailyCompleted} / {dailyGoal} rituals
           </span>
           <span className='font-semibold text-gray-900 dark:text-white'>
             {Math.round(dailyProgress)}%
           </span>
         </div>
-        <div className='relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 md:h-2.5'>
+        <div className='relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10] md:h-2.5'>
           <div
             className={cn(
               'h-full transition-all duration-500',
@@ -64,10 +64,10 @@ export function ProgressBars({
       </div>
 
       {/* Weekly Progress */}
-      <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4'>
+      <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-3 dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-4'>
         <div className='mb-2 flex items-center justify-between md:mb-3'>
           <div className='flex items-center gap-1.5 md:gap-2'>
-            <Target className='h-4 w-4 text-purple-600 dark:text-purple-400 md:h-5 md:w-5' />
+            <Target className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E] md:h-5 md:w-5' />
             <h3 className='text-xs font-semibold text-gray-900 dark:text-white md:text-sm'>
               Weekly Goal
             </h3>
@@ -80,14 +80,14 @@ export function ProgressBars({
           )}
         </div>
         <div className='mb-1.5 flex items-center justify-between text-xs md:mb-2'>
-          <span className='text-gray-600 dark:text-gray-400'>
+          <span className='text-gray-600 dark:text-[#9E8B76]'>
             {weeklyCompleted} / {weeklyGoal} rituals
           </span>
           <span className='font-semibold text-gray-900 dark:text-white'>
             {Math.round(weeklyProgress)}%
           </span>
         </div>
-        <div className='relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 md:h-2.5'>
+        <div className='relative h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10] md:h-2.5'>
           <div
             className={cn(
               'h-full transition-all duration-500',

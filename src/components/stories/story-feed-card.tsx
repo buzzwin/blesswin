@@ -12,9 +12,9 @@ interface StoryFeedCardProps {
 }
 
 const categoryColors = {
-  community: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  community: 'bg-[rgba(201,169,110,0.1)] text-[#5a3d08] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   environment: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  education: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  education: 'bg-[rgba(201,169,110,0.1)] text-[#7a5a18] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   health: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
   'social-justice': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
   innovation: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
@@ -72,9 +72,9 @@ export function StoryFeedCard({ story, index }: StoryFeedCardProps): JSX.Element
     <>
       {/* Ad-like container with distinct styling */}
       <div className='my-3 px-2 md:px-0'>
-        <article className='relative overflow-hidden rounded-xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 shadow-lg transition-shadow hover:shadow-xl dark:border-purple-800/50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20'>
+        <article className='relative overflow-hidden rounded-xl border-2 border-[rgba(201,169,110,0.3)] bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 shadow-lg transition-shadow hover:shadow-xl dark:border-[rgba(201,169,110,0.25)]/50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-orange-900/20'>
           {/* Featured Story Badge */}
-          <div className='absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-purple-700 shadow-md backdrop-blur-sm dark:bg-gray-800/90 dark:text-purple-300'>
+          <div className='absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full bg-white/90 px-3 py-1.5 text-xs font-bold text-[#8a6520] shadow-md backdrop-blur-sm dark:bg-[#1c1510]/90 dark:text-[#C9A96E]'>
             <TrendingUp className='h-3 w-3' />
             <span>Featured Story</span>
           </div>
@@ -88,13 +88,13 @@ export function StoryFeedCard({ story, index }: StoryFeedCardProps): JSX.Element
                     {categoryLabel}
                   </span>
                   {story.location && (
-                    <span className='flex items-center gap-1 text-xs text-gray-700 dark:text-gray-300'>
+                    <span className='flex items-center gap-1 text-xs text-gray-700 dark:text-[#C4B5A0]'>
                       <MapPin className='h-3 w-3' />
                       {story.location}
                     </span>
                   )}
                   {formattedDate && (
-                    <span className='flex items-center gap-1 text-xs text-gray-700 dark:text-gray-300'>
+                    <span className='flex items-center gap-1 text-xs text-gray-700 dark:text-[#C4B5A0]'>
                       <Calendar className='h-3 w-3' />
                       {formattedDate}
                     </span>
@@ -120,12 +120,12 @@ export function StoryFeedCard({ story, index }: StoryFeedCardProps): JSX.Element
                 )}
                 
                 {/* Story Description */}
-                <p className='mb-3 text-base leading-relaxed text-gray-800 dark:text-gray-200'>
+                <p className='mb-3 text-base leading-relaxed text-gray-800 dark:text-[#C4B5A0]'>
                   {story.description}
                 </p>
                 
                 {story.source && (
-                  <p className='mb-3 text-xs font-medium text-gray-600 dark:text-gray-400'>
+                  <p className='mb-3 text-xs font-medium text-gray-600 dark:text-[#9E8B76]'>
                     Source: <span className='font-semibold'>{story.source}</span>
                   </p>
                 )}

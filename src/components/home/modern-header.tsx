@@ -28,9 +28,9 @@ export function ModernHeader({
     <div
       className={cn(
         'sticky top-0 z-10',
-        'bg-white/80 dark:bg-gray-900/80',
+        'bg-white/80 dark:bg-[#1c1510]/80',
         'backdrop-blur-xl backdrop-saturate-150',
-        'border-b border-gray-200 dark:border-gray-800',
+        'border-b border-gray-200 dark:border-[#2a1d10]',
         !disableSticky && 'sticky top-0',
         className
       )}
@@ -44,7 +44,7 @@ export function ModernHeader({
                   variant='ghost'
                   size='icon'
                   onClick={action}
-                  className='hover:bg-gray-100 dark:hover:bg-gray-800'
+                  className='hover:bg-gray-100 dark:hover:bg-[#231a10]'
                 >
                   <Home className='h-5 w-5' />
                 </Button>
@@ -53,8 +53,8 @@ export function ModernHeader({
               {title && (
                 <div className='flex items-center gap-3'>
                   <div className='flex items-center gap-2'>
-                    <Sparkles className='h-5 w-5 text-emerald-500' />
-                    <h2 className='text-xl font-bold text-gray-900 dark:text-gray-100'>
+                    <Sparkles className='h-5 w-5 text-[#C9A96E]' />
+                    <h2 className='text-xl font-bold text-gray-900 dark:text-[#F5EFE6]'>
                       {title}
                     </h2>
                   </div>

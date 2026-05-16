@@ -54,8 +54,8 @@ export default function RitualsPage(): JSX.Element {
   return (
     <div className='min-h-[40vh] bg-main-background dark:bg-black' aria-busy='true'>
       <div className='mx-auto flex max-w-2xl flex-col items-center justify-center gap-3 px-4 py-16 text-center'>
-        <div className='h-10 w-10 animate-pulse rounded-full bg-gray-200 dark:bg-gray-800' />
-        <p className='text-sm text-gray-500 dark:text-gray-400'>
+        <div className='h-10 w-10 animate-pulse rounded-full bg-gray-200 dark:bg-[#1c1510]' />
+        <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
           Opening…
         </p>
       </div>

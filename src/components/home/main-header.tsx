@@ -32,7 +32,8 @@ export function MainHeader({
   return (
     <header
       className={cn(
-        'hover-animation even z-10 bg-main-background/60 py-2 backdrop-blur-md',
+        'hover-animation z-10 py-2 backdrop-blur-md',
+        'bg-main-background/80 border-b border-light-border dark:border-dark-border',
         !disableSticky && 'sticky top-0',
         className ?? 'flex items-center gap-6'
       )}
@@ -47,11 +48,13 @@ export function MainHeader({
         </Button>
       )}
       {title && (
-        <div className='flex gap-8'>
+        <div className='flex flex-1 items-center justify-between'>
+          <div className='flex items-center gap-3'>
+            <h2 className='font-display text-xl font-bold' key={title}>
+              {title}
+            </h2>
+          </div>
           {useMobileSidebar && <MobileSidebar />}
-          <h2 className='font-display text-xl font-bold' key={title}>
-            {title}
-          </h2>
         </div>
       )}
       {children}

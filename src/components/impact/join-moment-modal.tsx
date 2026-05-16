@@ -114,18 +114,18 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
   return (
     <>
       <Modal
-        modalClassName='max-w-2xl bg-white dark:bg-gray-900 w-full p-6 rounded-2xl'
+        modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl'
         open={open}
         closeModal={closeModal}
       >
         <div className='space-y-4'>
           {/* Header */}
-          <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+          <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
             <div>
               <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
                 Join This Action
               </h2>
-              <p className='text-sm text-gray-600 dark:text-gray-400 mt-1'>
+              <p className='text-sm text-gray-600 dark:text-[#9E8B76] mt-1'>
                 Share how you joined @{originalMoment.user.username}'s positive action
               </p>
             </div>
@@ -138,7 +138,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
           </div>
 
           {/* Original Moment Preview */}
-          <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <div className='flex items-start gap-3'>
               <UserAvatar
                 src={originalMoment.user.photoURL}
@@ -149,7 +149,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
                 <div className='mb-1 text-sm font-semibold text-gray-900 dark:text-white'>
                   {originalMoment.user.name}
                 </div>
-                <p className='text-sm text-gray-700 dark:text-gray-300'>
+                <p className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                   {originalMoment.text}
                 </p>
               </div>
@@ -172,15 +172,15 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
                 className={cn(
                   'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
                   'text-gray-900 placeholder-gray-500',
-                  'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                  'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                  'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                   'transition-colors'
                 )}
                 rows={3}
                 maxLength={inputLimit}
                 disabled={loading}
               />
-              <div className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+              <div className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                 {text.length} / {inputLimit}
               </div>
             </div>
@@ -188,7 +188,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
 
           {/* Tags Selection */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Tags (select at least one)
             </label>
             <div className='flex flex-wrap gap-2'>
@@ -201,7 +201,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
                     'rounded-full px-3 py-1.5 text-sm font-medium transition-all',
                     selectedTags.includes(tag)
                       ? impactTagColors[tag]
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600',
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]',
                     loading && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -213,7 +213,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
 
           {/* Effort Level */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Effort Level
             </label>
             <div className='flex gap-2'>
@@ -226,8 +226,8 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
                     'flex flex-1 items-center justify-center gap-2 rounded-lg px-4 py-2.5',
                     'text-sm font-medium transition-all',
                     effortLevel === level
-                      ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600',
+                      ? 'bg-[rgba(201,169,110,0.1)] text-[#7a5a18] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]',
                     loading && 'opacity-50 cursor-not-allowed'
                   )}
                 >
@@ -240,12 +240,12 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
 
           {/* Mood Check-in (Optional) */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Mood Check-in (optional)
             </label>
             <div className='grid grid-cols-2 gap-4'>
               <div>
-                <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
+                <label className='mb-1 block text-xs text-gray-600 dark:text-[#9E8B76]'>
                   Before
                 </label>
                 <div className='flex items-center gap-2'>
@@ -269,7 +269,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
                 </div>
               </div>
               <div>
-                <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>
+                <label className='mb-1 block text-xs text-gray-600 dark:text-[#9E8B76]'>
                   After
                 </label>
                 <div className='flex items-center gap-2'>
@@ -296,13 +296,13 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
           </div>
 
           {/* Action Buttons */}
-          <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-gray-700'>
+          <div className='flex justify-end gap-2 pt-4 border-t border-gray-200 dark:border-[#2a1d10]'>
             <button
               onClick={closeModal}
               disabled={loading}
               className={cn(
                 'rounded-full px-4 py-2 text-sm font-semibold',
-                'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+                'text-gray-700 hover:bg-gray-100 dark:text-[#C4B5A0] dark:hover:bg-[#231a10]',
                 loading && 'opacity-50 cursor-not-allowed'
               )}
             >
@@ -312,7 +312,7 @@ export function JoinMomentModal({ originalMoment, open, closeModal, onJoin }: Jo
               onClick={handleSubmit}
               disabled={!text.trim() || selectedTags.length === 0 || !effortLevel || loading}
               className={cn(
-                'rounded-full bg-purple-600 px-4 py-2 text-sm font-semibold text-white hover:bg-purple-700',
+                'rounded-full bg-[#C97D60] px-4 py-2 text-sm font-semibold text-white hover:bg-[#B56540]',
                 (!text.trim() || selectedTags.length === 0 || !effortLevel || loading) && 'opacity-50 cursor-not-allowed'
               )}
             >

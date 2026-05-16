@@ -236,8 +236,8 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
   if (loading) {
     return (
       <div className='flex items-center gap-2'>
-        <div className='h-5 w-5 animate-pulse rounded-full bg-gray-200 dark:bg-gray-700' />
-        <span className='text-sm text-gray-500 dark:text-gray-400'>Loading...</span>
+        <div className='h-5 w-5 animate-pulse rounded-full bg-gray-200 dark:bg-[#231a10]' />
+        <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>Loading...</span>
       </div>
     );
   }
@@ -257,7 +257,7 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
           disabled={reacting}
           className={`flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors ${
             userReaction
-              ? 'bg-purple-100 text-purple-700 hover:bg-purple-200 dark:bg-purple-900/30 dark:text-purple-300 dark:hover:bg-purple-900/50'
+              ? 'bg-[rgba(201,169,110,0.1)] text-[#8a6520] hover:bg-purple-200 dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E] dark:hover:bg-purple-900/50'
               : 'bg-gradient-to-r from-purple-600 to-pink-600 text-white hover:from-purple-700 hover:to-pink-700'
           } ${reacting ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
@@ -274,7 +274,7 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
         {menuOpen && (
           <div
             ref={menuRef}
-            className='absolute left-0 top-full z-10 mt-2 w-56 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800'
+            className='absolute left-0 top-full z-10 mt-2 w-56 rounded-lg border border-gray-200 bg-white shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'
           >
             <div className='p-2'>
               {(['inspired', 'matters_to_me'] as StoryReactionType[]).map(
@@ -289,8 +289,8 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
                       }}
                       className={`w-full flex items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
                         isActive
-                          ? 'bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                          : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+                          ? 'bg-[rgba(201,169,110,0.06)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                          : 'hover:bg-gray-100 dark:hover:bg-[#231a10]'
                       }`}
                     >
                       <span className='text-lg'>{storyReactionIcons[reactionType]}</span>
@@ -320,7 +320,7 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
           <div className='mb-4 flex items-center justify-between'>
             <div className='flex items-center gap-3'>
               <div className='flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-                <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+                <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
               </div>
               <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
                 You're Inspired! What's Next?
@@ -333,40 +333,40 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
                 setRitualSuggestions([]);
                 setRitualAnalysis(null);
               }}
-              className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+              className='rounded-full p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
             >
               <X className='h-5 w-5' />
             </button>
           </div>
 
-          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <h3 className='mb-2 font-semibold text-gray-900 dark:text-white'>
               {story.title}
             </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400'>
+            <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
               {story.description}
             </p>
           </div>
 
           {!actionType ? (
             <div className='space-y-3'>
-              <p className='mb-4 text-gray-700 dark:text-gray-300'>
+              <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
                 Turn your inspiration into action! Choose how you'd like to engage:
               </p>
               
               <button
                 onClick={() => setActionType('moment')}
-                className='w-full rounded-lg border-2 border-purple-200 bg-purple-50 p-4 text-left transition-colors hover:border-purple-300 hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'
+                className='w-full rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 text-left transition-colors hover:border-[rgba(201,169,110,0.4)] hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:hover:bg-[rgba(201,169,110,0.09)]'
               >
                 <div className='flex items-center gap-3'>
-                  <div className='flex h-10 w-10 items-center justify-center rounded-full bg-purple-600'>
+                  <div className='flex h-10 w-10 items-center justify-center rounded-full bg-[#C97D60]'>
                     <Sparkles className='h-5 w-5 text-white' />
                   </div>
                   <div className='flex-1'>
                     <h3 className='font-semibold text-gray-900 dark:text-white'>
                       Create Impact Moment
                     </h3>
-                    <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                       Share how this story inspires you and document your response
                     </p>
                   </div>
@@ -382,17 +382,17 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
                   }
                   void router.push('/rituals/create');
                 }}
-                className='w-full rounded-lg border-2 border-purple-200 bg-purple-50 p-4 text-left transition-colors hover:border-purple-300 hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:hover:bg-purple-900/30'
+                className='w-full rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 text-left transition-colors hover:border-[rgba(201,169,110,0.4)] hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:hover:bg-[rgba(201,169,110,0.09)]'
               >
                 <div className='flex items-center gap-3'>
-                  <div className='flex h-10 w-10 items-center justify-center rounded-full bg-purple-600'>
+                  <div className='flex h-10 w-10 items-center justify-center rounded-full bg-[#C97D60]'>
                     <Calendar className='h-5 w-5 text-white' />
                   </div>
                   <div className='flex-1'>
                     <h3 className='font-semibold text-gray-900 dark:text-white'>
                       Get Ritual Suggestions
                     </h3>
-                    <p className='text-sm text-gray-600 dark:text-gray-400'>
+                    <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                       Discover daily rituals that connect to this story's themes
                     </p>
                   </div>
@@ -402,8 +402,8 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
             </div>
           ) : actionType === 'moment' ? (
             <div>
-              <div className='mb-4 rounded-lg border border-purple-200 bg-purple-50 p-3 dark:border-purple-800 dark:bg-purple-900/20'>
-                <p className='text-sm text-purple-800 dark:text-purple-200'>
+              <div className='mb-4 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-3 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+                <p className='text-sm text-[#7a5a18] dark:text-[#C4B5A0]'>
                   ✨ Inspired by: <span className='font-semibold'>{story.title}</span>
                 </p>
               </div>
@@ -429,23 +429,23 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
             <div>
               {ritualLoading ? (
                 <div className='flex flex-col items-center justify-center py-12'>
-                  <Loader2 className='mb-4 h-8 w-8 animate-spin text-purple-600' />
-                  <p className='text-gray-600 dark:text-gray-400'>
+                  <Loader2 className='mb-4 h-8 w-8 animate-spin text-[#C9A96E]' />
+                  <p className='text-gray-600 dark:text-[#9E8B76]'>
                     Finding rituals that connect to this story...
                   </p>
                 </div>
               ) : ritualSuggestions.length > 0 ? (
                 <div className='space-y-4'>
                   {ritualAnalysis && (
-                    <div className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
-                      <p className='mb-2 text-sm font-semibold text-purple-900 dark:text-purple-200'>
+                    <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+                      <p className='mb-2 text-sm font-semibold text-[#5a3d0a] dark:text-[#C4B5A0]'>
                         Why These Rituals?
                       </p>
-                      <p className='mb-2 text-sm text-purple-800 dark:text-purple-300'>
+                      <p className='mb-2 text-sm text-[#7a5a18] dark:text-[#C9A96E]'>
                         {ritualAnalysis.connection}
                       </p>
                       {ritualAnalysis.personalizedNote && (
-                        <p className='text-sm text-purple-700 dark:text-purple-400'>
+                        <p className='text-sm text-[#8a6520] dark:text-[#C9A96E]'>
                           {ritualAnalysis.personalizedNote}
                         </p>
                       )}
@@ -456,16 +456,16 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
                     {ritualSuggestions.map((ritual, idx) => (
                       <div
                         key={ritual.id}
-                        className='rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800'
+                        className='rounded-lg border border-gray-200 bg-[#faf8f4] p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'
                       >
                         <h4 className='mb-2 font-semibold text-gray-900 dark:text-white'>
                           {ritual.title}
                         </h4>
-                        <p className='mb-2 text-sm text-gray-600 dark:text-gray-400'>
+                        <p className='mb-2 text-sm text-gray-600 dark:text-[#9E8B76]'>
                           {ritual.description}
                         </p>
                         {ritualAnalysis?.whyTheseRituals[idx] && (
-                          <p className='text-xs text-purple-600 dark:text-purple-400'>
+                          <p className='text-xs text-[#C9A96E] dark:text-[#C9A96E]'>
                             💡 {ritualAnalysis.whyTheseRituals[idx]}
                           </p>
                         )}
@@ -473,7 +473,7 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
                           onClick={() => {
                             void router.push('/rituals');
                           }}
-                          className='mt-3 text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'
+                          className='mt-3 text-sm font-medium text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E] dark:hover:text-purple-300'
                         >
                           Add to My Rituals →
                         </button>
@@ -483,19 +483,19 @@ export function StoryActionFlow({ story, onReactionChange }: StoryActionFlowProp
 
                   <button
                     onClick={() => setActionType(null)}
-                    className='mt-4 w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                    className='mt-4 w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                   >
                     Back to Options
                   </button>
                 </div>
               ) : (
                 <div className='py-8 text-center'>
-                  <p className='text-gray-600 dark:text-gray-400'>
+                  <p className='text-gray-600 dark:text-[#9E8B76]'>
                     No ritual suggestions available at this time.
                   </p>
                   <button
                     onClick={() => setActionType(null)}
-                    className='mt-4 rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                    className='mt-4 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                   >
                     Back to Options
                   </button>

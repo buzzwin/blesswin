@@ -49,48 +49,48 @@ export function AgentPreferencesForm(): JSX.Element | null {
   };
 
   return (
-    <div className='rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800'>
+    <div className='rounded-xl border border-gray-200 bg-[#faf8f4] p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
       <h3 className='text-sm font-semibold text-gray-900 dark:text-white'>
         Lightweight memory (optional)
       </h3>
-      <p className='mt-1 text-xs text-gray-600 dark:text-gray-400'>
+      <p className='mt-1 text-xs text-gray-600 dark:text-[#9E8B76]'>
         Helps Ask Buzzwin personalize suggestions. You control what we store.
       </p>
       <div className='mt-3 grid gap-3 sm:grid-cols-2'>
-        <label className='block text-xs font-medium text-gray-700 dark:text-gray-300'>
+        <label className='block text-xs font-medium text-gray-700 dark:text-[#C4B5A0]'>
           Dietary / food
           <input
             value={dietary}
             onChange={(e) => setDietary(e.target.value)}
-            className='mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white'
+            className='mt-1 w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
             placeholder='e.g. vegetarian'
           />
         </label>
-        <label className='block text-xs font-medium text-gray-700 dark:text-gray-300'>
+        <label className='block text-xs font-medium text-gray-700 dark:text-[#C4B5A0]'>
           Typical outing day
           <input
             value={typicalOutingDay}
             onChange={(e) => setTypicalOutingDay(e.target.value)}
-            className='mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white'
+            className='mt-1 w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
             placeholder='e.g. Friday evenings'
           />
         </label>
-        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 sm:col-span-2'>
+        <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] sm:col-span-2'>
           Venue styles (comma-separated)
           <input
             value={venueStyles}
             onChange={(e) => setVenueStyles(e.target.value)}
-            className='mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white'
+            className='mt-1 w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
             placeholder='e.g. rooftop bars, quiet cafes'
           />
         </label>
-        <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 sm:col-span-2'>
+        <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] sm:col-span-2'>
           Notes
           <textarea
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             rows={2}
-            className='mt-1 w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-600 dark:bg-gray-900 dark:text-white'
+            className='mt-1 w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
             placeholder='Anything else the assistant should remember'
           />
         </label>

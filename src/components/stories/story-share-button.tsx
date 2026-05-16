@@ -85,7 +85,7 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
           e.stopPropagation();
           openShareModal();
         }}
-        className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-gray-200 ${className}`}
+        className={`inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-gray-200 ${className}`}
       >
         <Share2 className='h-4 w-4' />
         <span>Share</span>
@@ -98,11 +98,11 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
           </h2>
 
           {/* Story Preview */}
-          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='mb-6 rounded-lg border border-gray-200 bg-gray-50 p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <h3 className='mb-2 font-semibold text-gray-900 dark:text-white'>
               {story.title}
             </h3>
-            <p className='text-sm text-gray-600 dark:text-gray-400 line-clamp-2'>
+            <p className='text-sm text-gray-600 dark:text-[#9E8B76] line-clamp-2'>
               {story.description}
             </p>
           </div>
@@ -113,9 +113,9 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
             {typeof navigator !== 'undefined' && 'share' in navigator && typeof navigator.share === 'function' && (
               <button
                 onClick={handleWebShare}
-                className='flex w-full items-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700'
+                className='flex w-full items-center gap-3 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[#231a10]'
               >
-                <Share2 className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+                <Share2 className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
                 <span className='font-medium text-gray-900 dark:text-white'>Share via...</span>
               </button>
             )}
@@ -123,7 +123,7 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
             {/* Copy Link */}
             <button
               onClick={handleCopyLink}
-              className='flex w-full items-center gap-3 rounded-lg border border-gray-300 bg-white px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700'
+              className='flex w-full items-center gap-3 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-3 text-left transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[#231a10]'
             >
               {copied ? (
                 <>
@@ -132,7 +132,7 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
                 </>
               ) : (
                 <>
-                  <Copy className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+                  <Copy className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
                   <span className='font-medium text-gray-900 dark:text-white'>Copy Link</span>
                 </>
               )}
@@ -142,26 +142,26 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
             <div className='grid grid-cols-3 gap-2'>
               <button
                 onClick={() => handleSocialShare('twitter')}
-                className='flex flex-col items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700'
+                className='flex flex-col items-center gap-2 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-3 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[#231a10]'
               >
-                <Twitter className='h-5 w-5 text-blue-400' />
-                <span className='text-xs font-medium text-gray-700 dark:text-gray-300'>Twitter</span>
+                <Twitter className='h-5 w-5 text-[#9E8B76]' />
+                <span className='text-xs font-medium text-gray-700 dark:text-[#C4B5A0]'>Twitter</span>
               </button>
 
               <button
                 onClick={() => handleSocialShare('facebook')}
-                className='flex flex-col items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700'
+                className='flex flex-col items-center gap-2 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-3 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[#231a10]'
               >
-                <Facebook className='h-5 w-5 text-blue-600' />
-                <span className='text-xs font-medium text-gray-700 dark:text-gray-300'>Facebook</span>
+                <Facebook className='h-5 w-5 text-[#8a6520]' />
+                <span className='text-xs font-medium text-gray-700 dark:text-[#C4B5A0]'>Facebook</span>
               </button>
 
               <button
                 onClick={() => handleSocialShare('linkedin')}
-                className='flex flex-col items-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-3 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:hover:bg-gray-700'
+                className='flex flex-col items-center gap-2 rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-3 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[#231a10]'
               >
-                <Linkedin className='h-5 w-5 text-blue-700' />
-                <span className='text-xs font-medium text-gray-700 dark:text-gray-300'>LinkedIn</span>
+                <Linkedin className='h-5 w-5 text-[#7a5510]' />
+                <span className='text-xs font-medium text-gray-700 dark:text-[#C4B5A0]'>LinkedIn</span>
               </button>
             </div>
           </div>
@@ -169,7 +169,7 @@ export function StoryShareButton({ story, className = '' }: StoryShareButtonProp
           {/* Close Button */}
           <button
             onClick={closeShareModal}
-            className='mt-6 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+            className='mt-6 w-full rounded-lg border border-gray-300 bg-gray-100 px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-200 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
           >
             Close
           </button>

@@ -23,7 +23,7 @@ function statusBadge(buzz: Buzz): { label: string; className: string } {
   if (buzz.status === 'revealed') {
     return {
       label: 'Revealed',
-      className: 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+      className: 'bg-[rgba(156,175,136,0.15)] text-[#5a7a48] dark:bg-[rgba(156,175,136,0.12)] dark:text-[#9CAF88]'
     };
   }
   const now = Date.now();
@@ -31,12 +31,12 @@ function statusBadge(buzz: Buzz): { label: string; className: string } {
   if (now >= revealMs) {
     return {
       label: 'Ready to open',
-      className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400'
+      className: 'bg-[rgba(201,169,110,0.15)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.12)] dark:text-[#C9A96E]'
     };
   }
   return {
     label: 'Collecting',
-    className: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400'
+    className: 'bg-[rgba(181,96,60,0.12)] text-[#9a4422] dark:bg-[rgba(181,96,60,0.1)] dark:text-[#D4845A]'
   };
 }
 
@@ -57,12 +57,12 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
 
   return (
     <Link href={`/buzzes/${buzz.id}`}>
-      <a className='block rounded-2xl border-2 border-gray-200 bg-white p-5 shadow-sm transition hover:border-emerald-400 hover:shadow dark:border-gray-700 dark:bg-gray-900 dark:hover:border-emerald-600'>
+      <a className='block rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-5 shadow-sm transition hover:border-[#C9A96E] hover:shadow-[0_4px_20px_rgba(201,169,110,0.15)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)]'>
         <div className='flex items-start justify-between gap-3'>
           <div className='flex items-center gap-3'>
             <span className='text-2xl'>{emoji}</span>
             <div>
-              <p className='font-display font-bold text-gray-900 dark:text-white line-clamp-1'>
+              <p className='font-display font-bold text-light-primary dark:text-dark-primary line-clamp-1'>
                 {buzz.title}
               </p>
               <p className='text-sm text-gray-500'>
@@ -77,12 +77,12 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
         </div>
 
         <div className='mt-4 flex items-center justify-between'>
-          <span className='text-sm text-gray-400'>
+          <span className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             {buzz.totalSignatures} {buzz.totalSignatures === 1 ? 'page' : 'pages'} added
           </span>
           <button
             onClick={copyLink}
-            className='flex items-center gap-1 text-sm font-medium text-emerald-600 hover:text-emerald-700 dark:text-emerald-400'
+            className='flex items-center gap-1 text-sm font-medium text-[#C9A96E] hover:text-[#E8B86D]'
           >
             <HeroIcon iconName='LinkIcon' className='h-3.5 w-3.5' />
             Copy link
@@ -123,15 +123,15 @@ export default function MyBuzzes(): JSX.Element {
 
       <div className='space-y-3 px-4 py-4'>
         {loading && (
-          <div className='py-16 text-center text-gray-400'>Loading…</div>
+          <div className='py-16 text-center text-[#9E8B76]'>Loading…</div>
         )}
 
         {!loading && buzzes?.length === 0 && (
           <div className='flex flex-col items-center gap-4 py-20 text-center'>
             <span className='text-5xl'>📖</span>
             <div>
-              <p className='font-display font-bold text-gray-700 dark:text-gray-200'>No Buzzes yet</p>
-              <p className='mt-1 text-sm text-gray-400'>
+              <p className='font-display font-bold text-light-primary dark:text-dark-primary'>No Buzzes yet</p>
+              <p className='mt-1 text-sm text-[#9E8B76]'>
                 Start one and share the link — friends add their pages, you reveal the Buzzbook.
               </p>
             </div>

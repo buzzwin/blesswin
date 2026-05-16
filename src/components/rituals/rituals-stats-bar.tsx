@@ -25,7 +25,7 @@ export function RitualsStatsBar({
   return (
     <div
       className={cn(
-        'rounded-[28px] border-2 border-gray-100 bg-white shadow-[0_14px_36px_rgba(14,14,14,0.08)] dark:border-gray-800 dark:bg-gray-900',
+        'rounded-[28px] border-2 border-gray-100 bg-white shadow-[0_14px_36px_rgba(14,14,14,0.08)] dark:border-[#2a1d10] dark:bg-[#1c1510]',
         'py-3 px-3 md:py-4 md:px-4',
         className
       )}
@@ -34,11 +34,11 @@ export function RitualsStatsBar({
         {/* Progress Stat */}
         <button
           onClick={() => onNavigateToTab('progress')}
-          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-gray-800 md:gap-3 md:px-4'
+          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-[#231a10] md:gap-3 md:px-4'
         >
-          <TrendingUp className='h-4 w-4 text-blue-600 dark:text-blue-400 md:h-5 md:w-5' />
+          <TrendingUp className='h-4 w-4 text-[#8a6520] dark:text-[#9E8B76] md:h-5 md:w-5' />
           <div className='flex-1 text-left'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 md:text-sm'>Progress</div>
+            <div className='text-xs text-gray-500 dark:text-[#9E8B76] md:text-sm'>Progress</div>
             <div className='text-sm font-semibold text-gray-900 dark:text-white md:text-base'>
               {overallProgress}%
             </div>
@@ -48,11 +48,11 @@ export function RitualsStatsBar({
         {/* Karma Points Stat */}
         <button
           onClick={() => onNavigateToTab('progress')}
-          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-gray-800 md:gap-3 md:px-4'
+          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-[#231a10] md:gap-3 md:px-4'
         >
           <Sparkles className='h-4 w-4 text-yellow-600 dark:text-yellow-400 md:h-5 md:w-5' />
           <div className='flex-1 text-left'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 md:text-sm'>Karma</div>
+            <div className='text-xs text-gray-500 dark:text-[#9E8B76] md:text-sm'>Karma</div>
             <div className='text-sm font-semibold text-gray-900 dark:text-white md:text-base'>
               {karmaPoints.toLocaleString()}
             </div>
@@ -62,11 +62,11 @@ export function RitualsStatsBar({
         {/* Rituals Count Stat */}
         <button
           onClick={() => onNavigateToTab('joined')}
-          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-gray-800 md:gap-3 md:px-4'
+          className='flex flex-1 items-center gap-2 rounded-2xl px-3 py-2 transition-all hover:-translate-y-0.5 hover:bg-gray-50 dark:hover:bg-[#231a10] md:gap-3 md:px-4'
         >
-          <Calendar className='h-4 w-4 text-purple-600 dark:text-purple-400 md:h-5 md:w-5' />
+          <Calendar className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E] md:h-5 md:w-5' />
           <div className='flex-1 text-left'>
-            <div className='text-xs text-gray-500 dark:text-gray-400 md:text-sm'>Rituals</div>
+            <div className='text-xs text-gray-500 dark:text-[#9E8B76] md:text-sm'>Rituals</div>
             <div className='text-sm font-semibold text-gray-900 dark:text-white md:text-base'>
               {ritualsCount}
             </div>

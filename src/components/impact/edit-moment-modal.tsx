@@ -124,7 +124,7 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
     <div className='space-y-4'>
       {/* Text Input */}
       <div>
-        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
           What did you do? *
         </label>
         <textarea
@@ -132,13 +132,13 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
           onChange={(e) => setText(e.target.value)}
           placeholder='What small good deed did you do today?'
           rows={4}
-          className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+          className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
         />
       </div>
 
       {/* Tags */}
       <div>
-        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
           Tags *
         </label>
         <div className='flex flex-wrap gap-2'>
@@ -155,8 +155,8 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
               }}
               className={`rounded-full px-3 py-1 text-sm font-medium transition-colors ${
                 selectedTags.includes(tag)
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                  ? 'bg-[#C97D60] text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
               }`}
             >
               {tag}
@@ -167,7 +167,7 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
 
       {/* Effort Level */}
       <div>
-        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
           Effort Level *
         </label>
         <div className='flex gap-2'>
@@ -178,8 +178,8 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
               onClick={() => setEffortLevel(level)}
               className={`rounded-lg px-4 py-2 text-sm font-medium capitalize transition-colors ${
                 effortLevel === level
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                  ? 'bg-[#C97D60] text-white'
+                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
               }`}
             >
               {level}
@@ -190,16 +190,16 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
 
       {/* Mood Check-in */}
       <div>
-        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+        <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
           Mood Check-in (Optional)
         </label>
         <div className='flex items-center gap-4'>
           <div>
-            <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>Before</label>
+            <label className='mb-1 block text-xs text-gray-600 dark:text-[#9E8B76]'>Before</label>
             <select
               value={moodBefore || ''}
               onChange={(e) => setMoodBefore(e.target.value ? parseInt(e.target.value) : null)}
-              className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+              className='rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
             >
               <option value=''>Select</option>
               {[1, 2, 3, 4, 5].map(num => (
@@ -208,11 +208,11 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
             </select>
           </div>
           <div>
-            <label className='mb-1 block text-xs text-gray-600 dark:text-gray-400'>After</label>
+            <label className='mb-1 block text-xs text-gray-600 dark:text-[#9E8B76]'>After</label>
             <select
               value={moodAfter || ''}
               onChange={(e) => setMoodAfter(e.target.value ? parseInt(e.target.value) : null)}
-              className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+              className='rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
             >
               <option value=''>Select</option>
               {[1, 2, 3, 4, 5].map(num => (
@@ -228,7 +228,7 @@ function EditMomentForm({ moment, onSuccess, onCancel, onSubmittingChange }: Edi
         <button
           onClick={onCancel}
           disabled={loading}
-          className='flex-1 rounded-lg border-2 border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+          className='flex-1 rounded-lg border-2 border-gray-300 bg-[#faf8f4] px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
         >
           Cancel
         </button>

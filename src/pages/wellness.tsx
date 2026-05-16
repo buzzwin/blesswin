@@ -119,7 +119,7 @@ export default function WellnessPage(): JSX.Element {
         <div className='flex min-h-[400px] items-center justify-center'>
           <div className='text-center'>
             <Loading size='lg' />
-            <p className='mt-4 text-sm text-gray-600 dark:text-gray-400'>
+            <p className='mt-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
               Preparing your AI companion...
             </p>
           </div>
@@ -128,9 +128,9 @@ export default function WellnessPage(): JSX.Element {
 
       {/* Content - Hidden until disclaimer accepted */}
       {!isChecking && showContent ? (
-        <div className='flex h-screen flex-col overflow-hidden bg-gray-50 dark:bg-gray-950'>
+        <div className='flex h-screen flex-col overflow-hidden bg-gray-50 dark:bg-[#1c1510]'>
           {/* Compact Sticky Header */}
-          <header className='sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-white px-3 py-2 dark:border-gray-700 dark:bg-gray-900 sm:px-4 md:px-6'>
+          <header className='sticky top-0 z-10 flex items-center justify-between border-b border-gray-200 bg-[#faf8f4] px-3 py-2 dark:border-[#2a1d10] dark:bg-[#1c1510] sm:px-4 md:px-6'>
             <div className='flex items-center gap-2'>
               <div className='flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-purple-500 to-teal-500 shadow-sm'>
                 <Sparkles className='h-4 w-4 text-white' />
@@ -141,7 +141,7 @@ export default function WellnessPage(): JSX.Element {
             </div>
             <Link
               href='/'
-              className='flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white'
+              className='flex h-8 w-8 items-center justify-center rounded-lg text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-white'
             >
               <ArrowLeft className='h-5 w-5' />
             </Link>
@@ -166,7 +166,7 @@ export default function WellnessPage(): JSX.Element {
             <h2 className='mb-2 text-xl font-semibold text-gray-900 dark:text-white'>
               Disclaimer Required
             </h2>
-            <p className='mb-6 text-gray-600 dark:text-gray-400'>
+            <p className='mb-6 text-gray-600 dark:text-[#9E8B76]'>
               To use the Wellness AI Pal, please review and accept our wellness disclaimer.
             </p>
             <button

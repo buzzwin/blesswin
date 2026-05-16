@@ -259,7 +259,7 @@ export function MyRitualsSection({
 
   if (loading) {
     return (
-      <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+      <div className='rounded-xl border border-gray-200 bg-[#faf8f4] p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
         <Loading className='mt-5' />
       </div>
     );
@@ -276,19 +276,19 @@ export function MyRitualsSection({
     return (
       <div className='space-y-3 md:space-y-4'>
         {availableRituals.length > 0 ? (
-          <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-3 dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-4 lg:p-6'>
             <div className='mb-3 flex items-center justify-between md:mb-4'>
               <div className='flex items-center gap-2'>
-                <Sparkles className='h-4 w-4 text-blue-600 dark:text-blue-400 md:h-5 md:w-5' />
+                <Sparkles className='h-4 w-4 text-[#8a6520] dark:text-[#9E8B76] md:h-5 md:w-5' />
                 <h3 className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
                   Available Rituals
                 </h3>
-                <span className='rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'>
+                <span className='rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-0.5 text-xs font-medium text-[#7a5510] dark:bg-[rgba(201,169,110,0.08)]/30 dark:text-[#C4B5A0]'>
                   {availableRituals.length}
                 </span>
               </div>
             </div>
-            <p className='mb-3 text-xs text-gray-600 dark:text-gray-400 md:mb-4 md:text-sm'>
+            <p className='mb-3 text-xs text-gray-600 dark:text-[#9E8B76] md:mb-4 md:text-sm'>
               Discover new rituals you can join and make part of your daily
               practice.
             </p>
@@ -322,13 +322,13 @@ export function MyRitualsSection({
             </div>
           </div>
         ) : (
-          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-12'>
             <div className='mx-auto max-w-md'>
               <div className='mb-4 text-4xl md:text-6xl'>🌱</div>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
                 No New Rituals Available
               </h3>
-              <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+              <p className='mb-6 text-sm text-gray-600 dark:text-[#9E8B76] md:text-base'>
                 Create your own ritual or check back later for new rituals to
                 join!
               </p>
@@ -349,13 +349,13 @@ export function MyRitualsSection({
   // Don't show sections if they're filtered out
   if (filterType === 'created' && createdRituals.length === 0) {
     return (
-      <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
+      <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-12'>
         <div className='mx-auto max-w-md'>
           <div className='mb-4 text-4xl md:text-6xl'>📝</div>
           <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
             No Created Rituals
           </h3>
-          <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+          <p className='mb-6 text-sm text-gray-600 dark:text-[#9E8B76] md:text-base'>
             Create your first ritual to get started!
           </p>
           <button
@@ -375,15 +375,15 @@ export function MyRitualsSection({
       {/* Created Rituals Section - Always show when filter is 'created' */}
       {/* (Created rituals scheduled for today appear in "Today's Rituals" section above) */}
       {filterType === 'created' && (
-        <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+        <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-3 dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-4 lg:p-6'>
           <div className='mb-3 flex items-center justify-between md:mb-4'>
             <div className='flex items-center gap-2'>
-              <Plus className='h-4 w-4 text-purple-600 dark:text-purple-400 md:h-5 md:w-5' />
+              <Plus className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E] md:h-5 md:w-5' />
               <h3 className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
                 My Created Rituals
               </h3>
               {filteredAndSortedCreated.length > 0 && (
-                <span className='rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+                <span className='rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                   {filteredAndSortedCreated.length}
                 </span>
               )}
@@ -428,13 +428,13 @@ export function MyRitualsSection({
               ))}
             </div>
           ) : (
-            <div className='rounded-lg border-2 border-dashed border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20 md:p-8'>
+            <div className='rounded-lg border-2 border-dashed border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-6 text-center dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] md:p-8'>
               <div className='mx-auto max-w-md'>
                 <div className='mb-3 text-4xl md:mb-4 md:text-5xl'>✨</div>
                 <h4 className='mb-2 text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
                   Create Your Own Ritual
                 </h4>
-                <p className='mb-4 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+                <p className='mb-4 text-sm text-gray-600 dark:text-[#9E8B76] md:text-base'>
                   Design a personalized ritual that reflects your values and
                   goals. Share it with others and build a community around
                   positive habits!
@@ -454,13 +454,13 @@ export function MyRitualsSection({
 
       {/* Empty State */}
       {!hasRituals && (
-        <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
+        <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-12'>
           <div className='mx-auto max-w-md'>
             <div className='mb-4 text-4xl md:text-6xl'>🌱</div>
             <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
               No Rituals Yet
             </h3>
-            <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+            <p className='mb-6 text-sm text-gray-600 dark:text-[#9E8B76] md:text-base'>
               Create your first ritual or join one from today's suggestions to
               get started!
             </p>

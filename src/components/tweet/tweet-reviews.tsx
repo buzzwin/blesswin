@@ -15,7 +15,7 @@ export function TweetReviews({
   if (loading) {
     return (
       <div className='flex justify-center py-4'>
-        <div className='h-8 w-8 animate-spin rounded-full border-4 border-emerald-400 border-t-transparent' />
+        <div className='h-8 w-8 animate-spin rounded-full border-4 border-[#C9A96E] border-t-transparent' />
       </div>
     );
   }

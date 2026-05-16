@@ -33,7 +33,7 @@ export function HeroSection({
           </h1>
           
           {/* Animated description */}
-          <p className='mx-auto mb-12 max-w-2xl animate-fade-in-up text-lg leading-relaxed text-gray-600 dark:text-gray-300 md:text-xl lg:text-2xl [animation-delay:150ms]'>
+          <p className='mx-auto mb-12 max-w-2xl animate-fade-in-up text-lg leading-relaxed text-gray-600 dark:text-[#C4B5A0] md:text-xl lg:text-2xl [animation-delay:150ms]'>
             Let&apos;s start a new ritual today on a journey of self improvement.
           </p>
 
@@ -53,7 +53,7 @@ export function HeroSection({
             <Link href='/real-stories'>
               <a
                 onClick={onSeeRealStories}
-                className='group inline-flex items-center justify-center rounded-full border-2 border-gray-900/10 bg-white/80 px-8 py-4 text-base font-semibold text-gray-900 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-900/20 hover:bg-white hover:shadow-lg dark:border-gray-200/10 dark:bg-gray-800/80 dark:text-gray-100 dark:hover:border-gray-200/20 dark:hover:bg-gray-800'
+                className='group inline-flex items-center justify-center rounded-full border-2 border-gray-900/10 bg-white/80 px-8 py-4 text-base font-semibold text-gray-900 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:border-gray-900/20 hover:bg-white hover:shadow-lg dark:border-gray-200/10 dark:bg-[#1c1510]/80 dark:text-[#F5EFE6] dark:hover:border-gray-200/20 dark:hover:bg-[#231a10]'
               >
                 {navigating ? (
                   <span className='flex items-center gap-2'>

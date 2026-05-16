@@ -40,7 +40,7 @@ export function CommentCard({ comment, momentId, onDelete }: CommentCardProps): 
   const canDelete = user?.id === comment.createdBy;
 
   return (
-    <div className='flex gap-3 border-b border-gray-200 p-4 dark:border-gray-700'>
+    <div className='flex gap-3 border-b border-gray-200 p-4 dark:border-[#2a1d10]'>
       <Link href={`/user/${comment.user.username}`}>
         <a>
           <UserAvatar
@@ -65,8 +65,8 @@ export function CommentCard({ comment, momentId, onDelete }: CommentCardProps): 
           <UserUsername username={comment.user.username} />
           {comment.createdAt && (
             <>
-              <span className='text-gray-500 dark:text-gray-400'>·</span>
-              <time className='text-sm text-gray-500 dark:text-gray-400'>
+              <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
+              <time className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                 {comment.createdAt instanceof Date 
                   ? formatDate(comment.createdAt as unknown as Timestamp, 'tweet')
                   : formatDate(comment.createdAt, 'tweet')}

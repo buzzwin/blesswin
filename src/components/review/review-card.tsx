@@ -24,7 +24,7 @@ export function ReviewCard({
       className={cn(
         'relative rounded-xl border border-gray-100 p-6',
         'bg-white/50 backdrop-blur-sm',
-        'dark:border-gray-800 dark:bg-gray-900/50'
+        'dark:border-[#2a1d10] dark:bg-[#1c1510]/50'
       )}
     >
       <div className='absolute right-4 top-4 flex items-center gap-2'>
@@ -53,10 +53,10 @@ export function ReviewCard({
             <span className='font-medium text-gray-900 dark:text-white'>
               {review.user.name}
             </span>
-            <span className='text-sm text-gray-500 dark:text-gray-400'>
+            <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>
               @{review.user.username}
             </span>
-            <span className='text-sm text-gray-500 dark:text-gray-400'>·</span>
+            <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>·</span>
             <TweetDate createdAt={review.createdAt} viewTweet={false} />
           </div>
           <span className='text-2xl'>{review.rating}</span>
@@ -66,7 +66,7 @@ export function ReviewCard({
       {/* Review Content */}
       <div className='mt-3 space-y-3'>
         {review.review && (
-          <p className='text-gray-600 dark:text-gray-300'>{review.review}</p>
+          <p className='text-gray-600 dark:text-[#C4B5A0]'>{review.review}</p>
         )}
         {review.tags.length > 0 && (
           <div className='flex flex-wrap gap-1.5'>
@@ -76,7 +76,7 @@ export function ReviewCard({
                 className={cn(
                   'rounded-full px-2 py-0.5 text-xs',
                   'bg-gray-100 text-gray-600',
-                  'dark:bg-gray-800 dark:text-gray-300'
+                  'dark:bg-[#1c1510] dark:text-[#C4B5A0]'
                 )}
               >
                 {tag}
@@ -100,7 +100,7 @@ export function ReviewCard({
             <h3 className='font-medium text-gray-900 dark:text-white'>
               {review.title}
             </h3>
-            <p className='text-sm text-gray-500 dark:text-gray-400'>
+            <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
               {review.mediaType === 'movie' ? 'Movie' : 'TV Show'}
             </p>
           </div>

@@ -43,10 +43,10 @@ export function RitualsFilter({
             onClick={() => onFilterChange(option.id)}
             className={cn(
               'inline-flex items-center gap-1.5 rounded-full border-2 px-3 py-1.5 text-xs font-medium transition-colors',
-              'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1',
+              'focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 focus:ring-offset-1',
               isActive
-                ? 'border-purple-600 bg-purple-600 text-white dark:border-purple-400 dark:bg-purple-400 dark:text-gray-900'
-                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-700'
+                ? 'border-[#C9A96E] bg-[#C97D60] text-white dark:border-[rgba(201,169,110,0.45)] dark:bg-[#C97D60] dark:text-[#1a1108]'
+                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:border-gray-600 dark:hover:bg-[#231a10]'
             )}
           >
             <Icon className='h-3 w-3 md:h-3.5 md:w-3.5' />
@@ -56,8 +56,8 @@ export function RitualsFilter({
                 className={cn(
                   'rounded-full px-1.5 py-0.5 text-xs font-semibold',
                   isActive
-                    ? 'bg-white/20 text-white dark:bg-gray-900/20 dark:text-gray-100'
-                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                    ? 'bg-white/20 text-white dark:bg-[#1c1510]/20 dark:text-[#F5EFE6]'
+                    : 'bg-gray-100 text-gray-600 dark:bg-[#231a10] dark:text-[#9E8B76]'
                 )}
               >
                 {count}

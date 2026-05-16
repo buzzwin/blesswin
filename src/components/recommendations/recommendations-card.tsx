@@ -183,7 +183,7 @@ export function RecommendationsCard({
 
   if (loading) {
     return (
-      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
+      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-[#231a10]'>
         <CardContent className='p-6 text-center'>
           <div className='mb-4 flex justify-center'>
             <div className='h-8 w-8 animate-spin rounded-full border-2 border-blue-500/30 border-t-blue-500'></div>
@@ -191,7 +191,7 @@ export function RecommendationsCard({
           <h4 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
             Analyzing Your Preferences...
           </h4>
-          <p className='text-sm text-muted-foreground dark:text-gray-400'>
+          <p className='text-sm text-muted-foreground dark:text-[#9E8B76]'>
             Our AI is learning from your ratings to provide personalized
             recommendations
           </p>
@@ -202,7 +202,7 @@ export function RecommendationsCard({
 
   if (error) {
     return (
-      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
+      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-[#231a10]'>
         <CardContent className='p-6 text-center'>
           <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-red-500/20'>
             <Brain className='h-6 w-6 text-red-400' />
@@ -210,7 +210,7 @@ export function RecommendationsCard({
           <h4 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
             Unable to Load Recommendations
           </h4>
-          <p className='mb-4 text-sm text-muted-foreground dark:text-gray-400'>
+          <p className='mb-4 text-sm text-muted-foreground dark:text-[#9E8B76]'>
             {error.includes('Failed to fetch')
               ? 'Connection issue. Please check your internet connection and try again.'
               : error}
@@ -231,15 +231,15 @@ export function RecommendationsCard({
 
   if (!recommendations || recommendations.length === 0) {
     return (
-      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-gray-800/50'>
+      <Card className='border-0 bg-muted/50 shadow-xl backdrop-blur-sm dark:bg-[#231a10]'>
         <CardContent className='p-6 text-center'>
-          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-blue-500/20'>
-            <Brain className='h-6 w-6 text-blue-400' />
+          <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(201,169,110,0.06)]0/20'>
+            <Brain className='h-6 w-6 text-[#9E8B76]' />
           </div>
           <h4 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
             AI-Powered Recommendations
           </h4>
-          <p className='mb-4 text-sm text-muted-foreground dark:text-gray-400'>
+          <p className='mb-4 text-sm text-muted-foreground dark:text-[#9E8B76]'>
             {analysis?.suggestions?.[0] ??
               'Get personalized recommendations based on your preferences!'}
           </p>
@@ -252,14 +252,14 @@ export function RecommendationsCard({
     <div className='space-y-3'>
       {/* Compact AI Analysis Section */}
       {analysis && (
-        <div className='rounded-lg bg-muted/50 p-3 dark:bg-gray-800'>
+        <div className='rounded-lg bg-muted/50 p-3 dark:bg-[#1c1510]'>
           <div className='mb-2 flex items-center gap-2'>
-            <Brain className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+            <Brain className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
             <h4 className='text-xs font-semibold text-foreground dark:text-white'>
               AI Insights
             </h4>
           </div>
-          <p className='line-clamp-2 text-xs text-muted-foreground dark:text-gray-400'>
+          <p className='line-clamp-2 text-xs text-muted-foreground dark:text-[#9E8B76]'>
             {analysis.ratingPattern}
           </p>
           {analysis.preferredGenres.length > 0 && (
@@ -267,7 +267,7 @@ export function RecommendationsCard({
               {analysis.preferredGenres.slice(0, 3).map((genre, index) => (
                 <span
                   key={index}
-                  className='rounded-full bg-purple-100 px-2 py-1 text-xs text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
+                  className='rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-1 text-xs text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
                 >
                   {genre}
                 </span>
@@ -287,7 +287,7 @@ export function RecommendationsCard({
             variant='ghost'
             size='sm'
             onClick={() => void refetch()}
-            className='h-6 w-6 p-0 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200'
+            className='h-6 w-6 p-0 text-gray-500 hover:text-gray-700 dark:text-[#9E8B76] dark:hover:text-gray-200'
           >
             <RefreshCw className='h-3 w-3' />
           </Button>
@@ -297,13 +297,13 @@ export function RecommendationsCard({
           {visibleRecommendations.slice(0, 3).map((recommendation, index) => (
             <div
               key={index}
-              className='group relative rounded-lg border border-border bg-card p-2 transition-all duration-200 hover:border-border/80 hover:shadow-sm dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
+              className='group relative rounded-lg border border-border bg-card p-2 transition-all duration-200 hover:border-border/80 hover:shadow-sm dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-gray-600'
             >
               <div
                 className='flex cursor-pointer gap-3'
                 onClick={() => setSelectedRecommendation(recommendation)}
               >
-                <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
+                <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-[#231a10]'>
                   {recommendation.posterPath ? (
                     <ImageWithFallback
                       src={getImageUrl(recommendation.posterPath, 'w92')}
@@ -320,8 +320,8 @@ export function RecommendationsCard({
                       }}
                     />
                   ) : (
-                    <div className='absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700'>
-                      <div className='text-lg text-gray-500 dark:text-gray-400'>
+                    <div className='absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-[#231a10]'>
+                      <div className='text-lg text-gray-500 dark:text-[#9E8B76]'>
                         📽️
                       </div>
                     </div>
@@ -331,7 +331,7 @@ export function RecommendationsCard({
                   <h5 className='line-clamp-1 text-xs font-medium text-foreground dark:text-white'>
                     {recommendation.title}
                   </h5>
-                  <div className='mb-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400'>
+                  <div className='mb-1 flex items-center gap-1 text-xs text-muted-foreground dark:text-[#9E8B76]'>
                     <span className='font-medium'>
                       {recommendation.mediaType === 'movie' ? 'Movie' : 'TV'}
                     </span>
@@ -339,7 +339,7 @@ export function RecommendationsCard({
                     <span>{recommendation.year}</span>
                   </div>
                   <div className='flex items-center gap-1'>
-                    <div className='flex-1 rounded-full bg-gray-200 dark:bg-gray-600'>
+                    <div className='flex-1 rounded-full bg-gray-200 dark:bg-[#3d2e1e]'>
                       <div
                         className='h-1 rounded-full bg-gradient-to-r from-purple-500 to-blue-500'
                         style={{
@@ -349,7 +349,7 @@ export function RecommendationsCard({
                         }}
                       />
                     </div>
-                    <span className='text-xs text-muted-foreground dark:text-gray-400'>
+                    <span className='text-xs text-muted-foreground dark:text-[#9E8B76]'>
                       {Math.round(recommendation.confidence * 100)}%
                     </span>
                   </div>
@@ -370,7 +370,7 @@ export function RecommendationsCard({
                   variant='outline'
                   size='sm'
                   onClick={(e) => handleAddToWatchlist(e, recommendation)}
-                  className='flex-1 text-xs hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400'
+                  className='flex-1 text-xs hover:bg-[rgba(201,169,110,0.06)] hover:text-[#8a6520] dark:hover:bg-[rgba(201,169,110,0.08)] dark:hover:text-[#9E8B76]'
                 >
                   <Bookmark className='mr-1 h-3 w-3' />
                   Save
@@ -382,7 +382,7 @@ export function RecommendationsCard({
 
         {visibleRecommendations.length > 3 && (
           <div className='text-center'>
-            <div className='text-xs text-gray-500 dark:text-gray-400'>
+            <div className='text-xs text-gray-500 dark:text-[#9E8B76]'>
               Showing {visibleRecommendations.length} recommendations
             </div>
           </div>
@@ -392,9 +392,9 @@ export function RecommendationsCard({
       {/* Simple Recommendation Detail Modal */}
       {selectedRecommendation && (
         <div className='fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4'>
-          <div className='w-full max-w-md rounded-lg bg-white p-6 shadow-xl dark:bg-gray-800'>
+          <div className='w-full max-w-md rounded-lg bg-[#faf8f4] p-6 shadow-xl dark:bg-[#1c1510]'>
             <div className='mb-4 flex items-start gap-4'>
-              <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded bg-gray-200 dark:bg-gray-700'>
+              <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded bg-gray-200 dark:bg-[#231a10]'>
                 {selectedRecommendation.posterPath ? (
                   <ImageWithFallback
                     src={getImageUrl(selectedRecommendation.posterPath, 'w154')}
@@ -411,8 +411,8 @@ export function RecommendationsCard({
                     }}
                   />
                 ) : (
-                  <div className='absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-gray-700'>
-                    <div className='text-sm text-gray-500 dark:text-gray-400'>
+                  <div className='absolute inset-0 flex items-center justify-center bg-gray-200 dark:bg-[#231a10]'>
+                    <div className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                       📽️
                     </div>
                   </div>
@@ -422,7 +422,7 @@ export function RecommendationsCard({
                 <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
                   {selectedRecommendation.title}
                 </h3>
-                <div className='mb-2 flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400'>
+                <div className='mb-2 flex items-center gap-2 text-sm text-gray-500 dark:text-[#9E8B76]'>
                   <span>
                     {selectedRecommendation.mediaType === 'movie'
                       ? 'Movie'
@@ -434,9 +434,9 @@ export function RecommendationsCard({
                   <span>{selectedRecommendation.genre}</span>
                 </div>
                 <div className='flex items-center gap-2'>
-                  <div className='flex-1 rounded-full bg-gray-200 dark:bg-gray-600'>
+                  <div className='flex-1 rounded-full bg-gray-200 dark:bg-[#3d2e1e]'>
                     <div
-                      className='h-1 rounded-full bg-gray-600 dark:bg-gray-400'
+                      className='h-1 rounded-full bg-gray-600 dark:bg-[#6b5744]'
                       style={{
                         width: `${Math.round(
                           selectedRecommendation.confidence * 100
@@ -444,7 +444,7 @@ export function RecommendationsCard({
                       }}
                     />
                   </div>
-                  <span className='text-xs text-gray-500 dark:text-gray-400'>
+                  <span className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                     {Math.round(selectedRecommendation.confidence * 100)}%
                   </span>
                 </div>
@@ -455,7 +455,7 @@ export function RecommendationsCard({
               <h4 className='mb-2 text-sm font-medium text-gray-900 dark:text-white'>
                 Why This is Recommended
               </h4>
-              <p className='max-h-32 overflow-y-auto rounded bg-gray-50 p-3 text-sm text-gray-700 dark:bg-gray-700 dark:text-gray-300'>
+              <p className='max-h-32 overflow-y-auto rounded bg-gray-50 p-3 text-sm text-gray-700 dark:bg-[#231a10] dark:text-[#C4B5A0]'>
                 {selectedRecommendation.reason}
               </p>
             </div>
@@ -483,7 +483,7 @@ export function RecommendationsCard({
                       handleAddToWatchlist(e, selectedRecommendation);
                     }
                   }}
-                  className='flex-1 hover:bg-blue-50 hover:text-blue-600 dark:hover:bg-blue-900/20 dark:hover:text-blue-400'
+                  className='flex-1 hover:bg-[rgba(201,169,110,0.06)] hover:text-[#8a6520] dark:hover:bg-[rgba(201,169,110,0.08)] dark:hover:text-[#9E8B76]'
                 >
                   <Bookmark className='mr-2 h-4 w-4' />
                   Save to Watchlist
@@ -500,7 +500,7 @@ export function RecommendationsCard({
               </div>
 
               {/* Compact Social Share */}
-              <div className='border-t border-gray-200 pt-2 dark:border-gray-700'>
+              <div className='border-t border-gray-200 pt-2 dark:border-[#2a1d10]'>
                 <SocialShare
                   title={`Check out "${selectedRecommendation.title}" recommended by Buzzwin AI!`}
                   description={`${

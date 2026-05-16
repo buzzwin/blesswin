@@ -89,13 +89,13 @@ export function UserKarmaDisplay({
   return (
     <div
       className={cn(
-        'rounded-xl border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800',
+        'rounded-xl border border-gray-200 bg-[#faf8f4] p-4 dark:border-[#2a1d10] dark:bg-[#1c1510]',
         className
       )}
     >
       <div className='flex items-center justify-between'>
         <div className='flex-1'>
-          <h3 className='text-sm font-medium text-gray-500 dark:text-gray-400'>
+          <h3 className='text-sm font-medium text-[#6b5744] dark:text-[#9E8B76]'>
             Karma Points
           </h3>
           <UserKarmaBadge
@@ -105,21 +105,21 @@ export function UserKarmaDisplay({
             className='mt-2'
           />
           {showEncouragement && (
-            <p className='mt-2 text-sm text-gray-600 dark:text-gray-400'>
+            <p className='mt-2 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
               {getEncouragementMessage()}
             </p>
           )}
           {nextMilestone && showEncouragement && (
             <div className='mt-3'>
               <div className='mb-1 flex items-center justify-between text-xs'>
-                <span className='text-gray-600 dark:text-gray-400'>
+                <span className='text-[#6b5744] dark:text-[#9E8B76]'>
                   Next milestone: {nextMilestone.toLocaleString()}
                 </span>
-                <span className='font-semibold text-gray-900 dark:text-white'>
+                <span className='font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
                   {Math.round(progressToNext)}%
                 </span>
               </div>
-              <div className='h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700'>
+              <div className='h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10]'>
                 <div
                   className='h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-500'
                   style={{ width: `${Math.min(progressToNext, 100)}%` }}
@@ -131,7 +131,7 @@ export function UserKarmaDisplay({
         {showBreakdown && (
           <button
             onClick={() => setBreakdownOpen(!breakdownOpen)}
-            className='ml-4 rounded-lg p-2 text-gray-500 transition-colors hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+            className='ml-4 rounded-lg p-2 text-[#9E8B76] transition-colors hover:bg-[rgba(201,169,110,0.08)] dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
             aria-label='Toggle breakdown'
           >
             {breakdownOpen ? (
@@ -144,7 +144,7 @@ export function UserKarmaDisplay({
       </div>
 
       {showBreakdown && breakdownOpen && (
-        <div className='mt-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+        <div className='mt-4 border-t border-[#e8d8c4] pt-4 dark:border-[#2a1d10]'>
           <UserKarmaBreakdown
             breakdown={karmaBreakdown}
             totalKarma={karmaPoints}
@@ -156,13 +156,13 @@ export function UserKarmaDisplay({
       {showEncouragement && karmaPoints < 100 && (
         <div className='mt-4 flex gap-2'>
           <Link href='/home'>
-            <a className='flex flex-1 items-center justify-center gap-2 rounded-lg bg-purple-600 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-purple-700'>
+            <a className='flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#C97D60] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[#B56540]'>
               <Sparkles className='h-4 w-4' />
               Share Impact Moment
             </a>
           </Link>
           <Link href='/rituals'>
-            <a className='flex flex-1 items-center justify-center gap-2 rounded-lg border border-purple-600 px-4 py-2 text-sm font-semibold text-purple-600 transition-colors hover:bg-purple-50 dark:text-purple-400 dark:hover:bg-purple-900/20'>
+            <a className='flex flex-1 items-center justify-center gap-2 rounded-lg border border-[#C9A96E] px-4 py-2 text-sm font-semibold text-[#C9A96E] transition-colors hover:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'>
               Complete Ritual
               <ArrowRight className='h-4 w-4' />
             </a>

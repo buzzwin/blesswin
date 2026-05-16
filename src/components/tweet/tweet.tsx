@@ -327,11 +327,11 @@ export function Tweet(tweet: TweetProps): JSX.Element {
         <div
           className={cn(
             'relative',
-            'bg-white dark:bg-gray-900',
+            'bg-white dark:bg-[#1c1510]',
             'overflow-hidden rounded-xl',
             'shadow-md hover:shadow-xl',
             'transition-all duration-300',
-            'border border-gray-100 dark:border-gray-800'
+            'border border-gray-100 dark:border-[#2a1d10]'
           )}
         >
           <Modal
@@ -454,7 +454,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                               className={cn(
                                 'flex items-center gap-3',
                                 'transition-colors duration-200',
-                                'hover:bg-gray-100 dark:hover:bg-gray-800/50',
+                                'hover:bg-gray-100 dark:hover:bg-[#231a10]/50',
                                 '-ml-2 rounded-xl p-2'
                               )}
                             >
@@ -467,18 +467,18 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                                 <span
                                   className={cn(
                                     'text-sm font-medium',
-                                    'text-gray-900 dark:text-gray-100'
+                                    'text-gray-900 dark:text-[#F5EFE6]'
                                   )}
                                 >
                                   {name}
                                   {verified && (
                                     <HeroIcon
-                                      className='ml-1 inline-block h-4 w-4 text-emerald-500'
+                                      className='ml-1 inline-block h-4 w-4 text-[#C9A96E]'
                                       iconName='CheckBadgeIcon'
                                     />
                                   )}
                                 </span>
-                                <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
+                                <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                                   <span>@{username}</span>
                                   <span>·</span>
                                   <div className='flex items-center gap-2'>
@@ -493,9 +493,9 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                               'inline-flex items-center',
                               'rounded-full px-2.5 py-0.5',
                               'text-sm font-medium',
-                              'bg-emerald-50 dark:bg-emerald-900/20',
-                              'text-emerald-600 dark:text-emerald-400',
-                              'border border-emerald-100 dark:border-emerald-800'
+                              'bg-[rgba(201,169,110,0.06)] dark:bg-[rgba(201,169,110,0.08)]',
+                              'text-[#8a6520] dark:text-[#C9A96E]',
+                              'border border-emerald-100 dark:border-[rgba(201,169,110,0.35)]'
                             )}
                           >
                             {viewingActivity.status}
@@ -518,13 +518,13 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                               onClick={toggleMenu}
                               className={cn(
                                 'rounded-full p-2',
-                                'hover:bg-gray-100 dark:hover:bg-gray-800',
+                                'hover:bg-gray-100 dark:hover:bg-[#231a10]',
                                 'transition-colors duration-200'
                               )}
                             >
                               <HeroIcon
                                 iconName={menuIconName}
-                                className='h-5 w-5 text-gray-500 dark:text-gray-400'
+                                className='h-5 w-5 text-gray-500 dark:text-[#9E8B76]'
                               />
                             </button>
 
@@ -540,7 +540,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                                     'absolute right-0 mt-2',
                                     'w-48',
                                     'rounded-xl',
-                                    'bg-white dark:bg-gray-900',
+                                    'bg-white dark:bg-[#1c1510]',
                                     'shadow-lg ring-1 ring-gray-200 dark:ring-gray-800',
                                     'py-1',
                                     'z-50'
@@ -625,7 +625,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
               {/* Tweet Stats */}
               {!parentTweet && (
-                <div className='border-t border-gray-100 pt-3 dark:border-gray-800'>
+                <div className='border-t border-gray-100 pt-3 dark:border-[#2a1d10]'>
                   <TweetStats
                     reply={!!parent}
                     userId={userId as string}
@@ -646,12 +646,12 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
               {/* Add Watching Badge when applicable */}
               {userId && userWatching?.includes(userId) && (
-                <div className='absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-3 py-1'>
+                <div className='absolute top-2 left-2 flex items-center gap-1.5 rounded-full bg-[#C97D60]/10 px-3 py-1'>
                   <HeroIcon
                     iconName='EyeIcon'
-                    className='h-4 w-4 text-emerald-500'
+                    className='h-4 w-4 text-[#C9A96E]'
                   />
-                  <span className='text-xs font-medium text-emerald-600 dark:text-emerald-400'>
+                  <span className='text-xs font-medium text-[#8a6520] dark:text-[#C9A96E]'>
                     Watching this
                   </span>
                 </div>
@@ -659,7 +659,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
 
               {/* Show total watchers prominently */}
               {totalWatchers > 0 && (
-                <div className='mt-2 flex items-center gap-1.5 text-gray-500 dark:text-gray-400'>
+                <div className='mt-2 flex items-center gap-1.5 text-gray-500 dark:text-[#9E8B76]'>
                   <HeroIcon iconName='UsersIcon' className='h-5 w-5' />
                   <span className='text-sm'>
                     {totalWatchers} {totalWatchers === 1 ? 'person' : 'people'}{' '}
@@ -675,7 +675,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                   className={cn(
                     'mt-2 flex items-center gap-2',
                     'text-sm text-gray-500 hover:text-gray-700',
-                    'dark:text-gray-400 dark:hover:text-gray-200',
+                    'dark:text-[#9E8B76] dark:hover:text-gray-200',
                     'transition-colors duration-200'
                   )}
                 >
@@ -699,7 +699,7 @@ export function Tweet(tweet: TweetProps): JSX.Element {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className='ml-12 border-l border-gray-200 pl-4 dark:border-gray-800'
+            className='ml-12 border-l border-gray-200 pl-4 dark:border-[#2a1d10]'
           >
             {/* Reviews Section */}
             <div className='mb-6'>
@@ -732,16 +732,16 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                         <span className='font-medium text-gray-900 dark:text-white'>
                           {reply.user.name}
                         </span>
-                        <span className='text-sm text-gray-500 dark:text-gray-400'>
+                        <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                           @{reply.user.username}
                         </span>
-                        <span className='text-sm text-gray-500 dark:text-gray-400'>
+                        <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                           ·
                         </span>
                         <TweetDate createdAt={reply.createdAt} />
                       </div>
                       {reply.viewingActivity?.review && (
-                        <p className='mt-2 text-gray-600 dark:text-gray-300'>
+                        <p className='mt-2 text-gray-600 dark:text-[#C4B5A0]'>
                           {reply.viewingActivity.review}
                         </p>
                       )}
@@ -753,8 +753,8 @@ export function Tweet(tweet: TweetProps): JSX.Element {
                                 key={tag}
                                 className={cn(
                                   'rounded-full px-2 py-1 text-xs',
-                                  'bg-gray-100 dark:bg-gray-800',
-                                  'text-gray-600 dark:text-gray-300'
+                                  'bg-gray-100 dark:bg-[#1c1510]',
+                                  'text-gray-600 dark:text-[#C4B5A0]'
                                 )}
                               >
                                 {tag}

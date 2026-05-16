@@ -121,7 +121,7 @@ export function CurrentEvents(): JSX.Element {
 
           const content = (
             <>
-              <div className='mb-2 flex items-center gap-3 text-sm text-gray-500 dark:text-gray-400'>
+              <div className='mb-2 flex items-center gap-3 text-sm text-gray-500 dark:text-[#9E8B76]'>
                 <span>{categoryLabel}</span>
                 <span>•</span>
                 <span>{formatDate(event.date)}</span>
@@ -129,7 +129,7 @@ export function CurrentEvents(): JSX.Element {
               <h4 className='mb-2 text-lg font-medium leading-snug text-gray-900 dark:text-white md:text-xl'>
                 {event.title}
               </h4>
-              <p className='text-base leading-relaxed text-gray-600 dark:text-gray-400'>
+              <p className='text-base leading-relaxed text-gray-600 dark:text-[#9E8B76]'>
                 {event.description}
               </p>
             </>
@@ -142,7 +142,7 @@ export function CurrentEvents(): JSX.Element {
                 href={event.url}
                 target='_blank'
                 rel='noopener noreferrer'
-                className='block border-b border-gray-200 pb-6 transition-opacity hover:opacity-70 dark:border-gray-700 last:border-0 last:pb-0'
+                className='block border-b border-gray-200 pb-6 transition-opacity hover:opacity-70 dark:border-[#2a1d10] last:border-0 last:pb-0'
               >
                 {content}
               </a>
@@ -152,7 +152,7 @@ export function CurrentEvents(): JSX.Element {
           return (
             <div
               key={idx}
-              className='border-b border-gray-200 pb-6 dark:border-gray-700 last:border-0 last:pb-0'
+              className='border-b border-gray-200 pb-6 dark:border-[#2a1d10] last:border-0 last:pb-0'
             >
               {content}
             </div>

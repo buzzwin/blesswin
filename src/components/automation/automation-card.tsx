@@ -103,7 +103,7 @@ export function AutomationCard({
   return (
     <motion.div
       whileHover={{ scale: 1.02, y: -2 }}
-      className='group relative overflow-hidden rounded-lg border-2 border-gray-200 bg-white p-5 transition-all hover:border-purple-300 hover:shadow-lg dark:border-gray-700 dark:bg-gray-800 dark:hover:border-purple-600'
+      className='group relative overflow-hidden rounded-lg border-2 border-gray-200 bg-[#faf8f4] p-5 transition-all hover:border-[rgba(201,169,110,0.4)] hover:shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[#C9A96E]'
     >
       {/* Category Badge */}
       <div className='mb-3 flex items-center justify-between'>
@@ -116,7 +116,7 @@ export function AutomationCard({
           {automation.category}
         </span>
         {stats.sharedCount > 0 && (
-          <div className='flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400'>
+          <div className='flex items-center gap-1 text-xs text-gray-600 dark:text-[#9E8B76]'>
             <TrendingUp className='h-3 w-3' />
             <span>{stats.sharedCount}</span>
           </div>
@@ -127,19 +127,19 @@ export function AutomationCard({
       <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
         {automation.title}
       </h3>
-      <p className='mb-4 line-clamp-2 text-sm text-gray-600 dark:text-gray-400'>
+      <p className='mb-4 line-clamp-2 text-sm text-gray-600 dark:text-[#9E8B76]'>
         {automation.description}
       </p>
 
       {/* Triggers & Actions Preview */}
       <div className='mb-4 space-y-2'>
-        <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500'>
+        <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
           <Clock className='h-3 w-3' />
           <span>
             {automation.triggers.length} trigger{automation.triggers.length !== 1 ? 's' : ''}
           </span>
         </div>
-        <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500'>
+        <div className='flex items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
           <Zap className='h-3 w-3' />
           <span>
             {automation.actions.length} action{automation.actions.length !== 1 ? 's' : ''}
@@ -148,13 +148,13 @@ export function AutomationCard({
       </div>
 
       {/* Creator */}
-      <div className='mb-4 flex items-center gap-2 border-t border-gray-200 pt-3 dark:border-gray-700'>
+      <div className='mb-4 flex items-center gap-2 border-t border-gray-200 pt-3 dark:border-[#2a1d10]'>
         <UserAvatar src={creator.photoURL ?? 'default-avatar'} alt={creator.name} />
         <div className='flex-1'>
           <p className='text-xs font-medium text-gray-900 dark:text-white'>
             {creator.name}
           </p>
-          <p className='text-xs text-gray-600 dark:text-gray-400'>
+          <p className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             @{creator.username}
           </p>
         </div>

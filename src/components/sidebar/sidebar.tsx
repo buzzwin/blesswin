@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { LogOut, Bot } from 'lucide-react';
+import { LogOut } from 'lucide-react';
 import { useModal } from '@lib/hooks/useModal';
 import { useAuth } from '@lib/context/auth-context';
 import { Modal } from '@components/modal/modal';
@@ -29,33 +29,9 @@ const getNavLinks = (username: string): Readonly<NavLink[]> => [
     disabled: false
   },
   {
-    href: '/ask',
-    linkName: 'Ask Buzzwin',
-    iconName: 'ChatBubbleLeftRightIcon',
-    disabled: false
-  },
-  {
     href: '/buzzes',
     linkName: 'My Buzzes',
     iconName: 'GiftIcon',
-    disabled: false
-  },
-  {
-    href: '/automations',
-    linkName: 'Automations',
-    iconName: 'SparklesIcon',
-    disabled: false
-  },
-  {
-    href: '/real-stories',
-    linkName: 'Stories',
-    iconName: 'BookOpenIcon',
-    disabled: false
-  },
-  {
-    href: '/bookmarks',
-    linkName: 'Bookmarks',
-    iconName: 'BookmarkIcon',
     disabled: false
   },
   {

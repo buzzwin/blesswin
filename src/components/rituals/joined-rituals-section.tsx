@@ -117,7 +117,7 @@ export function JoinedRitualsSection({
 
   if (loading) {
     return (
-      <div className='rounded-xl border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+      <div className='rounded-xl border border-gray-200 bg-[#faf8f4] p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
         <Loading className='mt-5' />
       </div>
     );
@@ -125,16 +125,16 @@ export function JoinedRitualsSection({
 
   if (sortedJoinedRituals.length === 0) {
     return (
-      <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800 md:p-12'>
+      <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-12'>
         <div className='mx-auto max-w-md'>
           <div className='mb-4 text-4xl md:text-6xl'>👥</div>
           <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white md:text-xl'>
             No Joined Rituals Yet
           </h3>
-          <p className='mb-6 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+          <p className='mb-6 text-sm text-gray-600 dark:text-[#9E8B76] md:text-base'>
             Explore available rituals and join ones that resonate with you. Joining rituals helps you stay committed to your daily practice!
           </p>
-          <p className='text-xs text-gray-500 dark:text-gray-400'>
+          <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
             Tip: Check the "Available" tab to discover rituals you can join.
           </p>
         </div>
@@ -144,7 +144,7 @@ export function JoinedRitualsSection({
 
   return (
     <div className='space-y-3 md:space-y-4'>
-      <div className='rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800 md:p-4 lg:p-6'>
+      <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-3 dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-4 lg:p-6'>
         <div className='mb-3 flex items-center justify-between md:mb-4'>
           <div className='flex items-center gap-2'>
             <Users className='h-4 w-4 text-green-600 dark:text-green-400 md:h-5 md:w-5' />
@@ -156,7 +156,7 @@ export function JoinedRitualsSection({
             </span>
           </div>
         </div>
-        <p className='mb-3 text-xs text-gray-600 dark:text-gray-400 md:mb-4 md:text-sm'>
+        <p className='mb-3 text-xs text-gray-600 dark:text-[#9E8B76] md:mb-4 md:text-sm'>
           Rituals you've joined are sorted with incomplete ones first. Complete them to earn karma!
         </p>
         <div className='space-y-2 md:space-y-3 lg:space-y-4'>

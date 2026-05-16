@@ -74,7 +74,7 @@ const ActivityFeed: React.FC = () => {
         <div
           className={cn(
             'h-8 w-8 rounded-full',
-            'border-4 border-emerald-400 dark:border-emerald-500',
+            'border-4 border-[#C9A96E] dark:border-[rgba(201,169,110,0.35)]',
             'border-t-transparent dark:border-t-transparent',
             'animate-spin'
           )}
@@ -163,8 +163,8 @@ const ActivityFeed: React.FC = () => {
                         layout='fill'
                         className={cn(
                           'rounded-lg object-cover transition-all duration-700',
-                          'ring-1 ring-white/10 group-hover:ring-emerald-500/50',
-                          'dark:ring-black/20 dark:group-hover:ring-emerald-500/30'
+                          'ring-1 ring-white/10 group-hover:ring-[#C9A96E]/50',
+                          'dark:ring-black/20 dark:group-hover:ring-[#C9A96E]/30'
                         )}
                         sizes='(max-width: 768px) 96px, (max-width: 1024px) 128px, 176px'
                       />
@@ -179,8 +179,8 @@ const ActivityFeed: React.FC = () => {
                           'relative overflow-hidden rounded-full',
                           'h-6 w-6 md:h-8 md:w-8',
                           'transition-transform duration-500 group-hover:scale-105',
-                          'ring-2 ring-white/10 group-hover:ring-emerald-500/50',
-                          'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
+                          'ring-2 ring-white/10 group-hover:ring-[#C9A96E]/50',
+                          'dark:ring-white/5 dark:group-hover:ring-[#C9A96E]/30'
                         )}
                       >
                         {activity.photoURL === 'default-avatar' ? (
@@ -189,8 +189,8 @@ const ActivityFeed: React.FC = () => {
                               'relative overflow-hidden rounded-full',
                               'h-6 w-6 md:h-8 md:w-8',
                               'transition-transform duration-500 group-hover:scale-105',
-                              'ring-2 ring-white/10 group-hover:ring-emerald-500/50',
-                              'dark:ring-white/5 dark:group-hover:ring-emerald-500/30'
+                              'ring-2 ring-white/10 group-hover:ring-[#C9A96E]/50',
+                              'dark:ring-white/5 dark:group-hover:ring-[#C9A96E]/30'
                             )}
                           />
                         ) : activity.photoURL ? (
@@ -209,7 +209,7 @@ const ActivityFeed: React.FC = () => {
                         className={cn(
                           'text-base font-medium md:text-lg',
                           'text-gray-300 group-hover:text-white',
-                          'dark:text-gray-400 dark:group-hover:text-white',
+                          'dark:text-[#9E8B76] dark:group-hover:text-white',
                           'transition-colors duration-500'
                         )}
                       >
@@ -219,9 +219,9 @@ const ActivityFeed: React.FC = () => {
                         className={cn(
                           'rounded-full px-3 py-1 text-xs md:text-sm',
                           'bg-gray-800/50 text-gray-300',
-                          'dark:bg-black/50 dark:text-gray-400',
-                          'group-hover:bg-emerald-900/30 group-hover:text-emerald-200',
-                          'dark:group-hover:bg-emerald-950/50 dark:group-hover:text-emerald-300',
+                          'dark:bg-black/50 dark:text-[#9E8B76]',
+                          'group-hover:bg-emerald-900/30 group-hover:text-[#C4B5A0]',
+                          'dark:group-hover:bg-emerald-950/50 dark:group-hover:text-[#C9A96E]',
                           'transition-colors duration-500'
                         )}
                       >
@@ -232,8 +232,8 @@ const ActivityFeed: React.FC = () => {
                     <h3
                       className={cn(
                         'text-xl font-bold md:text-3xl lg:text-4xl',
-                        'text-white group-hover:text-emerald-400',
-                        'dark:text-gray-100 dark:group-hover:text-emerald-500',
+                        'text-white group-hover:text-[#C9A96E]',
+                        'dark:text-[#F5EFE6] dark:group-hover:text-[#C9A96E]',
                         'transition-all duration-500'
                       )}
                     >
@@ -245,7 +245,7 @@ const ActivityFeed: React.FC = () => {
                         'flex flex-wrap items-center gap-3 md:gap-4',
                         'text-sm md:text-base',
                         'text-gray-400 group-hover:text-gray-300',
-                        'dark:text-gray-500 dark:group-hover:text-gray-400',
+                        'dark:text-[#9E8B76] dark:group-hover:text-gray-400',
                         'transition-colors duration-500'
                       )}
                     >
@@ -254,8 +254,8 @@ const ActivityFeed: React.FC = () => {
                           'rounded-full px-3 py-1 md:px-4',
                           'bg-gray-800/50',
                           'dark:bg-black/50',
-                          'group-hover:bg-emerald-900/30 group-hover:text-emerald-200',
-                          'dark:group-hover:bg-emerald-950/50 dark:group-hover:text-emerald-300',
+                          'group-hover:bg-emerald-900/30 group-hover:text-[#C4B5A0]',
+                          'dark:group-hover:bg-emerald-950/50 dark:group-hover:text-[#C9A96E]',
                           'transition-colors duration-500'
                         )}
                       >
@@ -329,7 +329,7 @@ const ActivityFeed: React.FC = () => {
                 'h-1.5 rounded-full md:h-2',
                 'transition-all duration-500',
                 index === currentIndex
-                  ? 'w-6 bg-emerald-400 dark:bg-emerald-500'
+                  ? 'w-6 bg-emerald-400 dark:bg-[#C97D60]'
                   : cn(
                       'w-1.5 md:w-2',
                       'bg-white/30 hover:bg-white/50',

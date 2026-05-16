@@ -42,11 +42,11 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
 
   if (historyLoading) {
     return (
-      <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-gray-900/50'>
+      <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-[#1c1510]/50'>
         <CardContent className='p-6'>
           <div className='flex items-center justify-center py-8'>
             <div className='h-8 w-8 animate-spin rounded-full border-2 border-blue-500/30 border-t-blue-500'></div>
-            <span className='ml-3 text-sm text-muted-foreground dark:text-gray-400'>
+            <span className='ml-3 text-sm text-muted-foreground dark:text-[#9E8B76]'>
               Loading your recommendations...
             </span>
           </div>
@@ -57,14 +57,14 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
 
   if (historyError) {
     return (
-      <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-gray-900/50'>
+      <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-[#1c1510]/50'>
         <CardContent className='p-6'>
           <div className='flex flex-col items-center justify-center py-8 text-center'>
             <TrendingUp className='mb-4 h-12 w-12 text-red-500' />
             <h3 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
               Unable to Load Recommendations
             </h3>
-            <p className='mb-4 text-sm text-muted-foreground dark:text-gray-400'>
+            <p className='mb-4 text-sm text-muted-foreground dark:text-[#9E8B76]'>
               {historyError}
             </p>
             <Button
@@ -82,14 +82,14 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
 
   if (!recommendations || recommendations.length === 0) {
     return (
-      <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-gray-900/50'>
+      <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-[#1c1510]/50'>
         <CardContent className='p-6'>
           <div className='flex flex-col items-center justify-center py-8 text-center'>
-            <Sparkles className='mb-4 h-12 w-12 text-blue-500' />
+            <Sparkles className='mb-4 h-12 w-12 text-[#C9A96E]' />
             <h3 className='mb-2 text-lg font-bold text-foreground dark:text-white'>
               No Recommendations Yet
             </h3>
-            <p className='text-sm text-muted-foreground dark:text-gray-400'>
+            <p className='text-sm text-muted-foreground dark:text-[#9E8B76]'>
               Start rating shows and movies to get personalized recommendations.
             </p>
           </div>
@@ -99,21 +99,21 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
   }
 
   return (
-    <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-gray-900/50'>
+    <Card className='border-0 bg-card/50 shadow-xl backdrop-blur-sm dark:bg-[#1c1510]/50'>
       <CardContent className='p-0'>
         <div className='mb-6 flex items-center justify-between px-6 pt-6'>
           <div className='flex items-center gap-3'>
-            <Calendar className='h-6 w-6 text-blue-500' />
+            <Calendar className='h-6 w-6 text-[#C9A96E]' />
             <div>
               <h3 className='text-xl font-bold text-foreground dark:text-white'>
                 Recommendation History
               </h3>
-              <p className='text-xs text-muted-foreground dark:text-gray-400'>
+              <p className='text-xs text-muted-foreground dark:text-[#9E8B76]'>
                 All recommendations your Curator has shared with you
               </p>
             </div>
           </div>
-          <p className='text-sm text-muted-foreground dark:text-gray-400'>
+          <p className='text-sm text-muted-foreground dark:text-[#9E8B76]'>
             {recommendations.length} total
           </p>
         </div>
@@ -122,10 +122,10 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
           {displayedRecommendations.map((rec, index) => (
             <div
               key={`${rec.tmdbId}-${rec.mediaType}`}
-              className='group cursor-pointer rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/10 dark:border-gray-700 dark:bg-gray-800/50 dark:hover:border-purple-600'
+              className='group cursor-pointer rounded-xl border border-border bg-card p-4 transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:shadow-purple-500/10 dark:border-[#2a1d10] dark:bg-[#231a10] dark:hover:border-[#C9A96E]'
             >
               <div className='flex gap-3'>
-                <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-gray-700'>
+                <div className='relative h-16 w-12 flex-shrink-0 overflow-hidden rounded-md bg-gray-200 dark:bg-[#231a10]'>
                   <ImageWithFallback
                     src={getImageUrl(rec.posterPath)}
                     alt={rec.title}
@@ -139,7 +139,7 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
                   <h4 className='line-clamp-1 text-sm font-medium text-foreground dark:text-white'>
                     {rec.title}
                   </h4>
-                  <div className='mb-2 flex items-center gap-2 text-xs text-muted-foreground dark:text-gray-400'>
+                  <div className='mb-2 flex items-center gap-2 text-xs text-muted-foreground dark:text-[#9E8B76]'>
                     <Badge variant='outline' className='text-xs'>
                       {rec.mediaType === 'movie' ? 'Movie' : 'TV'}
                     </Badge>
@@ -147,12 +147,12 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
                   </div>
                   <div className='mb-2 flex items-center gap-1'>
                     <Star className='h-3 w-3 text-yellow-500' />
-                    <span className='text-xs text-muted-foreground dark:text-gray-400'>
+                    <span className='text-xs text-muted-foreground dark:text-[#9E8B76]'>
                       {Math.round(rec.confidence * 100)}% match
                     </span>
                   </div>
                   <div className='flex items-center gap-1'>
-                    <div className='flex-1 rounded-full bg-gray-200 dark:bg-gray-600'>
+                    <div className='flex-1 rounded-full bg-gray-200 dark:bg-[#3d2e1e]'>
                       <div
                         className='h-1 rounded-full bg-gradient-to-r from-purple-500 to-blue-500'
                         style={{
@@ -164,14 +164,14 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
                 </div>
               </div>
               <div className='mt-3'>
-                <p className='line-clamp-2 text-xs text-muted-foreground dark:text-gray-300'>
+                <p className='line-clamp-2 text-xs text-muted-foreground dark:text-[#C4B5A0]'>
                   {rec.reason}
                 </p>
                 <div className='mt-2 flex items-center justify-between'>
                   <Badge variant='outline' className='text-xs'>
                     {rec.genre}
                   </Badge>
-                  <div className='flex items-center gap-1 text-xs text-muted-foreground dark:text-gray-400'>
+                  <div className='flex items-center gap-1 text-xs text-muted-foreground dark:text-[#9E8B76]'>
                     <Film className='h-3 w-3' />
                     <span>#{index + 1}</span>
                   </div>
@@ -185,7 +185,7 @@ export function PastRecommendations({ userId }: PastRecommendationsProps) {
           <div className='px-6 pb-6 text-center'>
             <Button
               onClick={() => setShowAll(!showAll)}
-              className='h-8 border border-border text-xs text-foreground hover:bg-muted dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+              className='h-8 border border-border text-xs text-foreground hover:bg-muted dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
             >
               {showAll
                 ? 'Show Less'

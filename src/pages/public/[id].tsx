@@ -126,8 +126,8 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
         }`}
       >
         {data?.createdAt ? (
-          <div className='relative grid grid-cols-1 gap-4 overflow-hidden rounded-xl bg-gray-100 p-4 shadow-md dark:bg-gray-800 sm:grid-cols-2'>
-            <div className='relative grid grid-cols-1 gap-6 overflow-hidden rounded-xl bg-white p-4 shadow-md dark:bg-gray-900'>
+          <div className='relative grid grid-cols-1 gap-4 overflow-hidden rounded-xl bg-gray-100 p-4 shadow-md dark:bg-[#1c1510] sm:grid-cols-2'>
+            <div className='relative grid grid-cols-1 gap-6 overflow-hidden rounded-xl bg-[#faf8f4] p-4 shadow-md dark:bg-[#1c1510]'>
               <div>
                 <div className='grid grid-cols-1 sm:grid-cols-2'>
                   <div className='flex items-center justify-center'>
@@ -145,14 +145,14 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
 
                   <div>
                     <div className='pl-0 sm:pl-4'>
-                      <p className='font-semibold text-emerald-500 dark:text-emerald-400'>
+                      <p className='font-semibold text-[#C9A96E] dark:text-[#C9A96E]'>
                         Buzz generated {data.createdAt ?? 'No Date'}
                       </p>
-                      <div className='mb-4 text-xl font-medium text-gray-900 dark:text-gray-100'>
+                      <div className='mb-4 text-xl font-medium text-gray-900 dark:text-[#F5EFE6]'>
                         {data.text}
                       </div>
                     </div>
-                    <div className='text-sm text-gray-600 dark:text-gray-300'>
+                    <div className='text-sm text-gray-600 dark:text-[#C4B5A0]'>
                       <p>{(data.viewingActivity as ViewingActivity)?.review}</p>
                     </div>
                   </div>
@@ -163,7 +163,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
                   Are you interested in what the world is watching?
                 </h2>
                 <Link href='/'>
-                  <a className='mt-2 mb-4 inline-flex items-center font-medium tracking-wide text-white transition duration-200 hover:text-emerald-400 focus:outline-none'>
+                  <a className='mt-2 mb-4 inline-flex items-center font-medium tracking-wide text-white transition duration-200 hover:text-[#C9A96E] focus:outline-none'>
                     <span>
                       Join friends, family, and people around the world now!
                     </span>
@@ -175,7 +175,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
                 </Link>
                 <div className='mt-2'>
                   <button
-                    className='rounded-lg bg-white px-4 py-2 font-bold text-emerald-600 transition-colors duration-200 hover:bg-emerald-500 hover:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500/20 dark:bg-gray-800 dark:text-emerald-400 dark:hover:bg-emerald-600'
+                    className='rounded-lg bg-[#faf8f4] px-4 py-2 font-bold text-[#8a6520] transition-colors duration-200 hover:bg-[#C97D60] hover:text-white focus:outline-none focus:ring-2 focus:ring-[rgba(201,169,110,0.25)] dark:bg-[#1c1510] dark:text-[#C9A96E] dark:hover:bg-[#C97D60]'
                     onClick={() => router.push('/')}
                   >
                     Sign Up or Sign In
@@ -188,7 +188,7 @@ export const Tweet: React.FC<TweetProps> = ({ data }) => {
           </div>
         ) : (
           <div>
-            <div className='p-16 text-center text-gray-700 dark:text-gray-300'>
+            <div className='p-16 text-center text-gray-700 dark:text-[#C4B5A0]'>
               You have reached the place where you can see what the world is
               watching
             </div>

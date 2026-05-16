@@ -47,7 +47,7 @@ export function Suggestions(): JSX.Element {
           'rounded-2xl bg-white/5 p-4',
           'hover:bg-white/10 dark:bg-black/20 dark:hover:bg-black/40',
           'backdrop-blur-sm hover:backdrop-blur-lg',
-          'border border-white/10 hover:border-emerald-500/20',
+          'border border-white/10 hover:border-[#C9A96E]/20',
           'shadow-xl hover:shadow-2xl hover:shadow-emerald-500/10',
           'transition-all duration-500'
         )}

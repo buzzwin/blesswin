@@ -37,7 +37,7 @@ export function RitualsTabs({
   return (
     <div
       className={cn(
-        'border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-900',
+        'border-b border-gray-200 bg-white dark:border-[#2a1d10] dark:bg-[#1c1510]',
         'overflow-x-auto',
         className
       )}
@@ -55,8 +55,8 @@ export function RitualsTabs({
                 'whitespace-nowrap rounded-t-lg px-3 py-2 text-sm font-medium transition-colors',
                 'border-b-2',
                 isActive
-                  ? 'border-purple-600 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-                  : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200',
+                  ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+                  : 'border-transparent text-gray-600 hover:border-gray-300 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-200',
                 'flex items-center gap-1.5'
               )}
             >
@@ -66,8 +66,8 @@ export function RitualsTabs({
                   className={cn(
                     'rounded-full px-1.5 py-0.5 text-xs',
                     isActive
-                      ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                      : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400'
+                      ? 'bg-[rgba(201,169,110,0.1)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                      : 'bg-gray-100 text-gray-600 dark:bg-[#231a10] dark:text-[#9E8B76]'
                   )}
                 >
                   {count}

@@ -8,13 +8,13 @@ export function PublicationHeader(): JSX.Element {
   return (
     <header
       className={cn(
-        'sticky top-0 z-40 border-b border-charcoal/10 bg-cream/95 backdrop-blur-sm dark:border-white/10 dark:bg-gray-950/95'
+        'sticky top-0 z-40 border-b border-charcoal/10 bg-cream/95 backdrop-blur-sm dark:border-white/10 dark:bg-[#1c1510]/95'
       )}
     >
       <div className='mx-auto flex h-14 max-w-3xl items-center justify-between gap-3 px-4 sm:h-16 sm:px-6'>
         <div className='flex min-w-0 items-center gap-3'>
           <Link href='/'>
-            <a className='text-sm font-semibold text-charcoal dark:text-gray-100'>
+            <a className='text-sm font-semibold text-charcoal dark:text-[#F5EFE6]'>
               Buzzwin
             </a>
           </Link>
@@ -22,7 +22,7 @@ export function PublicationHeader(): JSX.Element {
             /
           </span>
           <Link href='/blog'>
-            <a className='truncate text-sm font-medium text-charcoal/80 hover:text-charcoal dark:text-gray-300 dark:hover:text-white'>
+            <a className='truncate text-sm font-medium text-charcoal/80 hover:text-charcoal dark:text-[#C4B5A0] dark:hover:text-white'>
               Journal
             </a>
           </Link>
@@ -39,13 +39,13 @@ export function PublicationHeader(): JSX.Element {
           </a>
           {user ? (
             <Link href='/home'>
-              <a className='text-xs font-medium text-charcoal/70 hover:text-charcoal dark:text-gray-400 dark:hover:text-white sm:text-sm'>
+              <a className='text-xs font-medium text-charcoal/70 hover:text-charcoal dark:text-[#9E8B76] dark:hover:text-white sm:text-sm'>
                 Open app
               </a>
             </Link>
           ) : (
             <Link href='/login'>
-              <a className='text-xs font-medium text-charcoal/70 hover:text-charcoal dark:text-gray-400 dark:hover:text-white sm:text-sm'>
+              <a className='text-xs font-medium text-charcoal/70 hover:text-charcoal dark:text-[#9E8B76] dark:hover:text-white sm:text-sm'>
                 Sign in
               </a>
             </Link>

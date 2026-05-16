@@ -26,19 +26,19 @@ function StatCard({
   className
 }: StatCardProps): JSX.Element {
   return (
-    <div className='rounded-xl bg-white p-4 shadow-sm dark:bg-gray-800'>
+    <div className='rounded-xl bg-[#faf8f4] p-4 shadow-sm dark:bg-[#1c1510]'>
       <div className='flex items-center gap-3'>
         <div
           className={cn(
             'rounded-lg p-2',
-            'bg-gray-100 dark:bg-gray-700',
+            'bg-gray-100 dark:bg-[#231a10]',
             className
           )}
         >
           <HeroIcon iconName={icon} className='h-5 w-5' />
         </div>
         <div>
-          <p className='text-sm text-gray-500 dark:text-gray-400'>{label}</p>
+          <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>{label}</p>
           <p className='text-2xl font-bold'>{value}</p>
         </div>
       </div>
@@ -93,7 +93,7 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
 
   if (loading) {
     return (
-      <div className='h-24 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800' />
+      <div className='h-24 animate-pulse rounded-xl bg-gray-100 dark:bg-[#1c1510]' />
     );
   }
 
@@ -103,7 +103,7 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
         icon='BookmarkIcon'
         label='Total Lists'
         value={stats.total}
-        className='text-blue-600 dark:text-blue-400'
+        className='text-[#8a6520] dark:text-[#9E8B76]'
       />
       <StatCard
         icon='GlobeAltIcon'
@@ -115,7 +115,7 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
         icon='FilmIcon'
         label='Movies'
         value={stats.movies}
-        className='text-purple-600 dark:text-purple-400'
+        className='text-[#C9A96E] dark:text-[#C9A96E]'
       />
       <StatCard
         icon='TvIcon'

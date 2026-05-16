@@ -22,7 +22,7 @@ const ShareButtons = ({
   return (
     <>
       {viewingActivity && (
-        <div className='flex justify-center space-x-4 bg-white p-8 shadow-lg'>
+        <div className='flex justify-center space-x-4 bg-[#faf8f4] p-8 shadow-lg'>
           <div className='flex flex-col items-center'>
             <FacebookShareButton url={shareURL} quote={text}>
               <FacebookIcon className='h-10 w-10' />

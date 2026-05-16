@@ -183,7 +183,7 @@ export function SimpleSocialShare({
           <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
             Share Buzzwin
           </h3>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
             Help others discover wellness and positive actions
           </p>
         </div>
@@ -193,10 +193,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('twitter')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>𝕏</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             Twitter
           </span>
         </Button>
@@ -204,10 +204,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('facebook')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>f</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             Facebook
           </span>
         </Button>
@@ -215,10 +215,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('whatsapp')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>W</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             WhatsApp
           </span>
         </Button>
@@ -226,10 +226,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('linkedin')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>in</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             LinkedIn
           </span>
         </Button>
@@ -237,10 +237,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('reddit')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>r</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             Reddit
           </span>
         </Button>
@@ -248,10 +248,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('telegram')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>T</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             Telegram
           </span>
         </Button>
@@ -259,10 +259,10 @@ export function SimpleSocialShare({
         <Button
           variant='outline'
           onClick={() => handleShare('email')}
-          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-800'
+          className='flex h-16 flex-col items-center justify-center gap-1 rounded-lg p-2 transition-colors hover:bg-gray-100 dark:hover:bg-[#231a10]'
         >
           <span className='text-2xl'>@</span>
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             Email
           </span>
         </Button>
@@ -277,7 +277,7 @@ export function SimpleSocialShare({
           ) : (
             <Copy className='h-6 w-6' />
           )}
-          <span className='text-xs text-gray-600 dark:text-gray-400'>
+          <span className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             {copied ? 'Copied!' : 'Copy Link'}
           </span>
         </Button>

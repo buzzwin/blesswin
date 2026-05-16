@@ -13,7 +13,7 @@ export function FallbackImage({
 
   return (
     <div
-      className={`flex h-full w-full items-center justify-center rounded bg-gray-200 dark:bg-gray-700 ${className}`}
+      className={`flex h-full w-full items-center justify-center rounded bg-gray-200 dark:bg-[#231a10] ${className}`}
     >
       <Icon className='h-6 w-6 text-gray-400' />
     </div>

@@ -33,22 +33,22 @@ export function ViewParentTweet({
           className={cn(
             'rounded-2xl',
             'p-4',
-            'bg-gray-50 dark:bg-gray-800/50',
-            'border border-gray-100 dark:border-gray-700',
+            'bg-gray-50 dark:bg-[#231a10]',
+            'border border-gray-100 dark:border-[#2a1d10]',
             'transition-all duration-200'
           )}
         >
           <p
             className={cn(
-              'text-gray-600 dark:text-gray-400',
+              'text-gray-600 dark:text-[#9E8B76]',
               'transition-colors duration-200'
             )}
           >
             This Buzz was deleted.{' '}
             <a
               className={cn(
-                'text-emerald-500 dark:text-emerald-400',
-                'hover:text-emerald-600 dark:hover:text-emerald-500',
+                'text-[#C9A96E] dark:text-[#C9A96E]',
+                'hover:text-[#8a6520] dark:hover:text-[#C9A96E]',
                 'underline',
                 'transition-colors duration-200'
               )}

@@ -73,7 +73,7 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
   return (
     <div className='space-y-4'>
       {bookmarks.length === 0 ? (
-        <p className='py-8 text-center text-gray-500 dark:text-gray-400'>
+        <p className='py-8 text-center text-gray-500 dark:text-[#9E8B76]'>
           No items in this watchlist yet
         </p>
       ) : (
@@ -81,7 +81,7 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
           {bookmarks.map((bookmark: Bookmark) => (
             <div
               key={bookmark.id}
-              className='relative overflow-hidden rounded-lg bg-white shadow transition-shadow hover:shadow-md dark:bg-gray-800'
+              className='relative overflow-hidden rounded-lg bg-white shadow transition-shadow hover:shadow-md dark:bg-[#1c1510]'
             >
               <div className='relative aspect-[2/3]'>
                 {bookmark.posterPath ? (
@@ -94,7 +94,7 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
                     unoptimized
                   />
                 ) : (
-                  <div className='flex h-full items-center justify-center bg-gray-100 dark:bg-gray-700'>
+                  <div className='flex h-full items-center justify-center bg-gray-100 dark:bg-[#231a10]'>
                     <HeroIcon
                       className='h-12 w-12 text-gray-400'
                       iconName='PhotoIcon'
@@ -111,7 +111,7 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
               <div className='p-4'>
                 <h3 className='line-clamp-1 font-medium'>{bookmark.title}</h3>
                 {bookmark.description && (
-                  <p className='line-clamp-2 mt-1 text-sm text-gray-500 dark:text-gray-400'>
+                  <p className='line-clamp-2 mt-1 text-sm text-gray-500 dark:text-[#9E8B76]'>
                     {bookmark.description}
                   </p>
                 )}
@@ -120,7 +120,7 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
                     {bookmark.tags.map((tag: string) => (
                       <span
                         key={tag}
-                        className='rounded-full bg-gray-100 px-2 py-1 text-xs dark:bg-gray-700'
+                        className='rounded-full bg-gray-100 px-2 py-1 text-xs dark:bg-[#231a10]'
                       >
                         {tag}
                       </span>

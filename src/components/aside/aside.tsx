@@ -44,12 +44,12 @@ export function Aside({ children }: AsideProps): JSX.Element {
         {/* <section
           className={cn(
             'rounded-xl',
-            'bg-white dark:bg-gray-800',
-            'border border-gray-100 dark:border-gray-700',
+            'bg-white dark:bg-[#1c1510]',
+            'border border-gray-100 dark:border-[#2a1d10]',
             'overflow-hidden'
           )}
         >
-          <div className='p-4 border-b border-gray-100 dark:border-gray-700'>
+          <div className='p-4 border-b border-gray-100 dark:border-[#2a1d10]'>
             <h2 className='font-bold'>Who to follow</h2>
           </div>
           <div className='p-4'>
@@ -86,23 +86,23 @@ export function Aside({ children }: AsideProps): JSX.Element {
                   ))}
                 </div>
               ) : (
-                <div className='py-4 text-center text-gray-500 dark:text-gray-400'>
+                <div className='py-4 text-center text-gray-500 dark:text-[#9E8B76]'>
                   No suggestions available
                 </div>
               )
             ) : (
               <div className='flex flex-col items-center gap-4 py-8 text-center'>
-                <div className='p-3 bg-gray-100 rounded-full dark:bg-gray-700'>
+                <div className='p-3 bg-gray-100 rounded-full dark:bg-[#231a10]'>
                   <HeroIcon
                     iconName='UserGroupIcon'
-                    className='w-6 h-6 text-gray-500 dark:text-gray-400'
+                    className='w-6 h-6 text-gray-500 dark:text-[#9E8B76]'
                   />
                 </div>
                 <div>
                   <p className='font-medium text-gray-900 dark:text-white'>
                     Sign in to follow others
                   </p>
-                  <p className='text-sm text-gray-500 dark:text-gray-400'>
+                  <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                     See what others are watching
                   </p>
                 </div>

@@ -51,8 +51,8 @@ export function Leaderboard({
             className={cn(
               'rounded-full px-2.5 py-1 text-xs font-medium transition-colors md:px-3 md:py-1.5',
               timePeriod === period
-                ? 'bg-purple-600 text-white'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                ? 'bg-[#C97D60] text-white'
+                : 'bg-gray-100 text-gray-700 dark:bg-[#231a10] dark:text-[#C4B5A0]'
             )}
           >
             {period === 'all-time' ? 'All Time' : period.charAt(0).toUpperCase() + period.slice(1)}
@@ -63,9 +63,9 @@ export function Leaderboard({
       {/* Leaderboard List */}
       <div className='space-y-1.5 md:space-y-2'>
         {filteredEntries.length === 0 ? (
-          <div className='rounded-lg border border-gray-200 bg-gray-50 p-6 text-center dark:border-gray-700 dark:bg-gray-800 md:p-8'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-6 text-center dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-8'>
             <Trophy className='mx-auto mb-2 h-8 w-8 text-gray-400 md:h-12 md:w-12' />
-            <p className='text-xs text-gray-600 dark:text-gray-400 md:text-sm'>
+            <p className='text-xs text-gray-600 dark:text-[#9E8B76] md:text-sm'>
               No rankings yet. Be the first!
             </p>
           </div>
@@ -86,8 +86,8 @@ export function Leaderboard({
                   className={cn(
                     'flex items-center gap-2 rounded-lg border-2 p-2 transition-all md:gap-3 md:rounded-xl md:p-3',
                     isCurrentUser
-                      ? 'border-purple-500 bg-purple-50 dark:border-purple-600 dark:bg-purple-900/20'
-                      : 'border-gray-200 bg-white hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:hover:border-gray-600'
+                      ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] dark:border-[#C9A96E] dark:bg-[rgba(201,169,110,0.08)]'
+                      : 'border-gray-200 bg-white hover:border-gray-300 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-gray-600'
                   )}
                 >
                   {/* Rank */}
@@ -95,7 +95,7 @@ export function Leaderboard({
                     {RankIcon ? (
                       <RankIcon className={cn('h-6 w-6', rankColor)} />
                     ) : (
-                      <span className='text-sm font-bold text-gray-500 dark:text-gray-400'>
+                      <span className='text-sm font-bold text-gray-500 dark:text-[#9E8B76]'>
                         {rank}
                       </span>
                     )}
@@ -117,12 +117,12 @@ export function Leaderboard({
                         {entry.name}
                       </p>
                       {isCurrentUser && (
-                        <span className='rounded-full bg-purple-100 px-1.5 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+                        <span className='rounded-full bg-[rgba(201,169,110,0.1)] px-1.5 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                           You
                         </span>
                       )}
                     </div>
-                    <div className='flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400 md:gap-2'>
+                    <div className='flex items-center gap-1 text-xs text-gray-600 dark:text-[#9E8B76] md:gap-2'>
                       <span>@{entry.username}</span>
                       <span>•</span>
                       <span>Level {level}</span>
@@ -132,12 +132,12 @@ export function Leaderboard({
                   {/* Stats */}
                   <div className='flex shrink-0 flex-col items-end gap-0.5 md:gap-1'>
                     <div className='flex items-center gap-1'>
-                      <Sparkles className='h-3 w-3 text-purple-600 dark:text-purple-400' />
+                      <Sparkles className='h-3 w-3 text-[#C9A96E] dark:text-[#C9A96E]' />
                       <span className='text-xs font-bold text-gray-900 dark:text-white md:text-sm'>
                         {entry.karmaPoints.toLocaleString()}
                       </span>
                     </div>
-                    <div className='text-xs text-gray-600 dark:text-gray-400'>
+                    <div className='text-xs text-gray-600 dark:text-[#9E8B76]'>
                       {entry.totalCompleted} completed
                     </div>
                     {entry.currentStreak > 0 && (
@@ -156,22 +156,22 @@ export function Leaderboard({
 
       {/* Current User Rank (if not in top 10) */}
       {currentUserRank && currentUserRank > 10 && currentUserEntry && (
-        <div className='rounded-xl border-2 border-purple-500 bg-purple-50 p-3 dark:border-purple-600 dark:bg-purple-900/20'>
+        <div className='rounded-xl border-2 border-[#C9A96E] bg-[rgba(201,169,110,0.06)] p-3 dark:border-[#C9A96E] dark:bg-[rgba(201,169,110,0.08)]'>
           <div className='mb-2 flex items-center gap-2'>
-            <TrendingUp className='h-4 w-4 text-purple-600 dark:text-purple-400' />
-            <span className='text-xs font-medium text-purple-700 dark:text-purple-300'>
+            <TrendingUp className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
+            <span className='text-xs font-medium text-[#8a6520] dark:text-[#C9A96E]'>
               Your Rank
             </span>
           </div>
           <div className='flex items-center gap-3'>
-            <span className='text-sm font-bold text-purple-700 dark:text-purple-300'>
+            <span className='text-sm font-bold text-[#8a6520] dark:text-[#C9A96E]'>
               #{currentUserRank}
             </span>
             <div className='flex-1'>
               <p className='text-sm font-semibold text-gray-900 dark:text-white'>
                 {currentUserEntry.name}
               </p>
-              <div className='flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400'>
+              <div className='flex items-center gap-2 text-xs text-gray-600 dark:text-[#9E8B76]'>
                 <span>{currentUserEntry.karmaPoints.toLocaleString()} karma</span>
                 <span>•</span>
                 <span>Level {calculateLevel(currentUserEntry.karmaPoints)}</span>

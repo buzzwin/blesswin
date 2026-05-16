@@ -8,7 +8,6 @@ import {
   updateDoc,
   arrayUnion,
   arrayRemove,
-  increment,
   addDoc,
   serverTimestamp,
   where
@@ -16,27 +15,15 @@ import {
 import { impactMomentsCollection } from '@lib/firebase/collections';
 import { usersCollection } from '@lib/firebase/collections';
 import { CommonLayout } from '@components/layout/common-layout';
-import { MainLayout } from '@components/layout/main-layout';
 import { MainContainer } from '@components/home/main-container';
 import { MainHeader } from '@components/home/main-header';
 import { ImpactMomentInput } from '@components/impact/impact-moment-input';
 import { ImpactMomentCard } from '@components/impact/impact-moment-card';
 import { JoinMomentModal } from '@components/impact/join-moment-modal';
-import { RitualsBanner } from '@components/rituals/rituals-banner';
-import { RitualStatsWidget } from '@components/rituals/ritual-stats-widget';
-import { RitualSettings } from '@components/rituals/ritual-settings';
-import { UserKarmaDisplay } from '@components/user/user-karma-display';
-import { StoryFeedCard } from '@components/stories/story-feed-card';
-import { FamilyWatchMode } from '@components/recommendations/family-watch-mode';
-import { TodayStack } from '@components/rituals/today-stack';
-import { WindDownRitual } from '@components/rituals/wind-down-ritual';
-import { DailyBriefing } from '@components/home/daily-briefing';
-import { DEFAULT_KARMA_BREAKDOWN } from '@lib/types/karma';
 import { SEO } from '@components/common/seo';
 import { Loading } from '@components/ui/loading';
 import { StatsEmpty } from '@components/tweet/stats-empty';
 import Link from 'next/link';
-import { Sparkles, X } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import { getDoc } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
@@ -48,39 +35,11 @@ import type {
   ImpactTag,
   EffortLevel
 } from '@lib/types/impact-moment';
-import type { RitualDefinition, RitualStats } from '@lib/types/ritual';
-import type { RealStory } from '@lib/types/real-story';
 import type { ReactElement, ReactNode } from 'react';
-
-const AGENT_BANNER_KEY = 'buzzwin-agent-upgrade-banner-dismissed';
-const BUZZ_BANNER_KEY = 'buzzwin-buzz-banner-dismissed';
 
 export default function HomeFeed(): JSX.Element {
   const router = useRouter();
-  const { user, loading: authLoading } = useAuth();
-  const [showAgentBanner, setShowAgentBanner] = useState(false);
-  const [showBuzzBanner, setShowBuzzBanner] = useState(false);
-
-  useEffect(() => {
-    if (typeof window === 'undefined' || !user) return;
-    try {
-      setShowAgentBanner(localStorage.getItem(AGENT_BANNER_KEY) !== '1');
-      setShowBuzzBanner(localStorage.getItem(BUZZ_BANNER_KEY) !== '1');
-    } catch {
-      setShowAgentBanner(true);
-      setShowBuzzBanner(true);
-    }
-  }, [user?.id]);
-
-  const dismissAgentBanner = (): void => {
-    try { localStorage.setItem(AGENT_BANNER_KEY, '1'); } catch { /* ignore */ }
-    setShowAgentBanner(false);
-  };
-
-  const dismissBuzzBanner = (): void => {
-    try { localStorage.setItem(BUZZ_BANNER_KEY, '1'); } catch { /* ignore */ }
-    setShowBuzzBanner(false);
-  };
+  const { user } = useAuth();
   const [moments, setMoments] = useState<ImpactMomentWithUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -89,25 +48,8 @@ export default function HomeFeed(): JSX.Element {
     openModal: openJoinModal,
     closeModal: closeJoinModal
   } = useModal();
-  const {
-    open: settingsModalOpen,
-    openModal: openSettingsModal,
-    closeModal: closeSettingsModal
-  } = useModal();
   const [selectedMomentForJoin, setSelectedMomentForJoin] =
     useState<ImpactMomentWithUser | null>(null);
-  const [todayRitual, setTodayRitual] = useState<RitualDefinition | null>(null);
-  const [ritualCompleted, setRitualCompleted] = useState(false);
-  const [ritualStats, setRitualStats] = useState<RitualStats | null>(null);
-  const [ritualStatsLoading, setRitualStatsLoading] = useState(false);
-  const [userKarma, setUserKarma] = useState<{
-    karmaPoints: number;
-    karmaBreakdown: typeof DEFAULT_KARMA_BREAKDOWN;
-  } | null>(null);
-  const [featuredStories, setFeaturedStories] = useState<RealStory[]>([]);
-  const [storiesLoading, setStoriesLoading] = useState(false);
-  const [windDownExpanded, setWindDownExpanded] = useState(false);
-  const [dayContext, setDayContext] = useState<'busy' | 'calm' | 'travel' | 'weekend' | 'stress'>('calm');
 
   const fetchMoments = async (): Promise<void> => {
     try {
@@ -116,12 +58,10 @@ export default function HomeFeed(): JSX.Element {
         query(impactMomentsCollection, orderBy('createdAt', 'desc'))
       );
 
-      // Filter moments based on privacy: show public moments to all, private moments only to creator
       const filteredDocs = snapshot.docs.filter((docSnapshot) => {
         const momentData = docSnapshot.data();
-        const isPublic = momentData.isPublic !== false; // Default to true for backward compatibility
+        const isPublic = momentData.isPublic !== false;
         const isCreator = user?.id === momentData.createdBy;
-        // Show if public OR if user is the creator
         return isPublic || isCreator;
       });
 
@@ -129,7 +69,6 @@ export default function HomeFeed(): JSX.Element {
         filteredDocs.map(async (docSnapshot) => {
           const momentData = { id: docSnapshot.id, ...docSnapshot.data() };
 
-          // If joinedByUsers doesn't exist, query for it
           if (!momentData.joinedByUsers && momentData.id) {
             try {
               const joinedSnapshot = await getDocs(
@@ -147,7 +86,6 @@ export default function HomeFeed(): JSX.Element {
             }
           }
 
-          // Fetch user data
           const userDoc = await getDoc(
             doc(usersCollection, momentData.createdBy)
           );
@@ -183,98 +121,9 @@ export default function HomeFeed(): JSX.Element {
     }
   };
 
-  // Fetch all real stories for feed - CACHE ONLY (no Gemini calls)
-  const fetchFeaturedStories = async (): Promise<void> => {
-    try {
-      setStoriesLoading(true);
-      const response = await fetch('/api/real-stories?cacheOnly=true');
-      if (response.ok) {
-        const data = await response.json();
-        if (data.stories && Array.isArray(data.stories)) {
-          // Show all stories from the last year
-          setFeaturedStories(data.stories);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching featured stories:', error);
-    } finally {
-      setStoriesLoading(false);
-    }
-  };
-
-  // Fetch user karma
-  const fetchUserKarma = async (): Promise<void> => {
-    if (!user?.id) return;
-    try {
-      const response = await fetch(`/api/karma/${user.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.success) {
-          setUserKarma({
-            karmaPoints: data.karmaPoints || 0,
-            karmaBreakdown: data.karmaBreakdown || DEFAULT_KARMA_BREAKDOWN
-          });
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching user karma:', error);
-    }
-  };
-
-  // Fetch today's ritual for banner
-  const fetchTodayRitual = async (): Promise<void> => {
-    if (!user?.id) return;
-    try {
-      const response = await fetch(`/api/rituals/today?userId=${user.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.rituals?.globalRitual) {
-          const ritual = data.rituals.globalRitual;
-          setTodayRitual(ritual);
-          setRitualCompleted(ritual.completed || false);
-        }
-      }
-    } catch (error) {
-      console.error("Error fetching today's ritual:", error);
-    }
-  };
-
-  // Fetch ritual stats
-  const fetchRitualStats = async (): Promise<void> => {
-    if (!user?.id) return;
-    setRitualStatsLoading(true);
-    try {
-      const response = await fetch(`/api/rituals/stats?userId=${user.id}`);
-      if (response.ok) {
-        const data = await response.json();
-        if (data.stats) {
-          setRitualStats(data.stats);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching ritual stats:', error);
-    } finally {
-      setRitualStatsLoading(false);
-    }
-  };
-
-  // All useEffect hooks must be before any early returns
   useEffect(() => {
     void fetchMoments();
-    void fetchFeaturedStories();
   }, []);
-
-  useEffect(() => {
-    void fetchUserKarma();
-  }, [user?.id]);
-
-  useEffect(() => {
-    void fetchTodayRitual();
-  }, [user?.id]);
-
-  useEffect(() => {
-    void fetchRitualStats();
-  }, [user?.id]);
 
   const handleRipple = async (
     momentId: string,
@@ -285,15 +134,11 @@ export default function HomeFeed(): JSX.Element {
       return;
     }
 
-    // Only handle reactions: inspired, grateful, sent_love
-    // Join is handled separately via "Join This Action" button
     if (rippleType === 'joined_you') {
-      // This should not happen, but if it does, redirect to join page
       void router.push(`/impact/${momentId}/join`);
       return;
     }
 
-    // Regular reaction handling
     try {
       const momentRef = doc(impactMomentsCollection, momentId);
       const momentDoc = await getDoc(momentRef);
@@ -308,16 +153,9 @@ export default function HomeFeed(): JSX.Element {
       const currentRipples = momentData.ripples[rippleKey] || [];
       const hasRippled = currentRipples.includes(user.id);
 
-      // Check if user has reacted in any other category
-      let wasReactedElsewhere = false;
       const reactionTypes: RippleType[] = ['inspired', 'grateful', 'sent_love'];
       for (const type of reactionTypes) {
-        if (
-          type !== rippleType &&
-          momentData.ripples[type]?.includes(user.id)
-        ) {
-          wasReactedElsewhere = true;
-          // Remove from other category
+        if (type !== rippleType && momentData.ripples[type]?.includes(user.id)) {
           await updateDoc(momentRef, {
             [`ripples.${type}`]: arrayRemove(user.id)
           });
@@ -325,38 +163,30 @@ export default function HomeFeed(): JSX.Element {
       }
 
       if (hasRippled) {
-        // Remove reaction
         await updateDoc(momentRef, {
           [`ripples.${rippleKey}`]: arrayRemove(user.id)
         });
         toast.success(`Removed ${rippleType} reaction`);
       } else {
-        // Add reaction
         await updateDoc(momentRef, {
           [`ripples.${rippleKey}`]: arrayUnion(user.id)
         });
         toast.success(`Added ${rippleType} reaction! ✨`);
 
-        // Award karma to moment creator for receiving reaction (if not themselves)
         const momentCreatorId = momentData.createdBy;
         if (momentCreatorId && momentCreatorId !== user.id) {
           try {
             await fetch('/api/karma/award', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({
-                userId: momentCreatorId,
-                action: 'reaction_received'
-              })
+              body: JSON.stringify({ userId: momentCreatorId, action: 'reaction_received' })
             });
           } catch (karmaError) {
             console.error('Error awarding karma for reaction:', karmaError);
-            // Don't fail the reaction if karma fails
           }
         }
       }
 
-      // Refresh moments to show updated ripple counts
       await fetchMoments();
     } catch (error) {
       console.error('Error updating ripple:', error);
@@ -376,13 +206,10 @@ export default function HomeFeed(): JSX.Element {
       return;
     }
 
-    // Save the moment ID and creator ID before clearing state
-    // After the null check above, selectedMomentForJoin is guaranteed to be non-null
     const momentId = selectedMomentForJoin.id;
     const originalCreatorId = selectedMomentForJoin.createdBy;
 
     try {
-      // Create the joined moment
       const joinedMoment = {
         text: joinedMomentData.text,
         tags: joinedMomentData.tags,
@@ -399,7 +226,6 @@ export default function HomeFeed(): JSX.Element {
         joinedFromMomentId: momentId
       };
 
-      // Add optional fields
       if (joinedMomentData.moodCheckIn) {
         (joinedMoment as any).moodCheckIn = joinedMomentData.moodCheckIn;
       }
@@ -407,13 +233,8 @@ export default function HomeFeed(): JSX.Element {
         (joinedMoment as any).images = joinedMomentData.images;
       }
 
-      // Create the joined moment
-      const joinedMomentRef = await addDoc(
-        impactMomentsCollection,
-        joinedMoment as any
-      );
+      await addDoc(impactMomentsCollection, joinedMoment as any);
 
-      // Update the original moment
       const originalMomentRef = doc(impactMomentsCollection, momentId);
       const originalMomentDoc = await getDoc(originalMomentRef);
 
@@ -422,63 +243,44 @@ export default function HomeFeed(): JSX.Element {
         const currentJoinedBy = originalData.joinedByUsers || [];
         const currentJoinedYouRipples = originalData.ripples?.joined_you || [];
 
-        // Add user to joinedByUsers if not already there
         if (!currentJoinedBy.includes(user.id)) {
           await updateDoc(originalMomentRef, {
             joinedByUsers: arrayUnion(user.id),
             'ripples.joined_you': arrayUnion(user.id),
             rippleCount: (originalData.rippleCount || 0) + 1
           });
-        } else {
-          // User already in list, just update ripple
-          if (!currentJoinedYouRipples.includes(user.id)) {
-            await updateDoc(originalMomentRef, {
-              'ripples.joined_you': arrayUnion(user.id),
-              rippleCount: (originalData.rippleCount || 0) + 1
-            });
-          }
+        } else if (!currentJoinedYouRipples.includes(user.id)) {
+          await updateDoc(originalMomentRef, {
+            'ripples.joined_you': arrayUnion(user.id),
+            rippleCount: (originalData.rippleCount || 0) + 1
+          });
         }
       }
 
-      // Award karma for "Joined You" actions
       try {
-        // Award karma to user who joined
         await fetch('/api/karma/award', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            userId: user.id,
-            action: 'joined_you_created'
-          })
+          body: JSON.stringify({ userId: user.id, action: 'joined_you_created' })
         });
 
-        // Award karma to original creator (if not themselves)
         if (originalCreatorId && originalCreatorId !== user.id) {
           await fetch('/api/karma/award', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              userId: originalCreatorId,
-              action: 'joined_you_received'
-            })
+            body: JSON.stringify({ userId: originalCreatorId, action: 'joined_you_received' })
           });
         }
       } catch (karmaError) {
         console.error('Error awarding karma for joined action:', karmaError);
-        // Don't fail the join if karma fails
       }
 
-      // Refresh karma display
-      void fetchUserKarma();
-
-      // Redirect to ripple page to see the join
       closeJoinModal();
       setSelectedMomentForJoin(null);
 
       if (momentId) {
         void router.push(`/impact/${momentId}/ripple`);
       } else {
-        // Fallback: refresh moments if no ID
         await fetchMoments();
       }
     } catch (error) {
@@ -491,285 +293,64 @@ export default function HomeFeed(): JSX.Element {
     void fetchMoments();
   };
 
-  // Determine day context (simplified - could be enhanced with calendar/activity data)
-  useEffect(() => {
-    const dayOfWeek = new Date().getDay();
-    const hour = new Date().getHours();
-    
-    if (dayOfWeek === 0 || dayOfWeek === 6) {
-      setDayContext('weekend');
-    } else if (hour >= 7 && hour <= 9) {
-      setDayContext('busy');
-    } else if (hour >= 18) {
-      setDayContext('calm');
-    } else {
-      setDayContext('calm');
-    }
-  }, []);
-
-  // Get today's rituals for the stack
-  const [todayRitualsForStack, setTodayRitualsForStack] = useState<RitualDefinition[]>([]);
-
-  // Fetch all today's rituals for the stack
-  useEffect(() => {
-    const fetchTodayRituals = async (): Promise<void> => {
-      if (!user?.id) return;
-      
-      try {
-        const response = await fetch(`/api/rituals/today?userId=${user.id}`);
-        if (response.ok) {
-          const data = await response.json();
-          const rituals: RitualDefinition[] = [];
-          
-          if (data.rituals?.globalRitual) {
-            rituals.push(data.rituals.globalRitual);
-          }
-          
-          if (data.rituals?.personalizedRituals) {
-            rituals.push(...data.rituals.personalizedRituals);
-          }
-          
-          setTodayRitualsForStack(rituals);
-        }
-      } catch (error) {
-        console.error('Error fetching today\'s rituals:', error);
-      }
-    };
-
-    void fetchTodayRituals();
-  }, [user?.id]);
-
-  const handleRitualComplete = async (ritual: RitualDefinition): Promise<void> => {
-    // Navigate to automations page with rituals tab for completion
-    window.location.href = '/automations?tab=rituals';
-  };
-
   return (
     <MainContainer>
       <SEO
-        title='Home - What Matters Today / Buzzwin'
-        description='Decide and act — not just discover. Your daily briefing, rituals, and connections on Buzzwin.'
+        title='Home / Buzzwin'
+        description='Share moments and celebrate the people you love.'
       />
       <MainHeader title='Home' useMobileSidebar />
 
-      {user && showAgentBanner && (
-        <div className='mb-4 flex items-start gap-3 rounded-xl border border-purple-200 bg-purple-50/90 p-3 text-sm text-gray-800 dark:border-purple-800 dark:bg-purple-950/40 dark:text-gray-100'>
-          <Sparkles className='mt-0.5 h-5 w-5 shrink-0 text-purple-600 dark:text-purple-400' />
-          <div className='min-w-0 flex-1'>
-            <p className='font-medium'>We&apos;ve upgraded Buzzwin</p>
-            <p className='mt-1 text-gray-700 dark:text-gray-300'>
-              Tell it what you want — and it helps you get it done. Try Ask Buzzwin for plans, options, and next steps.
+      {/* Post to feed */}
+      <div className='mb-3'>
+        <ImpactMomentInput onSuccess={handleMomentCreated} />
+      </div>
+
+      {/* Buzzbook nudge — permanent, warm-styled */}
+      <Link href='/buzzes/new'>
+        <a className='mb-4 flex items-center gap-4 rounded-2xl border p-4 transition-all
+                      border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)]
+                      hover:border-[rgba(201,169,110,0.35)] hover:bg-[rgba(201,169,110,0.08)]
+                      dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
+          <span className='text-3xl'>📖</span>
+          <div className='flex-1'>
+            <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
+              Someone&apos;s birthday or big day coming up?
             </p>
-            <Link
-              href='/ask'
-              className='mt-2 inline-block font-semibold text-purple-700 underline decoration-purple-400 underline-offset-2 hover:text-purple-900 dark:text-purple-300 dark:hover:text-purple-200'
-            >
-              Open Ask Buzzwin
-            </Link>
-          </div>
-          <button
-            type='button'
-            onClick={dismissAgentBanner}
-            className='shrink-0 rounded-lg p-1 text-gray-500 hover:bg-purple-100 hover:text-gray-800 dark:hover:bg-purple-900/50 dark:hover:text-gray-200'
-            aria-label='Dismiss'
-          >
-            <X className='h-5 w-5' />
-          </button>
-        </div>
-      )}
-
-      {user && showBuzzBanner && (
-        <div className='mb-4 flex items-start gap-3 rounded-xl border-2 border-emerald-400 bg-emerald-50 p-4 text-sm text-gray-800 shadow-sm dark:border-emerald-600 dark:bg-emerald-950/50 dark:text-gray-100'>
-          <span className='mt-0.5 shrink-0 text-xl leading-none'>📖</span>
-          <div className='min-w-0 flex-1'>
-            <p className='font-medium'>Celebrate someone with a Buzzbook</p>
-            <p className='mt-1 text-gray-700 dark:text-gray-300'>
-              Collect messages and photos from friends — revealed together on the big day.
-            </p>
-            <Link href='/buzzes/new'>
-              <a className='mt-2 inline-block font-semibold text-emerald-700 underline decoration-emerald-400 underline-offset-2 hover:text-emerald-900 dark:text-emerald-300 dark:hover:text-emerald-200'>
-                Start a Buzz →
-              </a>
-            </Link>
-          </div>
-          <button
-            type='button'
-            onClick={dismissBuzzBanner}
-            className='shrink-0 rounded-lg p-1 text-gray-500 hover:bg-emerald-100 hover:text-gray-800 dark:hover:bg-emerald-900/50 dark:hover:text-gray-200'
-            aria-label='Dismiss'
-          >
-            <X className='h-5 w-5' />
-          </button>
-        </div>
-      )}
-
-      {/* Daily Briefing */}
-      <div className='mb-4'>
-        <DailyBriefing
-          userName={user?.name || user?.username}
-          dayContext={dayContext}
-        />
-      </div>
-
-      {/* Today's Rituals Stack */}
-      {todayRitualsForStack.length > 0 && (
-        <div className='mb-4'>
-          <TodayStack
-            rituals={todayRitualsForStack}
-            onComplete={handleRitualComplete}
-            onViewAll={() => {
-              window.location.href = '/automations?tab=rituals';
-            }}
-          />
-        </div>
-      )}
-
-      {/* Wind-Down Ritual (Entertainment) */}
-      <div className='mb-4'>
-        <WindDownRitual
-          isExpanded={windDownExpanded}
-          onToggle={() => setWindDownExpanded(!windDownExpanded)}
-        />
-      </div>
-
-      {/* Karma Display - Compact */}
-      {userKarma && user?.id && (
-        <div className='mb-4 border-b border-gray-200 pb-4 dark:border-gray-700'>
-          <UserKarmaDisplay
-            karmaPoints={userKarma.karmaPoints}
-            karmaBreakdown={userKarma.karmaBreakdown}
-            userId={user.id}
-            compact={true}
-            showBreakdown={false}
-            showEncouragement={true}
-          />
-        </div>
-      )}
-
-      {/* Ritual Stats Widget - Compact */}
-      <div className='mb-4 border-b border-gray-200 pb-4 dark:border-gray-700'>
-        <RitualStatsWidget
-          stats={ritualStats}
-          loading={ritualStatsLoading}
-          onSettingsClick={openSettingsModal}
-        />
-      </div>
-
-      {/* Community Feed Section */}
-      <div className='mb-4'>
-        <div className='mb-3 flex items-center justify-between'>
-          <div>
-            <h2 className='font-display text-xl font-bold text-gray-900 dark:text-white'>
-              Community Stories
-            </h2>
-            <p className='mt-0.5 text-xs text-gray-600 dark:text-gray-400'>
-              Share and discover moments of impact
+            <p className='text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.5)]'>
+              Start a Buzzbook — collect pages from friends, reveal together
             </p>
           </div>
-        </div>
-        <div className='mb-3'>
-          <ImpactMomentInput onSuccess={handleMomentCreated} />
-        </div>
-        {/* Buzz nudge */}
-        <Link href='/buzzes/new'>
-          <a className='mb-3 flex items-center gap-3 rounded-xl border-2 border-emerald-300 bg-emerald-50 px-4 py-3.5 shadow-sm transition hover:border-emerald-400 hover:bg-emerald-100 dark:border-emerald-700 dark:bg-emerald-950/40 dark:hover:border-emerald-500 dark:hover:bg-emerald-950/60'>
-            <span className='text-2xl'>🎂</span>
-            <div className='min-w-0 flex-1'>
-              <p className='text-sm font-semibold text-emerald-800 dark:text-emerald-300'>
-                Someone&apos;s birthday or big day coming up?
-              </p>
-              <p className='text-xs text-emerald-600 dark:text-emerald-500'>
-                Start a Buzzbook — collect pages from friends, reveal together
-              </p>
-            </div>
-            <span className='shrink-0 text-sm font-semibold text-emerald-700 dark:text-emerald-400'>
-              Start →
-            </span>
-          </a>
-        </Link>
-      </div>
+          <span className='shrink-0 text-sm font-semibold text-[#C9A96E]'>Start →</span>
+        </a>
+      </Link>
 
+      {/* Community feed */}
       <section>
         {loading ? (
           <Loading className='mt-5' />
-        ) : moments.length === 0 && featuredStories.length === 0 ? (
+        ) : moments.length === 0 ? (
           <StatsEmpty
-            title='Welcome to the Ritual Feed!'
-            description="Be the first to share a ritual participation! Share how you completed a ritual today - whether it's your breathing practice, morning meditation, or any other ritual you participated in."
+            title='Nothing shared yet'
+            description='Be the first to share a moment with the community.'
             imageData={{
               src: '/assets/no-buzz.png',
-              alt: 'No ritual participations yet'
+              alt: 'No moments yet'
             }}
           />
         ) : (
           <AnimatePresence mode='popLayout'>
-            {(() => {
-              // Interleave stories with moments: show 1 story after every 3-4 moments
-              const feedItems: Array<{
-                type: 'moment' | 'story';
-                data: ImpactMomentWithUser | RealStory;
-                index: number;
-              }> = [];
-              let storyIndex = 0;
-
-              moments.forEach((moment, momentIndex) => {
-                // Add moment
-                feedItems.push({
-                  type: 'moment',
-                  data: moment,
-                  index: momentIndex
-                });
-
-                // Add a story after every 3 moments (at positions 3, 7, 11, etc.)
-                if (
-                  (momentIndex + 1) % 4 === 0 &&
-                  storyIndex < featuredStories.length
-                ) {
-                  feedItems.push({
-                    type: 'story',
-                    data: featuredStories[storyIndex],
-                    index: storyIndex
-                  });
-                  storyIndex++;
-                }
-              });
-
-              // Add remaining stories at the end if any
-              while (storyIndex < featuredStories.length) {
-                feedItems.push({
-                  type: 'story',
-                  data: featuredStories[storyIndex],
-                  index: storyIndex
-                });
-                storyIndex++;
-              }
-
-              return feedItems.map((item, idx) => {
-                if (item.type === 'story') {
-                  return (
-                    <StoryFeedCard
-                      key={`story-${item.index}`}
-                      story={item.data as RealStory}
-                      index={item.index}
-                    />
-                  );
-                } else {
-                  const moment = item.data as ImpactMomentWithUser;
-                  return (
-                    <ImpactMomentCard
-                      key={moment.id || `moment-${idx}`}
-                      moment={moment}
-                      onRipple={handleRipple}
-                    />
-                  );
-                }
-              });
-            })()}
+            {moments.map((moment, idx) => (
+              <ImpactMomentCard
+                key={moment.id || `moment-${idx}`}
+                moment={moment}
+                onRipple={handleRipple}
+              />
+            ))}
           </AnimatePresence>
         )}
       </section>
 
-      {/* Join Moment Modal */}
       {selectedMomentForJoin && (
         <JoinMomentModal
           originalMoment={selectedMomentForJoin}
@@ -781,12 +362,6 @@ export default function HomeFeed(): JSX.Element {
           onJoin={handleJoinMoment}
         />
       )}
-
-      {/* Ritual Settings Modal */}
-      <RitualSettings
-        open={settingsModalOpen}
-        closeModal={closeSettingsModal}
-      />
     </MainContainer>
   );
 }

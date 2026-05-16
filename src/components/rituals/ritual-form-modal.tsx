@@ -335,7 +335,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
       open={open} 
       closeModal={closeModal} 
       className='max-w-2xl'
-      modalClassName='max-w-2xl bg-white dark:bg-gray-800 rounded-xl shadow-xl'
+      modalClassName='max-w-2xl bg-[#faf8f4] dark:bg-[#1c1510] rounded-xl shadow-xl'
     >
       <div className='p-6'>
         <div className='mb-4 flex items-center justify-between'>
@@ -346,7 +346,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
             <button
               type='button'
               onClick={() => setShowAiAssist(!showAiAssist)}
-              className='flex items-center gap-2 rounded-lg border border-purple-300 bg-purple-50 px-3 py-1.5 text-sm font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-700 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30'
+              className='flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.4)] bg-[rgba(201,169,110,0.06)] px-3 py-1.5 text-sm font-medium text-[#8a6520] transition-colors hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.3)] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.09)]'
             >
               <Sparkles className='h-4 w-4' />
               {showAiAssist ? 'Hide AI Assist' : 'AI Assist'}
@@ -356,12 +356,12 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
         {/* AI Assist Section */}
         {!isEditing && showAiAssist && (
-          <div className='mb-4 rounded-lg border-2 border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
-            <h3 className='mb-2 flex items-center gap-2 text-sm font-semibold text-purple-900 dark:text-purple-100'>
+          <div className='mb-4 rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+            <h3 className='mb-2 flex items-center gap-2 text-sm font-semibold text-[#5a3d0a] dark:text-[#F5EFE6]'>
               <Sparkles className='h-4 w-4' />
               Generate Ritual with AI
             </h3>
-            <p className='mb-3 text-xs text-purple-800 dark:text-purple-200'>
+            <p className='mb-3 text-xs text-[#7a5a18] dark:text-[#C4B5A0]'>
               Describe your idea or let AI create a meaningful ritual for you
             </p>
             <textarea
@@ -369,7 +369,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               onChange={(e) => setAiInput(e.target.value)}
               placeholder='e.g., "I want a morning ritual to start my day with gratitude" or "A ritual for better sleep" or leave empty for AI to suggest'
               rows={3}
-              className='mb-3 w-full rounded-lg border border-purple-300 bg-white px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-purple-700 dark:bg-gray-800 dark:text-white dark:placeholder-gray-500'
+              className='mb-3 w-full rounded-lg border border-[rgba(201,169,110,0.4)] bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[rgba(201,169,110,0.3)] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-500'
             />
             <button
               type='button'
@@ -395,7 +395,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
         <div className='space-y-4'>
           {/* Title */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Title *
             </label>
             <input
@@ -403,13 +403,13 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder='e.g., Morning Gratitude Practice'
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Description *
             </label>
             <textarea
@@ -417,13 +417,13 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               onChange={(e) => setDescription(e.target.value)}
               placeholder='Describe what this ritual involves...'
               rows={4}
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
             />
           </div>
 
           {/* Tags */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Tags * (Select at least one)
             </label>
             <div className='flex flex-wrap gap-2'>
@@ -440,8 +440,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   }}
                   className={`rounded-full px-4 py-2 text-sm font-medium capitalize transition-colors ${
                     tags.includes(tag)
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   {tag}
@@ -452,7 +452,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
           {/* Effort Level */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Effort Level *
             </label>
             <div className='flex gap-2'>
@@ -463,8 +463,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   onClick={() => setEffortLevel(level)}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium capitalize transition-colors ${
                     effortLevel === level
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   {level}
@@ -475,7 +475,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
           {/* Time of Day */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Suggested Time of Day
             </label>
             <div className='flex gap-2'>
@@ -486,8 +486,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   onClick={() => setSuggestedTimeOfDay(time)}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium capitalize transition-colors ${
                     suggestedTimeOfDay === time
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   {time}
@@ -498,7 +498,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
           {/* Duration Estimate */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Duration Estimate
             </label>
             <input
@@ -506,13 +506,13 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               value={durationEstimate}
               onChange={(e) => setDurationEstimate(e.target.value)}
               placeholder='e.g., 5 minutes'
-              className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-500'
+              className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-400 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white dark:placeholder-gray-500'
             />
           </div>
 
           {/* Frequency */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Frequency (RRULE)
             </label>
             <div className='space-y-3'>
@@ -523,8 +523,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   onClick={() => setFrequencyType('daily')}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     frequencyType === 'daily'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   Daily
@@ -534,8 +534,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   onClick={() => setFrequencyType('weekly')}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     frequencyType === 'weekly'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   Weekly
@@ -545,8 +545,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   onClick={() => setFrequencyType('monthly')}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     frequencyType === 'monthly'
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   Monthly
@@ -557,7 +557,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               {frequencyType === 'daily' && (
                 <div className='space-y-2'>
                   <div className='flex items-center gap-2'>
-                    <span className='text-sm text-gray-600 dark:text-gray-400'>Repeat every</span>
+                    <span className='text-sm text-gray-600 dark:text-[#9E8B76]'>Repeat every</span>
                     <input
                       type='number'
                       min={1}
@@ -569,11 +569,11 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                           setDailyInterval(val);
                         }
                       }}
-                      className='w-20 rounded-lg border border-gray-300 bg-white px-3 py-2 text-center text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                      className='w-20 rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-center text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
                     />
-                    <span className='text-sm text-gray-600 dark:text-gray-400'>day(s)</span>
+                    <span className='text-sm text-gray-600 dark:text-[#9E8B76]'>day(s)</span>
                   </div>
-                  <p className='text-xs text-gray-500 dark:text-gray-400'>
+                  <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                     RRULE: {generateRRULE({ freq: 'DAILY', interval: dailyInterval })}
                   </p>
                 </div>
@@ -582,7 +582,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
               {/* Weekly Selector */}
               {frequencyType === 'weekly' && (
                 <div className='space-y-2'>
-                  <p className='text-sm text-gray-600 dark:text-gray-400'>
+                  <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                     Select the days of the week:
                   </p>
                   <div className='grid grid-cols-7 gap-2'>
@@ -609,8 +609,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                           }}
                           className={`rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                             isSelected
-                              ? 'bg-purple-600 text-white'
-                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                              ? 'bg-[#C97D60] text-white'
+                              : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                           }`}
                           title={label}
                         >
@@ -626,7 +626,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                     </p>
                   )}
                   {selectedDaysOfWeek.length > 0 && (
-                    <p className='text-xs text-gray-500 dark:text-gray-400'>
+                    <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                       RRULE: {generateRRULE({
                         freq: 'WEEKLY',
                         byday: selectedDaysOfWeek.map(day => dayOfWeekToICal(day))
@@ -646,8 +646,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                       onClick={() => setMonthlyType('dates')}
                       className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                         monthlyType === 'dates'
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                          ? 'bg-[#C97D60] text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                       }`}
                     >
                       Specific Dates
@@ -657,8 +657,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                       onClick={() => setMonthlyType('ordinal')}
                       className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                         monthlyType === 'ordinal'
-                          ? 'bg-purple-600 text-white'
-                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                          ? 'bg-[#C97D60] text-white'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                       }`}
                     >
                       Ordinal Day (e.g., 2nd Friday)
@@ -668,7 +668,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   {/* Monthly Dates */}
                   {monthlyType === 'dates' && (
                     <div className='space-y-2'>
-                      <p className='text-sm text-gray-600 dark:text-gray-400'>
+                      <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                         Select the dates of the month:
                       </p>
                       <div className='grid grid-cols-7 gap-2 max-h-64 overflow-y-auto'>
@@ -687,8 +687,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                               }}
                               className={`rounded-lg px-2 py-2 text-sm font-medium transition-colors ${
                                 isSelected
-                                  ? 'bg-purple-600 text-white'
-                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                                  ? 'bg-[#C97D60] text-white'
+                                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                               }`}
                               title={`Day ${date}`}
                             >
@@ -703,7 +703,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                         </p>
                       )}
                       {selectedDaysOfMonth.length > 0 && (
-                        <p className='text-xs text-gray-500 dark:text-gray-400'>
+                        <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                           RRULE: {generateRRULE({
                             freq: 'MONTHLY',
                             bymonthday: selectedDaysOfMonth
@@ -720,7 +720,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                         <select
                           value={monthlyOrdinal}
                           onChange={(e) => setMonthlyOrdinal(parseInt(e.target.value, 10))}
-                          className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                          className='rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
                         >
                           <option value={1}>1st</option>
                           <option value={2}>2nd</option>
@@ -732,7 +732,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                         <select
                           value={monthlyOrdinalDay}
                           onChange={(e) => setMonthlyOrdinalDay(parseInt(e.target.value, 10) as DayOfWeek)}
-                          className='rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white'
+                          className='rounded-lg border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#231a10] dark:text-white'
                         >
                           {[
                             { day: 0, label: 'Sunday' },
@@ -749,7 +749,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                           ))}
                         </select>
                       </div>
-                      <p className='text-xs text-gray-500 dark:text-gray-400'>
+                      <p className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                         RRULE: {generateRRULE({
                           freq: 'MONTHLY',
                           byday: [`${monthlyOrdinal}${dayOfWeekToICal(monthlyOrdinalDay)}`]
@@ -765,7 +765,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
           {/* Automation Mode Toggle */}
           {!isEditing && (
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Type
               </label>
               <div className='flex gap-2'>
@@ -778,8 +778,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   }}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     !isAutomation
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   📝 Manual Ritual
@@ -789,14 +789,14 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                   onClick={() => setIsAutomation(true)}
                   className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                     isAutomation
-                      ? 'bg-purple-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                   }`}
                 >
                   ⚡ Automation
                 </button>
               </div>
-              <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+              <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                 {isAutomation 
                   ? 'Automation runs automatically based on triggers' 
                   : 'Manual ritual - you complete it when you choose'}
@@ -806,18 +806,18 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
           {/* Automation Triggers Section */}
           {isAutomation && (
-            <div className='space-y-4 rounded-lg border-2 border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
-              <h3 className='flex items-center gap-2 text-sm font-semibold text-purple-900 dark:text-purple-100'>
+            <div className='space-y-4 rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+              <h3 className='flex items-center gap-2 text-sm font-semibold text-[#5a3d0a] dark:text-[#F5EFE6]'>
                 <Zap className='h-4 w-4' />
                 Triggers
               </h3>
-              <p className='text-xs text-purple-800 dark:text-purple-200'>
+              <p className='text-xs text-[#7a5a18] dark:text-[#C4B5A0]'>
                 When should this automation run?
               </p>
               
               {/* Time Trigger */}
               <div className='space-y-2'>
-                <label className='flex items-center gap-2 text-sm font-medium text-purple-900 dark:text-purple-100'>
+                <label className='flex items-center gap-2 text-sm font-medium text-[#5a3d0a] dark:text-[#F5EFE6]'>
                   <Clock className='h-4 w-4' />
                   Time-based Trigger
                 </label>
@@ -840,7 +840,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                         }]);
                       }
                     }}
-                    className='rounded-lg border border-purple-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none dark:border-purple-700 dark:bg-gray-800 dark:text-white'
+                    className='rounded-lg border border-[rgba(201,169,110,0.4)] bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 focus:border-[#C9A96E] focus:outline-none dark:border-[rgba(201,169,110,0.3)] dark:bg-[#1c1510] dark:text-white'
                   />
                   <select
                     value={triggers.find(t => t.type === 'time')?.config?.frequency || 'daily'}
@@ -859,7 +859,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                         }]);
                       }
                     }}
-                    className='rounded-lg border border-purple-300 bg-white px-3 py-2 text-sm text-gray-900 focus:border-purple-500 focus:outline-none dark:border-purple-700 dark:bg-gray-800 dark:text-white'
+                    className='rounded-lg border border-[rgba(201,169,110,0.4)] bg-[#faf8f4] px-3 py-2 text-sm text-gray-900 focus:border-[#C9A96E] focus:outline-none dark:border-[rgba(201,169,110,0.3)] dark:bg-[#1c1510] dark:text-white'
                   >
                     <option value='daily'>Daily</option>
                     <option value='weekly'>Weekly</option>
@@ -872,19 +872,19 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
           {/* Automation Actions Section */}
           {isAutomation && (
-            <div className='space-y-4 rounded-lg border-2 border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
-              <h3 className='flex items-center gap-2 text-sm font-semibold text-purple-900 dark:text-purple-100'>
+            <div className='space-y-4 rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+              <h3 className='flex items-center gap-2 text-sm font-semibold text-[#5a3d0a] dark:text-[#F5EFE6]'>
                 <Sparkles className='h-4 w-4' />
                 Actions
               </h3>
-              <p className='text-xs text-purple-800 dark:text-purple-200'>
+              <p className='text-xs text-[#7a5a18] dark:text-[#C4B5A0]'>
                 What should happen when triggered?
               </p>
               
               {/* Default action: Complete ritual */}
               {actions.length === 0 && (
-                <div className='rounded-lg border border-purple-300 bg-white p-3 dark:border-purple-700 dark:bg-gray-800'>
-                  <p className='text-sm text-gray-700 dark:text-gray-300'>
+                <div className='rounded-lg border border-[rgba(201,169,110,0.4)] bg-[#faf8f4] p-3 dark:border-[rgba(201,169,110,0.3)] dark:bg-[#1c1510]'>
+                  <p className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                     Default: Complete this ritual automatically
                   </p>
                 </div>
@@ -895,7 +895,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
           {/* Social Features (for both rituals and automations) */}
           <div className='space-y-3'>
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Social Features
               </label>
               <div className='space-y-2'>
@@ -904,9 +904,9 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                     type='checkbox'
                     checked={isCompletable}
                     onChange={(e) => setIsCompletable(e.target.checked)}
-                    className='rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                    className='rounded border-gray-300 text-[#C9A96E] focus:ring-[#C9A96E]/50'
                   />
-                  <span className='text-sm text-gray-700 dark:text-gray-300'>
+                  <span className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                     Can be completed and create impact moments
                   </span>
                 </label>
@@ -915,9 +915,9 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                     type='checkbox'
                     checked={isJoinable}
                     onChange={(e) => setIsJoinable(e.target.checked)}
-                    className='rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                    className='rounded border-gray-300 text-[#C9A96E] focus:ring-[#C9A96E]/50'
                   />
-                  <span className='text-sm text-gray-700 dark:text-gray-300'>
+                  <span className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                     Others can join this {isAutomation ? 'automation' : 'ritual'}
                   </span>
                 </label>
@@ -927,7 +927,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
 
           {/* Visibility */}
           <div>
-            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+            <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
               Visibility
             </label>
             <div className='flex gap-2'>
@@ -939,8 +939,8 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                 }}
                 className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   scope === 'personalized'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-[#C97D60] text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                 }`}
               >
                 🔒 Private
@@ -953,14 +953,14 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
                 }}
                 className={`flex-1 rounded-lg px-4 py-2 text-sm font-medium transition-colors ${
                   scope === 'public'
-                    ? 'bg-purple-600 text-white'
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+                    ? 'bg-[#C97D60] text-white'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#231a10] dark:text-[#C4B5A0] dark:hover:bg-[#2a1d10]'
                 }`}
               >
                 🌍 Public
               </button>
             </div>
-            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
               {scope === 'public' 
                 ? 'Others can discover and join this ' + (isAutomation ? 'automation' : 'ritual')
                 : 'Only you can see and use this ' + (isAutomation ? 'automation' : 'ritual')}
@@ -972,7 +972,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
             <button
               onClick={closeModal}
               disabled={loading}
-              className='flex-1 rounded-lg border-2 border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+              className='flex-1 rounded-lg border-2 border-gray-300 bg-[#faf8f4] px-4 py-2 font-medium text-gray-700 transition-colors hover:bg-gray-50 disabled:opacity-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
             >
               Cancel
             </button>

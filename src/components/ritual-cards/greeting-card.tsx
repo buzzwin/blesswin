@@ -155,7 +155,7 @@ export function GreetingCard({
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className='bg-white dark:bg-gray-800 rounded-lg p-6 shadow-lg border-2 border-purple-200'
+              className='bg-white dark:bg-[#1c1510] rounded-lg p-6 shadow-lg border-2 border-[rgba(201,169,110,0.3)]'
             >
               <div className='flex items-center justify-between mb-4'>
                 <h3 className='text-xl font-bold text-gray-900 dark:text-white'>
@@ -178,12 +178,12 @@ export function GreetingCard({
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 placeholder='Write your message...'
-                className='w-full h-32 p-3 border-2 border-gray-300 rounded-lg resize-none focus:border-purple-500 focus:outline-none mb-4'
+                className='w-full h-32 p-3 border-2 border-gray-300 rounded-lg resize-none focus:border-[#C9A96E] focus:outline-none mb-4'
                 maxLength={500}
               />
 
               <div className='mb-4'>
-                <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+                <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
                   Add a Photo (Optional)
                 </label>
                 <div className='flex items-center gap-4'>

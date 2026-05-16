@@ -38,7 +38,7 @@ export function AnimatedProgressBar({
     <div className='w-full'>
       {showLabel && (
         <div className='mb-1 flex items-center justify-between'>
-          <span className='text-xs font-medium text-gray-700 dark:text-gray-300'>
+          <span className='text-xs font-medium text-gray-700 dark:text-[#C4B5A0]'>
             {label || 'Progress'}
           </span>
           <span className='text-xs font-bold text-gray-900 dark:text-white'>
@@ -48,7 +48,7 @@ export function AnimatedProgressBar({
       )}
       <div
         className={cn(
-          'w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700',
+          'w-full overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10]',
           heightClasses[height]
         )}
       >

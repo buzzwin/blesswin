@@ -60,21 +60,21 @@ export function MobileRecommendationsCard({
 
   if (loading) {
     return (
-      <Card className='border-purple-200 bg-white shadow-lg dark:border-purple-800/30 dark:bg-gray-800'>
+      <Card className='border-[rgba(201,169,110,0.3)] bg-white shadow-lg dark:border-[rgba(201,169,110,0.25)]/30 dark:bg-[#1c1510]'>
         <CardHeader className='pb-3'>
           <div className='flex items-center gap-2'>
-            <Brain className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+            <Brain className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
             <CardTitle className='text-base'>AI Recommendations</CardTitle>
           </div>
         </CardHeader>
         <CardContent className='py-6 text-center'>
-          <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
-            <Brain className='h-6 w-6 animate-pulse text-purple-600 dark:text-purple-400' />
+          <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'>
+            <Brain className='h-6 w-6 animate-pulse text-[#C9A96E] dark:text-[#C9A96E]' />
           </div>
           <h4 className='mb-1 text-sm font-medium text-gray-900 dark:text-white'>
             Analyzing Your Preferences...
           </h4>
-          <p className='text-xs text-gray-600 dark:text-gray-400'>
+          <p className='text-xs text-gray-600 dark:text-[#9E8B76]'>
             Our AI is learning from your ratings
           </p>
         </CardContent>
@@ -84,7 +84,7 @@ export function MobileRecommendationsCard({
 
   if (error) {
     return (
-      <Card className='border-red-200 bg-white shadow-lg dark:border-red-800/30 dark:bg-gray-800'>
+      <Card className='border-red-200 bg-white shadow-lg dark:border-red-800/30 dark:bg-[#1c1510]'>
         <CardHeader className='pb-3'>
           <div className='flex items-center gap-2'>
             <Brain className='h-4 w-4 text-red-600 dark:text-red-400' />
@@ -98,7 +98,7 @@ export function MobileRecommendationsCard({
           <h4 className='mb-1 text-sm font-medium text-gray-900 dark:text-white'>
             Unable to Load Recommendations
           </h4>
-          <p className='mb-3 text-xs text-gray-600 dark:text-gray-400'>
+          <p className='mb-3 text-xs text-gray-600 dark:text-[#9E8B76]'>
             {error}
           </p>
           <Button
@@ -117,21 +117,21 @@ export function MobileRecommendationsCard({
 
   if (!recommendations || recommendations.length === 0) {
     return (
-      <Card className='border-purple-200 bg-white shadow-lg dark:border-purple-800/30 dark:bg-gray-800'>
+      <Card className='border-[rgba(201,169,110,0.3)] bg-white shadow-lg dark:border-[rgba(201,169,110,0.25)]/30 dark:bg-[#1c1510]'>
         <CardHeader className='pb-3'>
           <div className='flex items-center gap-2'>
-            <Brain className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+            <Brain className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
             <CardTitle className='text-base'>AI Recommendations</CardTitle>
           </div>
         </CardHeader>
         <CardContent className='py-6 text-center'>
-          <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30'>
-            <Brain className='h-6 w-6 text-purple-600 dark:text-purple-400' />
+          <div className='mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'>
+            <Brain className='h-6 w-6 text-[#C9A96E] dark:text-[#C9A96E]' />
           </div>
           <h4 className='mb-1 text-sm font-medium text-gray-900 dark:text-white'>
             AI-Powered Recommendations
           </h4>
-          <p className='mb-3 text-xs text-gray-600 dark:text-gray-400'>
+          <p className='mb-3 text-xs text-gray-600 dark:text-[#9E8B76]'>
             {analysis?.suggestions?.[0] ??
               'Get personalized recommendations based on your preferences!'}
           </p>
@@ -144,10 +144,10 @@ export function MobileRecommendationsCard({
     <div className='space-y-3'>
       {/* AI Analysis Section - Compact */}
       {analysis && (
-        <Card className='border-purple-200 bg-white shadow-lg dark:border-purple-800/30 dark:bg-gray-800'>
+        <Card className='border-[rgba(201,169,110,0.3)] bg-white shadow-lg dark:border-[rgba(201,169,110,0.25)]/30 dark:bg-[#1c1510]'>
           <CardHeader className='pb-2'>
             <div className='flex items-center gap-2'>
-              <Brain className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+              <Brain className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
               <CardTitle className='text-base'>AI Analysis</CardTitle>
             </div>
           </CardHeader>
@@ -157,7 +157,7 @@ export function MobileRecommendationsCard({
                 <Sparkles className='h-3 w-3 text-yellow-500' />
                 AI Insights
               </h5>
-              <p className='text-xs text-gray-600 dark:text-gray-400'>
+              <p className='text-xs text-gray-600 dark:text-[#9E8B76]'>
                 {analysis.ratingPattern}
               </p>
             </div>
@@ -171,7 +171,7 @@ export function MobileRecommendationsCard({
                   {analysis.preferredGenres.slice(0, 3).map((genre, index) => (
                     <span
                       key={index}
-                      className='inline-block rounded bg-purple-100 px-2 py-1 text-xs text-purple-800 dark:bg-purple-900/30 dark:text-purple-300'
+                      className='inline-block rounded bg-[rgba(201,169,110,0.1)] px-2 py-1 text-xs text-[#7a5a18] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
                     >
                       {genre}
                     </span>
@@ -184,18 +184,18 @@ export function MobileRecommendationsCard({
       )}
 
       {/* AI Recommendations Section - Mobile Optimized */}
-      <Card className='border-purple-200 bg-white shadow-lg dark:border-purple-800/30 dark:bg-gray-800'>
+      <Card className='border-[rgba(201,169,110,0.3)] bg-white shadow-lg dark:border-[rgba(201,169,110,0.25)]/30 dark:bg-[#1c1510]'>
         <CardHeader className='pb-2'>
           <div className='flex items-center justify-between'>
             <div className='flex items-center gap-2'>
-              <Brain className='h-4 w-4 text-purple-600 dark:text-purple-400' />
+              <Brain className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
               <CardTitle className='text-base'>AI Recommendations</CardTitle>
             </div>
             <Button
               variant='ghost'
               size='sm'
               onClick={() => void refetch()}
-              className='text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'
+              className='text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E] dark:hover:text-purple-300'
             >
               <RefreshCw className='h-3 w-3' />
             </Button>
@@ -206,7 +206,7 @@ export function MobileRecommendationsCard({
             {recommendations.slice(0, 3).map((recommendation, index) => (
               <div
                 key={index}
-                className='group cursor-pointer rounded-lg border border-gray-200 p-2 transition-all hover:border-purple-300 hover:shadow-md dark:border-gray-700 dark:hover:border-purple-600'
+                className='group cursor-pointer rounded-lg border border-gray-200 p-2 transition-all hover:border-[rgba(201,169,110,0.4)] hover:shadow-md dark:border-[#2a1d10] dark:hover:border-[#C9A96E]'
                 onClick={() => setSelectedRecommendation(recommendation)}
               >
                 <div className='flex gap-2'>
@@ -226,7 +226,7 @@ export function MobileRecommendationsCard({
                     <h4 className='line-clamp-1 mb-1 text-sm font-medium text-gray-900 dark:text-white'>
                       {recommendation.title}
                     </h4>
-                    <div className='mb-1 flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-gray-400'>
+                    <div className='mb-1 flex flex-wrap items-center gap-2 text-xs text-gray-600 dark:text-[#9E8B76]'>
                       <div className='flex items-center gap-1'>
                         <Film className='h-3 w-3 flex-shrink-0' />
                         <span className='whitespace-nowrap'>
@@ -248,7 +248,7 @@ export function MobileRecommendationsCard({
                         </span>
                       </div>
                     </div>
-                    <p className='line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-gray-400'>
+                    <p className='line-clamp-2 text-xs leading-relaxed text-gray-600 dark:text-[#9E8B76]'>
                       {recommendation.reason}
                     </p>
                   </div>
@@ -258,7 +258,7 @@ export function MobileRecommendationsCard({
           </div>
 
           <div className='text-center'>
-            <div className='text-xs text-gray-500 dark:text-gray-400'>
+            <div className='text-xs text-gray-500 dark:text-[#9E8B76]'>
               Showing recommendations
             </div>
           </div>

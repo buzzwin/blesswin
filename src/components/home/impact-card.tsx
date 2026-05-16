@@ -33,7 +33,7 @@ export function ImpactCard({
   return (
     <button
       onClick={onClick}
-      className={`group relative w-full overflow-hidden rounded-2xl border bg-gradient-to-br ${colorClasses[color]} p-6 text-left backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:from-gray-800/50 dark:to-gray-900/50 dark:border-gray-700 dark:hover:border-gray-600`}
+      className={`group relative w-full overflow-hidden rounded-2xl border bg-gradient-to-br ${colorClasses[color]} p-6 text-left backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:from-gray-800/50 dark:to-gray-900/50 dark:border-[#2a1d10] dark:hover:border-gray-600`}
     >
       {/* Hover glow effect */}
       <div className='absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 bg-gradient-to-br from-white/50 to-transparent dark:from-white/5' />
@@ -47,7 +47,7 @@ export function ImpactCard({
           {title}
         </h3>
         
-        <p className='mb-4 text-base leading-relaxed text-gray-700 dark:text-gray-300'>
+        <p className='mb-4 text-base leading-relaxed text-gray-700 dark:text-[#C4B5A0]'>
           {description}
         </p>
         

@@ -157,10 +157,10 @@ export function ReviewModal({
     <Modal
       modalClassName={cn(
         'relative w-full max-w-xl',
-        'bg-white dark:bg-gray-900',
+        'bg-white dark:bg-[#1c1510]',
         'rounded-2xl',
         'shadow-xl',
-        'border border-gray-100 dark:border-gray-800'
+        'border border-gray-100 dark:border-[#2a1d10]'
       )}
       open={isOpen}
       closeModal={onClose}
@@ -170,7 +170,7 @@ export function ReviewModal({
           <h2 className='text-xl font-bold'>Review {viewingActivity.title}</h2>
           <button
             onClick={onClose}
-            className='rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-800'
+            className='rounded-full p-2 hover:bg-gray-100 dark:hover:bg-[#231a10]'
           >
             <HeroIcon iconName='XMarkIcon' className='h-5 w-5' />
           </button>
@@ -188,15 +188,15 @@ export function ReviewModal({
                   'rounded-lg px-2 py-1.5',
                   'transition-all duration-200',
                   selectedEmoji === emoji
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                    ? 'bg-[rgba(201,169,110,0.06)] dark:bg-[rgba(201,169,110,0.08)]'
+                    : 'hover:bg-gray-50 dark:hover:bg-[#231a10]'
                 )}
                 title={label}
               >
                 <span className='text-xl transition-transform duration-200 group-hover:scale-110'>
                   {emoji}
                 </span>
-                <span className='text-xs text-gray-500 dark:text-gray-400'>
+                <span className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                   {label}
                 </span>
               </button>
@@ -215,8 +215,8 @@ export function ReviewModal({
                 'text-sm font-medium',
                 'transition-colors duration-200',
                 selectedTags.includes(tag)
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                  ? 'bg-[#C97D60] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
               )}
             >
               {tag}
@@ -231,9 +231,9 @@ export function ReviewModal({
           placeholder='Share your thoughts...'
           className={cn(
             'mb-4 h-32 w-full resize-none rounded-lg p-3',
-            'bg-gray-50 dark:bg-gray-800',
-            'border border-gray-200 dark:border-gray-700',
-            'focus:border-emerald-500 focus:ring-emerald-500',
+            'bg-gray-50 dark:bg-[#1c1510]',
+            'border border-gray-200 dark:border-[#2a1d10]',
+            'focus:border-[#C9A96E] focus:ring-[rgba(201,169,110,0.35)]',
             'placeholder-gray-400 dark:placeholder-gray-500'
           )}
         />
@@ -246,9 +246,9 @@ export function ReviewModal({
               'px-4 py-2',
               'rounded-lg',
               'font-medium',
-              'bg-gray-100 dark:bg-gray-800',
-              'text-gray-700 dark:text-gray-300',
-              'hover:bg-gray-200 dark:hover:bg-gray-700'
+              'bg-gray-100 dark:bg-[#1c1510]',
+              'text-gray-700 dark:text-[#C4B5A0]',
+              'hover:bg-gray-200 dark:hover:bg-[#231a10]'
             )}
           >
             Cancel
@@ -261,9 +261,9 @@ export function ReviewModal({
               'px-4 py-2',
               'rounded-lg',
               'font-medium',
-              'bg-emerald-500 dark:bg-emerald-600',
+              'bg-[#C97D60] dark:bg-[#C97D60]',
               'text-white',
-              'hover:bg-emerald-600 dark:hover:bg-emerald-700',
+              'hover:bg-[#C97D60] dark:hover:bg-[#B56540]',
               'disabled:opacity-50'
             )}
           >

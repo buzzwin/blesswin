@@ -181,12 +181,12 @@ export function AddToWatchlistModal({
 
   return (
     <Modal open={isOpen} closeModal={onClose}>
-      <div className='w-full max-w-md rounded-xl bg-white p-6 dark:bg-gray-900'>
+      <div className='w-full max-w-md rounded-xl bg-[#faf8f4] p-6 dark:bg-[#1c1510]'>
         <div className='mb-4 flex items-center justify-between'>
           <h2 className='text-xl font-bold'>Add to Watchlist</h2>
           <button
             onClick={onClose}
-            className='rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-800'
+            className='rounded-full p-1 hover:bg-gray-100 dark:hover:bg-[#231a10]'
           >
             <HeroIcon className='h-5 w-5' iconName='XMarkIcon' />
           </button>
@@ -197,7 +197,7 @@ export function AddToWatchlistModal({
             {mediaData.title}
           </h3>
           {mediaData.description && (
-            <p className='mt-1 text-sm text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 text-sm text-gray-500 dark:text-[#9E8B76]'>
               {mediaData.description}
             </p>
           )}
@@ -210,20 +210,20 @@ export function AddToWatchlistModal({
               placeholder='Watchlist name'
               value={newWatchlistName}
               onChange={(e) => setNewWatchlistName(e.target.value)}
-              className='w-full rounded-lg border p-2 dark:border-gray-700 dark:bg-gray-800'
+              className='w-full rounded-lg border p-2 dark:border-[#2a1d10] dark:bg-[#1c1510]'
             />
             <textarea
               placeholder='Description (optional)'
               value={newWatchlistDesc}
               onChange={(e) => setNewWatchlistDesc(e.target.value)}
-              className='w-full rounded-lg border p-2 dark:border-gray-700 dark:bg-gray-800'
+              className='w-full rounded-lg border p-2 dark:border-[#2a1d10] dark:bg-[#1c1510]'
             />
-            <div className='flex items-center gap-3 rounded-lg border p-3 dark:border-gray-700'>
+            <div className='flex items-center gap-3 rounded-lg border p-3 dark:border-[#2a1d10]'>
               <div className='flex-1'>
                 <p className='font-medium text-gray-900 dark:text-white'>
                   Make Watchlist Public
                 </p>
-                <p className='text-sm text-gray-500 dark:text-gray-400'>
+                <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                   Anyone can view public watchlists
                 </p>
               </div>
@@ -233,8 +233,8 @@ export function AddToWatchlistModal({
                 aria-checked={isPublic}
                 onClick={() => setIsPublic(!isPublic)}
                 className={cn(
-                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2',
-                  isPublic ? 'bg-blue-500' : 'bg-gray-200 dark:bg-gray-700'
+                  'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[rgba(201,169,110,0.35)] focus:ring-offset-2',
+                  isPublic ? 'bg-[rgba(201,169,110,0.06)]0' : 'bg-gray-200 dark:bg-[#231a10]'
                 )}
               >
                 <span
@@ -248,7 +248,7 @@ export function AddToWatchlistModal({
             <div className='flex justify-end gap-2'>
               <button
                 onClick={() => setIsCreating(false)}
-                className='rounded-lg px-4 py-2 text-gray-600 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+                className='rounded-lg px-4 py-2 text-gray-600 hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
                 disabled={saving}
               >
                 Cancel
@@ -256,7 +256,7 @@ export function AddToWatchlistModal({
               <button
                 onClick={handleCreateWatchlist}
                 disabled={!newWatchlistName.trim() || saving}
-                className='rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50'
+                className='rounded-lg bg-[rgba(201,169,110,0.06)]0 px-4 py-2 text-white hover:bg-[#C97D60] disabled:opacity-50'
               >
                 {saving ? 'Creating...' : 'Create & Add'}
               </button>
@@ -280,19 +280,19 @@ export function AddToWatchlistModal({
                       setError(null);
                       setLoading(true);
                     }}
-                    className='mt-2 text-sm text-blue-500 hover:text-blue-600'
+                    className='mt-2 text-sm text-[#C9A96E] hover:text-[#8a6520]'
                   >
                     Try again
                   </button>
                 </div>
               ) : watchlists.length === 0 ? (
                 <div className='py-4 text-center'>
-                  <p className='text-gray-500 dark:text-gray-400'>
+                  <p className='text-gray-500 dark:text-[#9E8B76]'>
                     No watchlists yet. Create your first one!
                   </p>
                   <button
                     onClick={() => setIsCreating(true)}
-                    className='mt-2 text-sm text-blue-500 hover:text-blue-600'
+                    className='mt-2 text-sm text-[#C9A96E] hover:text-[#8a6520]'
                   >
                     Create Watchlist
                   </button>
@@ -305,14 +305,14 @@ export function AddToWatchlistModal({
                     className={cn(
                       'flex w-full items-center justify-between rounded-lg p-3',
                       selectedWatchlist === watchlist.id
-                        ? 'bg-blue-50 text-blue-600 dark:bg-blue-900/50 dark:text-blue-400'
-                        : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                        ? 'bg-[rgba(201,169,110,0.06)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)]/50 dark:text-[#9E8B76]'
+                        : 'hover:bg-gray-50 dark:hover:bg-[#231a10]'
                     )}
                   >
                     <div>
                       <p className='font-medium'>{watchlist.name}</p>
                       {watchlist.description && (
-                        <p className='text-sm text-gray-500 dark:text-gray-400'>
+                        <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                           {watchlist.description}
                         </p>
                       )}
@@ -325,10 +325,10 @@ export function AddToWatchlistModal({
               )}
             </div>
 
-            <div className='mt-4 flex items-center justify-between border-t pt-4 dark:border-gray-700'>
+            <div className='mt-4 flex items-center justify-between border-t pt-4 dark:border-[#2a1d10]'>
               <button
                 onClick={() => setIsCreating(true)}
-                className='flex items-center gap-2 rounded-lg px-4 py-2 text-blue-500 hover:bg-blue-50 dark:hover:bg-blue-900/20'
+                className='flex items-center gap-2 rounded-lg px-4 py-2 text-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] dark:hover:bg-[rgba(201,169,110,0.08)]'
               >
                 <HeroIcon className='h-5 w-5' iconName='PlusIcon' />
                 <span>New Watchlist</span>
@@ -337,7 +337,7 @@ export function AddToWatchlistModal({
               <button
                 onClick={handleAddToExisting}
                 disabled={!selectedWatchlist || saving}
-                className='rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 disabled:opacity-50'
+                className='rounded-lg bg-[rgba(201,169,110,0.06)]0 px-4 py-2 text-white hover:bg-[#C97D60] disabled:opacity-50'
               >
                 {saving ? 'Adding...' : 'Add to Selected'}
               </button>

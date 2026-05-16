@@ -252,12 +252,12 @@ export default function RippleViewPage(): JSX.Element {
       >
         <MainHeader title='Ripple' />
         <div className='mx-auto max-w-2xl px-4 py-8'>
-          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-            <p className='mb-4 text-gray-600 dark:text-gray-400'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
               Impact moment not found
             </p>
             <Link href='/'>
-              <a className='inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+              <a className='inline-flex items-center gap-2 text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'>
                 <ArrowLeft className='h-4 w-4' />
                 Back to Home
               </a>
@@ -287,7 +287,7 @@ export default function RippleViewPage(): JSX.Element {
         {/* Back Button */}
         <div className='mb-4'>
           <Link href={`/impact/${id}`}>
-            <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+            <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
               <ArrowLeft className='h-4 w-4' />
               Back to Moment
             </a>
@@ -295,11 +295,11 @@ export default function RippleViewPage(): JSX.Element {
         </div>
 
         {/* Ripple Header */}
-        <div className='mb-6 rounded-lg border border-gray-200 bg-white p-6 text-center dark:border-gray-700 dark:bg-gray-800'>
+        <div className='mb-6 rounded-lg border border-gray-200 bg-[#faf8f4] p-6 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
           <h2 className='mb-2 text-2xl font-bold text-gray-900 dark:text-white'>
             Ripple
           </h2>
-          <p className='text-sm text-gray-600 dark:text-gray-400'>
+          <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
             {joinedMoments.length === 0
               ? originalMoment.createdBy === user?.id
                 ? 'No ripples yet. Share it to inspire others!'
@@ -315,8 +315,8 @@ export default function RippleViewPage(): JSX.Element {
         </div>
 
         {/* Original Moment */}
-        <div className='mb-6 rounded-lg border-2 border-purple-300 bg-purple-50 p-4 dark:border-purple-700 dark:bg-purple-900/20'>
-          <div className='mb-3 text-xs font-semibold uppercase tracking-wide text-purple-600 dark:text-purple-400'>
+        <div className='mb-6 rounded-lg border-2 border-[rgba(201,169,110,0.4)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.3)] dark:bg-[rgba(201,169,110,0.08)]'>
+          <div className='mb-3 text-xs font-semibold uppercase tracking-wide text-[#C9A96E] dark:text-[#C9A96E]'>
             Original Action
           </div>
           <ImpactMomentCard
@@ -332,7 +332,7 @@ export default function RippleViewPage(): JSX.Element {
         {/* Joined Moments */}
         {joinedMoments.length > 0 && (
           <div className='mb-6'>
-            <div className='mb-4 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-gray-400'>
+            <div className='mb-4 text-xs font-semibold uppercase tracking-wide text-gray-600 dark:text-[#9E8B76]'>
               Joined Actions ({joinedMoments.length})
             </div>
             <div className='space-y-4'>
@@ -358,7 +358,7 @@ export default function RippleViewPage(): JSX.Element {
 
         {/* Empty State */}
         {joinedMoments.length === 0 && (
-          <div className='mb-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='mb-6 rounded-lg border border-gray-200 bg-[#faf8f4] p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <div className='text-center'>
               <div className='mb-4 text-6xl'>🌱</div>
               <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
@@ -366,7 +366,7 @@ export default function RippleViewPage(): JSX.Element {
                   ? 'Share Your Ritual Participation'
                   : 'View Ritual'}
               </h3>
-              <p className='mb-6 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mb-6 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 {originalMoment.createdBy === user?.id
                   ? 'Share your ritual participation with others to inspire them!'
                   : 'This ritual participation is part of a ritual. Join the ritual to participate yourself!'}
@@ -376,7 +376,7 @@ export default function RippleViewPage(): JSX.Element {
             {/* Email Share Form (for creator only) */}
             {originalMoment.createdBy === user?.id && (
               <div
-                className='mt-6 space-y-4 border-t border-gray-200 pt-6 dark:border-gray-700'
+                className='mt-6 space-y-4 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
                 style={{ position: 'relative', zIndex: 10 }}
@@ -395,7 +395,7 @@ export default function RippleViewPage(): JSX.Element {
                   onMouseDown={(e) => e.stopPropagation()}
                 >
                   <div>
-                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                       Friend's Email <span className='text-red-500'>*</span>
                     </label>
                     <input
@@ -420,12 +420,12 @@ export default function RippleViewPage(): JSX.Element {
                       readOnly={false}
                       disabled={false}
                       tabIndex={0}
-                      className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+                      className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
                       style={{ pointerEvents: 'auto', zIndex: 20 }}
                     />
                   </div>
                   <div>
-                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                       Friend's Name{' '}
                       <span className='text-xs text-gray-400'>(Optional)</span>
                     </label>
@@ -450,12 +450,12 @@ export default function RippleViewPage(): JSX.Element {
                       readOnly={false}
                       disabled={false}
                       tabIndex={0}
-                      className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+                      className='w-full rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
                       style={{ pointerEvents: 'auto', zIndex: 20 }}
                     />
                   </div>
                   <div>
-                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+                    <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                       Personal Message{' '}
                       <span className='text-xs text-gray-400'>(Optional)</span>
                     </label>
@@ -481,7 +481,7 @@ export default function RippleViewPage(): JSX.Element {
                       readOnly={false}
                       disabled={false}
                       tabIndex={0}
-                      className='w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+                      className='w-full resize-none rounded-lg border border-gray-300 px-4 py-2.5 text-gray-900 placeholder-gray-500 focus:border-green-500 focus:outline-none focus:ring-2 focus:ring-green-500 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
                       style={{ pointerEvents: 'auto', zIndex: 20 }}
                     />
                   </div>
@@ -506,7 +506,7 @@ export default function RippleViewPage(): JSX.Element {
                 </form>
 
                 {/* Social Share */}
-                <div className='mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
+                <div className='mt-6 space-y-3 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
                   <div className='flex items-center gap-2'>
                     <Share2 className='h-5 w-5 text-green-600 dark:text-green-400' />
                     <h4 className='text-base font-semibold text-gray-900 dark:text-white'>
@@ -537,7 +537,7 @@ export default function RippleViewPage(): JSX.Element {
               <>
                 {user ? (
                   <Link href={`/rituals/${originalMoment.ritualId}`}>
-                    <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
+                    <a className='inline-flex items-center gap-2 rounded-full bg-[#C97D60] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#B56540] dark:bg-[#C97D60] dark:hover:bg-[#B56540]'>
                       Join This Ritual
                       <ArrowLeft className='h-4 w-4 rotate-180' />
                     </a>
@@ -546,7 +546,7 @@ export default function RippleViewPage(): JSX.Element {
                   <Link
                     href={`/login?redirect=/rituals/${originalMoment.ritualId}`}
                   >
-                    <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
+                    <a className='inline-flex items-center gap-2 rounded-full bg-[#C97D60] px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#B56540] dark:bg-[#C97D60] dark:hover:bg-[#B56540]'>
                       <LogIn className='h-5 w-5' />
                       Sign In to Join Ritual
                     </a>
@@ -559,16 +559,16 @@ export default function RippleViewPage(): JSX.Element {
 
         {/* Sign In CTA (if not authenticated) */}
         {!user && (
-          <div className='rounded-lg border border-purple-200 bg-purple-50 p-6 text-center dark:border-purple-800 dark:bg-purple-900/20'>
+          <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-6 text-center dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
             <h3 className='mb-2 text-lg font-semibold text-gray-900 dark:text-white'>
               Join the Community
             </h3>
-            <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+            <p className='mb-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
               Sign in to join rituals, comment, and share your own ritual
               participations!
             </p>
             <Link href={`/login?redirect=/impact/${id}/ripple`}>
-              <a className='inline-flex items-center gap-2 rounded-full bg-purple-600 px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700'>
+              <a className='inline-flex items-center gap-2 rounded-full bg-[#C97D60] px-6 py-3 text-base font-semibold text-white transition-colors hover:bg-[#B56540] dark:bg-[#C97D60] dark:hover:bg-[#B56540]'>
                 <LogIn className='h-5 w-5' />
                 Sign In to Join
               </a>

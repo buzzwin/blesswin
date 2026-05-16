@@ -170,15 +170,15 @@ export function RitualShareModal({
 
   return (
     <Modal
-      modalClassName='max-w-md bg-white dark:bg-gray-900 w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
+      modalClassName='max-w-md bg-[#faf8f4] dark:bg-[#1c1510] w-full p-6 rounded-2xl max-h-[90vh] overflow-y-auto'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-6'>
-        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-700'>
+        <div className='flex items-center justify-between border-b border-gray-200 pb-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-3'>
-            <div className='rounded-full bg-purple-100 p-2 dark:bg-purple-900/30'>
-              <Share2 className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+            <div className='rounded-full bg-[rgba(201,169,110,0.1)] p-2 dark:bg-[rgba(201,169,110,0.08)]'>
+              <Share2 className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
             </div>
             <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
               Share Ritual
@@ -187,22 +187,22 @@ export function RitualShareModal({
         </div>
 
         {/* Ritual Preview */}
-        <div className='rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20'>
+        <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
           <div className='mb-2 flex items-center gap-2'>
             <span className='text-2xl'>{ritual.icon || '🌱'}</span>
-            <h3 className='font-semibold text-purple-900 dark:text-purple-100'>
+            <h3 className='font-semibold text-[#5a3d0a] dark:text-[#F5EFE6]'>
               {ritual.title}
             </h3>
           </div>
-          <p className='text-sm text-purple-800 dark:text-purple-200'>
+          <p className='text-sm text-[#7a5a18] dark:text-[#C4B5A0]'>
             {ritual.description}
           </p>
         </div>
 
         {/* Email Share Section */}
-        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
-            <Mail className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Mail className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Share via Email
             </h3>
@@ -210,7 +210,7 @@ export function RitualShareModal({
 
           {/* Friend Email */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Friend&apos;s Email <span className='text-red-500'>*</span>
             </label>
             <div className='relative'>
@@ -230,7 +230,7 @@ export function RitualShareModal({
 
           {/* Friend Name */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Friend&apos;s Name <span className='text-gray-400 text-xs'>(Optional)</span>
             </label>
             <Input
@@ -243,7 +243,7 @@ export function RitualShareModal({
 
           {/* Personal Message */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Personal Message <span className='text-gray-400 text-xs'>(Optional)</span>
             </label>
             <Textarea
@@ -257,16 +257,16 @@ export function RitualShareModal({
           <Button
             onClick={handleEmailShare}
             disabled={sending || !friendEmail}
-            className='w-full rounded-full bg-purple-600 px-4 py-2 font-semibold text-white hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed'
+            className='w-full rounded-full bg-[#C97D60] px-4 py-2 font-semibold text-white hover:bg-[#B56540] disabled:opacity-50 disabled:cursor-not-allowed'
           >
             {sending ? 'Sending...' : 'Send Email'}
           </Button>
         </div>
 
         {/* SMS Share Section */}
-        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
-            <Phone className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Phone className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Share via SMS
             </h3>
@@ -274,7 +274,7 @@ export function RitualShareModal({
 
           {/* Friend Phone */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Friend&apos;s Phone Number <span className='text-red-500'>*</span>
             </label>
             <div className='relative'>
@@ -290,14 +290,14 @@ export function RitualShareModal({
                 className='pl-10'
               />
             </div>
-            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
               On mobile devices, this will open your SMS app
             </p>
           </div>
 
           {/* Friend Name for SMS */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Friend&apos;s Name <span className='text-gray-400 text-xs'>(Optional)</span>
             </label>
             <Input
@@ -310,7 +310,7 @@ export function RitualShareModal({
 
           {/* SMS Message */}
           <div>
-            <label className='block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2'>
+            <label className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0] mb-2'>
               Personal Message <span className='text-gray-400 text-xs'>(Optional)</span>
             </label>
             <Textarea
@@ -320,7 +320,7 @@ export function RitualShareModal({
               rows={3}
               maxLength={160}
             />
-            <p className='mt-1 text-xs text-gray-500 dark:text-gray-400'>
+            <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
               {smsMessage.length}/160 characters (message will include ritual details and link)
             </p>
           </div>
@@ -335,9 +335,9 @@ export function RitualShareModal({
         </div>
 
         {/* Social Share Section */}
-        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-gray-700'>
+        <div className='space-y-4 border-t border-gray-200 pt-4 dark:border-[#2a1d10]'>
           <div className='flex items-center gap-2'>
-            <Share2 className='h-5 w-5 text-gray-600 dark:text-gray-400' />
+            <Share2 className='h-5 w-5 text-gray-600 dark:text-[#9E8B76]' />
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Share on Social Media
             </h3>
@@ -355,7 +355,7 @@ export function RitualShareModal({
           <Button
             onClick={handleCopyLink}
             variant='outline'
-            className='w-full rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+            className='w-full rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
           >
             {copied ? (
               <>
@@ -371,10 +371,10 @@ export function RitualShareModal({
           </Button>
         </div>
 
-        <div className='flex gap-3 border-t border-gray-200 pt-6 dark:border-gray-700'>
+        <div className='flex gap-3 border-t border-gray-200 pt-6 dark:border-[#2a1d10]'>
           <Button
             onClick={closeModal}
-            className='flex-1 rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+            className='flex-1 rounded-full border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
           >
             Close
           </Button>

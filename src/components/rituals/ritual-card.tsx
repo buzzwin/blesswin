@@ -318,8 +318,8 @@ export function RitualCard({
       className={cn(
         'rounded-lg border-2 p-3 transition-all md:rounded-xl md:p-4 lg:p-5',
         isGlobal
-          ? 'border-purple-300 bg-purple-50 dark:border-purple-700 dark:bg-purple-900/20'
-          : 'border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800',
+          ? 'border-[rgba(201,169,110,0.4)] bg-[rgba(201,169,110,0.06)] dark:border-[rgba(201,169,110,0.3)] dark:bg-[rgba(201,169,110,0.08)]'
+          : 'border-gray-200 bg-white dark:border-[#2a1d10] dark:bg-[#1c1510]',
         completed && 'opacity-75'
       )}
     >
@@ -332,8 +332,8 @@ export function RitualCard({
               className={cn(
                 'rounded-full px-2 py-0.5 text-xs font-semibold md:px-3 md:py-1',
                 isGlobal
-                  ? 'bg-purple-200 text-purple-800 dark:bg-purple-800 dark:text-purple-200'
-                  : 'bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                  ? 'bg-purple-200 text-[#7a5a18] dark:bg-purple-800 dark:text-[#C4B5A0]'
+                  : 'bg-gray-200 text-gray-700 dark:bg-[#231a10] dark:text-[#C4B5A0]'
               )}
             >
               {isGlobal ? 'Global Ritual of the Day' : 'Recommended for You'}
@@ -348,7 +348,7 @@ export function RitualCard({
           )}
           {/* Karma reward */}
           {karmaReward !== undefined && karmaReward > 0 && (
-            <span className='flex items-center gap-1 text-[10px] font-medium text-purple-700 dark:text-purple-300 md:text-xs'>
+            <span className='flex items-center gap-1 text-[10px] font-medium text-[#8a6520] dark:text-[#C9A96E] md:text-xs'>
               <Sparkles className='h-3 w-3' />
               {completed ? 'Earned' : 'Earn'} {karmaReward} karma
             </span>
@@ -363,8 +363,8 @@ export function RitualCard({
               }}
               disabled={leaving}
               className={cn(
-                'rounded-full border border-red-300 bg-white px-1.5 py-1 text-[10px] font-medium text-red-600',
-                'transition-colors hover:bg-red-50 dark:border-red-700 dark:bg-gray-800 dark:text-red-400 dark:hover:bg-red-900/20',
+                'rounded-full border border-red-300 bg-[#faf8f4] px-1.5 py-1 text-[10px] font-medium text-red-600',
+                'transition-colors hover:bg-red-50 dark:border-red-700 dark:bg-[#1c1510] dark:text-red-400 dark:hover:bg-red-900/20',
                 'flex items-center justify-center',
                 leaving && 'cursor-not-allowed opacity-50'
               )}
@@ -383,7 +383,7 @@ export function RitualCard({
                 e.stopPropagation();
                 onEditRitual();
               }}
-              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-gray-200'
               aria-label='Edit ritual'
               title='Edit ritual'
             >
@@ -410,14 +410,14 @@ export function RitualCard({
                 void handleToggleVisibility();
               }}
               disabled={togglingVisibility}
-              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 disabled:opacity-50 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-gray-200'
               aria-label={
                 ritual.scope === 'public' ? 'Make private' : 'Make public'
               }
               title={ritual.scope === 'public' ? 'Make private' : 'Make public'}
             >
               {ritual.scope === 'public' ? (
-                <Globe className='h-3.5 w-3.5 text-blue-600 dark:text-blue-400' />
+                <Globe className='h-3.5 w-3.5 text-[#8a6520] dark:text-[#9E8B76]' />
               ) : (
                 <Lock className='h-3.5 w-3.5' />
               )}
@@ -429,7 +429,7 @@ export function RitualCard({
                 e.stopPropagation();
                 onShareRitual();
               }}
-              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-gray-200'
+              className='rounded-full p-1.5 text-gray-600 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:bg-[#231a10] dark:hover:text-gray-200'
               aria-label='Share ritual'
               title='Share ritual'
             >
@@ -470,18 +470,18 @@ export function RitualCard({
               {ritual.title}
             </h3>
             {(ritual as any)._isAutomation && (
-              <span className='flex items-center gap-1 rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+              <span className='flex items-center gap-1 rounded-full bg-[rgba(201,169,110,0.1)] px-2 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                 <Zap className='h-3 w-3' />
                 Automation
               </span>
             )}
           </div>
-          <p className='text-xs text-gray-600 dark:text-gray-400 md:text-sm'>
+          <p className='text-xs text-gray-600 dark:text-[#9E8B76] md:text-sm'>
             {ritual.description}
           </p>
           {/* Show trigger info for automations */}
           {(ritual as any)._automationTriggers && Array.isArray((ritual as any)._automationTriggers) && (ritual as any)._automationTriggers.length > 0 && (
-            <div className='mt-2 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-500'>
+            <div className='mt-2 flex items-center gap-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
               <Clock className='h-3 w-3' />
               <span>
                 {((ritual as any)._automationTriggers as any[]).some((t: any) => t.type === 'time') && 'Time-based'}
@@ -513,7 +513,7 @@ export function RitualCard({
       </div>
 
       {/* Effort Level and Duration */}
-      <div className='mb-2 flex items-center justify-between text-xs text-gray-600 dark:text-gray-400 md:mb-3 md:text-sm'>
+      <div className='mb-2 flex items-center justify-between text-xs text-gray-600 dark:text-[#9E8B76] md:mb-3 md:text-sm'>
         <div className='flex items-center gap-1.5 md:gap-2'>
           <span className='text-base md:text-lg'>
             {effortLevelIcons[ritual.effortLevel]}
@@ -539,7 +539,7 @@ export function RitualCard({
       {(ritual.joinedByUsers?.length || 0) > 0 && (
         <div className='mb-2 md:mb-3'>
           <Link href={`/rituals/${ritual.id}/participants`}>
-            <a className='inline-flex items-center gap-1.5 rounded-lg border border-purple-200 bg-purple-50 px-2 py-1.5 text-xs font-medium text-purple-700 transition-colors hover:bg-purple-100 dark:border-purple-800 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30 md:gap-2 md:px-3 md:py-2 md:text-sm'>
+            <a className='inline-flex items-center gap-1.5 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-2 py-1.5 text-xs font-medium text-[#8a6520] transition-colors hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.09)] md:gap-2 md:px-3 md:py-2 md:text-sm'>
               <Users className='h-3 w-3 md:h-4 md:w-4' />
               <span>
                 {ritual.joinedByUsers?.length || 0}{' '}
@@ -563,9 +563,9 @@ export function RitualCard({
               onInvite();
             }}
             className={cn(
-              'w-full rounded-lg border-2 border-purple-300 bg-white px-3 py-1.5 text-xs font-semibold',
-              'text-purple-700 transition-colors hover:bg-purple-50',
-              'dark:border-purple-700 dark:bg-gray-800 dark:text-purple-400 dark:hover:bg-purple-900/20',
+              'w-full rounded-lg border-2 border-[rgba(201,169,110,0.4)] bg-[#faf8f4] px-3 py-1.5 text-xs font-semibold',
+              'text-[#8a6520] transition-colors hover:bg-[rgba(201,169,110,0.06)]',
+              'dark:border-[rgba(201,169,110,0.3)] dark:bg-[#1c1510] dark:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]',
               'flex items-center justify-center gap-1.5 md:gap-2 md:px-4 md:py-2 md:text-sm'
             )}
           >
@@ -647,9 +647,9 @@ export function RitualCard({
         <button
           onClick={onShare}
           className={cn(
-            'w-full rounded-lg border border-purple-300 bg-purple-50 px-3 py-2 text-xs font-semibold',
-            'text-purple-700 transition-colors hover:bg-purple-100',
-            'dark:border-purple-700 dark:bg-purple-900/20 dark:text-purple-300 dark:hover:bg-purple-900/30',
+            'w-full rounded-lg border border-[rgba(201,169,110,0.4)] bg-[rgba(201,169,110,0.06)] px-3 py-2 text-xs font-semibold',
+            'text-[#8a6520] transition-colors hover:bg-[rgba(201,169,110,0.1)]',
+            'dark:border-[rgba(201,169,110,0.3)] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.09)]',
             'md:px-4 md:py-2 md:text-sm'
           )}
         >

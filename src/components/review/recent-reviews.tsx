@@ -36,7 +36,7 @@ export function RecentReviews({
             className='h-6 w-6 text-red-600 dark:text-red-400'
           />
         </div>
-        <p className='text-sm text-gray-600 dark:text-gray-400'>{error}</p>
+        <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>{error}</p>
       </div>
     );
   }
@@ -44,16 +44,16 @@ export function RecentReviews({
   if (reviews.length === 0) {
     return (
       <div className={cn('py-8 text-center', className)}>
-        <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800'>
+        <div className='mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-[#1c1510]'>
           <HeroIcon
             iconName='FilmIcon'
-            className='h-6 w-6 text-gray-400 dark:text-gray-600'
+            className='h-6 w-6 text-gray-400 dark:text-[#3d2e1e]'
           />
         </div>
         <h3 className='mb-2 text-lg font-medium text-gray-900 dark:text-white'>
           No reviews yet
         </h3>
-        <p className='text-sm text-gray-500 dark:text-gray-400'>
+        <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
           Be the first to share your thoughts!
         </p>
       </div>
@@ -66,7 +66,7 @@ export function RecentReviews({
         <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
           Recent Reviews
         </h3>
-        <span className='text-sm text-gray-500 dark:text-gray-400'>
+        <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>
           {reviews.length} reviews
         </span>
       </div>
@@ -79,7 +79,7 @@ export function RecentReviews({
 
       {reviews.length > 4 && (
         <div className='pt-4 text-center'>
-          <p className='text-sm text-gray-500 dark:text-gray-400'>
+          <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
             +{reviews.length - 4} more reviews
           </p>
         </div>

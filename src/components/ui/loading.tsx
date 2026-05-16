@@ -25,7 +25,7 @@ function GradientSpinner({ size = 'md', className = '', iconClassName = '' }: Lo
   const sizeClass = iconClassName || sizeClasses[size];
   return (
     <div className={cn('relative', sizeClass, className)}>
-      <div className='absolute inset-0 rounded-full border-2 border-gray-200 dark:border-gray-700' />
+      <div className='absolute inset-0 rounded-full border-2 border-gray-200 dark:border-[#2a1d10]' />
       <div className='absolute inset-0 animate-spin rounded-full border-2 border-transparent border-t-action border-r-hope' />
     </div>
   );

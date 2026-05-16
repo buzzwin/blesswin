@@ -105,12 +105,12 @@ export function AutomationRegistry({
       {/* Header */}
       <div>
         <div className='mb-2 flex items-center gap-2'>
-          <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+          <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
           <h2 className='text-2xl font-bold text-gray-900 dark:text-white'>
             Simulate and prepare
           </h2>
         </div>
-        <p className='text-sm text-gray-600 dark:text-gray-400'>
+        <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
           See what's possible — success pathways and strategies you can adopt from the community.
         </p>
       </div>
@@ -123,7 +123,7 @@ export function AutomationRegistry({
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder='Search automations...'
-          className='w-full rounded-lg border-2 border-gray-300 bg-white py-2 pl-10 pr-4 text-sm focus:border-purple-500 focus:outline-none dark:border-gray-600 dark:bg-gray-800 dark:text-white'
+          className='w-full rounded-lg border-2 border-gray-300 bg-white py-2 pl-10 pr-4 text-sm focus:border-[#C9A96E] focus:outline-none dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white'
         />
       </div>
 
@@ -136,8 +136,8 @@ export function AutomationRegistry({
             className={cn(
               'flex items-center gap-2 rounded-lg border-2 px-3 py-1.5 text-sm font-medium transition-all',
               selectedCategory === category.value
-                ? 'border-purple-500 bg-purple-50 text-purple-700 dark:border-purple-600 dark:bg-purple-900/30 dark:text-purple-300'
-                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600'
+                ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] text-[#8a6520] dark:border-[#C9A96E] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:border-gray-600'
             )}
           >
             <span>{category.icon}</span>
@@ -149,12 +149,12 @@ export function AutomationRegistry({
       {/* Automations Grid */}
       {loading ? (
         <div className='flex items-center justify-center py-12'>
-          <div className='h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent' />
+          <div className='h-8 w-8 animate-spin rounded-full border-4 border-[#C9A96E] border-t-transparent' />
         </div>
       ) : filteredAutomations.length === 0 ? (
-        <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-900/50'>
+        <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]/50'>
           <Sparkles className='mx-auto mb-3 h-12 w-12 text-gray-400' />
-          <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+          <p className='text-sm font-medium text-gray-600 dark:text-[#9E8B76]'>
             {searchQuery ? 'No automations found matching your search' : 'No automations in this category yet'}
           </p>
         </div>

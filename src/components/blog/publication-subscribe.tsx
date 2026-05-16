@@ -47,7 +47,7 @@ export function PublicationSubscribe({
     <section
       id='publication-subscribe'
       className={cn(
-        'scroll-mt-24 rounded-xl border border-charcoal/10 bg-white/80 p-5 dark:border-white/10 dark:bg-gray-900/60 sm:p-6',
+        'scroll-mt-24 rounded-xl border border-charcoal/10 bg-white/80 p-5 dark:border-white/10 dark:bg-[#1c1510]/60 sm:p-6',
         className
       )}
       aria-labelledby='publication-subscribe-heading'
@@ -58,7 +58,7 @@ export function PublicationSubscribe({
       >
         New posts, free in your inbox
       </h2>
-      <p className='mt-1 text-sm text-charcoal/70 dark:text-gray-400'>
+      <p className='mt-1 text-sm text-charcoal/70 dark:text-[#9E8B76]'>
         No account required. We will only use this to send journal updates.
       </p>
       <form
@@ -76,7 +76,7 @@ export function PublicationSubscribe({
           placeholder='you@example.com'
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className='min-h-11 w-full flex-1 rounded-lg border border-charcoal/15 bg-white px-3 py-2 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-charcoal/40 focus:outline-none focus:ring-2 focus:ring-charcoal/20 dark:border-white/15 dark:bg-gray-950 dark:text-white dark:placeholder:text-gray-500 dark:focus:border-white/30 dark:focus:ring-white/10'
+          className='min-h-11 w-full flex-1 rounded-lg border border-charcoal/15 bg-[#faf8f4] px-3 py-2 text-sm text-charcoal placeholder:text-charcoal/40 focus:border-charcoal/40 focus:outline-none focus:ring-2 focus:ring-charcoal/20 dark:border-white/15 dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744] dark:focus:border-white/30 dark:focus:ring-white/10'
         />
         <button
           type='submit'

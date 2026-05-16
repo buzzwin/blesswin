@@ -17,13 +17,13 @@ const OCCASION_EMOJI: Record<string, string> = {
   custom: '✨'
 };
 
-// Soft pastel backgrounds cycling per page
+// Warm bohemian page backgrounds cycling per page
 const PAGE_BACKGROUNDS = [
-  'from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30',
-  'from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30',
-  'from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30',
-  'from-sky-50 to-blue-50 dark:from-sky-950/30 dark:to-blue-950/30',
-  'from-rose-50 to-pink-50 dark:from-rose-950/30 dark:to-pink-950/30'
+  'from-[rgba(201,169,110,0.12)] to-[rgba(181,96,60,0.08)] dark:from-[rgba(201,169,110,0.08)] dark:to-[rgba(181,96,60,0.05)]',
+  'from-[rgba(156,175,136,0.12)] to-[rgba(201,169,110,0.08)] dark:from-[rgba(156,175,136,0.08)] dark:to-[rgba(201,169,110,0.05)]',
+  'from-[rgba(181,96,60,0.1)] to-[rgba(201,169,110,0.08)] dark:from-[rgba(181,96,60,0.07)] dark:to-[rgba(201,169,110,0.05)]',
+  'from-[rgba(201,169,110,0.08)] to-[rgba(156,175,136,0.1)] dark:from-[rgba(201,169,110,0.05)] dark:to-[rgba(156,175,136,0.07)]',
+  'from-[rgba(212,165,116,0.1)] to-[rgba(201,169,110,0.06)] dark:from-[rgba(212,165,116,0.07)] dark:to-[rgba(201,169,110,0.04)]'
 ];
 
 function bgFor(index: number): string {
@@ -36,17 +36,17 @@ function CoverPage({ buzz }: { buzz: Buzz }): JSX.Element {
     <div className='flex h-full flex-col items-center justify-center gap-6 p-8 text-center'>
       <span className='text-7xl drop-shadow-sm'>{emoji}</span>
       <div>
-        <p className='text-sm font-semibold uppercase tracking-widest text-emerald-600 dark:text-emerald-400'>
+        <p className='text-sm font-semibold uppercase tracking-widest text-[#8a6520] dark:text-[#C9A96E]'>
           Buzzbook
         </p>
-        <h2 className='mt-2 text-3xl font-bold text-gray-900 dark:text-white'>
+        <h2 className='mt-2 font-display text-3xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
           {buzz.title}
         </h2>
       </div>
-      <p className='text-sm text-gray-500'>
+      <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
         {buzz.totalSignatures} {buzz.totalSignatures === 1 ? 'page' : 'pages'} inside
       </p>
-      <div className='mt-2 animate-bounce text-gray-300 dark:text-gray-600'>
+      <div className='mt-2 animate-bounce text-[#C9A96E]/40'>
         <HeroIcon iconName='ChevronRightIcon' className='h-6 w-6' />
       </div>
     </div>
@@ -56,13 +56,13 @@ function CoverPage({ buzz }: { buzz: Buzz }): JSX.Element {
 function TextPage({ sig }: { sig: Signature }): JSX.Element {
   return (
     <div className='flex h-full flex-col justify-between p-8'>
-      <span className='text-6xl leading-none text-gray-200 dark:text-gray-700'>&ldquo;</span>
-      <p className='flex-1 overflow-y-auto py-4 text-center text-xl font-medium leading-relaxed text-gray-800 dark:text-gray-100'>
+      <span className='font-display text-6xl leading-none text-[rgba(201,169,110,0.25)]'>&ldquo;</span>
+      <p className='flex-1 overflow-y-auto py-4 text-center text-xl font-medium leading-relaxed text-[#1a1108] dark:text-[#F5EFE6]'>
         {sig.text}
       </p>
       <div className='mt-4 flex items-center justify-end gap-2'>
-        <div className='h-px flex-1 bg-gray-200 dark:bg-gray-700' />
-        <span className='text-sm font-semibold text-gray-500 dark:text-gray-400'>
+        <div className='h-px flex-1 bg-[#e8d8c4] dark:bg-[#2a1d10]' />
+        <span className='text-sm font-semibold text-[#6b5744] dark:text-[#9E8B76]'>
           — {sig.authorName}
         </span>
       </div>
@@ -81,13 +81,13 @@ function PhotoPage({ sig }: { sig: Signature }): JSX.Element {
             className='h-full w-full object-contain'
           />
         ) : (
-          <div className='flex h-full items-center justify-center text-gray-300'>
+          <div className='flex h-full items-center justify-center text-[#e8d8c4] dark:text-[#2a1d10]'>
             <HeroIcon iconName='PhotoIcon' className='h-16 w-16' />
           </div>
         )}
       </div>
-      <div className='shrink-0 bg-white/80 p-4 text-right backdrop-blur-sm dark:bg-gray-900/80'>
-        <span className='text-sm font-semibold text-gray-600 dark:text-gray-300'>
+      <div className='shrink-0 bg-[#faf8f4]/90 p-4 text-right backdrop-blur-sm dark:bg-[#1c1510]/90'>
+        <span className='text-sm font-semibold text-[#6b5744] dark:text-[#C4B5A0]'>
           — {sig.authorName}
         </span>
       </div>
@@ -100,7 +100,6 @@ export function BuzzbookReveal({ buzz, signatures }: Props): JSX.Element {
   const totalPages = 1 + visible.length; // cover + sigs
   const [page, setPage] = useState(0);
 
-  // Touch swipe
   const [touchStartX, setTouchStartX] = useState<number | null>(null);
 
   const prev = useCallback(() => setPage((p) => Math.max(0, p - 1)), []);
@@ -128,7 +127,9 @@ export function BuzzbookReveal({ buzz, signatures }: Props): JSX.Element {
       <div
         className={cn(
           'relative flex-1 overflow-hidden rounded-2xl bg-gradient-to-br',
-          isCover ? 'from-emerald-50 to-teal-50 dark:from-emerald-950/30 dark:to-teal-950/30' : bgFor(page)
+          isCover
+            ? 'from-[rgba(201,169,110,0.15)] to-[rgba(181,96,60,0.08)] dark:from-[rgba(201,169,110,0.1)] dark:to-[rgba(181,96,60,0.06)]'
+            : bgFor(page)
         )}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -141,16 +142,16 @@ export function BuzzbookReveal({ buzz, signatures }: Props): JSX.Element {
         <button
           onClick={prev}
           disabled={page === 0}
-          className='absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow backdrop-blur-sm transition hover:bg-white disabled:opacity-0 dark:bg-gray-800/70 dark:hover:bg-gray-800'
+          className='absolute left-2 top-1/2 -translate-y-1/2 rounded-full bg-[#faf8f4]/80 p-2 shadow backdrop-blur-sm transition hover:bg-[#faf8f4] disabled:opacity-0 dark:bg-[#1c1510]/80 dark:hover:bg-[#231a10]'
         >
-          <HeroIcon iconName='ChevronLeftIcon' className='h-5 w-5 text-gray-700 dark:text-gray-200' />
+          <HeroIcon iconName='ChevronLeftIcon' className='h-5 w-5 text-[#6b5744] dark:text-[#C4B5A0]' />
         </button>
         <button
           onClick={next}
           disabled={page === totalPages - 1}
-          className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-white/70 p-2 shadow backdrop-blur-sm transition hover:bg-white disabled:opacity-0 dark:bg-gray-800/70 dark:hover:bg-gray-800'
+          className='absolute right-2 top-1/2 -translate-y-1/2 rounded-full bg-[#faf8f4]/80 p-2 shadow backdrop-blur-sm transition hover:bg-[#faf8f4] disabled:opacity-0 dark:bg-[#1c1510]/80 dark:hover:bg-[#231a10]'
         >
-          <HeroIcon iconName='ChevronRightIcon' className='h-5 w-5 text-gray-700 dark:text-gray-200' />
+          <HeroIcon iconName='ChevronRightIcon' className='h-5 w-5 text-[#6b5744] dark:text-[#C4B5A0]' />
         </button>
       </div>
 
@@ -163,15 +164,15 @@ export function BuzzbookReveal({ buzz, signatures }: Props): JSX.Element {
             className={cn(
               'h-2 rounded-full transition-all duration-200',
               i === page
-                ? 'w-6 bg-emerald-500'
-                : 'w-2 bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600'
+                ? 'w-6 bg-[#C97D60]'
+                : 'w-2 bg-[#e8d8c4] hover:bg-[#C9A96E]/30 dark:bg-[#2a1d10] dark:hover:bg-[#3d2e1e]'
             )}
           />
         ))}
       </div>
 
       {/* Page label */}
-      <p className='pb-4 text-center text-xs text-gray-400'>
+      <p className='pb-4 text-center text-xs text-[#9E8B76]'>
         {isCover ? 'Cover' : `Page ${page} of ${visible.length}`}
       </p>
     </div>

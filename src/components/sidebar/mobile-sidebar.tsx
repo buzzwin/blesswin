@@ -38,7 +38,7 @@ export function MobileSidebar(): JSX.Element {
       <Modal
         className='p-0'
         modalAnimation={variant}
-        modalClassName='h-full w-full bg-white dark:bg-gray-900 right-0 sm:w-96'
+        modalClassName='h-full w-full bg-[#faf8f4] dark:bg-[#1c1510] right-0 sm:w-96'
         open={open}
         closeModal={closeModal}
       >

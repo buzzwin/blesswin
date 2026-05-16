@@ -42,7 +42,7 @@ export default function VideosPage(): JSX.Element {
       <SectionShell className='py-8 sm:py-12'>
         <div className='mx-auto max-w-6xl px-4 sm:px-6'>
           <Link href='/'>
-            <a className='mb-4 inline-flex items-center gap-1.5 text-xs text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white sm:mb-6 sm:text-sm'>
+            <a className='mb-4 inline-flex items-center gap-1.5 text-xs text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white sm:mb-6 sm:text-sm'>
               <ArrowLeft className='h-3 w-3 sm:h-3.5 sm:w-3.5' />
               <span>Back</span>
             </a>
@@ -56,7 +56,7 @@ export default function VideosPage(): JSX.Element {
               <h1 className='mb-1 text-2xl font-light text-gray-900 dark:text-white sm:mb-2 sm:text-3xl md:text-4xl'>
                 Trending Videos
               </h1>
-              <p className='text-sm font-light text-gray-600 dark:text-gray-300 sm:text-base md:text-lg'>
+              <p className='text-sm font-light text-gray-600 dark:text-[#C4B5A0] sm:text-base md:text-lg'>
                 Yoga & Meditation videos from YouTube
               </p>
             </div>

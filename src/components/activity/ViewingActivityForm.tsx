@@ -236,9 +236,9 @@ const ViewingActivityForm = ({
                     'px-3 py-1.5',
                     'text-sm font-medium',
                     'rounded-lg',
-                    'bg-gray-100 dark:bg-gray-800',
-                    'text-gray-700 dark:text-gray-300',
-                    'hover:bg-gray-200 dark:hover:bg-gray-700',
+                    'bg-gray-100 dark:bg-[#1c1510]',
+                    'text-gray-700 dark:text-[#C4B5A0]',
+                    'hover:bg-gray-200 dark:hover:bg-[#231a10]',
                     'focus:outline-none focus:ring-2 focus:ring-gray-500/20',
                     'transition-all duration-200'
                   )}
@@ -251,10 +251,10 @@ const ViewingActivityForm = ({
                     'px-3 py-1.5',
                     'text-sm font-medium',
                     'rounded-lg',
-                    'bg-emerald-500 dark:bg-emerald-600',
+                    'bg-[#C97D60] dark:bg-[#C97D60]',
                     'text-white',
-                    'hover:bg-emerald-600 dark:hover:bg-emerald-700',
-                    'focus:outline-none focus:ring-2 focus:ring-emerald-500/20',
+                    'hover:bg-[#C97D60] dark:hover:bg-[#B56540]',
+                    'focus:outline-none focus:ring-2 focus:ring-[rgba(201,169,110,0.25)]',
                     'transition-all duration-200'
                   )}
                 >
@@ -270,15 +270,15 @@ const ViewingActivityForm = ({
                   'w-full appearance-none',
                   'px-4 py-2',
                   'rounded-xl',
-                  'bg-white dark:bg-gray-800',
-                  'border border-gray-200 dark:border-gray-700',
-                  'text-gray-900 dark:text-gray-100',
+                  'bg-white dark:bg-[#1c1510]',
+                  'border border-gray-200 dark:border-[#2a1d10]',
+                  'text-gray-900 dark:text-[#F5EFE6]',
                   'text-sm',
                   'shadow-sm',
                   'transition-all duration-200',
-                  'hover:border-emerald-500 dark:hover:border-emerald-500',
-                  'focus:border-emerald-500 dark:focus:border-emerald-500',
-                  'focus:ring-2 focus:ring-emerald-500/20',
+                  'hover:border-[#C9A96E] dark:hover:border-[#C9A96E]',
+                  'focus:border-[#C9A96E] dark:focus:border-[#C9A96E]',
+                  'focus:ring-2 focus:ring-[rgba(201,169,110,0.25)]',
                   'focus:outline-none'
                 )}
                 value={viewingActivity.status}
@@ -296,7 +296,7 @@ const ViewingActivityForm = ({
               <div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-4'>
                 <HeroIcon
                   iconName='ChevronDownIcon'
-                  className='h-5 w-5 text-gray-500 dark:text-gray-400'
+                  className='h-5 w-5 text-gray-500 dark:text-[#9E8B76]'
                 />
               </div>
             </div>
@@ -310,8 +310,8 @@ const ViewingActivityForm = ({
                   'mt-2',
                   'overflow-y-auto',
                   'rounded-xl',
-                  'bg-white dark:bg-gray-800',
-                  'border border-gray-200 dark:border-gray-700',
+                  'bg-white dark:bg-[#1c1510]',
+                  'border border-gray-200 dark:border-[#2a1d10]',
                   'shadow-lg',
                   'divide-y divide-gray-200 dark:divide-gray-700'
                 )}
@@ -332,7 +332,7 @@ const ViewingActivityForm = ({
                     className={cn(
                       'mb-1.5 block',
                       'text-sm font-medium',
-                      'text-gray-700 dark:text-gray-300'
+                      'text-gray-700 dark:text-[#C4B5A0]'
                     )}
                     htmlFor='review'
                   >
@@ -343,16 +343,16 @@ const ViewingActivityForm = ({
                       'w-full',
                       'px-4 py-2',
                       'rounded-xl',
-                      'bg-white dark:bg-gray-800',
-                      'border border-gray-200 dark:border-gray-700',
-                      'text-gray-900 dark:text-gray-100',
+                      'bg-white dark:bg-[#1c1510]',
+                      'border border-gray-200 dark:border-[#2a1d10]',
+                      'text-gray-900 dark:text-[#F5EFE6]',
                       'text-sm',
                       'placeholder-gray-500 dark:placeholder-gray-400',
                       'shadow-sm',
                       'transition-all duration-200',
-                      'hover:border-emerald-500 dark:hover:border-emerald-500',
-                      'focus:border-emerald-500 dark:focus:border-emerald-500',
-                      'focus:ring-2 focus:ring-emerald-500/20',
+                      'hover:border-[#C9A96E] dark:hover:border-[#C9A96E]',
+                      'focus:border-[#C9A96E] dark:focus:border-[#C9A96E]',
+                      'focus:ring-2 focus:ring-[rgba(201,169,110,0.25)]',
                       'focus:outline-none',
                       'resize-none',
                       'min-h-[100px]'
@@ -371,8 +371,8 @@ const ViewingActivityForm = ({
                     'flex gap-4',
                     'p-3',
                     'rounded-xl',
-                    'bg-gray-50 dark:bg-gray-800/50',
-                    'border border-gray-100 dark:border-gray-700'
+                    'bg-gray-50 dark:bg-[#231a10]',
+                    'border border-gray-100 dark:border-[#2a1d10]'
                   )}
                 >
                   {selectedShow.poster_path && (
@@ -395,7 +395,7 @@ const ViewingActivityForm = ({
                     <h3
                       className={cn(
                         'text-base font-semibold',
-                        'text-gray-900 dark:text-gray-100'
+                        'text-gray-900 dark:text-[#F5EFE6]'
                       )}
                     >
                       {selectedShow.title ?? selectedShow.name}
@@ -403,7 +403,7 @@ const ViewingActivityForm = ({
                     <p
                       className={cn(
                         'text-sm',
-                        'text-gray-600 dark:text-gray-400',
+                        'text-gray-600 dark:text-[#9E8B76]',
                         'line-clamp-2'
                       )}
                     >

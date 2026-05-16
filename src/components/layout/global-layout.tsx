@@ -1,6 +1,4 @@
 import { useRouter } from 'next/router';
-import { GlobalMobileHeader } from './global-mobile-header';
-import { GlobalDesktopHeader } from './global-desktop-header';
 import type { ReactNode } from 'react';
 
 interface GlobalLayoutProps {
@@ -13,19 +11,12 @@ function isPublicationPath(pathname: string): boolean {
 
 export function GlobalLayout({ children }: GlobalLayoutProps): JSX.Element {
   const { pathname } = useRouter();
-  const publication = isPublicationPath(pathname);
 
-  if (publication) {
+  if (isPublicationPath(pathname)) {
     return (
-      <div className='min-h-screen bg-cream dark:bg-gray-950'>{children}</div>
+      <div className='min-h-screen bg-cream dark:bg-[#1c1510]'>{children}</div>
     );
   }
 
-  return (
-    <div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-amber-50/30 dark:from-gray-900 dark:via-gray-900'>
-      <GlobalMobileHeader />
-      <GlobalDesktopHeader />
-      <main className='pt-0 md:pt-0'>{children}</main>
-    </div>
-  );
+  return <div className='min-h-screen bg-main-background'>{children}</div>;
 }

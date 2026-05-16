@@ -214,7 +214,7 @@ export function Input({
       className={cn(
         'w-full transition-all duration-300',
         'hover:bg-gray-50 dark:hover:bg-gray-900/50',
-        isExpanded ? 'bg-white dark:bg-gray-800/50' : 'bg-transparent'
+        isExpanded ? 'bg-white dark:bg-[#231a10]' : 'bg-transparent'
       )}
     >
       {/* Only show the collapsed view if not a reply/review modal */}
@@ -236,8 +236,8 @@ export function Input({
           />
           <p
             className={cn(
-              'text-gray-500 dark:text-gray-400',
-              'group-hover:text-emerald-500 dark:group-hover:text-emerald-400',
+              'text-gray-500 dark:text-[#9E8B76]',
+              'group-hover:text-[#C9A96E] dark:group-hover:text-[#C9A96E]',
               'transition-colors duration-200'
             )}
           >
@@ -248,7 +248,7 @@ export function Input({
               iconName='PlusCircleIcon'
               className={cn(
                 'h-5 w-5',
-                'group-hover:text-emerald-500 dark:group-hover:text-emerald-400',
+                'group-hover:text-[#C9A96E] dark:group-hover:text-[#C9A96E]',
                 'transition-colors duration-200'
               )}
             />
@@ -268,7 +268,7 @@ export function Input({
             <form
               className={cn(
                 'flex flex-col',
-                'border-b border-gray-100 dark:border-gray-800',
+                'border-b border-gray-100 dark:border-[#2a1d10]',
                 {
                   'gap-2': replyModal
                 }

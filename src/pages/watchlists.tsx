@@ -43,14 +43,14 @@ function CreateWatchlistModal({
 
   return (
     <Modal
-      modalClassName='max-w-lg bg-white dark:bg-gray-900 w-full p-8 rounded-2xl'
+      modalClassName='max-w-lg bg-[#faf8f4] dark:bg-[#1c1510] w-full p-8 rounded-2xl'
       open={open}
       closeModal={closeModal}
     >
       <div className='space-y-6'>
         <div>
           <h2 className='text-2xl font-bold'>Create new watchlist</h2>
-          <p className='text-gray-500 dark:text-gray-400'>
+          <p className='text-gray-500 dark:text-[#9E8B76]'>
             Create a new watchlist to organize your movies and TV shows
           </p>
         </div>
@@ -59,7 +59,7 @@ function CreateWatchlistModal({
           <div>
             <label
               htmlFor='name'
-              className='block text-sm font-medium text-gray-700 dark:text-gray-300'
+              className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'
             >
               Name
             </label>
@@ -68,7 +68,7 @@ function CreateWatchlistModal({
               id='name'
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className='block w-full px-4 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-emerald-500'
+              className='block w-full px-4 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-[#C9A96E] focus:ring-[rgba(201,169,110,0.35)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:focus:border-[#C9A96E]'
               placeholder='My Favorite Movies'
             />
           </div>
@@ -76,7 +76,7 @@ function CreateWatchlistModal({
           <div>
             <label
               htmlFor='description'
-              className='block text-sm font-medium text-gray-700 dark:text-gray-300'
+              className='block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'
             >
               Description (optional)
             </label>
@@ -84,18 +84,18 @@ function CreateWatchlistModal({
               id='description'
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className='block w-full px-4 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-emerald-500 focus:ring-emerald-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:focus:border-emerald-500'
+              className='block w-full px-4 py-2 mt-1 text-gray-900 bg-white border border-gray-300 rounded-lg focus:border-[#C9A96E] focus:ring-[rgba(201,169,110,0.35)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:focus:border-[#C9A96E]'
               placeholder='A collection of my all-time favorites'
               rows={3}
             />
           </div>
 
-          <div className='flex items-center gap-3 p-3 border rounded-lg dark:border-gray-700'>
+          <div className='flex items-center gap-3 p-3 border rounded-lg dark:border-[#2a1d10]'>
             <div className='flex-1'>
               <p className='font-medium text-gray-900 dark:text-white'>
                 Make Watchlist Public
               </p>
-              <p className='text-sm text-gray-500 dark:text-gray-400'>
+              <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                 Anyone can view public watchlists
               </p>
             </div>
@@ -105,8 +105,8 @@ function CreateWatchlistModal({
               aria-checked={isPublic}
               onClick={() => setIsPublic(!isPublic)}
               className={cn(
-                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2',
-                isPublic ? 'bg-emerald-500' : 'bg-gray-200 dark:bg-gray-700'
+                'relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-[rgba(201,169,110,0.35)] focus:ring-offset-2',
+                isPublic ? 'bg-[#C97D60]' : 'bg-gray-200 dark:bg-[#231a10]'
               )}
             >
               <span
@@ -122,14 +122,14 @@ function CreateWatchlistModal({
         <div className='flex justify-end gap-3'>
           <button
             onClick={closeModal}
-            className='px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800'
+            className='px-4 py-2 text-gray-600 rounded-lg hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={!name.trim()}
-            className='px-4 py-2 text-white rounded-lg bg-emerald-500 hover:bg-emerald-600 disabled:opacity-50'
+            className='px-4 py-2 text-white rounded-lg bg-[#C97D60] hover:bg-[#C97D60] disabled:opacity-50'
           >
             Create
           </button>
@@ -151,14 +151,14 @@ export default function WatchlistsPage(): JSX.Element {
         <div className='flex items-center justify-between px-4'>
           <div>
             <h2 className='text-xl font-bold'>My Watchlists</h2>
-            <p className='text-sm text-gray-500 dark:text-gray-400'>
+            <p className='text-sm text-gray-500 dark:text-[#9E8B76]'>
               Organize your movies and TV shows
             </p>
           </div>
           <span className='px-4'></span>
           <button
             onClick={openModal}
-            className='flex items-center gap-2 px-4 py-2 text-white rounded-lg bg-emerald-500 hover:bg-emerald-600'
+            className='flex items-center gap-2 px-4 py-2 text-white rounded-lg bg-[#C97D60] hover:bg-[#C97D60]'
           >
             <HeroIcon className='w-5 h-5' iconName='PlusIcon' />
             <span>New Watchlist</span>

@@ -77,7 +77,7 @@ const Quiz: React.FC = () => {
       <div className='mb-8 text-3xl font-bold'>
         <p className='mb-4'>{`Your Score: ${score}/${questions.length}`}</p>
         {/* <button
-          className='px-6 py-3 text-white bg-blue-500 rounded-md hover:bg-blue-600'
+          className='px-6 py-3 text-white bg-[rgba(201,169,110,0.06)]0 rounded-md hover:bg-[#C97D60]'
           onClick={resetQuiz}
         >
           Try Again
@@ -105,7 +105,7 @@ const Quiz: React.FC = () => {
                   ? answer === currentQuestion.correctAnswer.toString()
                     ? 'bg-green-500'
                     : 'bg-red-500'
-                  : 'bg-blue-500 hover:bg-blue-600'
+                  : 'bg-[rgba(201,169,110,0.06)]0 hover:bg-[#C97D60]'
               } w-full sm:w-auto`}
               onClick={() => handleAnswer(answer)}
             >
@@ -127,7 +127,7 @@ const Quiz: React.FC = () => {
               className={`ml-8 rounded-md px-6 py-3 text-white ${
                 currentQuestionIndex === questions.length - 1
                   ? 'bg-slate-500 hover:bg-amber-600'
-                  : 'bg-blue-500 hover:bg-blue-600'
+                  : 'bg-[rgba(201,169,110,0.06)]0 hover:bg-[#C97D60]'
               }`}
               onClick={handleNextQuestion}
             >
@@ -149,12 +149,12 @@ const Quiz: React.FC = () => {
         </div>
         <div className='mb-8 flex flex-col items-center justify-center space-y-4 sm:flex-row sm:space-x-8 sm:space-y-0'>
           <button
-            className='rounded-md bg-blue-500 px-6 py-3 text-white hover:bg-blue-600'
+            className='rounded-md bg-[rgba(201,169,110,0.06)]0 px-6 py-3 text-white hover:bg-[#C97D60]'
             onClick={resetQuiz}
           >
             Try Again
           </button>
-          <div className='flex justify-center space-x-4 bg-white p-8 shadow-lg'>
+          <div className='flex justify-center space-x-4 bg-[#faf8f4] p-8 shadow-lg'>
             <div className='flex flex-col items-center'>
               <FacebookShareButton
                 url={'http://www.buzzwin.com/trivia'}
@@ -191,7 +191,7 @@ const Quiz: React.FC = () => {
       >
         <div className='mx-auto h-full max-w-3xl p-6'>
           <div className='flex h-full flex-col'>
-            <div className='h-full rounded-md bg-white p-8 shadow-lg'>
+            <div className='h-full rounded-md bg-[#faf8f4] p-8 shadow-lg'>
               <div className='container mx-auto px-4 py-8'>
                 {showSummary ? (
                   renderSummary()

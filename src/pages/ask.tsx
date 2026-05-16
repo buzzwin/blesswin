@@ -28,7 +28,7 @@ export default function AskBuzzwinPage(): JSX.Element {
       />
       <MainHeader title='Ask Buzzwin' useMobileSidebar />
 
-      <p className='mb-6 text-center text-sm text-gray-600 dark:text-gray-400'>
+      <p className='mb-6 text-center text-sm text-gray-600 dark:text-[#9E8B76]'>
         Desire → Plan with AI · Expectation → Simulate and prepare · Belief → Execute and adapt — your AI co-pilot.
       </p>
 

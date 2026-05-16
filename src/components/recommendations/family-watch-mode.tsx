@@ -131,15 +131,15 @@ export function FamilyWatchMode(): JSX.Element {
   };
 
   return (
-    <div className='rounded-lg border-2 border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800 md:p-6'>
+    <div className='rounded-lg border-2 border-gray-200 bg-[#faf8f4] p-4 dark:border-[#2a1d10] dark:bg-[#1c1510] md:p-6'>
       <div className='mb-4'>
         <div className='mb-2 flex items-center gap-2'>
-          <Film className='h-5 w-5 text-purple-600 dark:text-purple-400' />
+          <Film className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
           <h2 className='text-xl font-bold text-gray-900 dark:text-white'>
             Family Watch Mode 🎬
           </h2>
         </div>
-        <p className='text-sm text-gray-600 dark:text-gray-400'>
+        <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
           Curate by mood, not catalog. Get fewer, better recommendations.
         </p>
       </div>
@@ -156,8 +156,8 @@ export function FamilyWatchMode(): JSX.Element {
             className={cn(
               'relative overflow-hidden rounded-lg border-2 p-3 text-left transition-all',
               selectedMood === mood.id
-                ? `border-purple-500 bg-gradient-to-br ${mood.color} shadow-lg text-white`
-                : 'border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:hover:border-gray-600',
+                ? `border-[#C9A96E] bg-gradient-to-br ${mood.color} shadow-lg text-white`
+                : 'border-gray-200 bg-gray-50 hover:border-gray-300 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-gray-600',
               loading && 'opacity-50 cursor-not-allowed'
             )}
           >
@@ -175,7 +175,7 @@ export function FamilyWatchMode(): JSX.Element {
             </div>
             <div className={cn(
               'mt-1 text-xs',
-              selectedMood === mood.id ? 'text-white/90' : 'text-gray-600 dark:text-gray-400'
+              selectedMood === mood.id ? 'text-white/90' : 'text-gray-600 dark:text-[#9E8B76]'
             )}>
               {mood.description}
             </div>
@@ -209,7 +209,7 @@ export function FamilyWatchMode(): JSX.Element {
                   transition={{ delay: index * 0.1 }}
                   className='group cursor-pointer space-y-2'
                 >
-                  <div className='relative overflow-hidden rounded-lg bg-gray-200 dark:bg-gray-700'>
+                  <div className='relative overflow-hidden rounded-lg bg-gray-200 dark:bg-[#231a10]'>
                     <ImageWithFallback
                       src={getImageUrl(rec.posterPath)}
                       alt={rec.title}
@@ -228,13 +228,13 @@ export function FamilyWatchMode(): JSX.Element {
                     <h4 className='text-sm font-semibold text-gray-900 dark:text-white line-clamp-1'>
                       {rec.title}
                     </h4>
-                    <div className='mt-1 flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400'>
+                    <div className='mt-1 flex items-center gap-2 text-xs text-gray-600 dark:text-[#9E8B76]'>
                       {rec.mediaType === 'tv' ? (
-                        <span className='rounded bg-blue-100 px-1.5 py-0.5 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300'>
+                        <span className='rounded bg-[rgba(201,169,110,0.1)] px-1.5 py-0.5 text-[#7a5510] dark:bg-[rgba(201,169,110,0.08)]/30 dark:text-[#C4B5A0]'>
                           TV
                         </span>
                       ) : (
-                        <span className='rounded bg-purple-100 px-1.5 py-0.5 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+                        <span className='rounded bg-[rgba(201,169,110,0.1)] px-1.5 py-0.5 text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                           Movie
                         </span>
                       )}
@@ -242,7 +242,7 @@ export function FamilyWatchMode(): JSX.Element {
                         <span>{formatRuntime(rec)}</span>
                       )}
                       {rec.rating && (
-                        <span className='rounded bg-gray-100 px-1.5 py-0.5 dark:bg-gray-700'>
+                        <span className='rounded bg-gray-100 px-1.5 py-0.5 dark:bg-[#231a10]'>
                           {rec.rating}
                         </span>
                       )}
@@ -256,7 +256,7 @@ export function FamilyWatchMode(): JSX.Element {
       </AnimatePresence>
 
       {selectedMood && recommendations.length === 0 && !loading && (
-        <div className='py-8 text-center text-gray-500 dark:text-gray-400'>
+        <div className='py-8 text-center text-gray-500 dark:text-[#9E8B76]'>
           <p>No recommendations found. Try selecting a different mood.</p>
         </div>
       )}

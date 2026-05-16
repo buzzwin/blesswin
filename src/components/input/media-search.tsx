@@ -157,7 +157,7 @@ export function MediaSearch({
 
       {/* Search Results Dropdown */}
       {showResults && searchResults.length > 0 && (
-        <Card className='absolute top-full left-0 right-0 z-50 mt-2 max-h-96 overflow-y-auto border-amber-200 bg-white shadow-lg dark:border-amber-800 dark:bg-gray-800'>
+        <Card className='absolute top-full left-0 right-0 z-50 mt-2 max-h-96 overflow-y-auto border-amber-200 bg-white shadow-lg dark:border-amber-800 dark:bg-[#1c1510]'>
           <CardContent className='p-2'>
             <div className='space-y-2'>
               {searchResults.map((result) => (
@@ -175,7 +175,7 @@ export function MediaSearch({
                         className='h-16 w-12 rounded-md object-cover'
                       />
                     ) : (
-                      <div className='flex h-16 w-12 items-center justify-center rounded-md bg-gray-200 dark:bg-gray-700'>
+                      <div className='flex h-16 w-12 items-center justify-center rounded-md bg-gray-200 dark:bg-[#231a10]'>
                         {result.mediaType === 'movie' ? (
                           <Film className='h-6 w-6 text-gray-400' />
                         ) : (
@@ -191,7 +191,7 @@ export function MediaSearch({
                       <h3 className='break-words font-medium text-gray-900 dark:text-white'>
                         {result.title}
                       </h3>
-                      <span className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
+                      <span className='flex items-center gap-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                         {result.mediaType === 'movie' ? (
                           <Film className='h-3 w-3' />
                         ) : (
@@ -202,14 +202,14 @@ export function MediaSearch({
                     </div>
 
                     {result.releaseDate && (
-                      <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
+                      <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                         <Calendar className='h-3 w-3' />
                         {new Date(result.releaseDate).getFullYear()}
                       </div>
                     )}
 
                     {result.vote_average > 0 && (
-                      <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400'>
+                      <div className='flex items-center gap-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                         <Star className='h-3 w-3 fill-yellow-400 text-yellow-400' />
                         {result.vote_average.toFixed(1)}
                       </div>
@@ -224,9 +224,9 @@ export function MediaSearch({
 
       {/* No Results */}
       {showResults && searchQuery && !loading && searchResults.length === 0 && (
-        <Card className='absolute top-full left-0 right-0 z-50 mt-2 border-amber-200 bg-white shadow-lg dark:border-amber-800 dark:bg-gray-800'>
+        <Card className='absolute top-full left-0 right-0 z-50 mt-2 border-amber-200 bg-white shadow-lg dark:border-amber-800 dark:bg-[#1c1510]'>
           <CardContent className='p-4 text-center'>
-            <p className='text-gray-500 dark:text-gray-400'>
+            <p className='text-gray-500 dark:text-[#9E8B76]'>
               No movies or TV shows found for &quot;{searchQuery}&quot;
             </p>
           </CardContent>

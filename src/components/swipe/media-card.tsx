@@ -65,8 +65,8 @@ export function SwipeableMediaCard({
             priority={isActive}
           />
         ) : (
-          <div className='flex h-full w-full items-center justify-center bg-gray-200 dark:bg-gray-700'>
-            <div className='text-4xl text-gray-500 dark:text-gray-400'>🎬</div>
+          <div className='flex h-full w-full items-center justify-center bg-gray-200 dark:bg-[#231a10]'>
+            <div className='text-4xl text-gray-500 dark:text-[#9E8B76]'>🎬</div>
           </div>
         )}
         <div className='absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent' />
@@ -101,7 +101,7 @@ export function SwipeableMediaCard({
       <div className='absolute bottom-0 left-0 right-0 p-4 text-white'>
         {/* Poster and Title */}
         <div className='flex items-end gap-3'>
-          <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 shadow-lg dark:bg-gray-700'>
+          <div className='relative h-20 w-14 flex-shrink-0 overflow-hidden rounded-lg bg-gray-200 shadow-lg dark:bg-[#231a10]'>
             <img
               src={posterUrl}
               alt={media.title}
@@ -120,10 +120,10 @@ export function SwipeableMediaCard({
               }}
             />
             <div
-              className='absolute inset-0 items-center justify-center bg-gray-200 dark:bg-gray-700'
+              className='absolute inset-0 items-center justify-center bg-gray-200 dark:bg-[#231a10]'
               style={{ display: 'none' }}
             >
-              <div className='text-lg text-gray-500 dark:text-gray-400'>🎬</div>
+              <div className='text-lg text-gray-500 dark:text-[#9E8B76]'>🎬</div>
             </div>
           </div>
 
@@ -202,7 +202,7 @@ export function SwipeableMediaCard({
 
           <button
             onClick={() => setShowSocialShare(true)}
-            className='flex h-10 w-10 items-center justify-center rounded-lg bg-blue-500 text-white shadow-lg transition-all hover:scale-105 hover:bg-blue-600'
+            className='flex h-10 w-10 items-center justify-center rounded-lg bg-[rgba(201,169,110,0.06)]0 text-white shadow-lg transition-all hover:scale-105 hover:bg-[#C97D60]'
           >
             <Share2 className='h-5 w-5' />
           </button>
@@ -212,14 +212,14 @@ export function SwipeableMediaCard({
       {/* Social Share Modal */}
       {showSocialShare && (
         <div className='absolute inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm'>
-          <div className='mx-4 w-full max-w-sm rounded-2xl bg-white p-6 shadow-2xl dark:bg-gray-800'>
+          <div className='mx-4 w-full max-w-sm rounded-2xl bg-[#faf8f4] p-6 shadow-2xl dark:bg-[#1c1510]'>
             <div className='mb-4 flex items-center justify-between'>
               <h3 className='text-lg font-bold text-gray-900 dark:text-white'>
                 Share &ldquo;{media.title}&rdquo;
               </h3>
               <button
                 onClick={() => setShowSocialShare(false)}
-                className='rounded-full p-1 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+                className='rounded-full p-1 text-gray-500 hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
               >
                 <X className='h-5 w-5' />
               </button>

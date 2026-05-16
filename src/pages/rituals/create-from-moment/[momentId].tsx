@@ -267,12 +267,12 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
         <SEO title='Action Not Found - Buzzwin' />
         <MainHeader title='Create Ritual' />
         <MainContainer>
-          <div className='rounded-lg border border-gray-200 bg-white p-8 text-center dark:border-gray-700 dark:bg-gray-800'>
-            <p className='mb-4 text-gray-600 dark:text-gray-400'>
+          <div className='rounded-lg border border-gray-200 bg-[#faf8f4] p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+            <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>
               Action not found
             </p>
             <Link href='/'>
-              <a className='inline-flex items-center gap-2 text-purple-600 hover:text-purple-700 dark:text-purple-400'>
+              <a className='inline-flex items-center gap-2 text-[#C9A96E] hover:text-[#8a6520] dark:text-[#C9A96E]'>
                 <ArrowLeft className='h-4 w-4' />
                 Back to Home
               </a>
@@ -291,27 +291,27 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
         <div className='mx-auto max-w-2xl space-y-6'>
           {/* Back Button */}
           <Link href={`/impact/${moment.id}`}>
-            <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+            <a className='inline-flex items-center gap-2 text-sm text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
               <ArrowLeft className='h-4 w-4' />
               Back to Action
             </a>
           </Link>
 
           {/* Header */}
-          <div className='rounded-2xl border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-8 text-center dark:border-purple-800 dark:from-purple-900/20 dark:to-pink-900/20'>
+          <div className='rounded-2xl border-2 border-[rgba(201,169,110,0.3)] bg-gradient-to-br from-purple-50 to-pink-50 p-8 text-center dark:border-[rgba(201,169,110,0.25)] dark:from-purple-900/20 dark:to-pink-900/20'>
             {existingRitual ? (
               <>
                 <h1 className='mb-3 text-3xl font-bold text-gray-900 dark:text-white'>
                   Join This Ritual
                 </h1>
-                <p className='mb-4 text-lg text-gray-700 dark:text-gray-300'>
+                <p className='mb-4 text-lg text-gray-700 dark:text-[#C4B5A0]'>
                   {moment.fromDailyRitual 
                     ? 'This action came from a ritual. Join others who are doing this regularly!'
                     : `${existingRitual.joinedByUsers?.length || 0} ${existingRitual.joinedByUsers?.length === 1 ? 'person has' : 'people have'} already joined this ritual`
                   }
                 </p>
                 {existingRitual.joinedByUsers && existingRitual.joinedByUsers.length > 0 && (
-                  <div className='flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
+                  <div className='flex items-center justify-center gap-2 text-sm text-gray-600 dark:text-[#9E8B76]'>
                     <Users className='h-4 w-4' />
                     <span>Be part of a growing community doing this regularly</span>
                   </div>
@@ -322,7 +322,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 <h1 className='mb-3 text-3xl font-bold text-gray-900 dark:text-white'>
                   Make This Recurring
                 </h1>
-                <p className='text-lg text-gray-700 dark:text-gray-300'>
+                <p className='text-lg text-gray-700 dark:text-[#C4B5A0]'>
                   Create a ritual to do this regularly
                 </p>
               </>
@@ -330,7 +330,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
           </div>
 
           {/* Moment Preview */}
-          <div className='rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='rounded-lg border border-gray-200 bg-gray-50 p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             <div className='flex items-start gap-3'>
               <UserAvatar
                 src={moment.user.photoURL ?? ''}
@@ -338,7 +338,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 username={moment.user.username ?? 'user'}
               />
               <div className='flex-1'>
-                <p className='text-sm text-gray-700 dark:text-gray-300'>
+                <p className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                   {moment.text}
                 </p>
                 <div className='mt-3 flex flex-wrap gap-2'>
@@ -356,7 +356,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 </div>
                 <div className='mt-3 flex items-center gap-2'>
                   <span className='text-lg'>{effortLevelIcons[moment.effortLevel]}</span>
-                  <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+                  <span className='text-sm font-medium text-gray-600 dark:text-[#9E8B76]'>
                     {effortLevelLabels[moment.effortLevel]} Effort
                   </span>
                 </div>
@@ -375,7 +375,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
               <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>
                 {existingRitual.title}
               </h2>
-              <p className='mb-4 text-gray-700 dark:text-gray-300'>
+              <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
                 {existingRitual.description}
               </p>
               <div className='mb-4 flex flex-wrap gap-2'>
@@ -392,7 +392,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 ))}
               </div>
               <div className='flex items-center justify-between'>
-                <div className='flex items-center gap-4 text-sm text-gray-600 dark:text-gray-400'>
+                <div className='flex items-center gap-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
                   <span>{existingRitual.suggestedTimeOfDay}</span>
                   <span>•</span>
                   <span>{existingRitual.durationEstimate}</span>
@@ -407,10 +407,10 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
 
           {/* Form Fields - Only show if no existing ritual */}
           {!existingRitual && (
-          <div className='space-y-6 rounded-lg border border-gray-200 bg-white p-6 dark:border-gray-700 dark:bg-gray-800'>
+          <div className='space-y-6 rounded-lg border border-gray-200 bg-[#faf8f4] p-6 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
             {/* Title */}
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Ritual Title
               </label>
               <input
@@ -421,8 +421,8 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 className={cn(
                   'w-full rounded-lg border border-gray-300 bg-gray-50 p-3',
                   'text-gray-900 placeholder-gray-500',
-                  'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                  'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                  'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                   'transition-colors'
                 )}
                 maxLength={100}
@@ -432,7 +432,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
 
             {/* Description */}
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Description
               </label>
               <textarea
@@ -442,8 +442,8 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 className={cn(
                   'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
                   'text-gray-900 placeholder-gray-500',
-                  'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                  'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                  'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                   'transition-colors'
                 )}
                 rows={4}
@@ -453,7 +453,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
 
             {/* Time of Day */}
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Suggested Time
               </label>
               <div className='grid grid-cols-4 gap-2'>
@@ -464,8 +464,8 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                     className={cn(
                       'rounded-lg border px-3 py-2 text-sm font-medium transition-colors',
                       suggestedTimeOfDay === option.value
-                        ? 'border-purple-500 bg-purple-50 text-purple-700 dark:bg-purple-900/20 dark:text-purple-300'
-                        : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                        ? 'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                        : 'border-gray-300 bg-white text-gray-700 hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                     )}
                     disabled={creating}
                   >
@@ -477,7 +477,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
 
             {/* Duration */}
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Duration Estimate
               </label>
               <input
@@ -488,8 +488,8 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 className={cn(
                   'w-full rounded-lg border border-gray-300 bg-gray-50 p-3',
                   'text-gray-900 placeholder-gray-500',
-                  'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-                  'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+                  'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
                   'transition-colors'
                 )}
                 disabled={creating}
@@ -504,7 +504,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
               <a
                 className={cn(
                   'rounded-full px-6 py-3 text-sm font-semibold',
-                  'text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700',
+                  'text-gray-700 hover:bg-gray-100 dark:text-[#C4B5A0] dark:hover:bg-[#231a10]',
                   (creating || joining) && 'opacity-50 cursor-not-allowed'
                 )}
               >
@@ -547,7 +547,7 @@ export default function CreateRitualFromMomentPage(): JSX.Element {
                 onClick={handleSubmit}
                 disabled={!title.trim() || !description.trim() || creating}
                 className={cn(
-                  'rounded-full bg-purple-600 px-6 py-3 text-sm font-semibold text-white hover:bg-purple-700',
+                  'rounded-full bg-[#C97D60] px-6 py-3 text-sm font-semibold text-white hover:bg-[#B56540]',
                   'flex items-center gap-2',
                   (!title.trim() || !description.trim() || creating) && 'opacity-50 cursor-not-allowed'
                 )}

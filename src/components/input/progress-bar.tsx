@@ -16,7 +16,7 @@ const circleStyles = [
     viewBox: '0 0 20 20',
     stroke: {
       base: 'stroke-gray-200 dark:stroke-gray-700',
-      progress: 'stroke-emerald-500 dark:stroke-emerald-400',
+      progress: 'stroke-[#C97D60] dark:stroke-[#C9A96E]',
       warning: 'stroke-yellow-500 dark:stroke-yellow-400',
       error: 'stroke-red-500 dark:stroke-red-400'
     },
@@ -27,7 +27,7 @@ const circleStyles = [
     viewBox: '0 0 30 30',
     stroke: {
       base: 'stroke-gray-200 dark:stroke-gray-700',
-      progress: 'stroke-emerald-500 dark:stroke-emerald-400',
+      progress: 'stroke-[#C97D60] dark:stroke-[#C9A96E]',
       warning: 'stroke-yellow-500 dark:stroke-yellow-400',
       error: 'stroke-red-500 dark:stroke-red-400'
     },
@@ -61,7 +61,7 @@ export function ProgressBar({
         'rounded-full transition-all duration-200',
         isHittingCharLimit
           ? 'focus-visible:ring-red-500'
-          : 'focus-visible:ring-emerald-500'
+          : 'focus-visible:ring-[#C9A96E]'
       )}
       type='button'
     >
@@ -120,7 +120,7 @@ export function ProgressBar({
             ? 'text-red-500 dark:text-red-400'
             : isNearCharLimit
             ? 'text-yellow-500 dark:text-yellow-400'
-            : 'text-emerald-500 dark:text-emerald-400'
+            : 'text-[#C9A96E] dark:text-[#C9A96E]'
         )}
       >
         {remainingCharacters}

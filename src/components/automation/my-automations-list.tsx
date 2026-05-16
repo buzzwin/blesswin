@@ -142,9 +142,9 @@ export function MyAutomationsList(): JSX.Element {
 
   if (automations.length === 0) {
     return (
-      <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-gray-700 dark:bg-gray-900/50'>
+      <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-12 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]/50'>
         <Sparkles className='mx-auto mb-3 h-12 w-12 text-gray-400' />
-        <p className='mb-4 text-sm font-medium text-gray-600 dark:text-gray-400'>
+        <p className='mb-4 text-sm font-medium text-gray-600 dark:text-[#9E8B76]'>
           Your running automations will appear here — track progress, get reminders, and adapt as you go.
         </p>
         <BounceButton
@@ -168,7 +168,7 @@ export function MyAutomationsList(): JSX.Element {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: index * 0.05 }}
-            className='rounded-lg border-2 border-gray-200 bg-white p-5 dark:border-gray-700 dark:bg-gray-800'
+            className='rounded-lg border-2 border-gray-200 bg-[#faf8f4] p-5 dark:border-[#2a1d10] dark:bg-[#1c1510]'
           >
             <div className='mb-3 flex items-start justify-between'>
               <div className='flex-1'>
@@ -187,7 +187,7 @@ export function MyAutomationsList(): JSX.Element {
                       Active
                     </span>
                   ) : (
-                    <span className='flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-gray-700 dark:text-gray-400'>
+                    <span className='flex items-center gap-1 rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-600 dark:bg-[#231a10] dark:text-[#9E8B76]'>
                       <PowerOff className='h-3 w-3' />
                       Inactive
                     </span>
@@ -196,16 +196,16 @@ export function MyAutomationsList(): JSX.Element {
                 <h3 className='mb-1 text-lg font-semibold text-gray-900 dark:text-white'>
                   {automation.title}
                 </h3>
-                <p className='text-sm text-gray-600 dark:text-gray-400'>
+                <p className='text-sm text-gray-600 dark:text-[#9E8B76]'>
                   {automation.description}
                 </p>
               </div>
             </div>
 
             {/* Triggers & Actions */}
-            <div className='mb-4 grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-3 dark:bg-gray-900/50'>
+            <div className='mb-4 grid grid-cols-2 gap-4 rounded-lg bg-gray-50 p-3 dark:bg-[#1c1510]/50'>
               <div>
-                <p className='mb-1 text-xs font-medium text-gray-500 dark:text-gray-400'>
+                <p className='mb-1 text-xs font-medium text-gray-500 dark:text-[#9E8B76]'>
                   Triggers
                 </p>
                 <p className='text-sm font-semibold text-gray-900 dark:text-white'>
@@ -213,7 +213,7 @@ export function MyAutomationsList(): JSX.Element {
                 </p>
               </div>
               <div>
-                <p className='mb-1 text-xs font-medium text-gray-500 dark:text-gray-400'>
+                <p className='mb-1 text-xs font-medium text-gray-500 dark:text-[#9E8B76]'>
                   Actions
                 </p>
                 <p className='text-sm font-semibold text-gray-900 dark:text-white'>

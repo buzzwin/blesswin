@@ -14,7 +14,7 @@ export function WindDownRitual({
   onToggle
 }: WindDownRitualProps): JSX.Element {
   return (
-    <div className='rounded-lg border-2 border-purple-200 bg-gradient-to-br from-purple-50 to-pink-50 p-4 dark:border-purple-800 dark:from-purple-900/20 dark:to-pink-900/20 md:p-6'>
+    <div className='rounded-lg border-2 border-[rgba(201,169,110,0.3)] bg-gradient-to-br from-purple-50 to-pink-50 p-4 dark:border-[rgba(201,169,110,0.25)] dark:from-purple-900/20 dark:to-pink-900/20 md:p-6'>
       <div className='mb-4 flex items-start justify-between'>
         <div className='flex items-start gap-3'>
           <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-purple-500 to-pink-500'>
@@ -24,7 +24,7 @@ export function WindDownRitual({
             <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
               Wind-Down Ritual
             </h3>
-            <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+            <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
               Rest and connection, not just content. Curate by mood, not catalog.
             </p>
           </div>
@@ -64,15 +64,15 @@ export function WindDownRitual({
           transition={{ duration: 0.3 }}
           className='overflow-hidden'
         >
-          <div className='rounded-lg border border-purple-200 bg-white dark:border-purple-800 dark:bg-gray-800'>
+          <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-white dark:border-[rgba(201,169,110,0.25)] dark:bg-[#1c1510]'>
             <FamilyWatchMode />
           </div>
         </motion.div>
       )}
 
       {!isExpanded && (
-        <div className='rounded-lg border border-purple-200 bg-white/50 p-3 dark:border-purple-800 dark:bg-gray-800/50'>
-          <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400'>
+        <div className='rounded-lg border border-[rgba(201,169,110,0.3)] bg-white/50 p-3 dark:border-[rgba(201,169,110,0.25)] dark:bg-[#231a10]'>
+          <div className='flex items-center gap-2 text-sm text-gray-600 dark:text-[#9E8B76]'>
             <Film className='h-4 w-4' />
             <span>Tap to find something perfect for right now</span>
           </div>

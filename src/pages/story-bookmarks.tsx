@@ -17,9 +17,9 @@ import type { StoryBookmark, StoryCollection } from '@lib/types/story-bookmark';
 import type { ReactElement, ReactNode } from 'react';
 
 const categoryColors = {
-  community: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+  community: 'bg-[rgba(201,169,110,0.1)] text-[#5a3d08] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   environment: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
-  education: 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+  education: 'bg-[rgba(201,169,110,0.1)] text-[#7a5a18] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C4B5A0]',
   health: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
   'social-justice': 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200',
   innovation: 'bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200'
@@ -232,10 +232,10 @@ export default function StoryBookmarksPage(): JSX.Element {
           <div className='text-center'>
             <Bookmark className='mx-auto mb-4 h-12 w-12 text-gray-400' />
             <h2 className='mb-2 text-xl font-bold text-gray-900 dark:text-white'>Sign In Required</h2>
-            <p className='mb-4 text-gray-600 dark:text-gray-400'>Please sign in to view your bookmarked stories.</p>
+            <p className='mb-4 text-gray-600 dark:text-[#9E8B76]'>Please sign in to view your bookmarked stories.</p>
             <button
               onClick={() => void router.push('/login')}
-              className='rounded-lg bg-purple-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-purple-700'
+              className='rounded-lg bg-[#C97D60] px-6 py-3 font-semibold text-white transition-colors hover:bg-[#B56540]'
             >
               Sign In
             </button>
@@ -251,13 +251,13 @@ export default function StoryBookmarksPage(): JSX.Element {
       <MainHeader title='My Story Bookmarks' />
       
       {/* Tabs */}
-      <div className='mb-6 flex gap-4 border-b border-gray-200 dark:border-gray-700'>
+      <div className='mb-6 flex gap-4 border-b border-gray-200 dark:border-[#2a1d10]'>
         <button
           onClick={() => setActiveTab('bookmarks')}
           className={`pb-3 font-semibold transition-colors ${
             activeTab === 'bookmarks'
-              ? 'border-b-2 border-purple-600 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-              : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+              ? 'border-b-2 border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+              : 'text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-200'
           }`}
         >
           <span className='flex items-center gap-2'>
@@ -269,8 +269,8 @@ export default function StoryBookmarksPage(): JSX.Element {
           onClick={() => setActiveTab('collections')}
           className={`pb-3 font-semibold transition-colors ${
             activeTab === 'collections'
-              ? 'border-b-2 border-purple-600 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-              : 'text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-200'
+              ? 'border-b-2 border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+              : 'text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-200'
           }`}
         >
           <span className='flex items-center gap-2'>
@@ -304,7 +304,7 @@ export default function StoryBookmarksPage(): JSX.Element {
                 return (
                   <article
                     key={bookmark.id}
-                    className='rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800'
+                    className='rounded-xl border border-gray-200 bg-[#faf8f4] p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'
                   >
                     <div className='mb-3 flex items-start justify-between gap-3'>
                       <div className='flex-1'>
@@ -313,13 +313,13 @@ export default function StoryBookmarksPage(): JSX.Element {
                             {categoryLabel}
                           </span>
                           {bookmark.storyLocation && (
-                            <span className='flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400'>
+                            <span className='flex items-center gap-1 text-xs text-gray-600 dark:text-[#9E8B76]'>
                               <MapPin className='h-3 w-3' />
                               {bookmark.storyLocation}
                             </span>
                           )}
                           {formattedDate && (
-                            <span className='flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400'>
+                            <span className='flex items-center gap-1 text-xs text-gray-600 dark:text-[#9E8B76]'>
                               <Calendar className='h-3 w-3' />
                               {formattedDate}
                             </span>
@@ -343,19 +343,19 @@ export default function StoryBookmarksPage(): JSX.Element {
                           </h3>
                         )}
                         
-                        <p className='mb-2 text-sm leading-relaxed text-gray-700 dark:text-gray-300'>
+                        <p className='mb-2 text-sm leading-relaxed text-gray-700 dark:text-[#C4B5A0]'>
                           {bookmark.storyDescription}
                         </p>
                         
                         {bookmark.storySource && (
-                          <p className='mb-2 text-xs text-gray-500 dark:text-gray-400'>
+                          <p className='mb-2 text-xs text-gray-500 dark:text-[#9E8B76]'>
                             Source: <span className='font-medium'>{bookmark.storySource}</span>
                           </p>
                         )}
 
                         {bookmark.notes && (
-                          <div className='mt-3 rounded-lg border border-purple-200 bg-purple-50 p-3 dark:border-purple-800 dark:bg-purple-900/20'>
-                            <p className='text-sm text-purple-800 dark:text-purple-200'>
+                          <div className='mt-3 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-3 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
+                            <p className='text-sm text-[#7a5a18] dark:text-[#C4B5A0]'>
                               <span className='font-semibold'>Your notes:</span> {bookmark.notes}
                             </p>
                           </div>
@@ -364,7 +364,7 @@ export default function StoryBookmarksPage(): JSX.Element {
                       
                       <button
                         onClick={() => bookmark.id && void handleDeleteBookmark(bookmark.id)}
-                        className='rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-700 dark:hover:text-red-400'
+                        className='rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-600 dark:hover:bg-[#231a10] dark:hover:text-red-400'
                         title='Remove bookmark'
                       >
                         <X className='h-5 w-5' />
@@ -376,7 +376,7 @@ export default function StoryBookmarksPage(): JSX.Element {
                         href={bookmark.storyUrl}
                         target='_blank'
                         rel='noopener noreferrer'
-                        className='inline-flex items-center gap-2 text-sm font-medium text-purple-600 hover:text-purple-700 dark:text-purple-400 dark:hover:text-purple-300'
+                        className='inline-flex items-center gap-2 text-sm font-medium text-[#C9A96E] hover:text-[#E8B86D] dark:text-[#C9A96E] dark:hover:text-[#E8B86D]'
                       >
                         Read Full Story
                         <ExternalLink className='h-4 w-4' />
@@ -420,7 +420,7 @@ export default function StoryBookmarksPage(): JSX.Element {
               {collections.map((collection) => (
                 <div
                   key={collection.id}
-                  className='rounded-xl border border-gray-200 bg-white p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-gray-700 dark:bg-gray-800'
+                  className='rounded-xl border border-gray-200 bg-[#faf8f4] p-5 shadow-sm transition-shadow hover:shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'
                 >
                   <div className='mb-3 flex items-start justify-between gap-2'>
                     <div className='flex-1'>
@@ -428,12 +428,12 @@ export default function StoryBookmarksPage(): JSX.Element {
                         {collection.name}
                       </h3>
                       {collection.description && (
-                        <p className='mb-2 text-sm text-gray-600 dark:text-gray-400'>
+                        <p className='mb-2 text-sm text-gray-600 dark:text-[#9E8B76]'>
                           {collection.description}
                         </p>
                       )}
                       <div className='flex items-center gap-2'>
-                        <span className='text-xs text-gray-500 dark:text-gray-400'>
+                        <span className='text-xs text-gray-500 dark:text-[#9E8B76]'>
                           {collection.storyIds.length} {collection.storyIds.length === 1 ? 'story' : 'stories'}
                         </span>
                         {collection.isPublic && (
@@ -446,14 +446,14 @@ export default function StoryBookmarksPage(): JSX.Element {
                     <div className='flex gap-1'>
                       <button
                         onClick={() => openEditCollection(collection)}
-                        className='rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-purple-600 dark:hover:bg-gray-700 dark:hover:text-purple-400'
+                        className='rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-[#C9A96E] dark:hover:bg-[#231a10] dark:hover:text-purple-400'
                         title='Edit collection'
                       >
                         <Edit2 className='h-4 w-4' />
                       </button>
                       <button
                         onClick={() => collection.id && void handleDeleteCollection(collection.id)}
-                        className='rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-600 dark:hover:bg-gray-700 dark:hover:text-red-400'
+                        className='rounded-full p-2 text-gray-400 transition-colors hover:bg-gray-100 hover:text-red-600 dark:hover:bg-[#231a10] dark:hover:text-red-400'
                         title='Delete collection'
                       >
                         <Trash2 className='h-4 w-4' />
@@ -486,7 +486,7 @@ export default function StoryBookmarksPage(): JSX.Element {
           
           <div className='space-y-4'>
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Collection Name *
               </label>
               <input
@@ -494,12 +494,12 @@ export default function StoryBookmarksPage(): JSX.Element {
                 value={collectionName}
                 onChange={(e) => setCollectionName(e.target.value)}
                 placeholder='e.g., Environmental Wins'
-                className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+                className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
               />
             </div>
 
             <div>
-              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300'>
+              <label className='mb-2 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
                 Description (optional)
               </label>
               <textarea
@@ -507,7 +507,7 @@ export default function StoryBookmarksPage(): JSX.Element {
                 onChange={(e) => setCollectionDescription(e.target.value)}
                 placeholder='Add a description for this collection...'
                 rows={3}
-                className='w-full rounded-lg border border-gray-300 bg-white px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400'
+                className='w-full rounded-lg border border-gray-300 bg-[#faf8f4] px-4 py-2 text-gray-900 placeholder-gray-500 focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400'
               />
             </div>
 
@@ -517,9 +517,9 @@ export default function StoryBookmarksPage(): JSX.Element {
                 id='isPublic'
                 checked={isPublic}
                 onChange={(e) => setIsPublic(e.target.checked)}
-                className='h-4 w-4 rounded border-gray-300 text-purple-600 focus:ring-purple-500'
+                className='h-4 w-4 rounded border-gray-300 text-[#C9A96E] focus:ring-[#C9A96E]/50'
               />
-              <label htmlFor='isPublic' className='text-sm text-gray-700 dark:text-gray-300'>
+              <label htmlFor='isPublic' className='text-sm text-gray-700 dark:text-[#C4B5A0]'>
                 Make this collection public
               </label>
             </div>
@@ -540,7 +540,7 @@ export default function StoryBookmarksPage(): JSX.Element {
                 setCollectionDescription('');
                 setIsPublic(false);
               }}
-              className='rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800'
+              className='rounded-lg border border-gray-300 px-6 py-3 font-semibold text-gray-700 transition-colors hover:bg-gray-50 dark:border-[#2a1d10] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
             >
               Cancel
             </button>

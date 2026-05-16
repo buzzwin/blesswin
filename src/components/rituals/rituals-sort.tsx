@@ -27,8 +27,8 @@ export function RitualsSort({
 }: RitualsSortProps): JSX.Element {
   return (
     <div className={cn('flex items-center gap-2', className)}>
-      <ArrowUpDown className='h-4 w-4 text-gray-500 dark:text-gray-400' />
-      <span className='text-xs font-medium text-gray-600 dark:text-gray-400 md:text-sm'>
+      <ArrowUpDown className='h-4 w-4 text-gray-500 dark:text-[#9E8B76]' />
+      <span className='text-xs font-medium text-gray-600 dark:text-[#9E8B76] md:text-sm'>
         Sort:
       </span>
       <div className='flex flex-wrap items-center gap-1.5'>
@@ -42,10 +42,10 @@ export function RitualsSort({
               onClick={() => onSortChange(option.id)}
               className={cn(
                 'inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium transition-colors',
-                'focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-1',
+                'focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50 focus:ring-offset-1',
                 isActive
-                  ? 'border-purple-600 bg-purple-600 text-white dark:border-purple-400 dark:bg-purple-400 dark:text-gray-900'
-                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:border-gray-600 dark:hover:bg-gray-700'
+                  ? 'border-[#C9A96E] bg-[#C97D60] text-white dark:border-[rgba(201,169,110,0.45)] dark:bg-[#C97D60] dark:text-[#1a1108]'
+                  : 'border-gray-200 bg-white text-gray-700 hover:border-gray-300 hover:bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:border-gray-600 dark:hover:bg-[#231a10]'
               )}
             >
               <Icon className='h-3 w-3' />

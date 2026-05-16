@@ -80,12 +80,12 @@ export function AISuggestionsSection(): JSX.Element {
       <div className='mx-auto w-full max-w-6xl px-6'>
         <div className='mb-12 text-center'>
           <div className='mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30'>
-            <Brain className='h-8 w-8 text-purple-600 dark:text-purple-400' />
+            <Brain className='h-8 w-8 text-[#C9A96E] dark:text-[#C9A96E]' />
           </div>
           <h2 className='mb-4 text-3xl font-bold tracking-tight text-gray-900 dark:text-white md:text-4xl'>
             Get AI Suggestions
           </h2>
-          <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-gray-300'>
+          <p className='mx-auto max-w-2xl text-lg leading-relaxed text-gray-600 dark:text-[#C4B5A0]'>
             Get personalized ritual suggestions powered by AI. Discover new ways to improve your life and build meaningful habits.
           </p>
         </div>
@@ -100,7 +100,7 @@ export function AISuggestionsSection(): JSX.Element {
               {suggestions.map((suggestion, index) => (
                 <div
                   key={index}
-                  className='group rounded-xl border-2 border-gray-200 bg-white p-6 transition-all duration-300 hover:scale-105 hover:border-purple-500 hover:shadow-xl dark:border-gray-700 dark:bg-gray-800'
+                  className='group rounded-xl border-2 border-gray-200 bg-[#faf8f4] p-6 transition-all duration-300 hover:scale-105 hover:border-[#C9A96E] hover:shadow-xl dark:border-[#2a1d10] dark:bg-[#1c1510]'
                 >
                   <div className='mb-4 flex items-start gap-3'>
                     <div className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-purple-500 to-pink-600 shadow-lg'>
@@ -111,14 +111,14 @@ export function AISuggestionsSection(): JSX.Element {
                         {suggestion.title}
                       </h3>
                       {suggestion.category && (
-                        <span className='inline-block rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'>
+                        <span className='inline-block rounded-full bg-[rgba(201,169,110,0.1)] px-3 py-1 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                           {suggestion.category}
                         </span>
                       )}
                     </div>
                   </div>
 
-                  <p className='mb-4 text-gray-700 dark:text-gray-300'>
+                  <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
                     {suggestion.description}
                   </p>
 
@@ -149,7 +149,7 @@ export function AISuggestionsSection(): JSX.Element {
             <div className='mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row'>
               <button
                 onClick={() => void fetchAISuggestions()}
-                className='inline-flex items-center gap-2 rounded-full border-2 border-purple-600 bg-white px-6 py-3 text-base font-semibold text-purple-600 transition-colors hover:bg-purple-50 dark:border-purple-400 dark:bg-gray-800 dark:text-purple-400 dark:hover:bg-purple-900/20'
+                className='inline-flex items-center gap-2 rounded-full border-2 border-[#C9A96E] bg-[#faf8f4] px-6 py-3 text-base font-semibold text-[#C9A96E] transition-colors hover:bg-[rgba(201,169,110,0.06)] dark:border-[rgba(201,169,110,0.45)] dark:bg-[#1c1510] dark:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
               >
                 <Sparkles className='h-4 w-4' />
                 Get More Suggestions

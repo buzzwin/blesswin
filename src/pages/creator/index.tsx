@@ -149,11 +149,11 @@ export default function CreatorConsolePage(): JSX.Element {
       />
       <MainHeader title='Creator Console' useMobileSidebar />
 
-      <p className='mb-4 text-sm text-gray-600 dark:text-gray-400'>
+      <p className='mb-4 text-sm text-gray-600 dark:text-[#9E8B76]'>
         Agents draft proposals. You approve, edit, or reject before anything ships.
       </p>
 
-      <section className='mb-6 rounded-xl border border-gray-200 p-4 dark:border-gray-800'>
+      <section className='mb-6 rounded-xl border border-gray-200 p-4 dark:border-[#2a1d10]'>
         <h2 className='mb-2 text-sm font-semibold text-gray-900 dark:text-white'>
           Run agent
         </h2>
@@ -161,7 +161,7 @@ export default function CreatorConsolePage(): JSX.Element {
           <select
             value={agent}
             onChange={(e) => setAgent(e.target.value as CreatorAgent)}
-            className='rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900'
+            className='rounded-md border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510]'
           >
             {AGENT_OPTIONS.map((option) => (
               <option key={option} value={option}>
@@ -173,7 +173,7 @@ export default function CreatorConsolePage(): JSX.Element {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder='Topic or brief input'
-            className='rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900'
+            className='rounded-md border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510]'
           />
           <button
             type='button'
@@ -195,7 +195,7 @@ export default function CreatorConsolePage(): JSX.Element {
             className={`rounded-full px-3 py-1 text-xs font-medium ${
               statusFilter === value
                 ? 'bg-gray-900 text-white dark:bg-gray-100 dark:text-black'
-                : 'bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300'
+                : 'bg-gray-100 text-gray-700 dark:bg-[#1c1510] dark:text-[#C4B5A0]'
             }`}
           >
             {value}
@@ -204,7 +204,7 @@ export default function CreatorConsolePage(): JSX.Element {
       </div>
 
       <div className='grid gap-4 lg:grid-cols-[320px,1fr]'>
-        <aside className='max-h-[70vh] overflow-y-auto rounded-xl border border-gray-200 p-2 dark:border-gray-800'>
+        <aside className='max-h-[70vh] overflow-y-auto rounded-xl border border-gray-200 p-2 dark:border-[#2a1d10]'>
           {loading && !proposals.length ? (
             <p className='p-2 text-sm text-gray-500'>Loading…</p>
           ) : proposals.length ? (
@@ -215,7 +215,7 @@ export default function CreatorConsolePage(): JSX.Element {
                 onClick={() => setSelectedId(proposal.id || null)}
                 className={`mb-1 w-full rounded-lg border p-2 text-left ${
                   selectedId === proposal.id
-                    ? 'border-blue-500 bg-blue-50 dark:border-blue-400 dark:bg-blue-950/30'
+                    ? 'border-blue-500 bg-[rgba(201,169,110,0.06)] dark:border-[rgba(201,169,110,0.45)] dark:bg-[rgba(201,169,110,0.08)]/30'
                     : 'border-transparent hover:border-gray-200 dark:hover:border-gray-700'
                 }`}
               >
@@ -232,20 +232,20 @@ export default function CreatorConsolePage(): JSX.Element {
           )}
         </aside>
 
-        <section className='rounded-xl border border-gray-200 p-4 dark:border-gray-800'>
+        <section className='rounded-xl border border-gray-200 p-4 dark:border-[#2a1d10]'>
           {selected ? (
             <>
               <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
                 {selected.title}
               </h3>
-              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 {selected.summary}
               </p>
 
               <div className='mt-4 grid gap-3'>
                 <div>
                   <p className='mb-1 text-xs font-semibold uppercase tracking-wide text-gray-500'>Payload</p>
-                  <pre className='max-h-64 overflow-auto rounded-lg bg-gray-100 p-3 text-xs dark:bg-gray-900'>
+                  <pre className='max-h-64 overflow-auto rounded-lg bg-gray-100 p-3 text-xs dark:bg-[#1c1510]'>
                     {JSON.stringify(selected.payload, null, 2)}
                   </pre>
                 </div>
@@ -258,7 +258,7 @@ export default function CreatorConsolePage(): JSX.Element {
                     rows={3}
                     value={reviewNotes}
                     onChange={(e) => setReviewNotes(e.target.value)}
-                    className='w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900'
+                    className='w-full rounded-md border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510]'
                     placeholder='Decision context or notes'
                   />
                 </div>
@@ -271,7 +271,7 @@ export default function CreatorConsolePage(): JSX.Element {
                     rows={6}
                     value={editedContent}
                     onChange={(e) => setEditedContent(e.target.value)}
-                    className='w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm dark:border-gray-700 dark:bg-gray-900'
+                    className='w-full rounded-md border border-gray-300 bg-[#faf8f4] px-3 py-2 text-sm dark:border-[#2a1d10] dark:bg-[#1c1510]'
                     placeholder='Manual edits before approval'
                   />
                 </div>
@@ -288,7 +288,7 @@ export default function CreatorConsolePage(): JSX.Element {
                 <button
                   type='button'
                   onClick={() => void reviewProposal('edited')}
-                  className='rounded-md bg-blue-600 px-3 py-2 text-xs font-semibold text-white'
+                  className='rounded-md bg-[#C97D60] px-3 py-2 text-xs font-semibold text-white'
                 >
                   Save as edited
                 </button>

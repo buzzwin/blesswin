@@ -39,15 +39,15 @@ module.exports = {
         'accent-orange': 'rgb(var(--accent-orange) / <alpha-value>)',
         'accent-green': 'rgb(var(--accent-green) / <alpha-value>)',
         'accent-red': '#F4212E',
-        'dark-primary': '#E7E9EA',
-        'dark-secondary': '#71767B',
+        'dark-primary': '#F5EFE6',
+        'dark-secondary': '#9E8B76',
         'dark-background': 'rgb(var(--dark-background) / <alpha-value>)',
-        'dark-surface': '#0A0A0A', // Slightly lighter than black for cards/surfaces
-        'dark-elevated': '#141414', // For elevated surfaces
-        'light-primary': '#0F1419',
-        'light-secondary': '#536471',
-        'dark-border': '#1F1F1F', // Darker border for better contrast on black
-        'light-border': '#EFF3F4',
+        'dark-surface': '#1c1510',
+        'dark-elevated': '#231a10',
+        'light-primary': '#1a1108',
+        'light-secondary': '#6b5744',
+        'dark-border': '#2a1d10',
+        'light-border': '#e8d8c4',
         'dark-line-reply': '#333639',
         'light-line-reply': '#CFD9DE',
         'twitter-icon': '#D6D9DB',

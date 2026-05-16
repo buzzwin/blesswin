@@ -174,7 +174,7 @@ export default function RitualCardPage(): JSX.Element {
       <MainContainer>
         <MainHeader title='Card Not Found' />
         <div className='text-center py-12'>
-          <p className='text-gray-600 dark:text-gray-400'>This card could not be found.</p>
+          <p className='text-gray-600 dark:text-[#9E8B76]'>This card could not be found.</p>
         </div>
       </MainContainer>
     );

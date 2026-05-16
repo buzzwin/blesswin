@@ -19,7 +19,7 @@ export default function DisclaimerPage(): JSX.Element {
       <SectionShell className='py-12'>
         <div className='mx-auto max-w-4xl px-6'>
           <Link href='/'>
-            <a className='mb-8 inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900 dark:text-gray-400 dark:hover:text-white'>
+            <a className='mb-8 inline-flex items-center gap-2 text-gray-600 transition-colors hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-white'>
               <ArrowLeft className='h-4 w-4' />
               <span className='font-medium'>Back</span>
             </a>
@@ -45,7 +45,7 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 text-2xl font-bold text-gray-900 dark:text-white'>
               Medical Disclaimer
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               <strong>
                 Buzzwin is NOT intended to provide medical advice, diagnosis, or
                 treatment.
@@ -55,14 +55,14 @@ export default function DisclaimerPage(): JSX.Element {
               intended to be a substitute for professional medical advice,
               diagnosis, or treatment.
             </p>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               Always seek the advice of your physician or other qualified health
               provider with any questions you may have regarding a medical
               condition. Never disregard professional medical advice or delay in
               seeking it because of something you have read or learned on this
               platform.
             </p>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               The wellness guidance, yoga poses, meditation techniques,
               mindfulness practices, and other content provided by our AI agents
               are general in nature and may not be appropriate for your specific
@@ -72,13 +72,13 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 mt-8 text-2xl font-bold text-gray-900 dark:text-white'>
               Not a Substitute for Professional Care
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               If you have or suspect you may have a medical or psychological
               condition, please consult with a qualified healthcare professional
               before starting any new wellness practice, exercise program, or
               making changes to your health routine.
             </p>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               The information provided on Buzzwin should not be used for
               diagnosing or treating a health problem or disease, or prescribing
               any medication or other treatment.
@@ -87,7 +87,7 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 mt-8 text-2xl font-bold text-gray-900 dark:text-white'>
               Limitation of Liability
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               <strong>
                 The creators, operators, and contributors to Buzzwin are not
                 responsible for any harm, injury, loss, or damage that may
@@ -95,10 +95,10 @@ export default function DisclaimerPage(): JSX.Element {
                 information or guidance provided herein.
               </strong>
             </p>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               By using Buzzwin, you acknowledge and agree that:
             </p>
-            <ul className='mb-4 ml-6 list-disc text-gray-700 dark:text-gray-300'>
+            <ul className='mb-4 ml-6 list-disc text-gray-700 dark:text-[#C4B5A0]'>
               <li>You use the platform at your own risk</li>
               <li>
                 The platform is provided &quot;as is&quot; without warranties of
@@ -121,7 +121,7 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 mt-8 text-2xl font-bold text-gray-900 dark:text-white'>
               Emergency Situations
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               If you think you may have a medical emergency, call your doctor or
               emergency services (911 in the United States) immediately. Buzzwin
               is not equipped to handle medical emergencies.
@@ -130,7 +130,7 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 mt-8 text-2xl font-bold text-gray-900 dark:text-white'>
               Assumption of Risk
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               By using Buzzwin, you acknowledge that you understand and accept
               the risks associated with wellness practices, including but not
               limited to yoga, meditation, and mindfulness exercises. You agree
@@ -142,7 +142,7 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 mt-8 text-2xl font-bold text-gray-900 dark:text-white'>
               No Endorsement
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               Reference to any specific product, service, or practice does not
               constitute an endorsement or recommendation by Buzzwin. Any views
               or opinions expressed are those of the AI agents and do not
@@ -152,7 +152,7 @@ export default function DisclaimerPage(): JSX.Element {
             <h2 className='mb-4 mt-8 text-2xl font-bold text-gray-900 dark:text-white'>
               Changes to Disclaimer
             </h2>
-            <p className='mb-4 text-gray-700 dark:text-gray-300'>
+            <p className='mb-4 text-gray-700 dark:text-[#C4B5A0]'>
               We reserve the right to modify this disclaimer at any time. Your
               continued use of Buzzwin after any changes constitutes your
               acceptance of the modified disclaimer.
@@ -167,7 +167,7 @@ export default function DisclaimerPage(): JSX.Element {
               </p>
             </div>
 
-            <div className='mt-8 text-sm text-gray-500 dark:text-gray-400'>
+            <div className='mt-8 text-sm text-gray-500 dark:text-[#9E8B76]'>
               <p>
                 Last updated:{' '}
                 {new Date().toLocaleDateString('en-US', {

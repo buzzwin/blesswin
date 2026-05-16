@@ -67,8 +67,8 @@ export function KarmaLevelSystem({
     return (
       <div className={cn('flex items-center gap-2', className)}>
         <div className='flex items-center gap-1.5 rounded-full bg-gradient-to-r from-purple-100 to-pink-100 px-3 py-1.5 dark:from-purple-900/30 dark:to-pink-900/30'>
-          <Sparkles className='h-4 w-4 text-purple-600 dark:text-purple-400' />
-          <span className='text-sm font-bold text-purple-700 dark:text-purple-300'>
+          <Sparkles className='h-4 w-4 text-[#C9A96E] dark:text-[#C9A96E]' />
+          <span className='text-sm font-bold text-[#8a6520] dark:text-[#C9A96E]'>
             Level {currentLevel}
           </span>
         </div>
@@ -95,19 +95,19 @@ export function KarmaLevelSystem({
       <div className='flex items-center justify-between'>
         <div>
           <div className='mb-1 flex items-center gap-2'>
-            <Sparkles className='h-5 w-5 text-purple-600 dark:text-purple-400' />
-            <span className='text-sm font-medium text-gray-600 dark:text-gray-400'>Level</span>
+            <Sparkles className='h-5 w-5 text-[#C9A96E] dark:text-[#C9A96E]' />
+            <span className='text-sm font-medium text-gray-600 dark:text-[#9E8B76]'>Level</span>
           </div>
           <div className='flex items-baseline gap-2'>
             <span className={cn(
               'text-4xl font-bold transition-all',
               isAnimating && 'scale-110',
-              'text-purple-700 dark:text-purple-300'
+              'text-[#8a6520] dark:text-[#C9A96E]'
             )}>
               {currentLevel}
             </span>
             {currentLevel < 50 && (
-              <span className='text-sm text-gray-500 dark:text-gray-400'>
+              <span className='text-sm text-gray-500 dark:text-[#9E8B76]'>
                 / {currentLevel + 1}
               </span>
             )}
@@ -119,14 +119,14 @@ export function KarmaLevelSystem({
       {/* Progress Bar */}
       <div className='space-y-2'>
         <div className='flex items-center justify-between text-xs'>
-          <span className='text-gray-600 dark:text-gray-400'>
+          <span className='text-gray-600 dark:text-[#9E8B76]'>
             {karmaRemaining > 0 ? `${karmaRemaining} karma to next level` : 'Max level reached!'}
           </span>
           <span className='font-semibold text-gray-900 dark:text-white'>
             {Math.round(progress)}%
           </span>
         </div>
-        <div className='relative h-4 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700'>
+        <div className='relative h-4 overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10]'>
           <div
             className={cn(
               'h-full bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 transition-all duration-500',

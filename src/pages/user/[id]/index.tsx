@@ -20,7 +20,7 @@ export default function UserImpactMomentsPage(): JSX.Element {
       {id ? (
         <UserImpactMoments userId={id} onRipple={handleRipple} />
       ) : (
-        <div className='mt-5 text-center text-gray-500 dark:text-gray-400'>
+        <div className='mt-5 text-center text-gray-500 dark:text-[#9E8B76]'>
           Loading user...
         </div>
       )}

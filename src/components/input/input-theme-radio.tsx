@@ -21,7 +21,7 @@ type InputThemeData = Record<
 
 const inputThemeData: Readonly<InputThemeData> = {
   light: {
-    textColor: 'text-gray-900',
+    textColor: 'text-[#1a1108] dark:text-[#F5EFE6]',
     backgroundColor: 'bg-white',
     ringColor: 'ring-gray-200',
     hoverRingColor: 'hover:ring-gray-300',
@@ -70,7 +70,7 @@ export function InputThemeRadio({
         ringColor,
         hoverRingColor,
         activeRingColor,
-        isChecked && 'ring-2 ring-emerald-500'
+        isChecked && 'ring-2 ring-[#C9A96E]'
       )}
       htmlFor={type}
     >
@@ -81,7 +81,7 @@ export function InputThemeRadio({
           'ring-1',
           ringColor,
           'group-hover:ring-2',
-          isChecked && 'ring-2 ring-emerald-500'
+          isChecked && 'ring-2 ring-[#C9A96E]'
         )}
       >
         <input
@@ -99,7 +99,7 @@ export function InputThemeRadio({
             'transition-all duration-200',
             'ring-1',
             ringColor,
-            isChecked && 'bg-emerald-500 ring-0'
+            isChecked && 'bg-[#C97D60] ring-0'
           )}
         >
           <HeroIcon

@@ -39,7 +39,7 @@ export default function WatchlistPage(): JSX.Element {
               {watchlist?.name ?? 'Watchlist'}
             </h2>
             {watchlist?.isPublic && (
-              <span className='inline-flex items-center gap-1 rounded-full bg-emerald-100 px-3 py-1 text-sm font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'>
+              <span className='inline-flex items-center gap-1 rounded-full bg-[rgba(201,169,110,0.1)] px-3 py-1 text-sm font-medium text-[#5a3d08] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                 <HeroIcon className='h-4 w-4' iconName='GlobeAltIcon' />
                 Public
               </span>
@@ -48,7 +48,7 @@ export default function WatchlistPage(): JSX.Element {
           {watchlist && (
             <button
               onClick={() => setIsShareOpen(true)}
-              className='flex items-center gap-2 rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600'
+              className='flex items-center gap-2 rounded-lg bg-[rgba(201,169,110,0.06)]0 px-4 py-2 text-white hover:bg-[#C97D60]'
             >
               <HeroIcon className='h-5 w-5' iconName='ShareIcon' />
               Share Watchlist

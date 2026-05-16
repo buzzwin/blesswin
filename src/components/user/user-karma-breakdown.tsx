@@ -33,16 +33,16 @@ const categoryConfig = {
   engagement: {
     label: 'Engagement',
     icon: MessageCircle,
-    color: 'bg-blue-500',
-    bgColor: 'bg-blue-100 dark:bg-blue-900/20',
-    textColor: 'text-blue-700 dark:text-blue-300'
+    color: 'bg-[rgba(201,169,110,0.06)]0',
+    bgColor: 'bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]/20',
+    textColor: 'text-[#7a5510] dark:text-[#C4B5A0]'
   },
   chains: {
     label: 'Chains',
     icon: Link2,
-    color: 'bg-purple-500',
-    bgColor: 'bg-purple-100 dark:bg-purple-900/20',
-    textColor: 'text-purple-700 dark:text-purple-300'
+    color: 'bg-[#C97D60]',
+    bgColor: 'bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]',
+    textColor: 'text-[#8a6520] dark:text-[#C9A96E]'
   },
   milestones: {
     label: 'Milestones',
@@ -98,7 +98,7 @@ export function UserKarmaBreakdown({
   return (
     <div className={cn('space-y-3', className)}>
       {showLabels && (
-        <h3 className='text-lg font-semibold text-gray-900 dark:text-white'>
+        <h3 className='text-lg font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
           Karma Breakdown
         </h3>
       )}
@@ -115,20 +115,20 @@ export function UserKarmaBreakdown({
                   <Icon
                     className={cn('h-4 w-4', config.textColor)}
                   />
-                  <span className='text-sm font-medium text-gray-700 dark:text-gray-300'>
+                  <span className='text-sm font-medium text-[#3d2c1a] dark:text-[#C4B5A0]'>
                     {config.label}
                   </span>
                 </div>
                 <div className='flex items-center gap-2'>
-                  <span className='text-sm font-semibold text-gray-900 dark:text-white'>
+                  <span className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
                     {value.toLocaleString()}
                   </span>
-                  <span className='text-xs text-gray-500 dark:text-gray-400'>
+                  <span className='text-xs text-[#9E8B76] dark:text-[#6b5744]'>
                     {percentage}%
                   </span>
                 </div>
               </div>
-              <div className='h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700'>
+              <div className='h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-[#231a10]'>
                 <div
                   className={cn(
                     'h-full transition-all duration-500',

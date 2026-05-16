@@ -91,7 +91,7 @@ export function CommentInput({
   const isValid = text.trim().length > 0 && text.length <= inputLimit;
 
   return (
-    <div className='flex gap-3 border-b border-gray-200 p-4 dark:border-gray-700'>
+    <div className='flex gap-3 border-b border-gray-200 p-4 dark:border-[#2a1d10]'>
       <UserAvatar
         src={user?.photoURL ?? ''}
         alt={user?.name ?? 'User'}
@@ -107,8 +107,8 @@ export function CommentInput({
           className={cn(
             'w-full resize-none rounded-lg border border-gray-300 bg-gray-50 p-3',
             'text-gray-900 placeholder-gray-500',
-            'dark:border-gray-600 dark:bg-gray-900 dark:text-white dark:placeholder-gray-400',
-            'focus:border-purple-500 focus:outline-none focus:ring-2 focus:ring-purple-500/20',
+            'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder-gray-400',
+            'focus:border-[#C9A96E] focus:outline-none focus:ring-2 focus:ring-[#C9A96E]/50/20',
             'transition-colors'
           )}
           rows={1}
@@ -116,14 +116,14 @@ export function CommentInput({
           disabled={loading}
         />
         <div className='mt-2 flex items-center justify-between'>
-          <span className='text-xs text-gray-500 dark:text-gray-400'>
+          <span className='text-xs text-gray-500 dark:text-[#9E8B76]'>
             {text.length} / {inputLimit}
           </span>
           <button
             onClick={handleSubmit}
             disabled={!isValid || loading}
             className={cn(
-              'rounded-full bg-purple-600 px-4 py-1.5 text-sm font-semibold text-white hover:bg-purple-700',
+              'rounded-full bg-[#C97D60] px-4 py-1.5 text-sm font-semibold text-white hover:bg-[#B56540]',
               'disabled:opacity-50 disabled:cursor-not-allowed',
               'transition-colors'
             )}

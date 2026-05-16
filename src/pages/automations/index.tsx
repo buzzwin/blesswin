@@ -300,9 +300,9 @@ export default function AutomationsPage(): JSX.Element {
           aria-busy='true'
           aria-label='Loading automations'
         >
-          <div className='h-28 rounded-[28px] bg-gray-200 dark:bg-gray-800' />
-          <div className='h-12 w-full rounded-lg bg-gray-200 dark:bg-gray-800' />
-          <div className='h-64 w-full rounded-lg bg-gray-200 dark:bg-gray-800' />
+          <div className='h-28 rounded-[28px] bg-gray-200 dark:bg-[#1c1510]' />
+          <div className='h-12 w-full rounded-lg bg-gray-200 dark:bg-[#1c1510]' />
+          <div className='h-64 w-full rounded-lg bg-gray-200 dark:bg-[#1c1510]' />
         </div>
       </MainContainer>
     );
@@ -317,19 +317,19 @@ export default function AutomationsPage(): JSX.Element {
       <MainHeader title='Automations' useMobileSidebar />
 
       {/* Playful intro */}
-      <div className='mb-6 rounded-[28px] border-2 border-amber-100 bg-gradient-to-br from-amber-50 via-white to-sky-50 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.08)] dark:border-gray-800 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 md:p-6'>
+      <div className='mb-6 rounded-[28px] border-2 border-amber-100 bg-gradient-to-br from-amber-50 via-white to-sky-50 p-5 shadow-[0_18px_40px_rgba(15,23,42,0.08)] dark:border-[#2a1d10] dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 md:p-6'>
         <div className='flex flex-wrap items-center gap-3'>
-          <span className='rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-600 shadow-sm dark:bg-gray-800 dark:text-gray-300'>
+          <span className='rounded-full bg-[#faf8f4] px-3 py-1 text-xs font-semibold uppercase tracking-[0.2em] text-gray-600 shadow-sm dark:bg-[#1c1510] dark:text-[#C4B5A0]'>
             Ritual Playground
           </span>
-          <span className='text-xs font-medium text-gray-500 dark:text-gray-400'>
+          <span className='text-xs font-medium text-gray-500 dark:text-[#9E8B76]'>
             Desire → Plan · Expectation → Simulate · Belief → Execute
           </span>
         </div>
         <h2 className='mt-4 text-2xl font-extrabold text-gray-900 dark:text-white md:text-3xl'>
           Make rituals feel light, automatic, and fun.
         </h2>
-        <p className='mt-2 text-sm text-gray-600 dark:text-gray-400 md:text-base'>
+        <p className='mt-2 text-sm text-gray-600 dark:text-[#9E8B76] md:text-base'>
           Your agent suggests small wins, adapts to your day, and nudges only when it helps.
         </p>
       </div>
@@ -337,7 +337,7 @@ export default function AutomationsPage(): JSX.Element {
       {/* Tabs — horizontal scroll on narrow screens to avoid layout break */}
       <div
         className={cn(
-          'mb-6 flex flex-nowrap gap-1 border-b border-gray-200 dark:border-gray-700 sm:gap-2',
+          'mb-6 flex flex-nowrap gap-1 border-b border-gray-200 dark:border-[#2a1d10] sm:gap-2',
           'overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
         )}
       >
@@ -347,8 +347,8 @@ export default function AutomationsPage(): JSX.Element {
           className={cn(
             'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'create'
-              ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+              ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
           )}
         >
           <div className='flex items-center gap-2'>
@@ -362,8 +362,8 @@ export default function AutomationsPage(): JSX.Element {
           className={cn(
             'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'registry'
-              ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+              ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
           )}
         >
           <div className='flex items-center gap-2'>
@@ -377,8 +377,8 @@ export default function AutomationsPage(): JSX.Element {
           className={cn(
             'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'my-automations'
-              ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+              ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
           )}
         >
           <div className='flex items-center gap-2'>
@@ -392,8 +392,8 @@ export default function AutomationsPage(): JSX.Element {
           className={cn(
             'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors whitespace-nowrap sm:px-4',
             activeTab === 'rituals'
-              ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+              ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+              : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
           )}
         >
           <div className='flex items-center gap-2'>
@@ -411,7 +411,7 @@ export default function AutomationsPage(): JSX.Element {
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
                 Plan with AI
               </h2>
-              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 Clarify your desire. Refine goals into clear plans, break dreams into actionable steps, and set timelines and milestones.
               </p>
             </div>
@@ -429,7 +429,7 @@ export default function AutomationsPage(): JSX.Element {
               <h2 className='text-xl font-semibold text-gray-900 dark:text-white'>
                 Execute and adapt
               </h2>
-              <p className='mt-1 text-sm text-gray-600 dark:text-gray-400'>
+              <p className='mt-1 text-sm text-gray-600 dark:text-[#9E8B76]'>
                 Build belief through action. Track progress, get reminders, and adjust plans when obstacles appear.
               </p>
             </div>
@@ -458,7 +458,7 @@ export default function AutomationsPage(): JSX.Element {
             {/* View Navigation */}
             <div
               className={cn(
-                'flex flex-nowrap gap-1 border-b border-gray-200 dark:border-gray-700 sm:gap-2',
+                'flex flex-nowrap gap-1 border-b border-gray-200 dark:border-[#2a1d10] sm:gap-2',
                 'overflow-x-auto overscroll-x-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden'
               )}
             >
@@ -468,8 +468,8 @@ export default function AutomationsPage(): JSX.Element {
                 className={cn(
                   'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'today'
-                    ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
                 )}
               >
                 Today
@@ -482,8 +482,8 @@ export default function AutomationsPage(): JSX.Element {
                 className={cn(
                   'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'all'
-                    ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
                 )}
               >
                 All Rituals
@@ -494,8 +494,8 @@ export default function AutomationsPage(): JSX.Element {
                 className={cn(
                   'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'progress'
-                    ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
                 )}
               >
                 Progress
@@ -506,8 +506,8 @@ export default function AutomationsPage(): JSX.Element {
                 className={cn(
                   'shrink-0 border-b-2 px-3 py-2 text-sm font-medium transition-colors sm:px-4',
                   ritualView === 'achievements'
-                    ? 'border-purple-500 text-purple-600 dark:border-purple-400 dark:text-purple-400'
-                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-300'
+                    ? 'border-[#C9A96E] text-[#C9A96E] dark:border-[rgba(201,169,110,0.45)] dark:text-[#C9A96E]'
+                    : 'border-transparent text-gray-600 hover:text-gray-900 dark:text-[#9E8B76] dark:hover:text-gray-300'
                 )}
               >
                 Achievements
@@ -518,7 +518,7 @@ export default function AutomationsPage(): JSX.Element {
             {ritualView === 'today' && (
               <div className='space-y-4'>
                 {loading ? (
-                  <div className='text-center py-8 text-gray-600 dark:text-gray-400'>Loading...</div>
+                  <div className='text-center py-8 text-gray-600 dark:text-[#9E8B76]'>Loading...</div>
                 ) : todayRitualsForStack.length > 0 ? (
                   <TodayStack
                     rituals={todayRitualsForStack}
@@ -528,12 +528,12 @@ export default function AutomationsPage(): JSX.Element {
                     }}
                   />
                 ) : (
-                  <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center dark:border-gray-700 dark:bg-gray-900/50'>
+                  <div className='rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 p-8 text-center dark:border-[#2a1d10] dark:bg-[#1c1510]/50'>
                     <Sparkles className='mx-auto mb-3 h-8 w-8 text-gray-400' />
-                    <p className='text-sm font-medium text-gray-600 dark:text-gray-400'>
+                    <p className='text-sm font-medium text-gray-600 dark:text-[#9E8B76]'>
                       No rituals for today
                     </p>
-                    <p className='mt-1 text-xs text-gray-500 dark:text-gray-500'>
+                    <p className='mt-1 text-xs text-gray-500 dark:text-[#9E8B76]'>
                       Your day is open for new intentions
                     </p>
                     <BounceButton
@@ -559,8 +559,8 @@ export default function AutomationsPage(): JSX.Element {
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                       filterType === 'joined'
-                        ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                        ? 'bg-[rgba(201,169,110,0.1)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                     )}
                   >
                     Joined
@@ -571,8 +571,8 @@ export default function AutomationsPage(): JSX.Element {
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                       filterType === 'available'
-                        ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                        ? 'bg-[rgba(201,169,110,0.1)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                     )}
                   >
                     Available
@@ -583,8 +583,8 @@ export default function AutomationsPage(): JSX.Element {
                     className={cn(
                       'px-4 py-2 text-sm font-medium rounded-lg transition-colors',
                       filterType === 'created'
-                        ? 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                        ? 'bg-[rgba(201,169,110,0.1)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
                     )}
                   >
                     Created

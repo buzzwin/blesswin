@@ -171,8 +171,8 @@ export function TweetReplyModal({
                   'rounded-lg px-2 py-1.5',
                   'transition-all duration-200',
                   selectedEmoji === emoji
-                    ? 'bg-emerald-50 dark:bg-emerald-900/20'
-                    : 'hover:bg-gray-50 dark:hover:bg-gray-800'
+                    ? 'bg-[rgba(201,169,110,0.06)] dark:bg-[rgba(201,169,110,0.08)]'
+                    : 'hover:bg-gray-50 dark:hover:bg-[#231a10]'
                 )}
                 title={label}
               >
@@ -184,8 +184,8 @@ export function TweetReplyModal({
                     'text-xs',
                     'transition-colors duration-200',
                     selectedEmoji === emoji
-                      ? 'text-emerald-600 dark:text-emerald-400'
-                      : 'text-gray-500 dark:text-gray-400'
+                      ? 'text-[#8a6520] dark:text-[#C9A96E]'
+                      : 'text-gray-500 dark:text-[#9E8B76]'
                   )}
                 >
                   {label}
@@ -206,8 +206,8 @@ export function TweetReplyModal({
                 'text-xs font-medium',
                 'transition-colors duration-200',
                 selectedTags.includes(tag)
-                  ? 'bg-emerald-500 text-white'
-                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700'
+                  ? 'bg-[#C97D60] text-white'
+                  : 'bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
               )}
             >
               {tag}
@@ -234,16 +234,16 @@ export function TweetReplyModal({
         />
 
         {/* Add Share Review Button */}
-        <div className='flex gap-3 justify-end pt-3 border-t border-gray-100 dark:border-gray-800'>
+        <div className='flex gap-3 justify-end pt-3 border-t border-gray-100 dark:border-[#2a1d10]'>
           <button
             onClick={closeModal}
             className={cn(
               'px-4 py-2',
               'rounded-xl',
               'text-sm font-medium',
-              'bg-gray-100 dark:bg-gray-800',
-              'text-gray-700 dark:text-gray-300',
-              'hover:bg-gray-200 dark:hover:bg-gray-700',
+              'bg-gray-100 dark:bg-[#1c1510]',
+              'text-gray-700 dark:text-[#C4B5A0]',
+              'hover:bg-gray-200 dark:hover:bg-[#231a10]',
               'transition-colors duration-200'
             )}
           >
@@ -256,9 +256,9 @@ export function TweetReplyModal({
               'px-4 py-2',
               'rounded-xl',
               'text-sm font-medium',
-              'bg-emerald-500 dark:bg-emerald-600',
+              'bg-[#C97D60] dark:bg-[#C97D60]',
               'text-white',
-              'hover:bg-emerald-600 dark:hover:bg-emerald-700',
+              'hover:bg-[#C97D60] dark:hover:bg-[#B56540]',
               'transition-colors duration-200',
               'flex gap-2 items-center',
               'disabled:cursor-not-allowed disabled:opacity-50'

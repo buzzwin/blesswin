@@ -17,7 +17,7 @@ export function PublicationLayout({
   return (
     <WindowContextProvider>
       <MainLayout>
-        <div className='min-h-screen bg-cream dark:bg-gray-950'>
+        <div className='min-h-screen bg-cream dark:bg-[#1c1510]'>
           <PublicationHeader />
           <div
             className={cn(

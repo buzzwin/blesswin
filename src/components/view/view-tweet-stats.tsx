@@ -80,10 +80,10 @@ export function ViewTweetStats({
         modalClassName={cn(
           'relative w-full max-w-xl',
           'h-[672px] overflow-hidden',
-          'bg-white dark:bg-gray-900',
+          'bg-white dark:bg-[#1c1510]',
           'rounded-2xl',
           'shadow-xl',
-          'border border-gray-100 dark:border-gray-800',
+          'border border-gray-100 dark:border-[#2a1d10]',
           'transition-all duration-200'
         )}
         open={open}
@@ -102,7 +102,7 @@ export function ViewTweetStats({
         <div
           className={cn(
             'flex flex-wrap gap-4 px-4 py-4',
-            'border-b border-gray-100 dark:border-gray-800',
+            'border-b border-gray-100 dark:border-[#2a1d10]',
             'transition-all duration-200'
           )}
         >
@@ -115,8 +115,8 @@ export function ViewTweetStats({
                     'transition-all duration-200',
                     'outline-none',
                     'border-b-2 border-transparent',
-                    'hover:border-emerald-500 dark:hover:border-emerald-400',
-                    'focus-visible:border-emerald-500 dark:focus-visible:border-emerald-400',
+                    'hover:border-[#C9A96E] dark:hover:border-[#C9A96E]',
+                    'focus-visible:border-emerald-500 dark:focus-visible:border-[#C9A96E]',
                     index === 0 && 'cursor-not-allowed opacity-50'
                   )}
                   key={title}
@@ -133,7 +133,7 @@ export function ViewTweetStats({
                   </div>
                   <div
                     className={cn(
-                      'text-gray-600 dark:text-gray-400',
+                      'text-gray-600 dark:text-[#9E8B76]',
                       'transition-colors duration-200'
                     )}
                   >

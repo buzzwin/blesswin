@@ -40,7 +40,7 @@ export function Watchlists({
         {Array.from({ length: isMobile ? 4 : 8 }).map((_, i) => (
           <div
             key={i}
-            className='h-48 animate-pulse rounded-xl bg-gray-100 dark:bg-gray-800'
+            className='h-48 animate-pulse rounded-xl bg-gray-100 dark:bg-[#1c1510]'
           />
         ))}
       </div>
@@ -51,7 +51,7 @@ export function Watchlists({
       {watchlists.map((watchlist) => (
         <div
           key={watchlist.id}
-          className='block h-full overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md dark:bg-gray-800'
+          className='block h-full overflow-hidden rounded-xl bg-white shadow-sm transition hover:shadow-md dark:bg-[#1c1510]'
         >
           <div className='flex h-full flex-col p-4'>
             <div className='mb-2 flex items-center justify-between'>
@@ -67,14 +67,14 @@ export function Watchlists({
               </Link>
               <div className='flex items-center gap-2'>
                 {watchlist.isPublic && (
-                  <span className='inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-medium text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'>
+                  <span className='inline-flex shrink-0 items-center gap-1 rounded-full bg-[rgba(201,169,110,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#5a3d08] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
                     <HeroIcon iconName='GlobeAltIcon' className='h-3 w-3' />
                     Public
                   </span>
                 )}
                 <button
                   onClick={() => setSelectedWatchlist(watchlist)}
-                  className='rounded-full p-1.5 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-700'
+                  className='rounded-full p-1.5 text-gray-500 hover:bg-gray-100 dark:text-[#9E8B76] dark:hover:bg-[#231a10]'
                 >
                   <HeroIcon className='h-5 w-5' iconName='ShareIcon' />
                 </button>
@@ -83,7 +83,7 @@ export function Watchlists({
             {watchlist.description && (
               <p
                 className={cn(
-                  'line-clamp-2 mb-3 flex-grow text-gray-500 dark:text-gray-400',
+                  'line-clamp-2 mb-3 flex-grow text-gray-500 dark:text-[#9E8B76]',
                   isMobile ? 'text-xs' : 'text-sm'
                 )}
               >
@@ -93,19 +93,19 @@ export function Watchlists({
             <div className='mt-auto flex items-center justify-between'>
               <div className='flex items-center gap-2'>
                 <div className='flex -space-x-2'>
-                  <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
+                  <div className='rounded-full bg-gray-100 p-1 dark:bg-[#231a10]'>
                     <HeroIcon
                       className={cn(
-                        'text-gray-500 dark:text-gray-400',
+                        'text-gray-500 dark:text-[#9E8B76]',
                         isMobile ? 'h-3 w-3' : 'h-4 w-4'
                       )}
                       iconName='FilmIcon'
                     />
                   </div>
-                  <div className='rounded-full bg-gray-100 p-1 dark:bg-gray-700'>
+                  <div className='rounded-full bg-gray-100 p-1 dark:bg-[#231a10]'>
                     <HeroIcon
                       className={cn(
-                        'text-gray-500 dark:text-gray-400',
+                        'text-gray-500 dark:text-[#9E8B76]',
                         isMobile ? 'h-3 w-3' : 'h-4 w-4'
                       )}
                       iconName='TvIcon'
@@ -114,7 +114,7 @@ export function Watchlists({
                 </div>
                 <span
                   className={cn(
-                    'text-gray-500 dark:text-gray-400',
+                    'text-gray-500 dark:text-[#9E8B76]',
                     isMobile ? 'text-xs' : 'text-sm'
                   )}
                 >

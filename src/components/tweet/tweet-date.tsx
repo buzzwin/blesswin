@@ -21,8 +21,8 @@ export function TweetDate({
             'whitespace-nowrap px-8',
             'text-sm',
             viewTweet
-              ? 'text-gray-500 dark:text-gray-400'
-              : 'text-gray-500 dark:text-gray-400'
+              ? 'text-gray-500 dark:text-[#9E8B76]'
+              : 'text-gray-500 dark:text-[#9E8B76]'
           )}
         >
           {formatDate(createdAt, viewTweet ? 'full' : 'tweet')}

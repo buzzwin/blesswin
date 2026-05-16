@@ -95,9 +95,9 @@ export function UpdateUsername(): JSX.Element {
       <Modal
         modalClassName={cn(
           'flex flex-col gap-6 max-w-xl w-full p-8',
-          'bg-white dark:bg-gray-900',
+          'bg-white dark:bg-[#1c1510]',
           'rounded-2xl shadow-xl',
-          'border border-gray-100 dark:border-gray-800',
+          'border border-gray-100 dark:border-[#2a1d10]',
           'transform transition-all duration-200'
         )}
         open={open}
@@ -126,9 +126,9 @@ export function UpdateUsername(): JSX.Element {
             'transition-all duration-200',
             'rounded-full',
             'bg-transparent dark:bg-transparent',
-            'hover:bg-emerald-500/10 dark:hover:bg-emerald-500/10',
-            'active:bg-emerald-500/20 dark:active:bg-emerald-500/20',
-            'focus-visible:ring-2 focus-visible:ring-emerald-500/50',
+            'hover:bg-[#C97D60]/10 dark:hover:bg-[#C97D60]/10',
+            'active:bg-[#C97D60]/20 dark:active:bg-[#C97D60]/20',
+            'focus-visible:ring-2 focus-visible:ring-[#C9A96E]/50',
             'disabled:opacity-50'
           )}
           onClick={openModal}
@@ -136,9 +136,9 @@ export function UpdateUsername(): JSX.Element {
           <HeroIcon
             className={cn(
               'h-5 w-5',
-              'text-gray-700 dark:text-gray-200',
+              'text-gray-700 dark:text-[#C4B5A0]',
               'transition-colors duration-200',
-              'group-hover:text-emerald-500 dark:group-hover:text-emerald-400'
+              'group-hover:text-[#C9A96E] dark:group-hover:text-[#C9A96E]'
             )}
             iconName='UserIcon'
           />

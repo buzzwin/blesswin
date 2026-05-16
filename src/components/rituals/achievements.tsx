@@ -102,7 +102,7 @@ export function Achievements({
           <h3 className='text-base font-semibold text-gray-900 dark:text-white md:text-lg'>
             Achievements
           </h3>
-          <p className='text-xs text-gray-600 dark:text-gray-400 md:text-sm'>
+          <p className='text-xs text-gray-600 dark:text-[#9E8B76] md:text-sm'>
             {unlockedCount} of {allAchievements.length} unlocked
           </p>
         </div>
@@ -115,8 +115,8 @@ export function Achievements({
           className={cn(
             'rounded-full px-2.5 py-1 text-xs font-medium transition-colors md:px-3 md:py-1.5',
             selectedCategory === 'all'
-              ? 'bg-purple-600 text-white'
-              : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+              ? 'bg-[#C97D60] text-white'
+              : 'bg-gray-100 text-gray-700 dark:bg-[#231a10] dark:text-[#C4B5A0]'
           )}
         >
           All
@@ -130,8 +130,8 @@ export function Achievements({
               className={cn(
                 'flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium transition-colors md:gap-1.5 md:px-3 md:py-1.5',
                 selectedCategory === category
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
+                  ? 'bg-[#C97D60] text-white'
+                  : 'bg-gray-100 text-gray-700 dark:bg-[#231a10] dark:text-[#C4B5A0]'
               )}
             >
               <Icon className='h-3 w-3' />
@@ -159,7 +159,7 @@ export function Achievements({
                 'group relative flex flex-col items-center rounded-lg border-2 p-2 transition-all md:rounded-xl md:p-3 lg:p-4',
                 isUnlocked
                   ? `border-transparent bg-gradient-to-br ${colorClass} bg-opacity-10`
-                  : 'border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800'
+                  : 'border-gray-200 bg-gray-50 dark:border-[#2a1d10] dark:bg-[#1c1510]'
               )}
               title={achievement.description}
             >
@@ -169,19 +169,19 @@ export function Achievements({
                   <h4 className='mb-0.5 text-center text-xs font-semibold text-gray-900 dark:text-white md:mb-1'>
                     {achievement.name}
                   </h4>
-                  <p className='hidden text-center text-xs text-gray-600 dark:text-gray-400 md:block'>
+                  <p className='hidden text-center text-xs text-gray-600 dark:text-[#9E8B76] md:block'>
                     {achievement.description}
                   </p>
                 </>
               ) : (
                 <>
-                  <div className='mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 dark:bg-gray-700 md:mb-2 md:h-10 md:w-10 lg:h-12 lg:w-12'>
+                  <div className='mb-1 flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 dark:bg-[#231a10] md:mb-2 md:h-10 md:w-10 lg:h-12 lg:w-12'>
                     <Lock className='h-4 w-4 text-gray-400 md:h-5 md:w-5 lg:h-6 lg:w-6' />
                   </div>
-                  <h4 className='mb-0.5 text-center text-xs font-semibold text-gray-500 dark:text-gray-400 md:mb-1'>
+                  <h4 className='mb-0.5 text-center text-xs font-semibold text-gray-500 dark:text-[#9E8B76] md:mb-1'>
                     Locked
                   </h4>
-                  <p className='hidden text-center text-xs text-gray-400 dark:text-gray-500 md:block'>
+                  <p className='hidden text-center text-xs text-gray-400 dark:text-[#9E8B76] md:block'>
                     {achievement.description}
                   </p>
                 </>
