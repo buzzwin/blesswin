@@ -59,9 +59,9 @@ export default function JustLogin(): JSX.Element {
               onChange={(e) => setEmail(e.target.value)}
               className={cn(
                 'w-full rounded-lg px-4 py-2',
-                'bg-white/10 backdrop-blur-sm',
-                'border border-white/10',
-                'text-white placeholder-gray-400',
+                'bg-white dark:bg-white/10',
+                'border border-gray-300 dark:border-white/10',
+                'text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
                 'focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
               )}
               required
@@ -73,9 +73,9 @@ export default function JustLogin(): JSX.Element {
               onChange={(e) => setPassword(e.target.value)}
               className={cn(
                 'w-full rounded-lg px-4 py-2',
-                'bg-white/10 backdrop-blur-sm',
-                'border border-white/10',
-                'text-white placeholder-gray-400',
+                'bg-white dark:bg-white/10',
+                'border border-gray-300 dark:border-white/10',
+                'text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400',
                 'focus:border-emerald-500 focus:outline-none focus:ring-1 focus:ring-emerald-500'
               )}
               required
@@ -88,7 +88,7 @@ export default function JustLogin(): JSX.Element {
               {/* existing remember me checkbox */}
             </div>
             <Link href='/forgot-password'>
-              <a className='text-sm text-emerald-600 hover:text-emerald-500 dark:text-emerald-400'>
+              <a className='text-sm text-emerald-700 hover:text-emerald-600 dark:text-emerald-400'>
                 Forgot password?
               </a>
             </Link>
@@ -99,8 +99,8 @@ export default function JustLogin(): JSX.Element {
             disabled={loading}
             className={cn(
               'w-full rounded-lg px-4 py-2',
-              'bg-emerald-500 text-white',
-              'hover:bg-emerald-600',
+              'bg-emerald-700 text-white',
+              'hover:bg-emerald-800',
               'transition-colors duration-200',
               'font-medium',
               'flex items-center justify-center gap-2',
@@ -165,14 +165,14 @@ export default function JustLogin(): JSX.Element {
         <button
           type='button'
           onClick={() => setIsSignUp(!isSignUp)}
-          className='text-sm text-emerald-400 hover:text-emerald-300'
+          className='text-sm text-emerald-700 hover:text-emerald-600 dark:text-emerald-400 dark:hover:text-emerald-300'
         >
           {isSignUp
             ? 'Already have an account? Sign in'
             : "Don't have an account? Sign up"}
         </button>
 
-        <p className='text-center text-sm text-gray-400'>
+        <p className='text-center text-sm text-gray-600 dark:text-gray-400'>
           By signing up, you agree to our Terms of Service and Privacy Policy.
         </p>
       </div>

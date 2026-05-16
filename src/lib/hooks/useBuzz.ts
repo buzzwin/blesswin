@@ -27,16 +27,24 @@ export function useBuzz(shareToken: string | null): UseBuzz {
 
     const q = query(buzzesCollection, where('shareToken', '==', shareToken), limit(1));
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      if (snapshot.empty) {
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        if (snapshot.empty) {
+          setBuzz(null);
+          setNotFound(true);
+        } else {
+          setBuzz(snapshot.docs[0].data({ serverTimestamps: 'estimate' }));
+          setNotFound(false);
+        }
+        setLoading(false);
+      },
+      (_error) => {
         setBuzz(null);
         setNotFound(true);
-      } else {
-        setBuzz(snapshot.docs[0].data({ serverTimestamps: 'estimate' }));
-        setNotFound(false);
+        setLoading(false);
       }
-      setLoading(false);
-    });
+    );
 
     return unsubscribe;
   }, [shareToken]);

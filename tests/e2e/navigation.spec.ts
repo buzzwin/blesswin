@@ -15,18 +15,12 @@ test.describe('navigation', () => {
     await expect(signInBtn).toBeVisible();
   });
 
-  test.fixme(
-    'landing Buzzbook CTA link navigates to /buzzes/new',
-    // LoginMain (which contains the Buzzbook CTA) is NOT rendered at /.
-    // The / route renders PublicLayout with the rituals pitch page.
-    // LoginMain is rendered at /public/[id]. This test needs a redesign.
-    async ({ page }) => {
-      await page.goto('/', { waitUntil: 'domcontentloaded' });
-      const buzzLink = page.getByRole('link', { name: /start a buzzbook/i });
-      await expect(buzzLink).toBeVisible({ timeout: 15_000 });
-      await expect(buzzLink).toHaveAttribute('href', '/buzzes/new');
-    }
-  );
+  test('landing Buzzbook CTA link navigates to /buzzes/new', async ({ page }) => {
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+    const buzzLink = page.getByRole('link', { name: /start a buzzbook/i });
+    await expect(buzzLink).toBeVisible({ timeout: 10_000 });
+    await expect(buzzLink).toHaveAttribute('href', '/buzzes/new');
+  });
 
   test('login page has back link or logo back to home', async ({ page }) => {
     await page.goto('/login');

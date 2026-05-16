@@ -45,13 +45,9 @@ for (const { path, heading } of PUBLIC_ROUTES) {
   });
 }
 
-test.fixme(
-  'smoke: unknown route shows 404 HTTP status',
-  // App has a [...redirect].tsx catch-all that renders the 404 component but returns
-  // HTTP 200 (Next.js pages router catch-all behaviour). Unknown routes never return 404.
-  // To fix: remove [...redirect].tsx or add getServerSideProps returning notFound:true.
-  async ({ page }) => {
-    const response = await page.goto('/this-route-definitely-does-not-exist-xyz');
-    expect(response?.status()).toBe(404);
-  }
-);
+test('smoke: unknown route shows 404 HTTP status', async ({ page }) => {
+  // Single-segment paths match pages/[id]/index.tsx (user profile catch-all).
+  // Use a two-segment path with a first segment that isn't a real directory.
+  const response = await page.goto('/no-such-page-segment/also-not-real-xyz');
+  expect(response?.status()).toBe(404);
+});

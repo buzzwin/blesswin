@@ -137,7 +137,7 @@ export default function HomePage(): JSX.Element {
               className='mt-5 font-display text-4xl font-extrabold leading-[1.02] tracking-tight text-charcoal sm:text-5xl lg:text-6xl'
             >
               Rituals that feel
-              <span className='block text-action'>effortless</span>
+              <span className='block text-emerald-700'>effortless</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 24 }}
@@ -187,6 +187,9 @@ export default function HomePage(): JSX.Element {
                       Sign In
                     </BounceButton>
                   </Link>
+                  <Link href='/buzzes/new' className='text-sm font-medium text-emerald-700 underline decoration-emerald-700/40 underline-offset-2 hover:decoration-emerald-700'>
+                    Start a Buzzbook →
+                  </Link>
                 </>
               )}
             </motion.div>
@@ -213,9 +216,9 @@ export default function HomePage(): JSX.Element {
             className='relative'
           >
             <div className='rounded-[32px] border-2 border-charcoal/10 bg-white/85 p-5 shadow-[0_24px_70px_rgba(44,44,44,0.15)] backdrop-blur sm:p-6'>
-              <div className='flex items-center justify-between text-sm text-charcoal/60'>
+              <div className='flex items-center justify-between text-sm text-charcoal/80'>
                 <span>Today</span>
-                <span className='rounded-full bg-cream px-3 py-1 text-xs uppercase tracking-[0.2em] text-charcoal/70'>Routine</span>
+                <span className='rounded-full bg-cream px-3 py-1 text-xs uppercase tracking-[0.2em] text-charcoal/80'>Routine</span>
               </div>
               <div className='mt-5 space-y-3 sm:mt-6 sm:space-y-4'>
                 {[
@@ -243,7 +246,7 @@ export default function HomePage(): JSX.Element {
                       <div className={cn('h-10 w-10 rounded-xl bg-gradient-to-br', item.tone)} />
                       <div>
                         <div className='text-sm font-semibold text-charcoal'>{item.title}</div>
-                        <div className='text-xs text-charcoal/60'>Suggested because: low effort day</div>
+                        <div className='text-xs text-charcoal/80'>Suggested because: low effort day</div>
                       </div>
                     </div>
                     <span className='text-xs font-medium text-charcoal/70'>{item.time}</span>
@@ -389,7 +392,7 @@ export default function HomePage(): JSX.Element {
                   </div>
                   <div>
                     <div className='font-semibold text-charcoal'>{example.name}</div>
-                    <div className='text-sm text-charcoal/60'>{example.role}</div>
+                    <div className='text-sm text-charcoal/80'>{example.role}</div>
                   </div>
                 </div>
                 <p className='text-sm leading-6 text-charcoal/70'>"{example.quote}"</p>
