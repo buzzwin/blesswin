@@ -3,10 +3,15 @@ import type { User } from './user';
 
 export type BuzzOccasion =
   | 'birthday'
+  | 'anniversary'
+  | 'trip'
+  | 'movie'
+  | 'series'
+  | 'gamenight'
+  | 'bookclub'
   | 'diwali'
   | 'christmas'
   | 'eid'
-  | 'anniversary'
   | 'custom';
 
 export type BuzzBoardMode = 'personal' | 'group';

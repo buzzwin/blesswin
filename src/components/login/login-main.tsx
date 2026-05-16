@@ -7,13 +7,14 @@ import { HeroIcon } from '@components/ui/hero-icon';
 import JustLogin from './justlogin';
 
 const OCCASIONS = [
+  { emoji: '🎬', label: 'Movie Night' },
+  { emoji: '✈️', label: 'Group Trip' },
   { emoji: '🎂', label: 'Birthday' },
-  { emoji: '🪔', label: 'Diwali' },
-  { emoji: '🌙', label: 'Eid' },
-  { emoji: '🎄', label: 'Christmas' },
+  { emoji: '🎮', label: 'Game Night' },
+  { emoji: '📚', label: 'Book Club' },
+  { emoji: '📺', label: 'TV Series' },
   { emoji: '💍', label: 'Anniversary' },
-  { emoji: '🎓', label: 'Graduation' },
-  { emoji: '👋', label: 'Farewell' }
+  { emoji: '✨', label: 'Custom' }
 ];
 
 export function LoginMain(): JSX.Element {
@@ -82,27 +83,25 @@ export function LoginMain(): JSX.Element {
               style={{ border: '1px solid rgba(201,169,110,0.28)', background: 'rgba(201,169,110,0.08)', color: '#C9A96E' }}
             >
               <span className='h-1.5 w-1.5 animate-pulse rounded-full bg-[#C9A96E]' />
-              Group celebrations · No app needed
+              Do more together · No app needed
             </div>
 
             <h1
               className='font-display text-5xl font-extrabold leading-[1.06] tracking-tight sm:text-6xl lg:text-[4rem]'
               style={{ color: '#F5EFE6' }}
             >
-              Celebrate the{' '}
+              Everything&apos;s better{' '}
               <span
                 className='bg-clip-text text-transparent'
                 style={{ backgroundImage: 'linear-gradient(135deg, #E8B86D 0%, #D4A574 45%, #C97D60 100%)' }}
               >
-                people
+                together.
               </span>
-              <br className='hidden sm:block' />
-              {' '}who matter to you.
             </h1>
 
             <p className='mx-auto max-w-lg text-lg leading-relaxed lg:mx-0' style={{ color: 'rgba(245,239,230,0.65)' }}>
-              Create a group Buzzbook for any occasion. Your tribe adds messages
-              and photos. Revealed together on the special day.
+              Start a Buzzbook for anything you do together — a movie night, a trip,
+              a birthday, a game night. Everyone adds their page. You all open it together.
             </p>
 
             {/* Occasions strip */}
@@ -121,9 +120,9 @@ export function LoginMain(): JSX.Element {
             {/* How it works — compact */}
             <div className='grid gap-4 sm:grid-cols-3 text-left'>
               {[
-                { num: '01', title: 'Create', body: 'Pick the occasion. Takes 60 seconds.' },
-                { num: '02', title: 'Share', body: 'Friends write messages and add photos. No app.' },
-                { num: '03', title: 'Reveal', body: 'On the day, the Buzzbook opens together.' }
+                { num: '01', title: 'Pick the vibe', body: 'Movie night, trip, birthday, game night — takes 60 seconds.' },
+                { num: '02', title: 'Everyone adds a page', body: 'Share the link. Friends write messages and add photos. No app.' },
+                { num: '03', title: 'Open it together', body: 'On the chosen date, the Buzzbook opens for everyone.' }
               ].map(({ num, title, body }) => (
                 <div key={num} className='space-y-1.5'>
                   <div
@@ -148,7 +147,7 @@ export function LoginMain(): JSX.Element {
                 </div>
                 <p className='text-sm' style={{ color: 'rgba(245,239,230,0.55)' }}>
                   <span className='font-bold' style={{ color: '#F5EFE6' }}>{userCount.toLocaleString()}</span>{' '}
-                  people celebrating together
+                  people doing things together
                 </p>
               </div>
             )}

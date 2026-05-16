@@ -7,13 +7,18 @@ import { SignBuzzForm } from '@components/buzz/sign-buzz-form';
 import { HeroIcon } from '@components/ui/hero-icon';
 
 const OCCASION_EMOJI: Record<string, string> = {
-  birthday: '🎂',
-  diwali: '🪔',
-  christmas: '🎄',
-  eid: '🌙',
-  anniversary: '💍',
-  custom: '✨'
+  birthday: '🎂', anniversary: '💍', trip: '✈️',
+  movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚',
+  diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };
+
+const GROUP_OCCASIONS = new Set(['trip', 'movie', 'series', 'gamenight', 'bookclub']);
+
+function buzzHeading(buzz: { occasion: string; recipientName: string }): string {
+  return GROUP_OCCASIONS.has(buzz.occasion)
+    ? `${buzz.recipientName} Buzzbook`
+    : `${buzz.recipientName}'s Buzzbook`;
+}
 
 export default function SignBuzzPage(): JSX.Element {
   const router = useRouter();
@@ -83,11 +88,12 @@ export default function SignBuzzPage(): JSX.Element {
           <div className='px-4 py-10 text-center' style={{ background: 'linear-gradient(135deg, #C97D60 0%, #B56540 60%, #8a4020 100%)' }}>
             <span className='text-5xl'>{emoji}</span>
             <h1 className='mt-3 font-display text-3xl font-extrabold leading-tight text-[#F5EFE6] sm:text-4xl'>
-              {buzz.recipientName}&apos;s Buzzbook
+              {buzzHeading(buzz)}
             </h1>
             <p className='mt-2 text-[rgba(245,239,230,0.75)]'>
               {buzz.totalSignatures}{' '}
-              {buzz.totalSignatures === 1 ? 'page' : 'pages'} added · Reveals{' '}
+              {buzz.totalSignatures === 1 ? 'page' : 'pages'} added ·{' '}
+              {GROUP_OCCASIONS.has(buzz.occasion) ? 'Opens' : 'Reveals'}{' '}
               {revealDate}
             </p>
           </div>
@@ -144,12 +150,16 @@ export default function SignBuzzPage(): JSX.Element {
               {/* ── Already signed ── */}
               {!isRevealed && !isPastReveal && alreadySigned && (
                 <div className='rounded-2xl border-2 border-[rgba(156,175,136,0.4)] bg-[rgba(156,175,136,0.06)] p-6 text-center dark:border-[rgba(156,175,136,0.3)] dark:bg-[rgba(156,175,136,0.08)]'>
-                  <span className='text-3xl'>✅</span>
+                  <span className='text-3xl'>{OCCASION_EMOJI[buzz.occasion] ?? '✅'}</span>
                   <p className='mt-2 font-display font-bold text-[#5a7a48] dark:text-[#9CAF88]'>
-                    You&apos;ve already added your page!
+                    {GROUP_OCCASIONS.has(buzz.occasion)
+                      ? 'Your page is in!'
+                      : "You've already added your page!"}
                   </p>
                   <p className='mt-1 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-                    Know someone else who should add theirs?
+                    {GROUP_OCCASIONS.has(buzz.occasion)
+                      ? 'Share the link so others can add their page too.'
+                      : 'Know someone else who should add theirs?'}
                   </p>
                   <button
                     onClick={() => void navigator.clipboard.writeText(shareUrl)}
@@ -164,9 +174,16 @@ export default function SignBuzzPage(): JSX.Element {
               {/* ── Sign form ── */}
               {!isRevealed && !isPastReveal && !alreadySigned && (
                 <div className='rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-6 shadow-sm dark:border-[#2a1d10] dark:bg-[#1c1510]'>
-                  <h2 className='mb-5 font-display text-lg font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-                    Add your page to {buzz.recipientName}&apos;s Buzzbook
+                  <h2 className='mb-1 font-display text-lg font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+                    {GROUP_OCCASIONS.has(buzz.occasion)
+                      ? `Add your page to the ${buzz.recipientName} Buzzbook`
+                      : `Add your page to ${buzz.recipientName}'s Buzzbook`}
                   </h2>
+                  {GROUP_OCCASIONS.has(buzz.occasion) && (
+                    <p className='mb-4 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+                      Write a message or upload a photo. Everyone&apos;s pages are revealed together.
+                    </p>
+                  )}
                   <SignBuzzForm buzz={buzz} shareUrl={shareUrl} />
                 </div>
               )}

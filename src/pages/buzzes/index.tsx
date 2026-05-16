@@ -11,12 +11,9 @@ import type { Buzz } from '@lib/types/buzz';
 import type { ReactElement, ReactNode } from 'react';
 
 const OCCASION_EMOJI: Record<string, string> = {
-  birthday: '🎂',
-  diwali: '🪔',
-  christmas: '🎄',
-  eid: '🌙',
-  anniversary: '💍',
-  custom: '✨'
+  birthday: '🎂', anniversary: '💍', trip: '✈️',
+  movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚',
+  diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };
 
 function statusBadge(buzz: Buzz): { label: string; className: string } {
@@ -65,9 +62,8 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
               <p className='font-display font-bold text-light-primary dark:text-dark-primary line-clamp-1'>
                 {buzz.title}
               </p>
-              <p className='text-sm text-gray-500'>
-                {buzz.boardMode === 'group' ? '👥 ' : ''}
-                {buzz.recipientName} · reveals {revealDate}
+              <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+                {buzz.recipientName} · {['trip','movie','series','gamenight','bookclub'].includes(buzz.occasion) ? 'opens' : 'reveals'} {revealDate}
               </p>
             </div>
           </div>

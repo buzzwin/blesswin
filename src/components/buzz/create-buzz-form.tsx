@@ -19,13 +19,18 @@ type OccasionOption = {
   defaultTitle: (name: string) => string;
 };
 
+// Occasions where recipientName is an experience/place name, not a person
+const GROUP_OCCASIONS = new Set<BuzzOccasion>(['trip', 'movie', 'series', 'gamenight', 'bookclub']);
+
 const OCCASIONS: OccasionOption[] = [
-  { value: 'birthday',    label: 'Birthday',    emoji: '🎂', defaultTitle: (n) => `Happy Birthday ${n}!` },
-  { value: 'diwali',      label: 'Diwali',      emoji: '🪔', defaultTitle: (n) => `Happy Diwali ${n}!` },
-  { value: 'christmas',   label: 'Christmas',   emoji: '🎄', defaultTitle: (n) => `Merry Christmas ${n}!` },
-  { value: 'eid',         label: 'Eid',         emoji: '🌙', defaultTitle: (n) => `Eid Mubarak ${n}!` },
-  { value: 'anniversary', label: 'Anniversary', emoji: '💍', defaultTitle: (n) => `Happy Anniversary ${n}!` },
-  { value: 'custom',      label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` }
+  { value: 'birthday',   label: 'Birthday',    emoji: '🎂', defaultTitle: (n) => `Happy Birthday ${n}!` },
+  { value: 'trip',       label: 'Group Trip',  emoji: '✈️', defaultTitle: (n) => `${n} Buzzbook` },
+  { value: 'movie',      label: 'Movie Night', emoji: '🎬', defaultTitle: (n) => `${n} Movie Night` },
+  { value: 'series',     label: 'TV Series',   emoji: '📺', defaultTitle: (n) => `Watching ${n} Together` },
+  { value: 'gamenight',  label: 'Game Night',  emoji: '🎮', defaultTitle: (n) => `${n} Game Night` },
+  { value: 'bookclub',   label: 'Book Club',   emoji: '📚', defaultTitle: (n) => `${n} — Book Club` },
+  { value: 'anniversary',label: 'Anniversary', emoji: '💍', defaultTitle: (n) => `Happy Anniversary ${n}!` },
+  { value: 'custom',     label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` }
 ];
 
 function minRevealDate(): string {
@@ -40,12 +45,67 @@ function formatRevealDate(iso: string): string {
   return d.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
-const STEP_LABELS: Record<Step, string> = {
-  occasion: 'Occasion',
-  recipient: 'Who',
-  reveal: 'When',
-  done: 'Done'
+const OCCASION_STEP2_LABEL: Partial<Record<BuzzOccasion, string>> = {
+  trip: 'Where', movie: 'What', series: 'What', gamenight: 'What', bookclub: 'What'
 };
+
+const STEP2_HEADING: Partial<Record<BuzzOccasion, string>> = {
+  trip:      "What's the trip?",
+  movie:     'What are you watching?',
+  series:    'What series?',
+  gamenight: 'What are you playing?',
+  bookclub:  'What are you reading?'
+};
+
+const STEP2_DESCRIPTION: Partial<Record<BuzzOccasion, string>> = {
+  trip:      'Give the trip a name. Share the link and everyone adds their photos.',
+  movie:     'Share the link before movie night — everyone adds their reactions.',
+  series:    'Share the link and each person adds their thoughts as you watch.',
+  gamenight: 'Name your game night and share the link with the crew.',
+  bookclub:  'Share the link and everyone adds their notes and highlights.'
+};
+
+const NAME_LABEL: Partial<Record<BuzzOccasion, string>> = {
+  trip: 'Trip name', movie: 'Movie name', series: 'Series name',
+  gamenight: 'Game night name', bookclub: 'Book name'
+};
+
+const NAME_PLACEHOLDER: Partial<Record<BuzzOccasion, string>> = {
+  trip:      'e.g. Goa 2025, Thailand Trip, Alps Hike',
+  movie:     'e.g. Inception, Interstellar, Avengers',
+  series:    'e.g. Breaking Bad, The Bear, Severance',
+  gamenight: 'e.g. Friday Night Catan, Poker Night',
+  bookclub:  'e.g. Atomic Habits, Dune'
+};
+
+const DONE_EMOJI: Partial<Record<BuzzOccasion, string>> = {
+  trip: '✈️', movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚'
+};
+
+const DONE_HEADING: Partial<Record<BuzzOccasion, string>> = {
+  trip:      'Your Trip Buzzbook is live!',
+  movie:     'Your Movie Night Buzzbook is live!',
+  series:    'Your Series Buzzbook is live!',
+  gamenight: 'Your Game Night Buzzbook is live!',
+  bookclub:  'Your Book Club Buzzbook is live!'
+};
+
+const DONE_DESC: Partial<Record<BuzzOccasion, string>> = {
+  trip:      'Share the link with everyone going on the trip. They add their photos, you all see them together when it opens.',
+  movie:     'Share the link before the movie — everyone adds their reactions after.',
+  series:    'Share the link with your watch crew — everyone adds their thoughts.',
+  gamenight: 'Share the link with your crew — everyone adds their page.',
+  bookclub:  'Share the link with your readers — everyone adds their notes and highlights.'
+};
+
+function stepLabels(occasion: BuzzOccasion | null): Record<Step, string> {
+  return {
+    occasion: 'Occasion',
+    recipient: (occasion && OCCASION_STEP2_LABEL[occasion]) ?? 'Who',
+    reveal: 'When',
+    done: 'Done'
+  };
+}
 
 const STEP_ORDER: Step[] = ['occasion', 'recipient', 'reveal', 'done'];
 
@@ -79,12 +139,17 @@ export function CreateBuzzForm(): JSX.Element {
   const occasionObj = OCCASIONS.find((o) => o.value === form.occasion);
   const stepIndex = STEP_ORDER.indexOf(step);
 
+  const isGroupOccasion = (occ: BuzzOccasion | null): boolean =>
+    occ !== null && GROUP_OCCASIONS.has(occ);
+
   function pickOccasion(occ: BuzzOccasion): void {
     const obj = OCCASIONS.find((o) => o.value === occ) ?? OCCASIONS[0];
+    const fallback = GROUP_OCCASIONS.has(occ) ? '' : 'You';
     setForm((f) => ({
       ...f,
       occasion: occ,
-      title: obj.defaultTitle(f.recipientName || 'You')
+      boardMode: GROUP_OCCASIONS.has(occ) ? 'group' : f.boardMode,
+      title: obj.defaultTitle(f.recipientName || fallback)
     }));
     setStep('recipient');
   }
@@ -191,7 +256,7 @@ export function CreateBuzzForm(): JSX.Element {
                   i <= stepIndex ? 'text-[#C9A96E]' : ''
                 )}
               >
-                {STEP_LABELS[s]}
+                {stepLabels(form.occasion)[s]}
               </span>
             ))}
           </div>
@@ -208,10 +273,10 @@ export function CreateBuzzForm(): JSX.Element {
       {step === 'occasion' && (
         <div>
           <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-            What&apos;s the occasion?
+            What are you doing together?
           </h2>
           <p className='mb-6 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-            Pick an occasion and we&apos;ll start a Buzz for it.
+            Pick the vibe and we&apos;ll set up a Buzzbook for it.
           </p>
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
             {OCCASIONS.map((occ) => (
@@ -236,47 +301,57 @@ export function CreateBuzzForm(): JSX.Element {
         </div>
       )}
 
-      {/* ── Step 1: Recipient ── */}
+      {/* ── Step 1: Recipient / Trip ── */}
       {step === 'recipient' && (
         <div className='space-y-5'>
           <div>
             <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-              {occasionObj?.emoji} Who&apos;s it for?
+              {isGroupOccasion(form.occasion)
+                ? `${occasionObj?.emoji} ${STEP2_HEADING[form.occasion!] ?? 'What\'s it called?'}`
+                : `${occasionObj?.emoji} Who's it for?`}
             </h2>
             <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-              {form.boardMode === 'personal'
-                ? 'Enter the recipient\'s name. They\'ll see it on the Buzzbook.'
-                : 'Give your group Buzz a name.'}
+              {isGroupOccasion(form.occasion)
+                ? STEP2_DESCRIPTION[form.occasion!] ?? 'Give it a name and share the link with your group.'
+                : form.boardMode === 'personal'
+                  ? 'Enter the recipient\'s name. They\'ll see it on the Buzzbook.'
+                  : 'Give your group Buzz a name.'}
             </p>
           </div>
 
-          {/* Personal / Group toggle */}
-          <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-[#2a1d10]'>
-            {(['personal', 'group'] as BuzzBoardMode[]).map((mode) => (
-              <button
-                key={mode}
-                onClick={() => setForm((f) => ({ ...f, boardMode: mode }))}
-                className={cn(
-                  'flex-1 py-2.5 text-sm font-medium capitalize transition',
-                  form.boardMode === mode
-                    ? 'bg-[#C97D60] text-white'
-                    : 'bg-[#faf8f4] text-[#6b5744] hover:bg-[rgba(201,169,110,0.06)] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
-                )}
-              >
-                {mode === 'personal' ? '👤 Personal' : '👥 Group'}
-              </button>
-            ))}
-          </div>
+          {/* Personal / Group toggle — hidden for group occasions (always group) */}
+          {!isGroupOccasion(form.occasion) && (
+            <div className='flex overflow-hidden rounded-xl border border-[#e8d8c4] dark:border-[#2a1d10]'>
+              {(['personal', 'group'] as BuzzBoardMode[]).map((mode) => (
+                <button
+                  key={mode}
+                  onClick={() => setForm((f) => ({ ...f, boardMode: mode }))}
+                  className={cn(
+                    'flex-1 py-2.5 text-sm font-medium capitalize transition',
+                    form.boardMode === mode
+                      ? 'bg-[#C97D60] text-white'
+                      : 'bg-[#faf8f4] text-[#6b5744] hover:bg-[rgba(201,169,110,0.06)] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
+                  )}
+                >
+                  {mode === 'personal' ? '👤 Personal' : '👥 Group'}
+                </button>
+              ))}
+            </div>
+          )}
 
           {/* Name input */}
           <div>
-            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
-              {form.boardMode === 'personal' ? 'Recipient name' : 'Group name'}
+            <label className='mb-1.5 block text-sm font-medium text-[#3d2c1a] dark:text-[#C4B5A0]'>
+              {(form.occasion && NAME_LABEL[form.occasion])
+                ?? (form.boardMode === 'personal' ? 'Recipient name' : 'Group name')}
             </label>
             <input
               type='text'
               className={inputCls}
-              placeholder={form.boardMode === 'personal' ? 'e.g. Jane' : 'e.g. The Squad'}
+              placeholder={
+                (form.occasion && NAME_PLACEHOLDER[form.occasion])
+                  ?? (form.boardMode === 'personal' ? 'e.g. Jane' : 'e.g. The Squad')
+              }
               value={form.recipientName}
               onChange={(e) => handleRecipientChange(e.target.value)}
               maxLength={60}
@@ -287,7 +362,7 @@ export function CreateBuzzForm(): JSX.Element {
           {/* Custom occasion label */}
           {form.occasion === 'custom' && (
             <div>
-              <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
+              <label className='mb-1.5 block text-sm font-medium text-[#3d2c1a] dark:text-[#C4B5A0]'>
                 What&apos;s the occasion?
               </label>
               <input
@@ -303,7 +378,7 @@ export function CreateBuzzForm(): JSX.Element {
 
           {/* Title (editable) */}
           <div>
-            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
+            <label className='mb-1.5 block text-sm font-medium text-[#3d2c1a] dark:text-[#C4B5A0]'>
               Buzzbook title
             </label>
             <input
@@ -336,16 +411,20 @@ export function CreateBuzzForm(): JSX.Element {
         <div className='space-y-5'>
           <div>
             <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-              When to reveal?
+              {isGroupOccasion(form.occasion) ? 'When should it open?' : 'When to reveal?'}
             </h2>
             <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-              The Buzzbook stays hidden until this moment. Pick a date and time.
+              {form.occasion === 'trip'
+                ? "Pick the date you want the Buzzbook to open — usually the last day of the trip or after you're back."
+                : isGroupOccasion(form.occasion)
+                ? 'Pick when the group sees the Buzzbook. Share the link so everyone adds their page before then.'
+                : 'The Buzzbook stays hidden until this moment. Pick a date and time.'}
             </p>
           </div>
 
           <div>
-            <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
-              Reveal date &amp; time
+            <label className='mb-1.5 block text-sm font-medium text-[#3d2c1a] dark:text-[#C4B5A0]'>
+              {isGroupOccasion(form.occasion) ? 'Open on' : 'Reveal date & time'}
             </label>
             <input
               type='datetime-local'
@@ -357,9 +436,10 @@ export function CreateBuzzForm(): JSX.Element {
           </div>
 
           {form.revealAt && (
-            <div className='rounded-xl border border-emerald-100 bg-[rgba(201,169,110,0.06)] p-4 text-sm text-[#7a5510] dark:border-[rgba(201,169,110,0.35)]/40 dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
-              📖 The Buzzbook for <strong>{form.recipientName}</strong> will be
-              revealed on <strong>{formatRevealDate(form.revealAt)}</strong>.
+            <div className='rounded-xl border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] p-4 text-sm text-[#7a5510] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'>
+              {isGroupOccasion(form.occasion)
+                ? <>{occasionObj?.emoji} The <strong>{form.recipientName}</strong> Buzzbook opens on <strong>{formatRevealDate(form.revealAt)}</strong>. Share the link so everyone adds their page before then.</>
+                : <>📖 The Buzzbook for <strong>{form.recipientName}</strong> will be revealed on <strong>{formatRevealDate(form.revealAt)}</strong>.</>}
             </div>
           )}
 
@@ -384,12 +464,12 @@ export function CreateBuzzForm(): JSX.Element {
       {step === 'done' && (
         <div className='space-y-6 text-center'>
           <div>
-            <span className='text-5xl'>🎉</span>
+            <span className='text-5xl'>{(form.occasion && DONE_EMOJI[form.occasion]) ?? '🎉'}</span>
             <h2 className='mt-3 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-              Your Buzz is live!
+              {(form.occasion && DONE_HEADING[form.occasion]) ?? 'Your Buzz is live!'}
             </h2>
             <p className='mt-1 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-              Share the link so friends can add their page before the Buzzbook is revealed.
+              {(form.occasion && DONE_DESC[form.occasion]) ?? 'Share the link so friends can add their page before the Buzzbook is revealed.'}
             </p>
           </div>
 
@@ -410,7 +490,11 @@ export function CreateBuzzForm(): JSX.Element {
           {/* WhatsApp */}
           <WhatsappShareButton
             url={shareUrl}
-            title={`Add your page to ${form.recipientName}'s Buzz! 📖\n`}
+            title={
+              isGroupOccasion(form.occasion)
+                ? `Add your page to the ${form.recipientName} Buzzbook! ${occasionObj?.emoji ?? ''}📖\n`
+                : `Add your page to ${form.recipientName}'s Buzz! 📖\n`
+            }
             className='w-full'
           >
             <span className={cn(primaryBtn, 'bg-[#25D366] hover:bg-[#1ebe5d]')}>

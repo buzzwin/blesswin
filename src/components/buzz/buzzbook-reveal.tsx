@@ -9,12 +9,9 @@ type Props = {
 };
 
 const OCCASION_EMOJI: Record<string, string> = {
-  birthday: '🎂',
-  diwali: '🪔',
-  christmas: '🎄',
-  eid: '🌙',
-  anniversary: '💍',
-  custom: '✨'
+  birthday: '🎂', anniversary: '💍', trip: '✈️',
+  movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚',
+  diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };
 
 // Warm bohemian page backgrounds cycling per page
