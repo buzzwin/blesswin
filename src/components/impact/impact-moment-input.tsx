@@ -63,8 +63,8 @@ export function ImpactMomentInput({
   const [aiAssisting, setAiAssisting] = useState(false);
   const [parsing, setParsing] = useState(false);
   const [validationWarning, setValidationWarning] = useState<string | null>(null);
-  const [placeholder, setPlaceholder] = useState('Share your ritual participation... (e.g., "Just finished my breathing ritual", "Completed my morning meditation")');
-  const [description, setDescription] = useState('Share your ritual participation');
+  const [placeholder, setPlaceholder] = useState('What are you doing with people? Share a moment — a walk, a movie, a meal together...');
+  const [description, setDescription] = useState('Share what you\'re doing together');
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -382,7 +382,7 @@ export function ImpactMomentInput({
       setImagesPreview([]);
       setIsExpanded(false);
       
-      toast.success('Impact moment shared! 🌱');
+      toast.success('Shared! 🤝');
       onSuccess?.();
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to share impact moment';
@@ -430,7 +430,7 @@ export function ImpactMomentInput({
         </div>
         <div className='flex-1'>
           <p className='font-semibold text-light-primary dark:text-dark-primary'>
-            Share a moment with the community
+            What are you doing together?
           </p>
           <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             {description}
@@ -735,7 +735,7 @@ export function ImpactMomentInput({
                   : 'bg-[#9E8B76] cursor-not-allowed'
               )}
             >
-              {loading ? 'Sharing...' : 'Share Impact Moment'}
+              {loading ? 'Sharing...' : 'Share with community'}
             </button>
           </div>
         </div>

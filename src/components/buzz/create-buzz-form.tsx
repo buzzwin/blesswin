@@ -29,8 +29,9 @@ const OCCASIONS: OccasionOption[] = [
   { value: 'series',     label: 'TV Series',   emoji: '📺', defaultTitle: (n) => `Watching ${n} Together` },
   { value: 'gamenight',  label: 'Game Night',  emoji: '🎮', defaultTitle: (n) => `${n} Game Night` },
   { value: 'bookclub',   label: 'Book Club',   emoji: '📚', defaultTitle: (n) => `${n} — Book Club` },
-  { value: 'anniversary',label: 'Anniversary', emoji: '💍', defaultTitle: (n) => `Happy Anniversary ${n}!` },
-  { value: 'custom',     label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` }
+  { value: 'anniversary', label: 'Anniversary', emoji: '💍', defaultTitle: (n) => `Happy Anniversary ${n}!` },
+  { value: 'graduation',  label: 'Graduation',  emoji: '🎓', defaultTitle: (n) => `Congratulations ${n}!` },
+  { value: 'custom',      label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` }
 ];
 
 function minRevealDate(): string {
@@ -116,6 +117,7 @@ type FormState = {
   recipientName: string;
   title: string;
   revealAt: string;
+  isPublic: boolean;
 };
 
 const INITIAL: FormState = {
@@ -124,7 +126,8 @@ const INITIAL: FormState = {
   boardMode: 'personal',
   recipientName: '',
   title: '',
-  revealAt: ''
+  revealAt: '',
+  isPublic: true
 };
 
 export function CreateBuzzForm(): JSX.Element {
@@ -183,7 +186,8 @@ export function CreateBuzzForm(): JSX.Element {
         recipientUserId: null,
         revealAt: revealTimestamp,
         coverImageURL: null,
-        createdBy: user.id
+        createdBy: user.id,
+        isPublic: form.isPublic
       });
 
       // Buzz created — show done state immediately
@@ -193,20 +197,22 @@ export function CreateBuzzForm(): JSX.Element {
       toast.success('Buzz created!');
 
       // Secondary ops: fire-and-forget (failures don't block the user)
-      const tweetUser = {
-        id: user.id,
-        name: user.name,
-        username: user.username,
-        photoURL: user.photoURL,
-        verified: user.verified
-      };
+      if (form.isPublic) {
+        const tweetUser = {
+          id: user.id,
+          name: user.name,
+          username: user.username,
+          photoURL: user.photoURL,
+          verified: user.verified
+        };
 
-      sendBuzzTweet(
-        { id: buzzId, shareToken, occasion: form.occasion, recipientName: form.recipientName, title: form.title },
-        tweetUser
-      )
-        .then((tweetId) => setBuzzFeedTweetId(buzzId, tweetId))
-        .catch(() => undefined);
+        sendBuzzTweet(
+          { id: buzzId, shareToken, occasion: form.occasion, recipientName: form.recipientName, title: form.title },
+          tweetUser
+        )
+          .then((tweetId) => setBuzzFeedTweetId(buzzId, tweetId))
+          .catch(() => undefined);
+      }
 
       awardBuzzKarma(user.id, 10).catch(() => undefined);
     } catch (err) {
@@ -442,6 +448,43 @@ export function CreateBuzzForm(): JSX.Element {
                 : <>📖 The Buzzbook for <strong>{form.recipientName}</strong> will be revealed on <strong>{formatRevealDate(form.revealAt)}</strong>.</>}
             </div>
           )}
+
+          {/* Public / private toggle */}
+          <button
+            type='button'
+            role='switch'
+            aria-checked={form.isPublic}
+            onClick={() => setForm((f) => ({ ...f, isPublic: !f.isPublic }))}
+            className={cn(
+              'flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left transition',
+              'border-[#e8d8c4] bg-[#faf8f4] hover:bg-[rgba(201,169,110,0.04)]',
+              'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[rgba(201,169,110,0.04)]'
+            )}
+          >
+            <div>
+              <p className='text-sm font-medium text-[#1a1108] dark:text-[#F5EFE6]'>
+                {form.isPublic ? '🌍 Share in community feed' : '🔒 Keep private'}
+              </p>
+              <p className='text-xs text-[#9E8B76]'>
+                {form.isPublic
+                  ? 'Visible to the Buzzwin community'
+                  : 'Only people with the link can access it'}
+              </p>
+            </div>
+            <span
+              className={cn(
+                'relative ml-4 h-6 w-11 shrink-0 rounded-full transition-colors',
+                form.isPublic ? 'bg-[#C97D60]' : 'bg-[#e8d8c4] dark:bg-[#2a1d10]'
+              )}
+            >
+              <span
+                className={cn(
+                  'absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform',
+                  form.isPublic ? 'translate-x-5' : 'translate-x-0.5'
+                )}
+              />
+            </span>
+          </button>
 
           <div className='flex gap-3 pt-1'>
             <button onClick={() => setStep('recipient')} className={ghostBtn}>

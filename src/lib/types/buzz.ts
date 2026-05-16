@@ -9,6 +9,7 @@ export type BuzzOccasion =
   | 'series'
   | 'gamenight'
   | 'bookclub'
+  | 'graduation'
   | 'diwali'
   | 'christmas'
   | 'eid'
@@ -37,6 +38,7 @@ export type Buzz = {
   signedBy: string[];
   feedTweetId: string | null;
   revealTweetId: string | null;
+  isPublic: boolean;
 };
 
 export type BuzzWithUser = Buzz & {
@@ -68,6 +70,7 @@ export type NewBuzzData = Pick<
   | 'revealAt'
   | 'coverImageURL'
   | 'createdBy'
+  | 'isPublic'
 >;
 
 export type NewSignatureData = Pick<

@@ -19,7 +19,7 @@ import type { Signature } from '@lib/types/buzz';
 import type { ReactElement, ReactNode } from 'react';
 
 const OCCASION_EMOJI: Record<string, string> = {
-  birthday: '🎂', anniversary: '💍', trip: '✈️',
+  birthday: '🎂', anniversary: '💍', graduation: '🎓', trip: '✈️',
   movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚',
   diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };

@@ -1,42 +1,28 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
-import { doc, getDoc } from 'firebase/firestore';
 import {
-  impactMomentsCollection,
-  usersCollection
-} from '@lib/firebase/collections';
+  MessageCircle,
+  Share2,
+  Sparkles,
+  Edit2,
+  Trash2
+} from 'lucide-react';
+import { cn } from '@lib/utils';
+import { toast } from 'react-hot-toast';
+import { useAuth } from '@lib/context/auth-context';
 import { UserAvatar } from '@components/user/user-avatar';
 import { UserName } from '@components/user/user-name';
 import { UserUsername } from '@components/user/user-username';
 import { formatDate } from '@lib/date';
 import {
   impactTagLabels,
-  impactTagColors,
-  effortLevelLabels,
-  effortLevelIcons,
   rippleTypeLabels,
   rippleTypeIcons,
   type ImpactMomentWithUser,
   type RippleType
 } from '@lib/types/impact-moment';
-import {
-  MessageCircle,
-  Share2,
-  Sparkles,
-  ArrowRight,
-  Edit2,
-  Trash2,
-  Calendar,
-  TrendingUp,
-  Globe,
-  Lock
-} from 'lucide-react';
-import { cn } from '@lib/utils';
-import { toast } from 'react-hot-toast';
-import { useAuth } from '@lib/context/auth-context';
 import { EditMomentModal } from './edit-moment-modal';
 import { ActionShareModal } from './action-share-modal';
-import { SharedAutomationCard } from '@components/automation/shared-automation-card';
 import type { Timestamp } from 'firebase/firestore';
 
 interface ImpactMomentCardProps {
@@ -50,77 +36,33 @@ export function ImpactMomentCard({
 }: ImpactMomentCardProps): JSX.Element {
   const { user } = useAuth();
   const [rippleMenuOpen, setRippleMenuOpen] = useState(false);
-  const [originalMoment, setOriginalMoment] =
-    useState<ImpactMomentWithUser | null>(null);
-  const [loadingOriginal, setLoadingOriginal] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [shareModalOpen, setShareModalOpen] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const isOwner = user?.id === moment.createdBy;
 
-  // Fetch original moment if this is a joined moment
-  useEffect(() => {
-    if (moment.joinedFromMomentId && !originalMoment) {
-      setLoadingOriginal(true);
-      const fetchOriginal = async (): Promise<void> => {
-        try {
-          const originalDoc = await getDoc(
-            doc(impactMomentsCollection, moment.joinedFromMomentId)
-          );
-          if (originalDoc.exists()) {
-            const originalData = { id: originalDoc.id, ...originalDoc.data() };
-            const userDoc = await getDoc(
-              doc(usersCollection, originalData.createdBy)
-            );
-            const userData = userDoc.exists() ? userDoc.data() : null;
-
-            setOriginalMoment({
-              ...originalData,
-              user: userData
-                ? {
-                    id: userData.id,
-                    name: userData.name,
-                    username: userData.username,
-                    photoURL: userData.photoURL,
-                    verified: userData.verified ?? false
-                  }
-                : {
-                    id: originalData.createdBy,
-                    name: 'Unknown User',
-                    username: 'unknown',
-                    photoURL: '',
-                    verified: false
-                  }
-            } as ImpactMomentWithUser);
-          }
-        } catch (error) {
-          console.error('Error fetching original moment:', error);
-        } finally {
-          setLoadingOriginal(false);
-        }
-      };
-      void fetchOriginal();
-    }
-  }, [moment.joinedFromMomentId, originalMoment]);
-
-  // Calculate reaction count (excludes joined_you)
   const reactionCount =
     moment.ripples.inspired.length +
     moment.ripples.grateful.length +
     moment.ripples.sent_love.length;
 
-  // Ripple count refers to joined users (chain participation)
-  const rippleCount = moment.joinedByUsers?.length || 0;
+  const joinerCount = moment.joinedByUsers?.length ?? 0;
+  // Total people doing this = original poster + joiners
+  const doingTogetherCount = joinerCount + 1;
+  const isJoined = moment.joinedFromMomentId != null;
 
-  const handleRipple = (rippleType: RippleType): void => {
-    setRippleMenuOpen(false);
-    onRipple?.(moment.id ?? '', rippleType);
-  };
+  const createdAt =
+    moment.createdAt instanceof Date
+      ? (moment.createdAt as unknown as Timestamp)
+      : moment.createdAt;
 
   return (
-    <article className='border-b border-[#e8d8c4] py-4 transition-colors hover:bg-[rgba(201,169,110,0.03)] dark:border-[#2a1d10] dark:hover:bg-[rgba(201,169,110,0.04)]'>
+    <article
+      className='border-b border-[#e8d8c4] py-4 transition-colors hover:bg-[rgba(201,169,110,0.02)] dark:border-[#2a1d10] dark:hover:bg-[rgba(201,169,110,0.03)]'
+      onClick={() => setRippleMenuOpen(false)}
+    >
       <div className='flex gap-3'>
-        {/* User Avatar */}
+        {/* Avatar */}
         <Link href={`/user/${moment.user.username}`}>
           <a>
             <UserAvatar
@@ -131,92 +73,9 @@ export function ImpactMomentCard({
           </a>
         </Link>
 
-        {/* Content */}
         <div className='min-w-0 flex-1'>
-          {/* Ritual Badge - Enhanced with join encouragement (compact mobile-friendly) */}
-          {moment.fromDailyRitual && (
-            <div className='mb-3 overflow-hidden rounded-lg border-2 border-[rgba(201,169,110,0.4)] bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 shadow-sm transition-shadow hover:shadow-md dark:border-[rgba(201,169,110,0.35)]/50 dark:from-emerald-900/30 dark:via-teal-900/30 dark:to-cyan-900/30'>
-              <div className='p-2.5 md:p-3'>
-                <div className='flex items-start gap-2 md:gap-2.5'>
-                  {/* Icon */}
-                  <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-teal-500 shadow-sm md:h-9 md:w-9'>
-                    <Calendar className='h-4 w-4 text-white md:h-4.5 md:w-4.5' />
-                  </div>
-                  
-                  {/* Content */}
-                  <div className='min-w-0 flex-1'>
-                    {/* Header with badge */}
-                    <div className='mb-1 flex flex-wrap items-center gap-1.5 md:gap-2'>
-                      <span className='text-xs font-bold text-[#5a3d08] dark:text-[#C4B5A0] md:text-sm'>
-                        Today's Ritual
-                      </span>
-                      <span className='flex items-center gap-0.5 rounded-full bg-[rgba(201,169,110,0.1)] px-1.5 py-0.5 text-[10px] font-semibold text-[#7a5510] dark:bg-emerald-800 dark:text-[#C4B5A0] md:px-2 md:text-xs'>
-                        <TrendingUp className='h-2.5 w-2.5 md:h-3 md:w-3' />
-                        Active
-                      </span>
-                    </div>
-                    
-                    {/* Ritual Title */}
-                    <h4 className='mb-1.5 text-sm font-bold text-gray-900 dark:text-white md:text-base'>
-                      {moment.ritualTitle || 'Daily Ritual'}
-                    </h4>
-                    
-                    {/* Compact description */}
-                    <p className='mb-2 text-xs leading-relaxed text-gray-700 dark:text-[#C4B5A0] md:text-sm'>
-                      Join this ritual to create your own moments and earn karma!
-                    </p>
-                    
-                    {/* Join Button - Compact */}
-                    {moment.ritualId ? (
-                      <Link href={`/rituals/${moment.ritualId}`}>
-                        <a className='inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:from-emerald-700 hover:to-teal-700 hover:shadow-md md:px-3.5 md:py-2 md:text-sm'>
-                          <span className='text-sm md:text-base'>🌱</span>
-                          <span>Join Ritual</span>
-                          <ArrowRight className='h-3 w-3 md:h-3.5 md:w-3.5' />
-                        </a>
-                      </Link>
-                    ) : (
-                      <Link href='/automations?tab=rituals'>
-                        <a className='inline-flex items-center gap-1.5 rounded-md bg-gradient-to-r from-emerald-600 to-teal-600 px-3 py-1.5 text-xs font-bold text-white shadow-sm transition-all hover:from-emerald-700 hover:to-teal-700 hover:shadow-md md:px-3.5 md:py-2 md:text-sm'>
-                          <span className='text-sm md:text-base'>🌱</span>
-                          <span>View Rituals</span>
-                          <ArrowRight className='h-3 w-3 md:h-3.5 md:w-3.5' />
-                        </a>
-                      </Link>
-                    )}
-                  </div>
-                </div>
-              </div>
-              {/* Decorative bottom border - thinner */}
-              <div className='h-0.5 bg-gradient-to-r from-emerald-400 via-teal-400 to-cyan-400 md:h-1'></div>
-            </div>
-          )}
-
-          {/* Shared Ritual Participation Badge */}
-          {moment.joinedFromMomentId && (
-            <div className='mb-3 flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-3 py-2 dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.08)]'>
-              <span className='text-lg'>🌱</span>
-              <span className='text-sm font-medium text-[#8a6520] dark:text-[#C9A96E]'>
-                Shared ritual participation from{' '}
-                {loadingOriginal
-                  ? '...'
-                  : originalMoment
-                  ? `@${originalMoment.user.username}`
-                  : 'another user'}
-              </span>
-              {originalMoment && (
-                <Link href={`/impact/${moment.joinedFromMomentId}`}>
-                  <a className='ml-auto flex items-center gap-1 text-xs font-medium text-[#C9A96E] hover:text-[#7a5a18] dark:text-[#C9A96E] dark:hover:text-purple-200'>
-                    View original
-                    <ArrowRight className='h-3 w-3' />
-                  </a>
-                </Link>
-              )}
-            </div>
-          )}
-
           {/* Header */}
-          <div className='mb-2 flex items-center gap-2'>
+          <div className='mb-2 flex flex-wrap items-center gap-1.5 text-sm'>
             <Link href={`/user/${moment.user.username}`}>
               <a className='hover:underline'>
                 <UserName
@@ -228,355 +87,181 @@ export function ImpactMomentCard({
               </a>
             </Link>
             <UserUsername username={moment.user.username} />
-            {moment.createdAt && (
+            {createdAt && (
               <>
-                <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
-                <time className='text-sm text-gray-500 dark:text-[#9E8B76]'>
-                  {moment.createdAt instanceof Date
-                    ? formatDate(
-                        moment.createdAt as unknown as Timestamp,
-                        'tweet'
-                      )
-                    : formatDate(moment.createdAt, 'tweet')}
+                <span className='text-[#9E8B76]'>·</span>
+                <time className='text-[#9E8B76]'>
+                  {formatDate(createdAt, 'tweet')}
                 </time>
               </>
             )}
-            {/* Privacy Indicator */}
-            {moment.isPublic === false && (
+            {isJoined && (
               <>
-                <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
-                <div className='flex items-center gap-1 rounded-full bg-[rgba(201,169,110,0.08)] px-2 py-0.5 border border-[rgba(201,169,110,0.2)]'>
-                  <Lock className='h-3 w-3 text-[#9E8B76]' />
-                  <span className='text-xs font-medium text-[#9E8B76]'>
-                    Private
-                  </span>
-                </div>
-              </>
-            )}
-            {moment.isPublic !== false && (
-              <>
-                <span className='text-gray-500 dark:text-[#9E8B76]'>·</span>
-                <div className='flex items-center gap-1 rounded-full bg-[rgba(156,175,136,0.1)] px-2 py-0.5 border border-[rgba(156,175,136,0.25)]'>
-                  <Globe className='h-3 w-3 text-[#9CAF88]' />
-                  <span className='text-xs font-medium text-[#9CAF88]'>
-                    Public
-                  </span>
-                </div>
+                <span className='text-[#9E8B76]'>·</span>
+                <span className='rounded-full bg-[rgba(201,169,110,0.08)] px-2 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'>
+                  doing it together
+                </span>
               </>
             )}
           </div>
 
-          {/* Shared Automation Card */}
-          {moment.automationId && moment.automationShare && (
-            <div className='mb-3'>
-              <SharedAutomationCard
-                automationId={moment.automationShare.automationId}
-                sourceUserId={moment.automationShare.sourceUserId}
-                title={moment.automationShare.title}
-                creatorName={moment.user.name}
-                creatorUsername={moment.user.username}
-                creatorPhotoURL={moment.user.photoURL}
-              />
-            </div>
-          )}
-
-          {/* Ritual Participation Text */}
+          {/* Post text */}
           <p className='mb-3 whitespace-pre-wrap break-words text-light-primary dark:text-dark-primary'>
             {moment.text}
           </p>
 
-          {/* Tags */}
-          <div className='mb-3 flex flex-wrap gap-2'>
-            {moment.tags.map((tag) => (
-              <span
-                key={tag}
-                className={cn(
-                  'rounded-full px-2.5 py-1 text-xs font-medium',
-                  impactTagColors[tag]
-                )}
-              >
-                {impactTagLabels[tag]}
-              </span>
-            ))}
-          </div>
-
-          {/* Effort Level */}
-          <div className='mb-3 flex items-center gap-2'>
-            <span className='text-lg'>
-              {effortLevelIcons[moment.effortLevel]}
-            </span>
-            <span className='text-sm font-medium text-[#6b5744] dark:text-[#9E8B76]'>
-              {effortLevelLabels[moment.effortLevel]} Effort
-            </span>
-          </div>
-
-          {/* Reaction and Ripple Count Display (for original moments) */}
-          {!moment.joinedFromMomentId &&
-            (reactionCount > 0 || rippleCount > 0) && (
-              <div className='mb-3 flex items-center gap-3 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-                {reactionCount > 0 && (
-                  <span>
-                    {reactionCount}{' '}
-                    {reactionCount === 1 ? 'reaction' : 'reactions'}
-                  </span>
-                )}
-                {reactionCount > 0 && rippleCount > 0 && <span>•</span>}
-                {rippleCount > 0 && (
-                  <Link href={moment.ritualId ? `/rituals/${moment.ritualId}` : `/impact/${moment.id}/ripple`}>
-                    <a className='inline-flex items-center gap-1 text-[#C9A96E] hover:text-[#E8B86D]'>
-                      <span>
-                        {moment.ritualId ? (
-                          <>View ritual</>
-                        ) : (
-                          <>
-                            {rippleCount} {rippleCount === 1 ? 'ripple' : 'ripples'}
-                          </>
-                        )}
-                      </span>
-                      <ArrowRight className='h-3 w-3' />
-                    </a>
-                  </Link>
-                )}
-              </div>
-            )}
-
-          {/* View Ripple/Ritual Button (for original moments with no reactions/ripples yet) */}
-          {!moment.joinedFromMomentId &&
-            reactionCount === 0 &&
-            rippleCount === 0 && (
-              <div className='mb-3'>
-                {moment.ritualId ? (
-                  <Link href={`/rituals/${moment.ritualId}`}>
-                    <a className='inline-flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] px-3 py-2 text-sm font-medium text-[#C9A96E] transition-colors hover:bg-[rgba(201,169,110,0.12)]'>
-                      <span>🌱</span>
-                      <span>View ritual</span>
-                      <ArrowRight className='h-4 w-4' />
-                    </a>
-                  </Link>
-                ) : (
-                  <Link href={`/impact/${moment.id}/ripple`}>
-                    <a className='inline-flex items-center gap-2 rounded-lg border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] px-3 py-2 text-sm font-medium text-[#C9A96E] transition-colors hover:bg-[rgba(201,169,110,0.12)]'>
-                      <span>🌱</span>
-                      <span>View ripple</span>
-                      <ArrowRight className='h-4 w-4' />
-                    </a>
-                  </Link>
-                )}
-              </div>
-            )}
-
-          {/* Mood Check-in */}
-          {moment.moodCheckIn && (
-            <div className='mb-3 rounded-lg bg-[rgba(201,169,110,0.06)] p-3 border border-[rgba(201,169,110,0.15)]'>
-              <div className='mb-2 text-xs font-medium text-[#C9A96E]'>
-                Mood Check-in
-              </div>
-              <div className='flex items-center gap-4 text-sm'>
-                <div className='flex items-center gap-2'>
-                  <span className='text-[#6b5744] dark:text-[#9E8B76]'>
-                    Before:
-                  </span>
-                  <span className='font-semibold text-light-primary dark:text-dark-primary'>
-                    {moment.moodCheckIn.before}/5
-                  </span>
-                </div>
-                <span className='text-[#9E8B76]'>→</span>
-                <div className='flex items-center gap-2'>
-                  <span className='text-[#6b5744] dark:text-[#9E8B76]'>
-                    After:
-                  </span>
-                  <span className='font-semibold text-green-600 dark:text-green-400'>
-                    {moment.moodCheckIn.after}/5
-                  </span>
-                </div>
-                {moment.moodCheckIn.after > moment.moodCheckIn.before && (
-                  <span className='ml-auto text-xs text-green-600 dark:text-green-400'>
-                    +{moment.moodCheckIn.after - moment.moodCheckIn.before}{' '}
-                    improvement
-                  </span>
-                )}
-              </div>
-            </div>
-          )}
-
           {/* Images */}
           {moment.images && moment.images.length > 0 && (
-            <div className='mb-3 grid grid-cols-2 gap-2 overflow-hidden rounded-lg'>
+            <div className='mb-3 grid grid-cols-2 gap-2 overflow-hidden rounded-xl'>
               {moment.images.slice(0, 4).map((imageUrl, index) => (
                 <img
                   key={index}
                   src={imageUrl}
-                  alt={`Ritual share image ${index + 1}`}
+                  alt={`Photo ${index + 1}`}
                   className='h-48 w-full object-cover'
                 />
               ))}
             </div>
           )}
 
-          {/* Actions - Compact */}
-          <div className='relative flex flex-col gap-1.5 pt-2'>
-            {/* Primary Actions: Reactions, Comment, Share, Edit, Delete */}
-            <div className='flex flex-wrap items-center gap-1.5 md:gap-2'>
-              {/* React Button (Reactions) */}
-              <div className='relative'>
-                <button
-                  onClick={() => setRippleMenuOpen(!rippleMenuOpen)}
-                  className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2'
-                  title='React'
+          {/* Tags — warm, uniform style */}
+          {moment.tags.length > 0 && (
+            <div className='mb-3 flex flex-wrap gap-1.5'>
+              {moment.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className='rounded-full bg-[rgba(201,169,110,0.08)] px-2.5 py-0.5 text-xs font-medium text-[#7a5520] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'
                 >
-                  <Sparkles className='h-4 w-4 md:h-4.5 md:w-4.5' />
-                  <span className='text-xs font-medium md:text-sm'>
-                    {reactionCount > 0 ? reactionCount : <span className='hidden sm:inline'>React</span>}
-                  </span>
-                </button>
+                  {impactTagLabels[tag]}
+                </span>
+              ))}
+            </div>
+          )}
 
-                {/* Reactions Menu */}
-                {rippleMenuOpen && (
-                  <div className='absolute left-0 top-full z-10 mt-2 w-48 rounded-lg border border-[#e8d8c4] bg-[#faf8f4] shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'>
-                    <div className='border-b border-[#e8d8c4] px-3 py-2 text-xs font-semibold uppercase tracking-wide text-[#6b5744] dark:border-[#2a1d10] dark:text-[#9E8B76]'>
-                      Reactions
-                    </div>
-                    <div className='p-2'>
-                      {(
-                        ['inspired', 'grateful', 'sent_love'] as RippleType[]
-                      ).map((rippleType) => (
-                        <button
-                          key={rippleType}
-                          onClick={() => {
-                            setRippleMenuOpen(false);
-                            if (moment.id) {
-                              void onRipple?.(moment.id, rippleType);
-                            }
-                          }}
-                          className='flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm transition-colors hover:bg-[rgba(201,169,110,0.08)]'
-                        >
-                          <span className='text-lg'>
-                            {rippleTypeIcons[rippleType]}
-                          </span>
-                          <span className='font-medium'>
-                            {rippleTypeLabels[rippleType]}
-                          </span>
-                          {moment.ripples[rippleType].length > 0 && (
-                            <span className='ml-auto text-xs text-gray-500'>
-                              {moment.ripples[rippleType].length}
-                            </span>
-                          )}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
+          {/* Togetherness count — only on originals with joiners */}
+          {!isJoined && joinerCount > 0 && (
+            <div className='mb-3 inline-flex items-center gap-2 rounded-full border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] px-3 py-1.5 dark:border-[rgba(201,169,110,0.2)] dark:bg-[rgba(201,169,110,0.05)]'>
+              <span className='text-base leading-none'>🤝</span>
+              <span className='text-sm font-semibold text-[#7a5520] dark:text-[#C9A96E]'>
+                {doingTogetherCount} people doing this together
+              </span>
+            </div>
+          )}
 
-              {/* Comment Button */}
-              <Link href={`/impact/${moment.id}`}>
-                <a className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2' title='Comment'>
-                  <MessageCircle className='h-4 w-4 md:h-4.5 md:w-4.5' />
-                  <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Comment</span></span>
-                </a>
-              </Link>
-
-              {/* Share Button */}
+          {/* Action bar */}
+          <div className='relative flex items-center gap-0.5 pt-1'>
+            {/* Reactions button */}
+            <div className='relative'>
               <button
-                onClick={() => setShareModalOpen(true)}
-                className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2'
-                title='Share'
+                onClick={(e) => { e.stopPropagation(); setRippleMenuOpen((o) => !o); }}
+                className='flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[#6b5744] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]'
+                title='React'
               >
-                <Share2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
-                <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Share</span></span>
+                <Sparkles className='h-4 w-4' />
+                {reactionCount > 0 && (
+                  <span className='text-xs font-medium'>{reactionCount}</span>
+                )}
               </button>
 
-              {/* Edit & Delete Buttons (Owner Only) - Now inline */}
-              {isOwner && (
-                <>
-                  <button
-                    onClick={() => setEditModalOpen(true)}
-                    className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-[rgba(201,169,110,0.1)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E] md:gap-1.5 md:p-2'
-                    title='Edit'
-                  >
-                    <Edit2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
-                    <span className='text-xs font-medium md:text-sm'><span className='hidden sm:inline'>Edit</span></span>
-                  </button>
-                  <button
-                    onClick={async () => {
-                      if (
-                        !window.confirm(
-                          'Are you sure you want to delete this ritual share? This action cannot be undone.'
-                        )
-                      ) {
-                        return;
-                      }
-
-                      if (!user?.id || !moment.id) {
-                        toast.error('Unable to delete ritual share');
-                        return;
-                      }
-
-                      setDeleting(true);
-                      try {
-                        const response = await fetch(
-                          `/api/impact-moments/${moment.id}`,
-                          {
-                            method: 'DELETE',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ userId: user.id })
-                          }
-                        );
-
-                        const data = await response.json();
-
-                        if (response.ok) {
-                          toast.success('Ritual share deleted successfully');
-                          // Reload the page to refresh the feed
-                          if (typeof window !== 'undefined') {
-                            window.location.reload();
-                          }
-                        } else {
-                          throw new Error(
-                            data.error || 'Failed to delete ritual share'
-                          );
-                        }
-                      } catch (error) {
-                        console.error('Error deleting ritual share:', error);
-                        toast.error(
-                          error instanceof Error
-                            ? error.message
-                            : 'Failed to delete ritual share'
-                        );
-                      } finally {
-                        setDeleting(false);
-                      }
-                    }}
-                    disabled={deleting}
-                    className='group flex items-center gap-1 rounded-full p-1.5 text-[#6b5744] transition-colors hover:bg-red-50 hover:text-red-600 disabled:opacity-50 dark:text-[#9E8B76] dark:hover:bg-red-900/20 dark:hover:text-red-400 md:gap-1.5 md:p-2'
-                    title='Delete'
-                  >
-                    <Trash2 className='h-4 w-4 md:h-4.5 md:w-4.5' />
-                    <span className='text-xs font-medium md:text-sm'>
-                      {deleting ? <span className='hidden sm:inline'>Deleting...</span> : <span className='hidden sm:inline'>Delete</span>}
-                    </span>
-                  </button>
-                </>
+              {rippleMenuOpen && (
+                <div
+                  className='absolute left-0 top-full z-10 mt-2 min-w-[160px] overflow-hidden rounded-xl border border-[#e8d8c4] bg-[#faf8f4] shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {(['inspired', 'grateful', 'sent_love'] as RippleType[]).map((rt) => (
+                    <button
+                      key={rt}
+                      onClick={() => { setRippleMenuOpen(false); onRipple?.(moment.id ?? '', rt); }}
+                      className='flex w-full items-center gap-3 px-4 py-2.5 text-left text-sm transition hover:bg-[rgba(201,169,110,0.06)] dark:hover:bg-[rgba(201,169,110,0.05)]'
+                    >
+                      <span className='text-base'>{rippleTypeIcons[rt]}</span>
+                      <span className='font-medium text-[#1a1108] dark:text-[#F5EFE6]'>{rippleTypeLabels[rt]}</span>
+                      {moment.ripples[rt].length > 0 && (
+                        <span className='ml-auto text-xs text-[#9E8B76]'>{moment.ripples[rt].length}</span>
+                      )}
+                    </button>
+                  ))}
+                </div>
               )}
             </div>
+
+            {/* Comment */}
+            <Link href={`/impact/${moment.id}`}>
+              <a className='flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[#6b5744] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]' title='Comment'>
+                <MessageCircle className='h-4 w-4' />
+              </a>
+            </Link>
+
+            {/* Share */}
+            <button
+              onClick={() => setShareModalOpen(true)}
+              className='flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[#6b5744] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]'
+              title='Share'
+            >
+              <Share2 className='h-4 w-4' />
+            </button>
+
+            {/* Owner: edit + delete */}
+            {isOwner && (
+              <>
+                <button
+                  onClick={() => setEditModalOpen(true)}
+                  className='flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[#6b5744] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]'
+                  title='Edit'
+                >
+                  <Edit2 className='h-4 w-4' />
+                </button>
+                <button
+                  onClick={async () => {
+                    if (!window.confirm('Delete this post? This cannot be undone.')) return;
+                    if (!user?.id || !moment.id) { toast.error('Unable to delete'); return; }
+                    setDeleting(true);
+                    try {
+                      const res = await fetch(`/api/impact-moments/${moment.id}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ userId: user.id })
+                      });
+                      if (res.ok) { toast.success('Deleted'); window.location.reload(); }
+                      else { const d = await res.json(); throw new Error(d.error); }
+                    } catch (err) {
+                      toast.error(err instanceof Error ? err.message : 'Failed to delete');
+                    } finally { setDeleting(false); }
+                  }}
+                  disabled={deleting}
+                  className='flex items-center gap-1.5 rounded-full px-2.5 py-1.5 text-[#6b5744] transition hover:bg-red-50 hover:text-red-600 disabled:opacity-50 dark:text-[#9E8B76] dark:hover:bg-red-900/20 dark:hover:text-red-400'
+                  title='Delete'
+                >
+                  <Trash2 className='h-4 w-4' />
+                </button>
+              </>
+            )}
+
+            {/* Do this too — only on original moments, not on the viewer's own post */}
+            {!isJoined && !isOwner && (
+              <button
+                onClick={() => onRipple?.(moment.id ?? '', 'joined_you')}
+                className={cn(
+                  'ml-auto flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-sm font-semibold transition',
+                  joinerCount > 0
+                    ? 'border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.08)] text-[#7a5520] hover:bg-[rgba(201,169,110,0.15)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'
+                    : 'border-[#e8d8c4] bg-[#faf8f4] text-[#6b5744] hover:border-[rgba(201,169,110,0.3)] hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#9E8B76] dark:hover:border-[rgba(201,169,110,0.25)]'
+                )}
+              >
+                <span>🤝</span>
+                {joinerCount > 0 ? 'Join them' : 'Do this too'}
+              </button>
+            )}
           </div>
         </div>
       </div>
 
-      {/* Edit Modal */}
       <EditMomentModal
         moment={moment}
         open={editModalOpen}
         closeModal={() => setEditModalOpen(false)}
-        onSuccess={() => {
-          // Reload the page to refresh the feed
-          if (typeof window !== 'undefined') {
-            window.location.reload();
-          }
-        }}
+        onSuccess={() => { if (typeof window !== 'undefined') window.location.reload(); }}
       />
-
-      {/* Share Modal */}
       <ActionShareModal
         moment={moment}
         open={shareModalOpen}

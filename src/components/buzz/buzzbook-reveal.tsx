@@ -9,7 +9,7 @@ type Props = {
 };
 
 const OCCASION_EMOJI: Record<string, string> = {
-  birthday: '🎂', anniversary: '💍', trip: '✈️',
+  birthday: '🎂', anniversary: '💍', graduation: '🎓', trip: '✈️',
   movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚',
   diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };

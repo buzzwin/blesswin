@@ -7,7 +7,7 @@ import { SignBuzzForm } from '@components/buzz/sign-buzz-form';
 import { HeroIcon } from '@components/ui/hero-icon';
 
 const OCCASION_EMOJI: Record<string, string> = {
-  birthday: '🎂', anniversary: '💍', trip: '✈️',
+  birthday: '🎂', anniversary: '💍', graduation: '🎓', trip: '✈️',
   movie: '🎬', series: '📺', gamenight: '🎮', bookclub: '📚',
   diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };
