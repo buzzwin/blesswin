@@ -17,7 +17,7 @@ test.describe('navigation', () => {
 
   test('landing Buzzbook CTA link navigates to /buzzes/new', async ({ page }) => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
-    const buzzLink = page.getByRole('link', { name: /start a buzzbook/i });
+    const buzzLink = page.getByRole('link', { name: /buzzbook/i }).first();
     await expect(buzzLink).toBeVisible({ timeout: 10_000 });
     await expect(buzzLink).toHaveAttribute('href', '/buzzes/new');
   });

@@ -114,10 +114,11 @@ export default function HomePage(): JSX.Element {
         <div className='absolute -left-40 top-40 h-80 w-80 rounded-full bg-[radial-gradient(circle,_#FFD9A8,_transparent_70%)] opacity-70 blur-3xl' />
         <div className='absolute -right-48 top-16 h-96 w-96 rounded-full bg-[radial-gradient(circle,_#FFB3C2,_transparent_70%)] opacity-60 blur-3xl' />
 
-        <div className='mx-auto grid max-w-7xl grid-cols-1 items-center gap-14 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2 lg:px-8 lg:py-28'>
+        <div className='mx-auto grid max-w-7xl grid-cols-1 items-center gap-12 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-2 lg:gap-16 lg:px-8 lg:py-28'>
+          {/* ── Left: copy + CTAs ── */}
           <div className='text-left'>
             {user && (
-              <div className='mb-4 rounded-xl border border-action/20 bg-white/90 px-4 py-3 text-sm text-charcoal/90 shadow-sm dark:border-white/10 dark:bg-charcoal/40 dark:text-cream/90'>
+              <div className='mb-5 rounded-xl border border-action/20 bg-white/90 px-4 py-3 text-sm text-charcoal/90 shadow-sm dark:border-white/10 dark:bg-charcoal/40 dark:text-cream/90'>
                 <span className='font-semibold text-action'>What&apos;s new:</span>{' '}
                 Buzzwin now helps you decide and act — not just discover.{' '}
                 <Link href='/ask' className='font-medium text-action underline decoration-action/40 underline-offset-2 hover:decoration-action'>
@@ -126,73 +127,88 @@ export default function HomePage(): JSX.Element {
                 to plan your weekend, compare options, or save a plan.
               </div>
             )}
-            <div className='inline-flex items-center gap-2 rounded-full border border-charcoal/10 bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.2em] text-charcoal/70 shadow-sm'>
-              <span className='text-base'>✨</span>
-              Rituals, but playful
+
+            {/* Badge row */}
+            <div className='flex flex-wrap gap-2'>
+              <span className='inline-flex items-center gap-1.5 rounded-full border border-charcoal/10 bg-white/80 px-3 py-1.5 text-xs font-semibold text-charcoal/80 shadow-sm'>
+                ✨ Daily rituals
+              </span>
+              <span className='inline-flex items-center gap-1.5 rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1.5 text-xs font-semibold text-emerald-800 shadow-sm'>
+                📖 Buzzbooks
+              </span>
             </div>
+
             <motion.h1
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className='mt-5 font-display text-4xl font-extrabold leading-[1.02] tracking-tight text-charcoal sm:text-5xl lg:text-6xl'
+              className='mt-5 font-display text-4xl font-extrabold leading-[1.05] tracking-tight text-charcoal sm:text-5xl lg:text-6xl'
             >
-              Rituals that feel
-              <span className='block text-emerald-700'>effortless</span>
+              Good days.
+              <span className='block text-emerald-700'>Great people.</span>
             </motion.h1>
+
             <motion.p
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.1 }}
               className='mt-5 text-base leading-7 text-charcoal/80 sm:mt-6 sm:text-lg'
             >
-              Blesswin learns your goals and constraints, then delivers three smart, humane picks each day. No guilt, no clutter, just a calm next step.
+              Blesswin keeps your rituals alive with three calm daily picks — and lets you celebrate the people who make your days better with a Buzzbook.
             </motion.p>
+
             <motion.div
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.2 }}
-              className='mt-8 flex flex-wrap items-center gap-4 sm:mt-10'
+              className='mt-8 sm:mt-10'
             >
               {user ? (
-                <>
+                <div className='flex flex-wrap gap-3'>
                   <Link href='/ask'>
                     <BounceButton variant='primary' size='lg'>
                       Ask Buzzwin
                       <ArrowRight className='ml-2 h-5 w-5' />
                     </BounceButton>
                   </Link>
-                  <Link href='/automations'>
+                  <Link href='/buzzes/new'>
                     <BounceButton variant='secondary' size='lg'>
-                      Automations
+                      📖 Create a Buzzbook
                     </BounceButton>
                   </Link>
                   <Link href='/home'>
                     <BounceButton variant='secondary' size='lg'>
-                      Go to Dashboard
+                      Dashboard
                     </BounceButton>
                   </Link>
-                </>
+                </div>
               ) : (
                 <>
-                  <Link href='/register'>
-                    <BounceButton variant='primary' size='lg'>
-                      <span className='inline-flex items-center gap-2 whitespace-nowrap'>
-                        Start Free
-                        <ArrowRight className='h-5 w-5' />
-                      </span>
-                    </BounceButton>
-                  </Link>
-                  <Link href='/login'>
-                    <BounceButton variant='secondary' size='lg'>
-                      Sign In
-                    </BounceButton>
-                  </Link>
-                  <Link href='/buzzes/new' className='text-sm font-medium text-emerald-700 underline decoration-emerald-700/40 underline-offset-2 hover:decoration-emerald-700'>
-                    Start a Buzzbook →
-                  </Link>
+                  <div className='flex flex-wrap gap-3'>
+                    <Link href='/register'>
+                      <BounceButton variant='primary' size='lg'>
+                        <span className='inline-flex items-center gap-2 whitespace-nowrap'>
+                          Start Free
+                          <ArrowRight className='h-5 w-5' />
+                        </span>
+                      </BounceButton>
+                    </Link>
+                    <Link href='/buzzes/new'>
+                      <a className='inline-flex items-center gap-2 rounded-full border-2 border-emerald-700 bg-emerald-700 px-6 py-3 text-lg font-semibold text-white shadow-sm transition hover:bg-emerald-800 focus:outline-none focus:ring-2 focus:ring-emerald-700 focus:ring-offset-2 active:scale-95'>
+                        📖 Create a Buzzbook
+                      </a>
+                    </Link>
+                  </div>
+                  <p className='mt-4 text-sm text-charcoal/80'>
+                    Already a member?{' '}
+                    <Link href='/login'>
+                      <a className='font-medium underline underline-offset-2 hover:text-charcoal'>Sign in</a>
+                    </Link>
+                  </p>
                 </>
               )}
             </motion.div>
+
             <div className='mt-8 flex flex-wrap gap-4 text-sm text-charcoal/70 sm:mt-10'>
               <div className='flex items-center gap-2'>
                 <span className='h-2.5 w-2.5 rounded-full bg-hope' />
@@ -200,65 +216,91 @@ export default function HomePage(): JSX.Element {
               </div>
               <div className='flex items-center gap-2'>
                 <span className='h-2.5 w-2.5 rounded-full bg-sage' />
-                Adjusts to your calendar
+                Group Buzzbooks in minutes
               </div>
               <div className='flex items-center gap-2'>
                 <span className='h-2.5 w-2.5 rounded-full bg-terracotta' />
-                Full approval control
+                No guilt, no pressure
               </div>
             </div>
           </div>
 
+          {/* ── Right: unified rituals + Buzzbook card ── */}
           <motion.div
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.25 }}
             className='relative'
           >
-            <div className='rounded-[32px] border-2 border-charcoal/10 bg-white/85 p-5 shadow-[0_24px_70px_rgba(44,44,44,0.15)] backdrop-blur sm:p-6'>
-              <div className='flex items-center justify-between text-sm text-charcoal/80'>
-                <span>Today</span>
-                <span className='rounded-full bg-cream px-3 py-1 text-xs uppercase tracking-[0.2em] text-charcoal/80'>Routine</span>
+            <div className='overflow-hidden rounded-[28px] border-2 border-charcoal/10 bg-white/90 shadow-[0_24px_70px_rgba(44,44,44,0.13)] backdrop-blur'>
+
+              {/* ── Rituals section ── */}
+              <div className='p-5 sm:p-6'>
+                <div className='flex items-center justify-between'>
+                  <span className='text-sm font-semibold text-charcoal'>✨ Today</span>
+                  <span className='rounded-full bg-cream px-3 py-1 text-xs font-medium uppercase tracking-widest text-charcoal/80'>Routine</span>
+                </div>
+                <div className='mt-4 space-y-2'>
+                  {[
+                    { title: '5-min reset walk', time: '9:10 AM', tone: 'from-emerald-400 to-teal-500' },
+                    { title: 'Stretch + hydrate', time: '1:30 PM', tone: 'from-sky-400 to-cyan-500' },
+                    { title: 'Wind-down journal', time: '9:00 PM', tone: 'from-amber-400 to-orange-500' }
+                  ].map((item) => (
+                    <div
+                      key={item.title}
+                      className='flex items-center justify-between rounded-xl border border-charcoal/8 bg-cream/60 px-3 py-2.5'
+                    >
+                      <div className='flex items-center gap-2.5'>
+                        <div className={cn('h-7 w-7 rounded-lg bg-gradient-to-br', item.tone)} />
+                        <span className='text-sm font-medium text-charcoal'>{item.title}</span>
+                      </div>
+                      <span className='text-xs font-medium text-charcoal/70'>{item.time}</span>
+                    </div>
+                  ))}
+                </div>
+                <p className='mt-3 rounded-xl bg-charcoal/5 px-3 py-2 text-xs text-charcoal/70'>
+                  Skip any time — we adjust tomorrow. No streak pressure.
+                </p>
               </div>
-              <div className='mt-5 space-y-3 sm:mt-6 sm:space-y-4'>
-                {[
-                  {
-                    title: '5-min reset walk',
-                    time: '9:10 AM',
-                    tone: 'from-emerald-400 to-teal-500'
-                  },
-                  {
-                    title: 'Stretch + hydrate',
-                    time: '1:30 PM',
-                    tone: 'from-sky-400 to-cyan-500'
-                  },
-                  {
-                    title: 'Wind-down journal',
-                    time: '9:00 PM',
-                    tone: 'from-amber-400 to-orange-500'
-                  }
-                ].map((item) => (
-                  <div
-                    key={item.title}
-                    className='flex items-center justify-between rounded-2xl border-2 border-charcoal/10 bg-white px-4 py-3 transition-transform hover:-translate-y-0.5'
-                  >
-                    <div className='flex items-center gap-3'>
-                      <div className={cn('h-10 w-10 rounded-xl bg-gradient-to-br', item.tone)} />
-                      <div>
-                        <div className='text-sm font-semibold text-charcoal'>{item.title}</div>
-                        <div className='text-xs text-charcoal/80'>Suggested because: low effort day</div>
+
+              {/* ── Divider ── */}
+              <div className='mx-5 border-t border-charcoal/8 sm:mx-6' />
+
+              {/* ── Buzzbook section ── */}
+              <div className='bg-emerald-50/70 p-5 sm:p-6'>
+                <div className='flex items-start gap-3'>
+                  <div className='flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm ring-1 ring-emerald-200'>
+                    📖
+                  </div>
+                  <div className='flex-1 min-w-0'>
+                    <p className='text-sm font-semibold text-charcoal'>Priya&apos;s Buzzbook</p>
+                    <p className='mt-0.5 text-xs text-charcoal/70'>Design Lead · 4 teammates have signed</p>
+                    <div className='mt-2 flex items-center gap-2'>
+                      <div className='flex -space-x-1.5'>
+                        {['🌿', '🧡', '⚡', '🌊'].map((emoji, i) => (
+                          <div key={i} className='flex h-6 w-6 items-center justify-center rounded-full bg-white text-xs ring-1 ring-emerald-100'>
+                            {emoji}
+                          </div>
+                        ))}
+                        <div className='flex h-6 w-6 items-center justify-center rounded-full bg-emerald-100 text-[10px] font-bold text-emerald-700 ring-1 ring-emerald-200'>
+                          +2
+                        </div>
                       </div>
                     </div>
-                    <span className='text-xs font-medium text-charcoal/70'>{item.time}</span>
                   </div>
-                ))}
-              </div>
-              <div className='mt-5 rounded-2xl bg-charcoal px-4 py-3 text-sm text-cream sm:mt-6'>
-                If you skip, we auto-adjust tomorrow. No streak pressure.
+                </div>
+                <Link href='/buzzes/new'>
+                  <a className='mt-4 flex items-center justify-between rounded-xl bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-emerald-800'>
+                    Sign their Buzzbook
+                    <ArrowRight className='h-4 w-4' />
+                  </a>
+                </Link>
               </div>
             </div>
-            <div className='absolute -bottom-6 -left-6 rounded-2xl border border-charcoal/10 bg-white px-4 py-3 text-xs font-semibold text-charcoal shadow-lg'>
-              +2 gentle nudges this week
+
+            {/* Floating badge */}
+            <div className='absolute -bottom-5 -right-4 rounded-2xl border border-charcoal/10 bg-white px-4 py-2.5 text-xs font-semibold text-charcoal shadow-lg'>
+              📅 +2 gentle nudges this week
             </div>
           </motion.div>
         </div>

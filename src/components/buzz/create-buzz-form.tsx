@@ -145,9 +145,10 @@ export function CreateBuzzForm(): JSX.Element {
 
       awardBuzzKarma(user.id, 10).catch(() => undefined);
     } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
       // eslint-disable-next-line no-console
       console.error('createBuzz failed:', err);
-      toast.error('Could not create Buzz — try again');
+      toast.error(`Could not create Buzz — ${msg}`);
     } finally {
       setLoading(false);
     }
