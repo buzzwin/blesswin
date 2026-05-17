@@ -1,7 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { buzzesCollection, usersCollection } from '@lib/firebase/collections';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
+import type { Transporter } from 'nodemailer';
 
 const OCCASION_EMOJI: Record<string, string> = {
   birthday: '🎂', anniversary: '💍', graduation: '🎓', trip: '✈️',
@@ -11,10 +12,10 @@ const OCCASION_EMOJI: Record<string, string> = {
 
 const GROUP_OCCASIONS = new Set(['trip', 'movie', 'series', 'gamenight', 'bookclub']);
 
-function createTransporter(): nodemailer.Transporter {
+function createTransporter(): Transporter {
   const emailApi = process.env.EMAIL_API || 'link2sources@gmail.com';
   const emailPassword = (process.env.EMAIL_API_PASSWORD || 'dyiqmkcl driu tmke').replace(/\s/g, '');
-  return nodemailer.createTransport({
+  return createTransport({
     service: 'gmail',
     auth: { user: emailApi, pass: emailPassword }
   });
@@ -158,27 +159,27 @@ export default async function handler(
     const sender = senderDoc.exists() ? senderDoc.data() : null;
     const senderName = sender?.name || sender?.username || 'A friend';
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://buzzwin.com';
-    const shareUrl = `${siteUrl}/b/${buzz.shareToken as string}`;
-    const isGroup = GROUP_OCCASIONS.has(buzz.occasion as string);
+    const shareUrl = `${siteUrl}/b/${buzz.shareToken}`;
+    const isGroup = GROUP_OCCASIONS.has(buzz.occasion);
 
     const transporter = createTransporter();
     await transporter.verify();
 
     const subject = isGroup
-      ? `${senderName} invited you to add your page to "${buzz.title as string}" 📖`
-      : `${senderName} is making a Buzzbook for ${buzz.recipientName as string} — add your page! 📖`;
+      ? `${senderName} invited you to add your page to "${buzz.title}" 📖`
+      : `${senderName} is making a Buzzbook for ${buzz.recipientName} — add your page! 📖`;
 
     const html = buildEmailHtml({
       senderName,
-      buzzTitle: buzz.title as string,
-      recipientName: buzz.recipientName as string,
-      occasion: buzz.occasion as string,
+      buzzTitle: buzz.title,
+      recipientName: buzz.recipientName,
+      occasion: buzz.occasion,
       isGroup,
       shareUrl,
       siteUrl
     });
 
-    const text = `${senderName} invited you to add your page to the "${buzz.title as string}" Buzzbook!\n\nAdd your page here: ${shareUrl}\n\nIf you didn't expect this, you can safely ignore it.`;
+    const text = `${senderName} invited you to add your page to the "${buzz.title}" Buzzbook!\n\nAdd your page here: ${shareUrl}\n\nIf you didn't expect this, you can safely ignore it.`;
 
     const emailApi = process.env.EMAIL_API || 'link2sources@gmail.com';
 
