@@ -114,9 +114,10 @@ export default async function handler(
     return;
   }
 
-  const { buzzId, emails, senderUserId } = req.body as {
+  const { buzzId, emails, userIds, senderUserId } = req.body as {
     buzzId?: string;
     emails?: unknown;
+    userIds?: unknown;
     senderUserId?: string;
   };
 
@@ -128,19 +129,23 @@ export default async function handler(
     res.status(400).json({ error: 'senderUserId is required' });
     return;
   }
-  if (!Array.isArray(emails) || emails.length === 0) {
-    res.status(400).json({ error: 'emails must be a non-empty array' });
-    return;
-  }
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validEmails = (emails as unknown[])
-    .filter((e): e is string => typeof e === 'string' && emailRegex.test(e.trim()))
-    .map((e) => e.trim().toLowerCase())
-    .slice(0, 20); // cap at 20 per call
+  const validEmails = Array.isArray(emails)
+    ? (emails as unknown[])
+        .filter((e): e is string => typeof e === 'string' && emailRegex.test(e.trim()))
+        .map((e) => e.trim().toLowerCase())
+        .slice(0, 20)
+    : [];
 
-  if (validEmails.length === 0) {
-    res.status(400).json({ error: 'No valid email addresses provided' });
+  const validUserIds = Array.isArray(userIds)
+    ? (userIds as unknown[])
+        .filter((u): u is string => typeof u === 'string' && u.trim().length > 0)
+        .slice(0, 20)
+    : [];
+
+  if (validEmails.length === 0 && validUserIds.length === 0) {
+    res.status(400).json({ error: 'Provide at least one email or user to invite' });
     return;
   }
 
@@ -162,51 +167,58 @@ export default async function handler(
     const shareUrl = `${siteUrl}/b/${buzz.shareToken}`;
     const isGroup = GROUP_OCCASIONS.has(buzz.occasion);
 
-    const transporter = createTransporter();
-    await transporter.verify();
+    let sent = 0;
+    let failed = 0;
+    let results: PromiseSettledResult<unknown>[] = [];
 
-    const subject = isGroup
-      ? `${senderName} invited you to add your page to "${buzz.title}" 📖`
-      : `${senderName} is making a Buzzbook for ${buzz.recipientName} — add your page! 📖`;
+    if (validEmails.length > 0) {
+      const transporter = createTransporter();
+      await transporter.verify();
 
-    const html = buildEmailHtml({
-      senderName,
-      buzzTitle: buzz.title,
-      recipientName: buzz.recipientName,
-      occasion: buzz.occasion,
-      isGroup,
-      shareUrl,
-      siteUrl
-    });
+      const subject = isGroup
+        ? `${senderName} invited you to add your page to "${buzz.title}" 📖`
+        : `${senderName} is making a Buzzbook for ${buzz.recipientName} — add your page! 📖`;
 
-    const text = `${senderName} invited you to add your page to the "${buzz.title}" Buzzbook!\n\nAdd your page here: ${shareUrl}\n\nIf you didn't expect this, you can safely ignore it.`;
-
-    const emailApi = process.env.EMAIL_API || 'link2sources@gmail.com';
-
-    const results = await Promise.allSettled(
-      validEmails.map((to) =>
-        transporter.sendMail({
-          from: `"${senderName} via Buzzwin" <${emailApi}>`,
-          to,
-          subject,
-          html,
-          text
-        })
-      )
-    );
-
-    const sent = results.filter((r) => r.status === 'fulfilled').length;
-    const failed = results.length - sent;
-
-    // Persist successfully-invited emails to the Buzz document
-    const sentEmails = validEmails.filter((_, i) => results[i].status === 'fulfilled');
-    if (sentEmails.length > 0) {
-      await updateDoc(doc(buzzesCollection, buzzId), {
-        invitedEmails: arrayUnion(...sentEmails)
+      const html = buildEmailHtml({
+        senderName,
+        buzzTitle: buzz.title,
+        recipientName: buzz.recipientName,
+        occasion: buzz.occasion,
+        isGroup,
+        shareUrl,
+        siteUrl
       });
+
+      const text = `${senderName} invited you to add your page to the "${buzz.title}" Buzzbook!\n\nAdd your page here: ${shareUrl}\n\nIf you didn't expect this, you can safely ignore it.`;
+
+      const emailApi = process.env.EMAIL_API || 'link2sources@gmail.com';
+
+      results = await Promise.allSettled(
+        validEmails.map((to) =>
+          transporter.sendMail({
+            from: `"${senderName} via Buzzwin" <${emailApi}>`,
+            to,
+            subject,
+            html,
+            text
+          })
+        )
+      );
+
+      sent = results.filter((r) => r.status === 'fulfilled').length;
+      failed = results.length - sent;
     }
 
-    res.status(200).json({ sent, failed });
+    // Persist sent emails + user IDs to the Buzz document
+    const sentEmails = validEmails.filter((_, i) => results[i].status === 'fulfilled');
+    const updates: Record<string, ReturnType<typeof arrayUnion>> = {};
+    if (sentEmails.length > 0) updates['invitedEmails'] = arrayUnion(...sentEmails);
+    if (validUserIds.length > 0) updates['invitedUserIds'] = arrayUnion(...validUserIds);
+    if (Object.keys(updates).length > 0) {
+      await updateDoc(doc(buzzesCollection, buzzId), updates);
+    }
+
+    res.status(200).json({ sent, failed, usersAdded: validUserIds.length });
   } catch (error) {
     console.error('[buzz-invite] error:', error);
     res.status(500).json({ error: error instanceof Error ? error.message : 'Failed to send invites' });

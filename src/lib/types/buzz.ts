@@ -37,6 +37,7 @@ export type Buzz = {
   shareToken: string;
   signedBy: string[];
   invitedEmails: string[];
+  invitedUserIds: string[];
   feedTweetId: string | null;
   revealTweetId: string | null;
   isPublic: boolean;

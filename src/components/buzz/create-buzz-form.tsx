@@ -124,6 +124,7 @@ type FormState = {
   boardMode: BuzzBoardMode;
   recipientName: string;
   title: string;
+  titleCustomized: boolean;
   revealAt: string;
   isPublic: boolean;
 };
@@ -134,6 +135,7 @@ const INITIAL: FormState = {
   boardMode: 'personal',
   recipientName: '',
   title: '',
+  titleCustomized: false,
   revealAt: '',
   isPublic: true
 };
@@ -172,7 +174,8 @@ export function CreateBuzzForm(): JSX.Element {
       ...f,
       occasion: occ,
       boardMode: GROUP_OCCASIONS.has(occ) ? 'group' : f.boardMode,
-      title: obj.defaultTitle(f.recipientName || fallback)
+      title: obj.defaultTitle(f.recipientName || fallback),
+      titleCustomized: false
     }));
     setStep('recipient');
   }
@@ -182,7 +185,8 @@ export function CreateBuzzForm(): JSX.Element {
     setForm((f) => ({
       ...f,
       recipientName: name,
-      title: obj ? obj.defaultTitle(name || 'You') : f.title
+      // Only recompute title if the user hasn't customized it (AI or manual edit)
+      title: !f.titleCustomized && obj ? obj.defaultTitle(name || 'You') : f.title
     }));
   }
 
@@ -269,7 +273,8 @@ export function CreateBuzzForm(): JSX.Element {
         occasion: data.occasion,
         boardMode: GROUP_OCCASIONS.has(data.occasion) ? 'group' : f.boardMode,
         recipientName: data.recipientName || f.recipientName,
-        title: data.title || obj.defaultTitle(data.recipientName || 'You')
+        title: data.title || obj.defaultTitle(data.recipientName || 'You'),
+        titleCustomized: !!data.title
       }));
       setStep('recipient');
     } catch {
@@ -552,7 +557,7 @@ export function CreateBuzzForm(): JSX.Element {
               type='text'
               className={inputCls}
               value={form.title}
-              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
+              onChange={(e) => setForm((f) => ({ ...f, title: e.target.value, titleCustomized: true }))}
               maxLength={80}
             />
           </div>

@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { doc, Timestamp } from 'firebase/firestore';
+import { doc, Timestamp, getDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
 import { WhatsappShareButton, WhatsappIcon } from 'next-share';
 import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
@@ -13,10 +13,11 @@ import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { useDocument } from '@lib/hooks/useDocument';
 import { useSignatures } from '@lib/hooks/useSignatures';
-import { buzzesCollection } from '@lib/firebase/collections';
+import { buzzesCollection, usersCollection } from '@lib/firebase/collections';
 import { hideBuzzSignature, updateBuzz, deleteBuzz } from '@lib/firebase/utils/buzz';
 import { InviteSection } from '@components/buzz/invite-section';
 import type { Signature } from '@lib/types/buzz';
+import type { User } from '@lib/types/user';
 import type { ReactElement, ReactNode } from 'react';
 
 const OCCASION_EMOJI: Record<string, string> = {
@@ -123,6 +124,35 @@ function InvitedRow({ email, shareUrl }: { email: string; shareUrl: string }): J
   );
 }
 
+function InvitedUserRow({ user, shareUrl }: { user: User; shareUrl: string }): JSX.Element {
+  const initials = user.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
+  return (
+    <div className='flex items-center gap-3 rounded-xl border border-dashed border-[#e8d8c4] bg-[#faf8f4] p-3.5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+      {user.photoURL ? (
+        <img src={user.photoURL} alt={user.name} className='h-9 w-9 shrink-0 rounded-full object-cover' />
+      ) : (
+        <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.15)] text-xs font-bold text-[#8a6520]'>
+          {initials}
+        </div>
+      )}
+      <div className='min-w-0 flex-1'>
+        <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>{user.name}</p>
+        <p className='text-xs text-[#9E8B76]'>@{user.username}</p>
+      </div>
+      <span className='shrink-0 rounded-full bg-[rgba(181,96,60,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
+        Invited
+      </span>
+      <button
+        onClick={() => { void navigator.clipboard.writeText(shareUrl); toast.success('Link copied!'); }}
+        className='shrink-0 rounded-lg p-1.5 text-[#9E8B76] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
+        title='Copy invite link'
+      >
+        <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
+      </button>
+    </div>
+  );
+}
+
 const inputCls = [
   'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
   'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
@@ -149,6 +179,15 @@ export default function BuzzManagement(): JSX.Element {
     if (buzzLoading || !buzz || !user) return;
     if (buzz.createdBy !== user.id) void router.replace('/buzzes');
   }, [buzz, buzzLoading, user]);
+
+  // ── Invited user profiles ────────────────────────────────────────────────────
+  const [invitedUsers, setInvitedUsers] = useState<User[]>([]);
+  useEffect(() => {
+    const ids = buzz?.invitedUserIds ?? [];
+    if (ids.length === 0) { setInvitedUsers([]); return; }
+    void Promise.all(ids.map((id) => getDoc(doc(usersCollection, id))))
+      .then((docs) => setInvitedUsers(docs.filter((d) => d.exists()).map((d) => d.data() as User)));
+  }, [buzz?.invitedUserIds?.join(',')]);
 
   // ── Edit state ──────────────────────────────────────────────────────────────
   const [editOpen, setEditOpen] = useState(false);
@@ -424,9 +463,9 @@ export default function BuzzManagement(): JSX.Element {
                   {signatures!.length} added
                 </span>
               )}
-              {(buzz.invitedEmails?.length ?? 0) > 0 && (
+              {((buzz.invitedEmails?.length ?? 0) + invitedUsers.length) > 0 && (
                 <span className='rounded-full bg-[rgba(181,96,60,0.1)] px-2 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
-                  {buzz.invitedEmails.length} invited
+                  {(buzz.invitedEmails?.length ?? 0) + invitedUsers.length} invited
                 </span>
               )}
             </div>
@@ -440,7 +479,16 @@ export default function BuzzManagement(): JSX.Element {
               </div>
             )}
 
-            {/* Invited (pending) */}
+            {/* Invited platform users */}
+            {invitedUsers.length > 0 && (
+              <div className='space-y-2'>
+                {invitedUsers.map((u) => (
+                  <InvitedUserRow key={u.id} user={u} shareUrl={shareUrl} />
+                ))}
+              </div>
+            )}
+
+            {/* Invited by email (pending) */}
             {buzz.invitedEmails && buzz.invitedEmails.length > 0 && (
               <div className='space-y-2'>
                 {buzz.invitedEmails.map((email) => (
@@ -450,7 +498,7 @@ export default function BuzzManagement(): JSX.Element {
             )}
 
             {/* Empty state */}
-            {(!signatures || signatures.length === 0) && (!buzz.invitedEmails || buzz.invitedEmails.length === 0) && (
+            {(!signatures || signatures.length === 0) && invitedUsers.length === 0 && (!buzz.invitedEmails || buzz.invitedEmails.length === 0) && (
               <div className='rounded-2xl border border-dashed border-[#e8d8c4] py-10 text-center text-sm text-[#9E8B76] dark:border-[#2a1d10]'>
                 No pages yet — share the link or invite people above.
               </div>
