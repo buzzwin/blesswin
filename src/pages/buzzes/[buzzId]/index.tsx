@@ -189,7 +189,7 @@ export default function BuzzManagement(): JSX.Element {
       )}
 
       {!loading && buzz && (
-        <div className='mx-auto max-w-lg space-y-5 px-4 py-4'>
+        <div className='mx-auto max-w-lg space-y-5 py-4'>
 
           {/* ── Buzz header card ── */}
           <div className='rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>

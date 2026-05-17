@@ -140,14 +140,12 @@ export default function MyBuzzes(): JSX.Element {
         <div className='flex w-full items-center justify-between px-4'>
           <h2 className='font-display text-xl font-bold'>My Buzzes</h2>
           <Link href='/buzzes/new'>
-            <a className='btn-festive px-4 py-2 text-sm'>
-              + New Buzzbook
-            </a>
+            <a className='btn-festive px-4 py-2 text-sm'>+ New</a>
           </Link>
         </div>
       </MainHeader>
 
-      <div className='space-y-3 px-4 py-4'>
+      <div className='space-y-3 py-4'>
         {loading && (
           <div className='py-16 text-center text-[#9E8B76]'>Loading…</div>
         )}

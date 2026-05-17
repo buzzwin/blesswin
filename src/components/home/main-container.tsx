@@ -13,16 +13,17 @@ export function MainContainer({
   return (
     <main
       className={cn(
-        'mx-auto flex min-h-screen w-full max-w-2xl flex-col',
+        'mx-auto flex min-h-screen w-full flex-col',
         'bg-main-background',
-        'border-x-0 border-[#e8d8c4] dark:border-[#2a1d10] sm:border-x',
+        'lg:max-w-2xl lg:border-x lg:border-[#e8d8c4] dark:lg:border-[#2a1d10]',
         'transition-colors duration-150',
         'relative',
-        'pb-10',
+        // bottom padding: extra on mobile for floating tab bar, less on desktop
+        'pb-28 lg:pb-10',
         className
       )}
     >
-      <div className='w-full px-2 sm:px-3'>{children}</div>
+      <div className='w-full px-4 lg:px-3'>{children}</div>
     </main>
   );
 }

@@ -34,6 +34,12 @@ const OCCASIONS: OccasionOption[] = [
   { value: 'custom',      label: 'Custom',      emoji: '✨', defaultTitle: (n) => `A Buzz for ${n}` }
 ];
 
+const OCCASION_COLOR: Partial<Record<BuzzOccasion, string>> = {
+  birthday: '#FFB300', trip: '#FF8A3D', movie: '#9B6FD9',
+  series: '#6C7CFF', gamenight: '#2FB888', bookclub: '#C9A96E',
+  anniversary: '#E5407A', graduation: '#34D399', custom: '#FFB300'
+};
+
 function minRevealDate(): string {
   const d = new Date();
   d.setDate(d.getDate() + 1);
@@ -237,10 +243,7 @@ export function CreateBuzzForm(): JSX.Element {
     'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
   );
 
-  const primaryBtn = cn(
-    'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold transition',
-    'bg-[#C97D60] text-white hover:bg-[#C97D60] disabled:opacity-40'
-  );
+  const primaryBtn = 'btn-festive w-full justify-center py-3 disabled:opacity-40';
 
   const ghostBtn = cn(
     'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-medium transition',
@@ -268,8 +271,11 @@ export function CreateBuzzForm(): JSX.Element {
           </div>
           <div className='h-1 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-[#1c1510]'>
             <div
-              className='h-full rounded-full bg-[#C97D60] transition-all duration-300'
-              style={{ width: `${((stepIndex) / 3) * 100}%` }}
+              className='h-full rounded-full transition-all duration-300'
+              style={{
+                width: `${((stepIndex) / 3) * 100}%`,
+                background: 'var(--bw-grad-festival-cta)'
+              }}
             />
           </div>
         </div>
@@ -284,25 +290,31 @@ export function CreateBuzzForm(): JSX.Element {
           <p className='mb-6 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             Pick the vibe and we&apos;ll set up a Buzzbook for it.
           </p>
-          <div className='grid grid-cols-2 gap-3 sm:grid-cols-3'>
-            {OCCASIONS.map((occ) => (
-              <button
-                key={occ.value}
-                onClick={() => pickOccasion(occ.value)}
-                className={cn(
-                  'flex flex-col items-center gap-2 rounded-2xl border-2 p-5 transition',
-                  'border-[#e8d8c4] bg-[#faf8f4] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)]',
-                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)] dark:hover:bg-[rgba(201,169,110,0.06)]',
-                  form.occasion === occ.value &&
-                    'border-[#C9A96E] bg-[rgba(201,169,110,0.06)] dark:bg-[rgba(201,169,110,0.08)]'
-                )}
-              >
-                <span className='text-3xl'>{occ.emoji}</span>
-                <span className='text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
-                  {occ.label}
-                </span>
-              </button>
-            ))}
+          <div className='grid grid-cols-3 gap-2.5'>
+            {OCCASIONS.map((occ) => {
+              const sel = form.occasion === occ.value;
+              const color = OCCASION_COLOR[occ.value] ?? '#C9A96E';
+              return (
+                <button
+                  key={occ.value}
+                  onClick={() => pickOccasion(occ.value)}
+                  className='flex flex-col items-center gap-2 rounded-2xl border-2 p-4 transition-all active:scale-95'
+                  style={{
+                    borderColor: sel ? color : 'rgba(201,169,110,0.2)',
+                    background: sel
+                      ? `${color}22`
+                      : 'rgba(201,169,110,0.04)',
+                    boxShadow: sel ? `0 0 20px ${color}44` : 'none',
+                    transform: sel ? 'translateY(-1px)' : 'none'
+                  }}
+                >
+                  <span className='text-3xl'>{occ.emoji}</span>
+                  <span className='text-xs font-bold text-[#1a1108] dark:text-[#C4B5A0]'>
+                    {occ.label}
+                  </span>
+                </button>
+              );
+            })}
           </div>
         </div>
       )}

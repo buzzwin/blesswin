@@ -299,40 +299,34 @@ export default function HomeFeed(): JSX.Element {
         title='Home / Buzzwin'
         description='Share moments and celebrate the people you love.'
       />
-      <MainHeader title='Home' useMobileSidebar />
+      <MainHeader title='Home' />
 
       {/* Post to feed */}
       <div className='mb-3'>
         <ImpactMomentInput onSuccess={handleMomentCreated} />
       </div>
 
-      {/* Buzzbook nudge — permanent, warm-styled */}
+      {/* Buzzbook nudge */}
       <Link href='/buzzes/new'>
-        <a className='mb-4 flex items-center gap-4 rounded-2xl border p-4 transition-all
-                      border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)]
-                      hover:border-[rgba(201,169,110,0.35)] hover:bg-[rgba(201,169,110,0.08)]
-                      dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
-          {/* SVG book icon */}
-          <svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg' className='h-10 w-10 shrink-0' aria-hidden='true'>
-            {/* Open book */}
-            <path d='M8,36 Q16,30 24,33 L24,44 Q16,41 8,44 Z' fill='rgba(201,169,110,0.25)' stroke='rgba(201,169,110,0.55)' strokeWidth='1.2'/>
-            <path d='M24,33 Q32,30 40,36 L40,44 Q32,41 24,44 Z' fill='rgba(201,169,110,0.25)' stroke='rgba(201,169,110,0.55)' strokeWidth='1.2'/>
-            <line x1='24' y1='32' x2='24' y2='45' stroke='rgba(201,169,110,0.7)' strokeWidth='1.8' strokeLinecap='round'/>
-            {/* Floating pages */}
-            <rect x='4' y='12' width='17' height='20' rx='3' fill='rgba(201,169,110,0.12)' stroke='rgba(201,169,110,0.4)' strokeWidth='1.2' transform='rotate(-8,12,22)'/>
-            <rect x='27' y='8' width='17' height='20' rx='3' fill='rgba(181,96,60,0.12)' stroke='rgba(181,96,60,0.4)' strokeWidth='1.2' transform='rotate(8,36,18)'/>
-            {/* Sparkle */}
-            <path d='M24,4 L25,1 L26,4 L29,5 L26,6 L25,9 L24,6 L21,5 Z' fill='rgba(201,169,110,0.7)'/>
+        <a className='mb-4 flex items-center gap-3 rounded-2xl border p-4 transition-all
+                      border-[rgba(255,179,0,0.2)] bg-[rgba(255,179,0,0.04)]
+                      hover:border-[rgba(255,179,0,0.35)] hover:bg-[rgba(255,179,0,0.07)]
+                      dark:border-[rgba(255,179,0,0.15)] dark:bg-[rgba(255,179,0,0.03)]'>
+          <svg viewBox='0 0 64 64' fill='none' className='h-10 w-10 shrink-0' aria-hidden='true'>
+            <path d='M32 28 Q22 24 12 28 L12 50 Q22 46 32 50 Z' fill='#FFB300' stroke='#7a3e20' strokeWidth='1.5' strokeLinejoin='round'/>
+            <path d='M32 28 Q42 24 52 28 L52 50 Q42 46 32 50 Z' fill='#E5407A' stroke='#7a3e20' strokeWidth='1.5' strokeLinejoin='round'/>
+            <line x1='32' y1='28' x2='32' y2='50' stroke='#7a3e20' strokeWidth='1.5' strokeLinecap='round'/>
+            <path d='M32 3 L33.5 10.5 L40.5 12 L33.5 13.5 L32 21 L30.5 13.5 L23.5 12 L30.5 10.5 Z' fill='#FFB300'/>
           </svg>
-          <div className='flex-1'>
-            <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
-              Doing something together soon?
+          <div className='min-w-0 flex-1'>
+            <p className='text-sm font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+              Something to celebrate together?
             </p>
-            <p className='text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.5)]'>
-              Every trip, movie night, birthday — everyone adds a page, you open it together.
+            <p className='mt-0.5 text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.5)]'>
+              Everyone adds a page — you open it as a Buzzbook.
             </p>
           </div>
-          <span className='shrink-0 text-sm font-semibold text-[#C9A96E]'>Make one →</span>
+          <span className='shrink-0 text-sm font-bold' style={{ color: '#FFB300' }}>Make one →</span>
         </a>
       </Link>
 

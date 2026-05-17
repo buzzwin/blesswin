@@ -65,8 +65,8 @@ export function TopNavBar(): JSX.Element | null {
 
   return (
     <nav
-      className='sticky top-0 z-50 border-b border-[#e8d8c4] bg-[#faf8f4]/95 backdrop-blur-md
-                 dark:border-[#2a1d10] dark:bg-[#0f0b06]/95'
+      className='sticky top-0 z-50 hidden border-b border-[#e8d8c4] bg-[#faf8f4]/95 backdrop-blur-md
+                 dark:border-[#2a1d10] dark:bg-[#0f0b06]/95 lg:block'
     >
       <div className='flex h-12 items-center justify-between px-3 sm:px-5'>
 
