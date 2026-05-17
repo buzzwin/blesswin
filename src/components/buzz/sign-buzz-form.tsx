@@ -1,12 +1,16 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Link from 'next/link';
-import { signInAnonymously } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import type { User as FirebaseUser } from 'firebase/auth';
 import { WhatsappShareButton, WhatsappIcon } from 'next-share';
 import { toast } from 'react-hot-toast';
 import { auth } from '@lib/firebase/app';
+import { useAuth } from '@lib/context/auth-context';
 import { signBuzz, uploadBuzzMedia, awardBuzzKarma } from '@lib/firebase/utils/buzz';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { GoogleIcon } from '@components/ui/google-icon';
+import { LoadingDots } from '@components/ui/loading';
 import { cn } from '@lib/utils';
 import type { Buzz } from '@lib/types/buzz';
 
@@ -23,7 +27,159 @@ const GROUP_OCCASIONS = new Set([
   'trip', 'movie', 'series', 'gamenight', 'bookclub'
 ]);
 
+const inputCls = cn(
+  'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
+  'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
+  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
+  'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
+);
+
+// ── Inline auth gate ────────────────────────────────────────────────────────
+
+function AuthGate({ buzz }: { buzz: Buzz }): JSX.Element {
+  const { signInWithGoogle, signInWithEmail, createUserWithEmail } = useAuth();
+  const [showEmail, setShowEmail] = useState(false);
+  const [isSignUp, setIsSignUp] = useState(true);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const isGroup = GROUP_OCCASIONS.has(buzz.occasion);
+
+  async function handleGoogle(): Promise<void> {
+    setLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch {
+      toast.error('Google sign-in failed — try again');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleEmail(e: React.FormEvent): Promise<void> {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      if (isSignUp) {
+        await createUserWithEmail(email, password);
+        toast.success('Account created!');
+      } else {
+        await signInWithEmail(email, password);
+        toast.success('Signed in!');
+      }
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : 'Authentication failed');
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <div className='space-y-5'>
+      {/* Context */}
+      <div className='rounded-2xl border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.05)]'>
+        <p className='text-sm font-semibold text-[#7a5510] dark:text-[#C9A96E]'>
+          Create a free account to add your page
+        </p>
+        <p className='mt-0.5 text-xs text-[#6b5744] dark:text-[#9E8B76]'>
+          {isGroup
+            ? `Your name and photo will appear in the ${buzz.recipientName} Buzzbook when it opens.`
+            : `Your page will be part of ${buzz.recipientName}'s Buzzbook — revealed on the day.`}
+        </p>
+      </div>
+
+      {/* Google */}
+      <button
+        type='button'
+        onClick={() => void handleGoogle()}
+        disabled={loading}
+        className={cn(
+          'flex w-full items-center justify-center gap-2.5 rounded-xl border py-3 text-sm font-semibold transition',
+          'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] hover:bg-[#f5f1ea]',
+          'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#F5EFE6] dark:hover:bg-[#231a10]',
+          'disabled:cursor-not-allowed disabled:opacity-50'
+        )}
+      >
+        {loading ? <LoadingDots size='sm' /> : (
+          <>
+            <GoogleIcon className='h-5 w-5' />
+            Continue with Google
+          </>
+        )}
+      </button>
+
+      {/* Divider */}
+      <div className='relative'>
+        <div className='absolute inset-0 flex items-center'>
+          <div className='w-full border-t border-[#e8d8c4] dark:border-[#2a1d10]' />
+        </div>
+        <div className='relative flex justify-center'>
+          <button
+            type='button'
+            onClick={() => setShowEmail((s) => !s)}
+            className='bg-[#faf8f4] px-3 text-xs text-[#9E8B76] transition hover:text-[#C9A96E] dark:bg-[#1c1510]'
+          >
+            {showEmail ? 'hide email form ↑' : 'or use email ↓'}
+          </button>
+        </div>
+      </div>
+
+      {/* Email form */}
+      {showEmail && (
+        <form onSubmit={(e) => void handleEmail(e)} className='space-y-3'>
+          <input
+            type='email'
+            placeholder='Email address'
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className={inputCls}
+            required
+            autoComplete='email'
+          />
+          <input
+            type='password'
+            placeholder='Password (min 6 characters)'
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={inputCls}
+            required
+            minLength={6}
+            autoComplete={isSignUp ? 'new-password' : 'current-password'}
+          />
+          <button
+            type='submit'
+            disabled={loading}
+            className='btn-festive w-full justify-center py-3 disabled:opacity-40'
+          >
+            {loading ? <LoadingDots size='sm' /> : isSignUp ? 'Create account & add page' : 'Sign in & add page'}
+          </button>
+          <button
+            type='button'
+            onClick={() => setIsSignUp((s) => !s)}
+            className='w-full text-center text-xs text-[#C9A96E] hover:text-[#E8B86D]'
+          >
+            {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
+          </button>
+        </form>
+      )}
+
+      <p className='text-center text-xs text-[#9E8B76]'>
+        Already have an account?{' '}
+        <Link href='/login'>
+          <a className='font-medium text-[#C9A96E] hover:text-[#E8B86D]'>Sign in here</a>
+        </Link>
+      </p>
+    </div>
+  );
+}
+
+// ── Main component ──────────────────────────────────────────────────────────
+
 export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(auth.currentUser);
+  const [authLoading, setAuthLoading] = useState(auth.currentUser === null);
+
   const [name, setName] = useState('');
   const [type, setType] = useState<SignType>('text');
   const [text, setText] = useState('');
@@ -32,6 +188,28 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
   const [loading, setLoading] = useState(false);
   const [done, setDone] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  // Track real Firebase auth state
+  useEffect(() => {
+    const unsub = onAuthStateChanged(auth, (u) => {
+      setFirebaseUser(u);
+      setAuthLoading(false);
+      // Pre-fill name from profile when they just signed in
+      if (u && !u.isAnonymous && u.displayName && !name) {
+        setName(u.displayName);
+      }
+    });
+    return unsub;
+  }, []);
+
+  // Pre-fill name if already signed in on mount
+  useEffect(() => {
+    if (firebaseUser && !firebaseUser.isAnonymous && firebaseUser.displayName && !name) {
+      setName(firebaseUser.displayName);
+    }
+  }, [firebaseUser]);
+
+  const needsAuth = !authLoading && (!firebaseUser || firebaseUser.isAnonymous);
 
   function handlePhotoChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const file = e.target.files?.[0];
@@ -58,15 +236,11 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
 
   async function handleSubmit(e: React.FormEvent): Promise<void> {
     e.preventDefault();
-    if (!canSubmit()) return;
+    if (!canSubmit() || !firebaseUser) return;
     setLoading(true);
 
     try {
-      let uid = auth.currentUser?.uid;
-      if (!uid) {
-        const { user } = await signInAnonymously(auth);
-        uid = user.uid;
-      }
+      const uid = firebaseUser.uid;
 
       let mediaURL: string | null = null;
       if (type === 'photo' && photoFile) {
@@ -77,7 +251,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         buzzId: buzz.id,
         authorId: uid,
         authorName: name.trim(),
-        authorPhotoURL: auth.currentUser?.photoURL ?? null,
+        authorPhotoURL: firebaseUser.photoURL ?? null,
         type,
         text: type === 'text' ? text.trim() : null,
         mediaURL,
@@ -97,18 +271,12 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
     }
   }
 
-  const inputCls = cn(
-    'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
-    'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
-    'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
-    'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
-  );
-
   const isGroup = GROUP_OCCASIONS.has(buzz.occasion);
   const revealDateStr = buzz.revealAt.toDate().toLocaleDateString('en-US', {
     month: 'long', day: 'numeric', year: 'numeric'
   });
 
+  // ── Done state ──────────────────────────────────────────────────────────────
   if (done) {
     return (
       <div className='space-y-5 text-center'>
@@ -124,67 +292,83 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
           </p>
         </div>
 
-        <WhatsappShareButton
-          url={shareUrl}
-          title={`Add your page to ${isGroup ? 'the' : ''} ${buzz.recipientName}${isGroup ? '' : "'s"} Buzzbook! 📖\n`}
-          className='w-full'
-        >
-          <span className='flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 font-semibold text-white transition hover:bg-[#1ebe5d]'>
-            <WhatsappIcon size={20} round />
-            Share with others
-          </span>
-        </WhatsappShareButton>
+        <div className='flex gap-2'>
+          <button
+            onClick={() => void navigator.clipboard.writeText(shareUrl).then(() => toast.success('Link copied!'))}
+            className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#e8d8c4] py-2.5 text-sm font-medium text-[#6b5744] transition hover:border-[#C9A96E] hover:text-[#C9A96E] dark:border-[#2a1d10] dark:text-[#9E8B76]'
+          >
+            <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
+            Copy link
+          </button>
+          <WhatsappShareButton
+            url={shareUrl}
+            title={`Add your page to ${isGroup ? 'the' : ''} ${buzz.recipientName}${isGroup ? '' : "'s"} Buzzbook! 📖\n`}
+            className='flex-1'
+          >
+            <span className='flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#25D366]/30 py-2.5 text-sm font-medium text-[#1a9e4e] transition hover:bg-[#25D366]/5 dark:border-[#25D366]/20 dark:text-[#25D366]'>
+              <WhatsappIcon size={16} round />
+              WhatsApp
+            </span>
+          </WhatsappShareButton>
+        </div>
 
-        {auth.currentUser && !auth.currentUser.isAnonymous ? (
-          /* Logged-in user — give them a way back to the app */
-          <div className='flex flex-col gap-2'>
-            <Link href='/home'>
-              <a className='flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-5 py-2.5 text-sm font-semibold text-[#8a6520] transition hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.2)] dark:bg-[rgba(201,169,110,0.05)] dark:text-[#C9A96E]'>
-                Go to home feed
-                <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
-              </a>
-            </Link>
-            <Link href='/buzzes/new'>
-              <a className='flex w-full items-center justify-center gap-2 rounded-xl bg-[#C97D60] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B56540]'>
-                Start your own Buzzbook
-                <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
-              </a>
-            </Link>
-          </div>
-        ) : (
-          /* Anonymous / not signed in — nudge to create account */
-          <div className='rounded-2xl border border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)] p-5 dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
-            <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
-              Want to create your own Buzzbook?
-            </p>
-            <p className='mt-1 text-xs text-[#6b5744] dark:text-[#9E8B76]'>
-              Trips, movie nights, birthdays — collect everyone&apos;s pages and reveal together.
-            </p>
-            <Link href='/login'>
-              <a className='mt-3 inline-flex items-center gap-2 rounded-xl bg-[#C97D60] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B56540]'>
-                Create a free account
-                <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
-              </a>
-            </Link>
-          </div>
-        )}
+        <div className='flex flex-col gap-2'>
+          <Link href='/home'>
+            <a className='flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-5 py-2.5 text-sm font-semibold text-[#8a6520] transition hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.2)] dark:text-[#C9A96E]'>
+              Go to home feed
+              <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
+            </a>
+          </Link>
+          <Link href='/buzzes/new'>
+            <a className='btn-festive w-full justify-center py-2.5 text-sm'>
+              Start your own Buzzbook
+            </a>
+          </Link>
+        </div>
       </div>
     );
   }
 
+  // ── Auth loading ────────────────────────────────────────────────────────────
+  if (authLoading) {
+    return (
+      <div className='flex justify-center py-8 text-[#9E8B76]'>
+        <HeroIcon iconName='ArrowPathIcon' className='h-6 w-6 animate-spin' />
+      </div>
+    );
+  }
+
+  // ── Auth gate ───────────────────────────────────────────────────────────────
+  if (needsAuth) {
+    return <AuthGate buzz={buzz} />;
+  }
+
+  // ── Sign form ───────────────────────────────────────────────────────────────
   return (
-    <form onSubmit={handleSubmit} className='space-y-5'>
-      {/* Name — no asterisk, no label */}
-      <input
-        type='text'
-        className={inputCls}
-        placeholder='Your name'
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        maxLength={60}
-        autoFocus
-        required
-      />
+    <form onSubmit={(e) => void handleSubmit(e)} className='space-y-5'>
+      {/* Name — pre-filled from profile, editable */}
+      <div>
+        <input
+          type='text'
+          className={inputCls}
+          placeholder='Your name'
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          maxLength={60}
+          autoFocus={!name}
+          required
+        />
+        {firebaseUser?.photoURL && (
+          <div className='mt-2 flex items-center gap-2 text-xs text-[#9E8B76]'>
+            <img
+              src={firebaseUser.photoURL}
+              alt={name}
+              className='h-6 w-6 rounded-full object-cover'
+            />
+            <span>Posting as {firebaseUser.email}</span>
+          </div>
+        )}
+      </div>
 
       {/* Type toggle */}
       <div className='grid grid-cols-2 gap-2'>
@@ -283,15 +467,6 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         {!loading && <span>✍️</span>}
         {loading ? 'Adding your page…' : 'Add my page'}
       </Button>
-
-      {/* Subtle sign-in nudge */}
-      <p className='text-center text-xs text-[#9E8B76]'>
-        Already have an account?{' '}
-        <Link href='/login'>
-          <a className='font-medium text-[#C9A96E] hover:text-[#E8B86D]'>Sign in</a>
-        </Link>
-        {' '}to track your Buzzes
-      </p>
     </form>
   );
 }

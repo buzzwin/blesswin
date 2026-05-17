@@ -36,6 +36,7 @@ export type Buzz = {
   coverImageURL: string | null;
   shareToken: string;
   signedBy: string[];
+  invitedEmails: string[];
   feedTweetId: string | null;
   revealTweetId: string | null;
   isPublic: boolean;

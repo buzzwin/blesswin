@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { getDoc, doc } from 'firebase/firestore';
+import { getDoc, doc, updateDoc, arrayUnion } from 'firebase/firestore';
 import { buzzesCollection, usersCollection } from '@lib/firebase/collections';
 import nodemailer from 'nodemailer';
 
@@ -196,6 +196,14 @@ export default async function handler(
 
     const sent = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - sent;
+
+    // Persist successfully-invited emails to the Buzz document
+    const sentEmails = validEmails.filter((_, i) => results[i].status === 'fulfilled');
+    if (sentEmails.length > 0) {
+      await updateDoc(doc(buzzesCollection, buzzId), {
+        invitedEmails: arrayUnion(...sentEmails)
+      });
+    }
 
     res.status(200).json({ sent, failed });
   } catch (error) {

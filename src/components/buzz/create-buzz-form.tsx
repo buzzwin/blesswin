@@ -1,17 +1,18 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { toast } from 'react-hot-toast';
 import { WhatsappShareButton, WhatsappIcon } from 'next-share';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
-import { createBuzz, sendBuzzTweet, setBuzzFeedTweetId, awardBuzzKarma } from '@lib/firebase/utils/buzz';
+import { createBuzz, signBuzz, uploadBuzzMedia, sendBuzzTweet, setBuzzFeedTweetId, awardBuzzKarma } from '@lib/firebase/utils/buzz';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
 import { InviteSection } from '@components/buzz/invite-section';
 import type { BuzzOccasion, BuzzBoardMode } from '@lib/types/buzz';
 import { Timestamp } from 'firebase/firestore';
 
-type Step = 'occasion' | 'recipient' | 'reveal' | 'done';
+type Step = 'occasion' | 'recipient' | 'reveal' | 'titlepage' | 'done';
+type TitleType = 'text' | 'photo';
 
 type OccasionOption = {
   value: BuzzOccasion;
@@ -106,16 +107,16 @@ const DONE_DESC: Partial<Record<BuzzOccasion, string>> = {
   bookclub:  'Share the link with your readers — everyone adds their notes and highlights.'
 };
 
-function stepLabels(occasion: BuzzOccasion | null): Record<Step, string> {
+function stepLabels(occasion: BuzzOccasion | null): Partial<Record<Step, string>> {
   return {
     occasion: 'Occasion',
     recipient: (occasion && OCCASION_STEP2_LABEL[occasion]) ?? 'Who',
-    reveal: 'When',
-    done: 'Done'
+    reveal: 'When'
   };
 }
 
-const STEP_ORDER: Step[] = ['occasion', 'recipient', 'reveal', 'done'];
+const STEP_ORDER: Step[] = ['occasion', 'recipient', 'reveal', 'titlepage', 'done'];
+const PROGRESS_STEPS: Step[] = ['occasion', 'recipient', 'reveal'];
 
 type FormState = {
   occasion: BuzzOccasion | null;
@@ -148,6 +149,15 @@ export function CreateBuzzForm(): JSX.Element {
   const [createdBuzzId, setCreatedBuzzId] = useState('');
   const [aiInput, setAiInput] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+
+  // Title page step
+  const [titleType, setTitleType] = useState<TitleType>('text');
+  const [titleText, setTitleText] = useState('');
+  const [titlePhoto, setTitlePhoto] = useState<File | null>(null);
+  const [titlePhotoPreview, setTitlePhotoPreview] = useState<string | null>(null);
+  const [titlePageLoading, setTitlePageLoading] = useState(false);
+  const [aiMsgLoading, setAiMsgLoading] = useState(false);
+  const titleFileRef = useRef<HTMLInputElement>(null);
 
   const occasionObj = OCCASIONS.find((o) => o.value === form.occasion);
   const stepIndex = STEP_ORDER.indexOf(step);
@@ -204,7 +214,7 @@ export function CreateBuzzForm(): JSX.Element {
       const url = `${window.location.origin}/b/${shareToken}`;
       setShareUrl(url);
       setCreatedBuzzId(buzzId);
-      setStep('done');
+      setStep('titlepage');
       toast.success('Buzz created!');
 
       // Secondary ops: fire-and-forget (failures don't block the user)
@@ -269,6 +279,72 @@ export function CreateBuzzForm(): JSX.Element {
     }
   }
 
+  async function handleGenerateMessage(): Promise<void> {
+    if (aiMsgLoading || !form.occasion) return;
+    setAiMsgLoading(true);
+    try {
+      const res = await fetch('/api/buzz-title-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          occasion: form.occasion,
+          recipientName: form.recipientName,
+          title: form.title,
+          creatorName: user?.name
+        })
+      });
+      if (!res.ok) throw new Error('generation failed');
+      const { message } = (await res.json()) as { message: string };
+      setTitleText(message);
+      setTitleType('text');
+    } catch {
+      toast.error('Couldn\'t generate a message — try writing your own!');
+    } finally {
+      setAiMsgLoading(false);
+    }
+  }
+
+  async function handleAddTitlePage(skip: boolean): Promise<void> {
+    if (!skip && !user) return;
+    setTitlePageLoading(true);
+    try {
+      if (!skip && user && createdBuzzId) {
+        const canSubmitText = titleType === 'text' && titleText.trim().length > 0;
+        const canSubmitPhoto = titleType === 'photo' && titlePhoto !== null;
+        if (canSubmitText || canSubmitPhoto) {
+          let mediaURL: string | null = null;
+          if (titleType === 'photo' && titlePhoto) {
+            mediaURL = await uploadBuzzMedia(createdBuzzId, user.id, titlePhoto);
+          }
+          await signBuzz({
+            buzzId: createdBuzzId,
+            authorId: user.id,
+            authorName: user.name,
+            authorPhotoURL: user.photoURL ?? null,
+            type: titleType,
+            text: titleType === 'text' ? titleText.trim() : null,
+            mediaURL,
+            mediaThumbnailURL: null
+          });
+          toast.success('Title page added! 🎉');
+        }
+      }
+      setStep('done');
+    } catch {
+      toast.error('Couldn\'t add your page — try again');
+    } finally {
+      setTitlePageLoading(false);
+    }
+  }
+
+  function handleTitlePhotoChange(e: React.ChangeEvent<HTMLInputElement>): void {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 10 * 1024 * 1024) { toast.error('Photo must be under 10 MB'); return; }
+    setTitlePhoto(file);
+    setTitlePhotoPreview(URL.createObjectURL(file));
+  }
+
   const inputCls = cn(
     'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
     'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
@@ -286,27 +362,26 @@ export function CreateBuzzForm(): JSX.Element {
 
   return (
     <div className='mx-auto w-full max-w-lg px-4 pb-12 pt-2'>
-      {/* Progress bar */}
+      {/* Progress bar — shown for the first 3 steps + titlepage */}
       {step !== 'done' && (
         <div className='mb-8'>
-          <div className='mb-2 flex justify-between text-xs text-[#9E8B76]'>
-            {STEP_ORDER.filter((s) => s !== 'done').map((s, i) => (
-              <span
-                key={s}
-                className={cn(
-                  'font-medium',
-                  i <= stepIndex ? 'text-[#C9A96E]' : ''
-                )}
-              >
-                {stepLabels(form.occasion)[s]}
-              </span>
-            ))}
-          </div>
+          {step !== 'titlepage' && (
+            <div className='mb-2 flex justify-between text-xs text-[#9E8B76]'>
+              {PROGRESS_STEPS.map((s, i) => (
+                <span
+                  key={s}
+                  className={cn('font-medium', i <= stepIndex ? 'text-[#C9A96E]' : '')}
+                >
+                  {stepLabels(form.occasion)[s]}
+                </span>
+              ))}
+            </div>
+          )}
           <div className='h-1 w-full overflow-hidden rounded-full bg-gray-100 dark:bg-[#1c1510]'>
             <div
               className='h-full rounded-full transition-all duration-300'
               style={{
-                width: `${((stepIndex) / 3) * 100}%`,
+                width: `${(Math.min(stepIndex, PROGRESS_STEPS.length) / PROGRESS_STEPS.length) * 100}%`,
                 background: 'var(--bw-grad-festival-cta)'
               }}
             />
@@ -589,7 +664,145 @@ export function CreateBuzzForm(): JSX.Element {
         </div>
       )}
 
-      {/* ── Step 3: Done ── */}
+      {/* ── Step 3: Title Page ── */}
+      {step === 'titlepage' && (
+        <div className='space-y-5'>
+          <div>
+            <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+              Add the first page ✨
+            </h2>
+            <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+              Your page kicks it off — write a welcome message, add a photo, or let AI write one for you.
+            </p>
+          </div>
+
+          {/* AI generate button */}
+          <button
+            type='button'
+            onClick={() => void handleGenerateMessage()}
+            disabled={aiMsgLoading}
+            className={cn(
+              'flex w-full items-center justify-center gap-2 rounded-xl border py-3 text-sm font-semibold transition',
+              'border-[rgba(201,169,110,0.35)] bg-[rgba(201,169,110,0.07)] text-[#8a6520]',
+              'hover:border-[rgba(201,169,110,0.55)] hover:bg-[rgba(201,169,110,0.12)]',
+              'dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]',
+              'disabled:cursor-not-allowed disabled:opacity-50'
+            )}
+          >
+            {aiMsgLoading ? (
+              <>
+                <svg className='h-4 w-4 animate-spin' viewBox='0 0 24 24' fill='none'>
+                  <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'/>
+                  <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z'/>
+                </svg>
+                Generating…
+              </>
+            ) : (
+              <>✨ Write opening message with AI</>
+            )}
+          </button>
+
+          {/* Type toggle */}
+          <div className='grid grid-cols-2 gap-2'>
+            {(['text', 'photo'] as TitleType[]).map((t) => (
+              <button
+                key={t}
+                type='button'
+                onClick={() => setTitleType(t)}
+                className={cn(
+                  'flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition',
+                  titleType === t
+                    ? 'bg-[#C97D60] text-white shadow-sm'
+                    : 'border border-[#e8d8c4] bg-[#faf8f4] text-[#6b5744] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0]'
+                )}
+              >
+                <span>{t === 'text' ? '💬' : '📷'}</span>
+                {t === 'text' ? 'Write a message' : 'Add a photo'}
+              </button>
+            ))}
+          </div>
+
+          {/* Text input */}
+          {titleType === 'text' && (
+            <div>
+              <textarea
+                className={cn(inputCls, 'min-h-[140px] resize-none')}
+                placeholder={
+                  isGroupOccasion(form.occasion)
+                    ? `Welcome to the ${form.recipientName} Buzzbook! Set the scene…`
+                    : `Write a welcome message for ${form.recipientName}'s Buzzbook…`
+                }
+                value={titleText}
+                onChange={(e) => setTitleText(e.target.value)}
+                maxLength={500}
+                autoFocus={!aiMsgLoading}
+              />
+              <p className='mt-1 text-right text-xs text-[#9E8B76]'>{titleText.length} / 500</p>
+            </div>
+          )}
+
+          {/* Photo input */}
+          {titleType === 'photo' && (
+            <div>
+              {titlePhotoPreview ? (
+                <div className='relative'>
+                  <img src={titlePhotoPreview} alt='Title photo' className='max-h-64 w-full rounded-xl object-cover' />
+                  <button
+                    type='button'
+                    onClick={() => { setTitlePhoto(null); setTitlePhotoPreview(null); if (titleFileRef.current) titleFileRef.current.value = ''; }}
+                    className='absolute right-2 top-2 rounded-full bg-black/50 p-1.5 text-white backdrop-blur-sm hover:bg-black/70'
+                  >
+                    <HeroIcon iconName='XMarkIcon' className='h-4 w-4' />
+                  </button>
+                </div>
+              ) : (
+                <button
+                  type='button'
+                  onClick={() => titleFileRef.current?.click()}
+                  className={cn(
+                    'flex h-40 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition',
+                    'border-[#e8d8c4] bg-[#faf8f4] text-[#9E8B76]',
+                    'hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] hover:text-[#C9A96E]',
+                    'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)]'
+                  )}
+                >
+                  <HeroIcon iconName='PhotoIcon' className='h-8 w-8' />
+                  <span className='text-sm font-medium'>Tap to pick a photo</span>
+                  <span className='text-xs opacity-60'>Up to 10 MB</span>
+                </button>
+              )}
+              <input ref={titleFileRef} type='file' accept='image/*' className='hidden' onChange={handleTitlePhotoChange} />
+            </div>
+          )}
+
+          {/* Actions */}
+          <div className='flex gap-3 pt-1'>
+            <button
+              type='button'
+              onClick={() => void handleAddTitlePage(true)}
+              className={ghostBtn}
+            >
+              Skip for now
+            </button>
+            <Button
+              type='button'
+              onClick={() => void handleAddTitlePage(false)}
+              disabled={
+                titlePageLoading ||
+                (titleType === 'text' && !titleText.trim()) ||
+                (titleType === 'photo' && !titlePhoto)
+              }
+              loading={titlePageLoading}
+              className={primaryBtn}
+            >
+              {!titlePageLoading && <span>✍️</span>}
+              {titlePageLoading ? 'Adding…' : 'Add my page'}
+            </Button>
+          </div>
+        </div>
+      )}
+
+      {/* ── Step 4: Done ── */}
       {step === 'done' && (
         <div className='space-y-6 text-center'>
           <div>
@@ -616,21 +829,27 @@ export function CreateBuzzForm(): JSX.Element {
             </button>
           </div>
 
-          {/* WhatsApp */}
-          <WhatsappShareButton
-            url={shareUrl}
-            title={
-              isGroupOccasion(form.occasion)
-                ? `Add your page to the ${form.recipientName} Buzzbook! ${occasionObj?.emoji ?? ''}📖\n`
-                : `Add your page to ${form.recipientName}'s Buzz! 📖\n`
-            }
-            className='w-full'
-          >
-            <span className={cn(primaryBtn, 'bg-[#25D366] hover:bg-[#1ebe5d]')}>
-              <WhatsappIcon size={20} round />
-              Share on WhatsApp
-            </span>
-          </WhatsappShareButton>
+          {/* Share actions */}
+          <div className='flex gap-2'>
+            <button onClick={copyLink} className={cn(ghostBtn, 'flex-1')}>
+              <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
+              Copy link
+            </button>
+            <WhatsappShareButton
+              url={shareUrl}
+              title={
+                isGroupOccasion(form.occasion)
+                  ? `Add your page to the ${form.recipientName} Buzzbook! ${occasionObj?.emoji ?? ''}📖\n`
+                  : `Add your page to ${form.recipientName}'s Buzz! 📖\n`
+              }
+              className='flex-1'
+            >
+              <span className='flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#25D366]/30 py-3 text-sm font-medium text-[#1a9e4e] transition hover:bg-[#25D366]/5 dark:border-[#25D366]/20 dark:text-[#25D366]'>
+                <WhatsappIcon size={16} round />
+                WhatsApp
+              </span>
+            </WhatsappShareButton>
+          </div>
 
           {createdBuzzId && user?.id && (
             <InviteSection

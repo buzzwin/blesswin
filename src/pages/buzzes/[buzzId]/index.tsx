@@ -27,7 +27,7 @@ const OCCASION_EMOJI: Record<string, string> = {
 
 const GROUP_OCCASIONS = new Set(['trip', 'movie', 'series', 'gamenight', 'bookclub']);
 
-function SignatureRow({ sig, buzzId }: { sig: Signature; buzzId: string }): JSX.Element {
+function ContributorRow({ sig, buzzId }: { sig: Signature; buzzId: string }): JSX.Element {
   async function toggleHide(): Promise<void> {
     try {
       await hideBuzzSignature(buzzId, sig.id, !sig.isHidden);
@@ -37,33 +37,87 @@ function SignatureRow({ sig, buzzId }: { sig: Signature; buzzId: string }): JSX.
     }
   }
 
+  const initials = sig.authorName
+    .split(' ')
+    .map((w) => w[0])
+    .slice(0, 2)
+    .join('')
+    .toUpperCase();
+
   return (
     <div
       className={cn(
-        'flex items-start gap-3 rounded-xl border p-4 transition',
+        'flex items-center gap-3 rounded-xl border p-3.5 transition',
         sig.isHidden
           ? 'border-[#e8d8c4] bg-[#f5f1ea] opacity-50 dark:border-[#2a1d10] dark:bg-[#1c1510]'
           : 'border-[#e8d8c4] bg-[#faf8f4] dark:border-[#2a1d10] dark:bg-[#1c1510]'
       )}
     >
-      <span className='shrink-0 rounded-lg bg-[rgba(201,169,110,0.1)] px-2 py-1 text-xs font-medium text-[#8a6520] dark:bg-[#1c1510] dark:text-[#9E8B76]'>
-        {sig.type === 'photo' ? '📷' : '💬'}
-      </span>
+      {/* Avatar */}
+      {sig.authorPhotoURL ? (
+        <img
+          src={sig.authorPhotoURL}
+          alt={sig.authorName}
+          className='h-9 w-9 shrink-0 rounded-full object-cover'
+        />
+      ) : (
+        <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.15)] text-xs font-bold text-[#8a6520] dark:bg-[rgba(201,169,110,0.1)] dark:text-[#C9A96E]'>
+          {initials}
+        </div>
+      )}
+
+      {/* Name + preview */}
       <div className='min-w-0 flex-1'>
         <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>{sig.authorName}</p>
-        {sig.type === 'text' && sig.text && (
-          <p className='mt-0.5 truncate text-sm text-[#6b5744] dark:text-[#9E8B76]'>{sig.text}</p>
-        )}
-        {sig.type === 'photo' && sig.mediaURL && (
-          <img src={sig.mediaURL} alt={`${sig.authorName}'s photo`} className='mt-2 h-20 w-20 rounded-lg object-cover' />
-        )}
+        {sig.type === 'text' && sig.text ? (
+          <p className='mt-0.5 truncate text-xs text-[#6b5744] dark:text-[#9E8B76]'>{sig.text}</p>
+        ) : sig.type === 'photo' ? (
+          <p className='mt-0.5 text-xs text-[#9E8B76]'>📷 Photo</p>
+        ) : null}
       </div>
+
+      {/* Type badge */}
+      <span className='shrink-0 rounded-full border border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.08)] px-2 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'>
+        {sig.type === 'photo' ? '📷' : '💬'}
+      </span>
+
+      {/* Show/hide toggle */}
       <button
-        onClick={toggleHide}
+        onClick={() => void toggleHide()}
         className='shrink-0 rounded-lg p-1.5 text-[#9E8B76] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
-        title={sig.isHidden ? 'Show page' : 'Hide page'}
+        title={sig.isHidden ? 'Show in Buzzbook' : 'Hide from Buzzbook'}
       >
         <HeroIcon iconName={sig.isHidden ? 'EyeIcon' : 'EyeSlashIcon'} className='h-4 w-4' />
+      </button>
+    </div>
+  );
+}
+
+function InvitedRow({ email, shareUrl }: { email: string; shareUrl: string }): JSX.Element {
+  function copyLink(): void {
+    void navigator.clipboard.writeText(shareUrl);
+    toast.success('Link copied!');
+  }
+
+  return (
+    <div className='flex items-center gap-3 rounded-xl border border-dashed border-[#e8d8c4] bg-[#faf8f4] p-3.5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+      {/* Email avatar placeholder */}
+      <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(181,96,60,0.08)] text-sm dark:bg-[rgba(181,96,60,0.06)]'>
+        ✉️
+      </div>
+
+      <p className='min-w-0 flex-1 truncate text-sm text-[#6b5744] dark:text-[#9E8B76]'>{email}</p>
+
+      <span className='shrink-0 rounded-full bg-[rgba(181,96,60,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
+        Invited
+      </span>
+
+      <button
+        onClick={copyLink}
+        className='shrink-0 rounded-lg p-1.5 text-[#9E8B76] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
+        title='Copy invite link'
+      >
+        <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
       </button>
     </div>
   );
@@ -217,9 +271,16 @@ export default function BuzzManagement(): JSX.Element {
               </span>
             </div>
 
-            {/* Edit / Delete actions */}
+            {/* Actions row */}
             {buzz.status !== 'revealed' && (
               <div className='mt-4 flex items-center gap-2 border-t border-[#e8d8c4] pt-4 dark:border-[#2a1d10]'>
+                {/* Add my page */}
+                <Link href={shareUrl || '#'}>
+                  <a className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[rgba(201,169,110,0.35)] bg-[rgba(201,169,110,0.07)] px-3 py-2 text-sm font-semibold text-[#8a6520] transition hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.12)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'>
+                    <HeroIcon iconName='PencilIcon' className='h-4 w-4' />
+                    Add my page
+                  </a>
+                </Link>
                 <button
                   onClick={() => setEditOpen((o) => !o)}
                   className='flex items-center gap-1.5 rounded-xl border border-[#e8d8c4] px-3 py-2 text-sm font-medium text-[#6b5744] transition hover:border-[#C9A96E] hover:text-[#C9A96E] dark:border-[#2a1d10] dark:text-[#9E8B76] dark:hover:border-[rgba(201,169,110,0.4)] dark:hover:text-[#C9A96E]'
@@ -318,16 +379,25 @@ export default function BuzzManagement(): JSX.Element {
                 Copy
               </button>
             </div>
-            <WhatsappShareButton
-              url={shareUrl}
-              title={`Add your page to ${isGroup ? '' : `${buzz.recipientName}'s `}Buzzbook! 📖\n`}
-              className='mt-3 w-full'
-            >
-              <span className='flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-2.5 text-sm font-semibold text-white transition hover:bg-[#1ebe5d]'>
-                <WhatsappIcon size={18} round />
-                Share on WhatsApp
-              </span>
-            </WhatsappShareButton>
+            <div className='mt-2 flex gap-2'>
+              <button
+                onClick={copyLink}
+                className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#e8d8c4] py-2.5 text-sm font-medium text-[#6b5744] transition hover:border-[#C9A96E] hover:text-[#C9A96E] dark:border-[#2a1d10] dark:text-[#9E8B76]'
+              >
+                <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
+                Copy link
+              </button>
+              <WhatsappShareButton
+                url={shareUrl}
+                title={`Add your page to ${isGroup ? '' : `${buzz.recipientName}'s `}Buzzbook! 📖\n`}
+                className='flex-1'
+              >
+                <span className='flex w-full items-center justify-center gap-1.5 rounded-xl border border-[#25D366]/30 py-2.5 text-sm font-medium text-[#1a9e4e] transition hover:bg-[#25D366]/5 dark:border-[#25D366]/20 dark:text-[#25D366]'>
+                  <WhatsappIcon size={16} round />
+                  WhatsApp
+                </span>
+              </WhatsappShareButton>
+            </div>
           </div>
 
           {/* ── Invite ── */}
@@ -344,20 +414,45 @@ export default function BuzzManagement(): JSX.Element {
             </Link>
           )}
 
-          {/* ── Signatures ── */}
-          <div>
-            <p className='mb-3 text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
-              Pages ({signatures?.length ?? 0})
-            </p>
-            {!signatures || signatures.length === 0 ? (
-              <div className='rounded-2xl border border-dashed border-[#e8d8c4] py-10 text-center text-sm text-[#9E8B76] dark:border-[#2a1d10]'>
-                No pages yet — share the link to get people signing.
-              </div>
-            ) : (
+          {/* ── People ── */}
+          <div className='space-y-3'>
+            {/* Section header */}
+            <div className='flex items-center gap-2'>
+              <p className='text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>People</p>
+              {(signatures?.length ?? 0) > 0 && (
+                <span className='rounded-full bg-[rgba(156,175,136,0.15)] px-2 py-0.5 text-xs font-medium text-[#5a7a48] dark:bg-[rgba(156,175,136,0.12)] dark:text-[#9CAF88]'>
+                  {signatures!.length} added
+                </span>
+              )}
+              {(buzz.invitedEmails?.length ?? 0) > 0 && (
+                <span className='rounded-full bg-[rgba(181,96,60,0.1)] px-2 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
+                  {buzz.invitedEmails.length} invited
+                </span>
+              )}
+            </div>
+
+            {/* Contributors */}
+            {signatures && signatures.length > 0 && (
               <div className='space-y-2'>
                 {signatures.map((sig) => (
-                  <SignatureRow key={sig.id} sig={sig} buzzId={buzz.id} />
+                  <ContributorRow key={sig.id} sig={sig} buzzId={buzz.id} />
                 ))}
+              </div>
+            )}
+
+            {/* Invited (pending) */}
+            {buzz.invitedEmails && buzz.invitedEmails.length > 0 && (
+              <div className='space-y-2'>
+                {buzz.invitedEmails.map((email) => (
+                  <InvitedRow key={email} email={email} shareUrl={shareUrl} />
+                ))}
+              </div>
+            )}
+
+            {/* Empty state */}
+            {(!signatures || signatures.length === 0) && (!buzz.invitedEmails || buzz.invitedEmails.length === 0) && (
+              <div className='rounded-2xl border border-dashed border-[#e8d8c4] py-10 text-center text-sm text-[#9E8B76] dark:border-[#2a1d10]'>
+                No pages yet — share the link or invite people above.
               </div>
             )}
           </div>
