@@ -4,6 +4,7 @@ import { HomeLayout, ProtectedLayout } from '@components/layout/common-layout';
 import { MainHeader } from '@components/home/main-header';
 import { SEO } from '@components/common/seo';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { EmptyBuzzesIllustration } from '@components/ui/illustrations';
 import { cn } from '@lib/utils';
 import { useAuth } from '@lib/context/auth-context';
 import { getUserBuzzes } from '@lib/firebase/utils/buzz';
@@ -123,8 +124,8 @@ export default function MyBuzzes(): JSX.Element {
         )}
 
         {!loading && buzzes?.length === 0 && (
-          <div className='flex flex-col items-center gap-4 py-20 text-center'>
-            <span className='text-5xl'>📖</span>
+          <div className='flex flex-col items-center gap-4 py-16 text-center'>
+            <EmptyBuzzesIllustration />
             <div>
               <p className='font-display font-bold text-light-primary dark:text-dark-primary'>No Buzzes yet</p>
               <p className='mt-1 text-sm text-[#9E8B76]'>

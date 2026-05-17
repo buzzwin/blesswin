@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { cn } from '@lib/utils';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { BuzzbookCoverOrnament } from '@components/ui/illustrations';
 import type { Buzz, Signature } from '@lib/types/buzz';
 
 type Props = {
@@ -30,9 +31,10 @@ function bgFor(index: number): string {
 function CoverPage({ buzz }: { buzz: Buzz }): JSX.Element {
   const emoji = OCCASION_EMOJI[buzz.occasion] ?? '✨';
   return (
-    <div className='flex h-full flex-col items-center justify-center gap-6 p-8 text-center'>
-      <span className='text-7xl drop-shadow-sm'>{emoji}</span>
-      <div>
+    <div className='relative flex h-full flex-col items-center justify-center gap-6 p-8 text-center'>
+      <BuzzbookCoverOrnament />
+      <span className='relative z-10 text-7xl drop-shadow-sm'>{emoji}</span>
+      <div className='relative z-10'>
         <p className='text-sm font-semibold uppercase tracking-widest text-[#8a6520] dark:text-[#C9A96E]'>
           Buzzbook
         </p>
@@ -40,10 +42,10 @@ function CoverPage({ buzz }: { buzz: Buzz }): JSX.Element {
           {buzz.title}
         </h2>
       </div>
-      <p className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+      <p className='relative z-10 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
         {buzz.totalSignatures} {buzz.totalSignatures === 1 ? 'page' : 'pages'} inside
       </p>
-      <div className='mt-2 animate-bounce text-[#C9A96E]/40'>
+      <div className='relative z-10 mt-2 animate-bounce text-[#C9A96E]/40'>
         <HeroIcon iconName='ChevronRightIcon' className='h-6 w-6' />
       </div>
     </div>

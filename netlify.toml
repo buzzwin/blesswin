@@ -4,7 +4,7 @@
   publish = ".next"
 
 [build.environment]
-  NODE_VERSION = "18"
+  NODE_VERSION = "22"
   # Ensure devDependencies are installed (default for Next.js, but explicit here)
   NPM_FLAGS = ""
 

@@ -13,15 +13,14 @@ type SEOProps = {
   structuredData?: Record<string, unknown>;
 };
 
-const defaultTitle =
-  'Buzzwin - A Storytelling Studio That Amplifies Good Causes';
+const defaultTitle = 'Buzzwin — Do More Together';
 const defaultDescription =
-  'A storytelling studio that amplifies good causes. Discover wellness resources, AI-powered guidance, and inspiring content for yoga, meditation, and harmony.';
+  'Start a Buzzbook for any group moment — a trip, birthday, movie night, or game night. Everyone adds a page, you open it together.';
 const defaultImage = `${
-  siteURL || 'https://Buzzwin.com'
-}/assets/wellness-og-image.jpg`;
+  siteURL || 'https://buzzwin.com'
+}/assets/buzzbook-og.svg`;
 const defaultKeywords =
-  'yoga, mindfulness, meditation, world peace, AI wellness, harmony, positive vibes, mental health, spiritual growth, inner peace, wellness platform';
+  'buzzbook, group memories, shared experiences, birthday book, trip memories, movie night, game night, together, group gift';
 
 export function SEO({
   title = defaultTitle,
@@ -97,7 +96,7 @@ export function SEO({
       <meta name='twitter:site' content='@Buzzwin' />
 
       {/* Additional Meta Tags */}
-      <meta name='theme-color' content='#10b981' />
+      <meta name='theme-color' content='#C97D60' />
       <meta name='apple-mobile-web-app-capable' content='yes' />
       <meta
         name='apple-mobile-web-app-status-bar-style'

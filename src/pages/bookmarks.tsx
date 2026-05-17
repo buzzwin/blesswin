@@ -98,7 +98,6 @@ export default function Bookmarks(): JSX.Element {
           <StatsEmpty
             title='Save buzzes for later'
             description='Keep your brain free for more important things! Save Buzzes to easily find them again in the future.'
-            imageData={{ src: '/assets/no-bookmarks.png', alt: 'No bookmarks' }}
           />
         ) : (
           <AnimatePresence mode='popLayout'>

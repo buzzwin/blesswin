@@ -1,0 +1,79 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#C97D60;stop-opacity:1" />
+      <stop offset="55%" style="stop-color:#B56540;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#7a3e20;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="glow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#E8B86D;stop-opacity:0.18" />
+      <stop offset="100%" style="stop-color:#E8B86D;stop-opacity:0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="630" fill="url(#bg)" />
+  <!-- Warm glow overlay -->
+  <ellipse cx="600" cy="200" rx="500" ry="300" fill="url(#glow)" />
+
+  <!-- Subtle grid texture -->
+  <rect width="1200" height="630" fill="none" stroke="#E8B86D" stroke-width="0.5" opacity="0.06"
+        style="background-image: repeating-linear-gradient(0deg,transparent,transparent 52px,rgba(232,184,109,0.05) 52px,rgba(232,184,109,0.05) 53px)" />
+
+  <!-- Book icon — open pages -->
+  <g transform="translate(600,210)" opacity="0.92">
+    <!-- Left page -->
+    <path d="M-120,-90 Q-60,-105 0,-90 L0,100 Q-60,85 -120,100 Z"
+          fill="#F5EFE6" opacity="0.15" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.3"/>
+    <!-- Right page -->
+    <path d="M0,-90 Q60,-105 120,-90 L120,100 Q60,85 0,100 Z"
+          fill="#F5EFE6" opacity="0.15" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.3"/>
+    <!-- Spine -->
+    <line x1="0" y1="-95" x2="0" y2="105" stroke="#F5EFE6" stroke-width="3" stroke-opacity="0.35"/>
+    <!-- Lines on left page -->
+    <line x1="-95" y1="-30" x2="-15" y2="-35" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <line x1="-95" y1="-5" x2="-15" y2="-10" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <line x1="-95" y1="20" x2="-15" y2="15" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <line x1="-95" y1="45" x2="-40" y2="40" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <!-- Lines on right page -->
+    <line x1="15" y1="-35" x2="95" y2="-30" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <line x1="15" y1="-10" x2="95" y2="-5" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <line x1="15" y1="15" x2="95" y2="20" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+    <line x1="40" y1="40" x2="95" y2="45" stroke="#F5EFE6" stroke-width="1.5" stroke-opacity="0.2"/>
+  </g>
+
+  <!-- Tagline above heading -->
+  <text x="600" y="375" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="22" fill="#F5EFE6" opacity="0.65" letter-spacing="6">
+    SHARED MEMORIES · REVEALED TOGETHER
+  </text>
+
+  <!-- Main heading -->
+  <text x="600" y="445" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="72" font-weight="bold" fill="#F5EFE6" letter-spacing="-1">
+    Buzzbook
+  </text>
+
+  <!-- Sub-heading -->
+  <text x="600" y="500" text-anchor="middle"
+        font-family="Georgia, 'Times New Roman', serif"
+        font-size="28" fill="#F5EFE6" opacity="0.75">
+    Everyone adds a page. You open it together.
+  </text>
+
+  <!-- Brand watermark -->
+  <text x="60" y="590" font-family="Georgia, 'Times New Roman', serif"
+        font-size="22" fill="#F5EFE6" opacity="0.45" letter-spacing="2">
+    buzzwin.com
+  </text>
+
+  <!-- Decorative corner dots -->
+  <circle cx="60" cy="60" r="4" fill="#F5EFE6" opacity="0.2"/>
+  <circle cx="80" cy="60" r="4" fill="#F5EFE6" opacity="0.2"/>
+  <circle cx="1120" cy="60" r="4" fill="#F5EFE6" opacity="0.2"/>
+  <circle cx="1140" cy="60" r="4" fill="#F5EFE6" opacity="0.2"/>
+  <circle cx="60" cy="570" r="4" fill="#F5EFE6" opacity="0.2"/>
+  <circle cx="1140" cy="570" r="4" fill="#F5EFE6" opacity="0.2"/>
+</svg>

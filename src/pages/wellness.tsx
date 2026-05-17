@@ -102,7 +102,6 @@ export default function WellnessPage(): JSX.Element {
         title='Wellness AI Pal - Your Complete Wellness Companion | Buzzwin'
         description='Get personalized guidance for yoga, meditation, mindfulness, and finding inner harmony. Your AI wellness companion for holistic well-being.'
         keywords='wellness, yoga, meditation, mindfulness, harmony, inner peace, wellness AI, wellness chatbot, holistic wellness'
-        image={`${siteURL || 'https://Buzzwin.com'}/assets/wellness-og-image.jpg`}
         structuredData={structuredData}
       />
 

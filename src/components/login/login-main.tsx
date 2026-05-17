@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { collection, getCountFromServer } from 'firebase/firestore';
 import { db } from '@lib/firebase/app';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { OpenBookHero } from '@components/ui/illustrations';
 import JustLogin from './justlogin';
 
 const OCCASIONS = [
@@ -115,6 +116,11 @@ export function LoginMain(): JSX.Element {
                   {emoji} {label}
                 </span>
               ))}
+            </div>
+
+            {/* Open book illustration */}
+            <div className='py-1'>
+              <OpenBookHero />
             </div>
 
             {/* How it works — compact */}

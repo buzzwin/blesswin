@@ -288,10 +288,6 @@ export default function StoryBookmarksPage(): JSX.Element {
             <StatsEmpty
               title='No bookmarked stories yet'
               description='Start bookmarking inspiring stories to save them here for later!'
-              imageData={{ 
-                src: '/assets/no-buzz.png', 
-                alt: 'No bookmarks'
-              }}
             />
           ) : (
             <div className='space-y-4'>
@@ -410,10 +406,6 @@ export default function StoryBookmarksPage(): JSX.Element {
             <StatsEmpty
               title='No collections yet'
               description='Create collections to organize your bookmarked stories by theme or topic!'
-              imageData={{ 
-                src: '/assets/no-buzz.png', 
-                alt: 'No collections'
-              }}
             />
           ) : (
             <div className='grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3'>

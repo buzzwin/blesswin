@@ -312,16 +312,27 @@ export default function HomeFeed(): JSX.Element {
                       border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)]
                       hover:border-[rgba(201,169,110,0.35)] hover:bg-[rgba(201,169,110,0.08)]
                       dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
-          <span className='text-3xl'>📖</span>
+          {/* SVG book icon */}
+          <svg viewBox='0 0 48 48' fill='none' xmlns='http://www.w3.org/2000/svg' className='h-10 w-10 shrink-0' aria-hidden='true'>
+            {/* Open book */}
+            <path d='M8,36 Q16,30 24,33 L24,44 Q16,41 8,44 Z' fill='rgba(201,169,110,0.25)' stroke='rgba(201,169,110,0.55)' strokeWidth='1.2'/>
+            <path d='M24,33 Q32,30 40,36 L40,44 Q32,41 24,44 Z' fill='rgba(201,169,110,0.25)' stroke='rgba(201,169,110,0.55)' strokeWidth='1.2'/>
+            <line x1='24' y1='32' x2='24' y2='45' stroke='rgba(201,169,110,0.7)' strokeWidth='1.8' strokeLinecap='round'/>
+            {/* Floating pages */}
+            <rect x='4' y='12' width='17' height='20' rx='3' fill='rgba(201,169,110,0.12)' stroke='rgba(201,169,110,0.4)' strokeWidth='1.2' transform='rotate(-8,12,22)'/>
+            <rect x='27' y='8' width='17' height='20' rx='3' fill='rgba(181,96,60,0.12)' stroke='rgba(181,96,60,0.4)' strokeWidth='1.2' transform='rotate(8,36,18)'/>
+            {/* Sparkle */}
+            <path d='M24,4 L25,1 L26,4 L29,5 L26,6 L25,9 L24,6 L21,5 Z' fill='rgba(201,169,110,0.7)'/>
+          </svg>
           <div className='flex-1'>
             <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
-              Someone&apos;s birthday or big day coming up?
+              Doing something together soon?
             </p>
             <p className='text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.5)]'>
-              Start a Buzzbook — collect pages from friends, reveal together
+              Every trip, movie night, birthday — everyone adds a page, you open it together.
             </p>
           </div>
-          <span className='shrink-0 text-sm font-semibold text-[#C9A96E]'>Start →</span>
+          <span className='shrink-0 text-sm font-semibold text-[#C9A96E]'>Make one →</span>
         </a>
       </Link>
 
@@ -333,10 +344,6 @@ export default function HomeFeed(): JSX.Element {
           <StatsEmpty
             title='Nothing shared yet'
             description='Be the first to share a moment with the community.'
-            imageData={{
-              src: '/assets/no-buzz.png',
-              alt: 'No moments yet'
-            }}
           />
         ) : (
           <AnimatePresence mode='popLayout'>

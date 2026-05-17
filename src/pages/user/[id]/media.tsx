@@ -43,7 +43,6 @@ export default function UserMedia(): JSX.Element {
         <StatsEmpty
           title={`@${username as string} hasn't Buzzed Media`}
           description='Once they do, those Buzzes will show up here.'
-          imageData={{ src: '/assets/no-media.png', alt: 'No media' }}
         />
       ) : (
         <AnimatePresence mode='popLayout'>

@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import Link from 'next/link';
 import { signInAnonymously } from 'firebase/auth';
 import { WhatsappShareButton, WhatsappIcon } from 'next-share';
 import { toast } from 'react-hot-toast';
@@ -17,6 +18,10 @@ type Props = {
 type SignType = 'text' | 'photo';
 
 const MAX_PHOTO_MB = 10;
+
+const GROUP_OCCASIONS = new Set([
+  'trip', 'movie', 'series', 'gamenight', 'bookclub'
+]);
 
 export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
   const [name, setName] = useState('');
@@ -57,7 +62,6 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
     setLoading(true);
 
     try {
-      // Ensure we have an auth session (anon if needed)
       let uid = auth.currentUser?.uid;
       if (!uid) {
         const { user } = await signInAnonymously(auth);
@@ -84,7 +88,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
       setDone(true);
     } catch (err: any) {
       if (err?.code === 'permission-denied') {
-        toast.error('You\'ve already added your page to this Buzz!');
+        toast.error("You've already added your page to this Buzz!");
       } else {
         toast.error('Something went wrong — please try again');
       }
@@ -100,6 +104,11 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
     'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
   );
 
+  const isGroup = GROUP_OCCASIONS.has(buzz.occasion);
+  const revealDateStr = buzz.revealAt.toDate().toLocaleDateString('en-US', {
+    month: 'long', day: 'numeric', year: 'numeric'
+  });
+
   if (done) {
     return (
       <div className='space-y-5 text-center'>
@@ -109,24 +118,15 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
             Your page is in!
           </h3>
           <p className='mt-1 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
-            The Buzzbook for <strong>{buzz.recipientName}</strong> will be
-            revealed on{' '}
-            {buzz.revealAt.toDate().toLocaleDateString('en-US', {
-              month: 'long',
-              day: 'numeric',
-              year: 'numeric'
-            })}
-            .
+            {isGroup
+              ? <>The {buzz.recipientName} Buzzbook opens on <strong>{revealDateStr}</strong> — you'll all see it together.</>
+              : <>Your page will be revealed with everyone else's on <strong>{revealDateStr}</strong>.</>}
           </p>
-        </div>
-
-        <div className='rounded-xl border border-[#e8d8c4] bg-[#faf8f4] p-4 text-sm text-[#6b5744] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0]'>
-          Know someone else who should add their page?
         </div>
 
         <WhatsappShareButton
           url={shareUrl}
-          title={`Add your page to ${buzz.recipientName}'s Buzzbook! 📖\n`}
+          title={`Add your page to ${isGroup ? 'the' : ''} ${buzz.recipientName}${isGroup ? '' : "'s"} Buzzbook! 📖\n`}
           className='w-full'
         >
           <span className='flex w-full items-center justify-center gap-2 rounded-xl bg-[#25D366] py-3 font-semibold text-white transition hover:bg-[#1ebe5d]'>
@@ -134,66 +134,77 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
             Share with others
           </span>
         </WhatsappShareButton>
+
+        {/* Account creation nudge */}
+        <div className='rounded-2xl border border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)] p-5 dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
+          <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
+            Want to create your own Buzzbook?
+          </p>
+          <p className='mt-1 text-xs text-[#6b5744] dark:text-[#9E8B76]'>
+            Trips, movie nights, birthdays — collect everyone's pages and reveal together.
+          </p>
+          <Link href='/login'>
+            <a className='mt-3 inline-flex items-center gap-2 rounded-xl bg-[#C97D60] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B56540]'>
+              Create a free account
+              <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
+            </a>
+          </Link>
+        </div>
       </div>
     );
   }
 
   return (
     <form onSubmit={handleSubmit} className='space-y-5'>
-      {/* Name */}
-      <div>
-        <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
-          Your name <span className='text-red-400'>*</span>
-        </label>
-        <input
-          type='text'
-          className={inputCls}
-          placeholder='How should your page be signed?'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          maxLength={60}
-          autoFocus
-          required
-        />
-      </div>
+      {/* Name — no asterisk, no label */}
+      <input
+        type='text'
+        className={inputCls}
+        placeholder='Your name'
+        value={name}
+        onChange={(e) => setName(e.target.value)}
+        maxLength={60}
+        autoFocus
+        required
+      />
 
       {/* Type toggle */}
-      <div>
-        <label className='mb-1.5 block text-sm font-medium text-gray-700 dark:text-[#C4B5A0]'>
-          What are you adding?
-        </label>
-        <div className='flex overflow-hidden rounded-xl border border-gray-200 dark:border-[#2a1d10]'>
-          {(['text', 'photo'] as SignType[]).map((t) => (
-            <button
-              key={t}
-              type='button'
-              onClick={() => setType(t)}
-              className={cn(
-                'flex-1 py-2.5 text-sm font-medium transition',
-                type === t
-                  ? 'bg-[#C97D60] text-white'
-                  : 'bg-[#faf8f4] text-[#6b5744] hover:bg-[rgba(201,169,110,0.06)] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:bg-[#231a10]'
-              )}
-            >
-              {t === 'text' ? '💬 Message' : '📷 Photo / Meme'}
-            </button>
-          ))}
-        </div>
+      <div className='grid grid-cols-2 gap-2'>
+        {(['text', 'photo'] as SignType[]).map((t) => (
+          <button
+            key={t}
+            type='button'
+            onClick={() => setType(t)}
+            className={cn(
+              'flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition',
+              type === t
+                ? 'bg-[#C97D60] text-white shadow-sm'
+                : 'border border-[#e8d8c4] bg-[#faf8f4] text-[#6b5744] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:border-[rgba(201,169,110,0.3)]'
+            )}
+          >
+            <span>{t === 'text' ? '💬' : '📷'}</span>
+            {t === 'text' ? 'Write a message' : 'Share a photo'}
+          </button>
+        ))}
       </div>
 
       {/* Text input */}
       {type === 'text' && (
         <div>
           <textarea
-            className={cn(inputCls, 'min-h-[120px] resize-none')}
-            placeholder={`Write something for ${buzz.recipientName}…`}
+            className={cn(inputCls, 'min-h-[140px] resize-none')}
+            placeholder={
+              isGroup
+                ? `Share a memory, an in-joke, or a highlight from ${buzz.recipientName}…`
+                : `Write something for ${buzz.recipientName}… a memory, a wish, or just how you feel`
+            }
             value={text}
             onChange={(e) => setText(e.target.value)}
             maxLength={500}
             required
           />
           <p className='mt-1 text-right text-xs text-[#9E8B76]'>
-            {text.length}/500
+            {text.length} / 500
           </p>
         </div>
       )}
@@ -221,14 +232,15 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
               type='button'
               onClick={() => fileInputRef.current?.click()}
               className={cn(
-                'flex h-36 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition',
-                'border-[#e8d8c4] bg-[#faf8f4] text-[#9E8B76] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] hover:text-[#C9A96E]',
-                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[#C9A96E] dark:hover:bg-emerald-900/20'
+                'flex h-40 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition',
+                'border-[#e8d8c4] bg-[#faf8f4] text-[#9E8B76]',
+                'hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] hover:text-[#C9A96E]',
+                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)] dark:hover:bg-[rgba(201,169,110,0.06)]'
               )}
             >
               <HeroIcon iconName='PhotoIcon' className='h-8 w-8' />
-              <span className='text-sm font-medium'>Tap to pick a photo or meme</span>
-              <span className='text-xs'>Up to {MAX_PHOTO_MB} MB</span>
+              <span className='text-sm font-medium'>Tap to pick a photo</span>
+              <span className='text-xs opacity-60'>Up to {MAX_PHOTO_MB} MB · any format</span>
             </button>
           )}
           <input
@@ -247,12 +259,21 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         loading={loading}
         className={cn(
           'flex w-full items-center justify-center gap-2 rounded-xl py-3 font-semibold transition',
-          'bg-[#C97D60] text-white hover:bg-[#C97D60] disabled:opacity-40'
+          'bg-[#C97D60] text-white hover:bg-[#B56540] disabled:opacity-40'
         )}
       >
-        {!loading && <HeroIcon iconName='PencilSquareIcon' className='h-4 w-4' />}
+        {!loading && <span>✍️</span>}
         {loading ? 'Adding your page…' : 'Add my page'}
       </Button>
+
+      {/* Subtle sign-in nudge */}
+      <p className='text-center text-xs text-[#9E8B76]'>
+        Already have an account?{' '}
+        <Link href='/login'>
+          <a className='font-medium text-[#C9A96E] hover:text-[#E8B86D]'>Sign in</a>
+        </Link>
+        {' '}to track your Buzzes
+      </p>
     </form>
   );
 }

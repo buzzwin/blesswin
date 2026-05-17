@@ -192,7 +192,6 @@ export default function RealStoriesPage(): JSX.Element {
         title='Real Stories of Good | Buzzwin'
         description='Discover inspiring real stories of people and communities making a positive impact in the world.'
         keywords='real stories, social good, community impact, positive change, inspiring stories, people doing good'
-        image={`${siteURL || 'https://Buzzwin.com'}/assets/og-stories.jpg`}
         structuredData={structuredData}
       />
       <Head>

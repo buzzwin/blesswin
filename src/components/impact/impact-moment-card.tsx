@@ -62,16 +62,12 @@ export function ImpactMomentCard({
       onClick={() => setRippleMenuOpen(false)}
     >
       <div className='flex gap-3'>
-        {/* Avatar */}
-        <Link href={`/user/${moment.user.username}`}>
-          <a>
-            <UserAvatar
-              src={moment.user.photoURL}
-              alt={moment.user.name}
-              username={moment.user.username}
-            />
-          </a>
-        </Link>
+        {/* Avatar — UserAvatar already wraps its own Link */}
+        <UserAvatar
+          src={moment.user.photoURL}
+          alt={moment.user.name}
+          username={moment.user.username}
+        />
 
         <div className='min-w-0 flex-1'>
           {/* Header */}
