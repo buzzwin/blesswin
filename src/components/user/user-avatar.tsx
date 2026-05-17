@@ -1,6 +1,6 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { cn } from '@lib/utils';
-import { NextImage } from '@components/ui/next-image';
 import { DefaultAvatar } from '@components/ui/default-avatar';
 
 type UserAvatarProps = {
@@ -24,23 +24,22 @@ export function UserAvatar({
     <Link href={username ? `/user/${username}` : '#'}>
       <a
         className={cn(
-          'blur-picture flex self-start',
+          'blur-picture flex shrink-0 self-start',
           !username && 'pointer-events-none',
           className
         )}
       >
         {src ? (
-          <NextImage
-            useSkeleton
-            imgClassName='rounded-full'
-            width={48}
-            height={48}
+          <Image
             src={src}
             alt={alt}
-            key={src}
+            width={48}
+            height={48}
+            className='rounded-full object-cover'
+            layout='fixed'
           />
         ) : (
-          <DefaultAvatar className={cn('h-12 w-12', 'rounded-full')} />
+          <DefaultAvatar className='h-12 w-12 rounded-full' />
         )}
       </a>
     </Link>

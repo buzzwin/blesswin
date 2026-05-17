@@ -43,6 +43,9 @@ export function NextImage({
     setError(true);
     setLoading(false);
   };
+  // onLoadingComplete doesn't fire when the image is served from browser cache
+  // (load event fires before React attaches the listener). onLoad covers that case.
+  const handleLoadEvent = (): void => setLoading(false);
 
   // If there's an error, show fallback
   if (error) {
@@ -71,6 +74,7 @@ export function NextImage({
         height={height}
         alt={alt}
         onLoadingComplete={handleLoad}
+        onLoad={handleLoadEvent}
         onError={handleError}
         layout='responsive'
         {...rest}

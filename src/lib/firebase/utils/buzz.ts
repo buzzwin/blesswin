@@ -5,7 +5,6 @@ import {
   updateDoc,
   query,
   where,
-  orderBy,
   serverTimestamp,
   arrayUnion,
   increment,
@@ -49,13 +48,12 @@ export async function getBuzzByToken(token: string): Promise<Buzz | null> {
 }
 
 export async function getUserBuzzes(userId: string): Promise<Buzz[]> {
-  const q = query(
-    buzzesCollection,
-    where('createdBy', '==', userId),
-    orderBy('createdAt', 'desc')
-  );
+  // Single-field where clause — no composite index required (Firestore auto-indexes every field).
+  // Sorting is done client-side so the query works regardless of index state.
+  const q = query(buzzesCollection, where('createdBy', '==', userId));
   const snapshot = await getDocs(q);
-  return snapshot.docs.map((d) => d.data());
+  const buzzes = snapshot.docs.map((d) => d.data());
+  return buzzes.sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
 }
 
 export async function signBuzz(data: NewSignatureData): Promise<void> {

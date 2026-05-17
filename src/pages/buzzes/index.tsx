@@ -99,7 +99,7 @@ export default function MyBuzzes(): JSX.Element {
     if (!user?.id) return;
     void getUserBuzzes(user.id)
       .then(setBuzzes)
-      .catch(() => setBuzzes([]))
+      .catch((err) => { console.error('[MyBuzzes] fetch failed:', err); setBuzzes([]); })
       .finally(() => setLoading(false));
   }, [user?.id]);
 
