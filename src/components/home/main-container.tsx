@@ -18,7 +18,7 @@ export function MainContainer({
         'border-x-0 border-[#e8d8c4] dark:border-[#2a1d10] sm:border-x',
         'transition-colors duration-150',
         'relative',
-        'pb-32 sm:pb-48 lg:pb-96',
+        'pb-10',
         className
       )}
     >

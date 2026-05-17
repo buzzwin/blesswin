@@ -34,7 +34,7 @@ export function MainHeader({
       className={cn(
         'hover-animation z-10 py-2 backdrop-blur-md',
         'bg-main-background/80 border-b border-light-border dark:border-dark-border',
-        !disableSticky && 'sticky top-0',
+        !disableSticky && 'sticky top-12',
         className ?? 'flex items-center gap-6'
       )}
     >

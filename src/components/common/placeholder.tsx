@@ -1,20 +1,11 @@
-import { CustomIcon } from '@components/ui/custom-icon';
+import { Loading } from '@components/ui/loading';
 import { SEO } from './seo';
 
 export function Placeholder(): JSX.Element {
   return (
-    <main className='flex min-h-screen items-center justify-center'>
-      <SEO
-        title='Buzzwin'
-        description='Tired of searching for the right movie or show to watch? Then you are in the right place!'
-        image='/home.png'
-      />
-      <i>
-        <CustomIcon
-          className='h-20 w-20 text-[#1DA1F2]'
-          iconName='TwitterIcon'
-        />
-      </i>
+    <main className='flex min-h-screen items-center justify-center bg-[#f5f1ea] dark:bg-[#110d07]'>
+      <SEO title='Buzzwin' />
+      <Loading />
     </main>
   );
 }
