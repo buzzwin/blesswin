@@ -144,6 +144,8 @@ export function CreateBuzzForm(): JSX.Element {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [loading, setLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
+  const [aiInput, setAiInput] = useState('');
+  const [aiLoading, setAiLoading] = useState(false);
 
   const occasionObj = OCCASIONS.find((o) => o.value === form.occasion);
   const stepIndex = STEP_ORDER.indexOf(step);
@@ -236,6 +238,34 @@ export function CreateBuzzForm(): JSX.Element {
     toast.success('Link copied!');
   }
 
+  async function handleAiParse(): Promise<void> {
+    const trimmed = aiInput.trim();
+    if (!trimmed || aiLoading) return;
+    setAiLoading(true);
+    try {
+      const res = await fetch('/api/buzz-ai-parse', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: trimmed })
+      });
+      if (!res.ok) throw new Error('AI parse failed');
+      const data = (await res.json()) as { occasion: BuzzOccasion; recipientName: string; title: string };
+      const obj = OCCASIONS.find((o) => o.value === data.occasion) ?? OCCASIONS[0];
+      setForm((f) => ({
+        ...f,
+        occasion: data.occasion,
+        boardMode: GROUP_OCCASIONS.has(data.occasion) ? 'group' : f.boardMode,
+        recipientName: data.recipientName || f.recipientName,
+        title: data.title || obj.defaultTitle(data.recipientName || 'You')
+      }));
+      setStep('recipient');
+    } catch {
+      toast.error('Couldn\'t parse that — pick an occasion below');
+    } finally {
+      setAiLoading(false);
+    }
+  }
+
   const inputCls = cn(
     'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
     'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
@@ -287,9 +317,50 @@ export function CreateBuzzForm(): JSX.Element {
           <h2 className='mb-1 text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
             What are you doing together?
           </h2>
-          <p className='mb-6 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+          <p className='mb-4 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             Pick the vibe and we&apos;ll set up a Buzzbook for it.
           </p>
+
+          {/* AI description input */}
+          <div className='mb-6'>
+            <div className='flex gap-2'>
+              <input
+                type='text'
+                className={cn(
+                  'flex-1 rounded-xl border px-4 py-3 text-sm outline-none transition',
+                  'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
+                  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
+                  'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
+                )}
+                placeholder='e.g. birthday party for my mum who turns 60…'
+                value={aiInput}
+                onChange={(e) => setAiInput(e.target.value)}
+                onKeyDown={(e) => { if (e.key === 'Enter') void handleAiParse(); }}
+                disabled={aiLoading}
+              />
+              <button
+                onClick={() => void handleAiParse()}
+                disabled={aiLoading || !aiInput.trim()}
+                className={cn(
+                  'flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition',
+                  'border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.08)] text-[#C9A96E]',
+                  'hover:border-[rgba(201,169,110,0.5)] hover:bg-[rgba(201,169,110,0.15)]',
+                  'dark:border-[rgba(201,169,110,0.2)] dark:bg-[rgba(201,169,110,0.06)]',
+                  'disabled:cursor-not-allowed disabled:opacity-40'
+                )}
+                aria-label='Auto-fill with AI'
+              >
+                {aiLoading
+                  ? <svg className='h-4 w-4 animate-spin' viewBox='0 0 24 24' fill='none'><circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'/><path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z'/></svg>
+                  : <span className='text-lg'>✨</span>
+                }
+              </button>
+            </div>
+            <p className='mt-1.5 text-xs text-[#9E8B76]'>
+              Describe it and AI will fill in the details — or just pick below
+            </p>
+          </div>
+
           <div className='grid grid-cols-3 gap-2.5'>
             {OCCASIONS.map((occ) => {
               const sel = form.occasion === occ.value;
