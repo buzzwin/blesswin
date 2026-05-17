@@ -29,9 +29,9 @@ const GROUP_OCCASIONS = new Set([
 
 const inputCls = cn(
   'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
-  'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
-  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
-  'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
+  'border-[#C4D6E8] bg-[#F0F5FA] text-[#0D1B2A] placeholder:text-[#7A8FA3]',
+  'dark:border-[#1E3251] dark:bg-[#122033] dark:text-white dark:placeholder:text-[#3D5A78]',
+  'focus:border-[#5BB8D4] focus:ring-2 focus:ring-[rgba(91,184,212,0.2)]'
 );
 
 // ── Inline auth gate ────────────────────────────────────────────────────────
@@ -78,11 +78,11 @@ function AuthGate({ buzz }: { buzz: Buzz }): JSX.Element {
   return (
     <div className='space-y-5'>
       {/* Context */}
-      <div className='rounded-2xl border border-[rgba(201,169,110,0.25)] bg-[rgba(201,169,110,0.06)] p-4 dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.05)]'>
-        <p className='text-sm font-semibold text-[#7a5510] dark:text-[#C9A96E]'>
+      <div className='rounded-2xl border border-[rgba(91,184,212,0.25)] bg-[rgba(91,184,212,0.06)] p-4 dark:border-[rgba(91,184,212,0.15)] dark:bg-[rgba(91,184,212,0.05)]'>
+        <p className='text-sm font-semibold text-[#1E4A7A] dark:text-[#5BB8D4]'>
           Create a free account to add your page
         </p>
-        <p className='mt-0.5 text-xs text-[#6b5744] dark:text-[#9E8B76]'>
+        <p className='mt-0.5 text-xs text-[#3D5A78] dark:text-[#7A8FA3]'>
           {isGroup
             ? `Your name and photo will appear in the ${buzz.recipientName} Buzzbook when it opens.`
             : `Your page will be part of ${buzz.recipientName}'s Buzzbook — revealed on the day.`}
@@ -96,8 +96,8 @@ function AuthGate({ buzz }: { buzz: Buzz }): JSX.Element {
         disabled={loading}
         className={cn(
           'flex w-full items-center justify-center gap-2.5 rounded-xl border py-3 text-sm font-semibold transition',
-          'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] hover:bg-[#f5f1ea]',
-          'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#F5EFE6] dark:hover:bg-[#231a10]',
+          'border-[#C4D6E8] bg-[#F0F5FA] text-[#0D1B2A] hover:bg-[#f5f1ea]',
+          'dark:border-[#1E3251] dark:bg-[#122033] dark:text-[#E8F0F8] dark:hover:bg-[#1A2D44]',
           'disabled:cursor-not-allowed disabled:opacity-50'
         )}
       >
@@ -112,13 +112,13 @@ function AuthGate({ buzz }: { buzz: Buzz }): JSX.Element {
       {/* Divider */}
       <div className='relative'>
         <div className='absolute inset-0 flex items-center'>
-          <div className='w-full border-t border-[#e8d8c4] dark:border-[#2a1d10]' />
+          <div className='w-full border-t border-[#C4D6E8] dark:border-[#1E3251]' />
         </div>
         <div className='relative flex justify-center'>
           <button
             type='button'
             onClick={() => setShowEmail((s) => !s)}
-            className='bg-[#faf8f4] px-3 text-xs text-[#9E8B76] transition hover:text-[#C9A96E] dark:bg-[#1c1510]'
+            className='bg-[#F0F5FA] px-3 text-xs text-[#7A8FA3] transition hover:text-[#5BB8D4] dark:bg-[#122033]'
           >
             {showEmail ? 'hide email form ↑' : 'or use email ↓'}
           </button>
@@ -157,17 +157,17 @@ function AuthGate({ buzz }: { buzz: Buzz }): JSX.Element {
           <button
             type='button'
             onClick={() => setIsSignUp((s) => !s)}
-            className='w-full text-center text-xs text-[#C9A96E] hover:text-[#E8B86D]'
+            className='w-full text-center text-xs text-[#5BB8D4] hover:text-[#E8B86D]'
           >
             {isSignUp ? 'Already have an account? Sign in' : "Don't have an account? Sign up"}
           </button>
         </form>
       )}
 
-      <p className='text-center text-xs text-[#9E8B76]'>
+      <p className='text-center text-xs text-[#7A8FA3]'>
         Already have an account?{' '}
         <Link href='/login'>
-          <a className='font-medium text-[#C9A96E] hover:text-[#E8B86D]'>Sign in here</a>
+          <a className='font-medium text-[#5BB8D4] hover:text-[#E8B86D]'>Sign in here</a>
         </Link>
       </p>
     </div>
@@ -282,10 +282,10 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
       <div className='space-y-5 text-center'>
         <div>
           <span className='text-5xl'>🎉</span>
-          <h3 className='mt-3 text-xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+          <h3 className='mt-3 text-xl font-bold text-[#0D1B2A] dark:text-[#E8F0F8]'>
             Your page is in!
           </h3>
-          <p className='mt-1 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+          <p className='mt-1 text-sm text-[#3D5A78] dark:text-[#7A8FA3]'>
             {isGroup
               ? <>The {buzz.recipientName} Buzzbook opens on <strong>{revealDateStr}</strong> — you'll all see it together.</>
               : <>Your page will be revealed with everyone else's on <strong>{revealDateStr}</strong>.</>}
@@ -295,7 +295,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         <div className='flex gap-2'>
           <button
             onClick={() => void navigator.clipboard.writeText(shareUrl).then(() => toast.success('Link copied!'))}
-            className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#e8d8c4] py-2.5 text-sm font-medium text-[#6b5744] transition hover:border-[#C9A96E] hover:text-[#C9A96E] dark:border-[#2a1d10] dark:text-[#9E8B76]'
+            className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#C4D6E8] py-2.5 text-sm font-medium text-[#3D5A78] transition hover:border-[#5BB8D4] hover:text-[#5BB8D4] dark:border-[#1E3251] dark:text-[#7A8FA3]'
           >
             <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
             Copy link
@@ -314,7 +314,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
 
         <div className='flex flex-col gap-2'>
           <Link href='/home'>
-            <a className='flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-5 py-2.5 text-sm font-semibold text-[#8a6520] transition hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.2)] dark:text-[#C9A96E]'>
+            <a className='flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(91,184,212,0.3)] bg-[rgba(91,184,212,0.06)] px-5 py-2.5 text-sm font-semibold text-[#1E4A7A] transition hover:bg-[rgba(91,184,212,0.1)] dark:border-[rgba(91,184,212,0.2)] dark:text-[#5BB8D4]'>
               Go to home feed
               <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
             </a>
@@ -332,7 +332,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
   // ── Auth loading ────────────────────────────────────────────────────────────
   if (authLoading) {
     return (
-      <div className='flex justify-center py-8 text-[#9E8B76]'>
+      <div className='flex justify-center py-8 text-[#7A8FA3]'>
         <HeroIcon iconName='ArrowPathIcon' className='h-6 w-6 animate-spin' />
       </div>
     );
@@ -359,7 +359,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
           required
         />
         {firebaseUser?.photoURL && (
-          <div className='mt-2 flex items-center gap-2 text-xs text-[#9E8B76]'>
+          <div className='mt-2 flex items-center gap-2 text-xs text-[#7A8FA3]'>
             <img
               src={firebaseUser.photoURL}
               alt={name}
@@ -381,7 +381,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
               'flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold transition',
               type === t
                 ? 'bg-[#C97D60] text-white shadow-sm'
-                : 'border border-[#e8d8c4] bg-[#faf8f4] text-[#6b5744] hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-[#C4B5A0] dark:hover:border-[rgba(201,169,110,0.3)]'
+                : 'border border-[#C4D6E8] bg-[#F0F5FA] text-[#3D5A78] hover:border-[#5BB8D4] hover:bg-[rgba(91,184,212,0.06)] dark:border-[#1E3251] dark:bg-[#122033] dark:text-[#A8C8E0] dark:hover:border-[rgba(91,184,212,0.3)]'
             )}
           >
             <span>{t === 'text' ? '💬' : '📷'}</span>
@@ -405,7 +405,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
             maxLength={500}
             required
           />
-          <p className='mt-1 text-right text-xs text-[#9E8B76]'>
+          <p className='mt-1 text-right text-xs text-[#7A8FA3]'>
             {text.length} / 500
           </p>
         </div>
@@ -435,9 +435,9 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
               onClick={() => fileInputRef.current?.click()}
               className={cn(
                 'flex h-40 w-full flex-col items-center justify-center gap-2 rounded-xl border-2 border-dashed transition',
-                'border-[#e8d8c4] bg-[#faf8f4] text-[#9E8B76]',
-                'hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] hover:text-[#C9A96E]',
-                'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)] dark:hover:bg-[rgba(201,169,110,0.06)]'
+                'border-[#C4D6E8] bg-[#F0F5FA] text-[#7A8FA3]',
+                'hover:border-[#5BB8D4] hover:bg-[rgba(91,184,212,0.06)] hover:text-[#5BB8D4]',
+                'dark:border-[#1E3251] dark:bg-[#122033] dark:hover:border-[rgba(91,184,212,0.4)] dark:hover:bg-[rgba(91,184,212,0.06)]'
               )}
             >
               <HeroIcon iconName='PhotoIcon' className='h-8 w-8' />

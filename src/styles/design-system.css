@@ -1,26 +1,26 @@
-/* Design System - Social Good Platform */
+/* Design System - Nordic Edition */
 
-/* Color Palette - Warm Neutrals, Earth Tones, Soft Sky Colors */
+/* Color Palette - Cool Nordic, Steel Blue, Ice & Snow */
 :root {
   /* Primary Colors */
-  --color-earth: #8B6F47;        /* Warm brown - earth */
-  --color-sage: #9CAF88;          /* Soft green - nature */
-  --color-sky: #A8D5E2;           /* Soft blue - sky */
-  --color-terracotta: #D4A574;    /* Warm orange - warmth */
-  
+  --color-earth: #3D5A78;          /* Cool slate */
+  --color-sage: #2E8B6E;           /* Fjord green */
+  --color-sky: #A8CDD8;            /* Ice blue */
+  --color-terracotta: #5BB8D4;     /* Aurora */
+
   /* Neutrals */
-  --color-cream: #F7F5F3;         /* Warm off-white */
-  --color-charcoal: #2C2C2C;      /* Deep gray - text */
-  
+  --color-cream: #F0F5FA;          /* Snow white */
+  --color-charcoal: #0D1B2A;       /* Midnight navy */
+
   /* Accent Colors */
-  --color-hope: #E8B86D;          /* Golden yellow - optimism */
-  --color-action: #C97D60;         /* Coral - action */
-  
+  --color-hope: #5BB8D4;           /* Aurora - optimism */
+  --color-action: #3B82C4;         /* Steel blue - action */
+
   /* Semantic Colors */
-  --color-success: #7FB069;
-  --color-info: #6B9BD2;
-  --color-warning: #F4A261;
-  --color-error: #E76F51;
+  --color-success: #2E8B6E;
+  --color-info: #3B82C4;
+  --color-warning: #C4963A;
+  --color-error: #D64545;
 }
 
 /* Typography System */
@@ -53,13 +53,13 @@
 /* Button Styles */
 .btn-primary {
   @apply rounded-full px-8 py-4 text-base font-semibold text-white transition-all duration-200;
-  background: linear-gradient(135deg, var(--color-action), var(--color-terracotta));
-  box-shadow: 0 4px 12px rgba(201, 125, 96, 0.3);
+  background: linear-gradient(135deg, #1E3A5F, #3B82C4);
+  box-shadow: 0 4px 12px rgba(59,130,196,0.3);
 }
 
 .btn-primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(201, 125, 96, 0.4);
+  box-shadow: 0 6px 16px rgba(59,130,196,0.4);
 }
 
 .btn-primary:active {
@@ -83,12 +83,12 @@
   @apply rounded-2xl p-8 transition-all duration-200;
   background: var(--color-cream);
   border: 3px solid var(--color-charcoal);
-  box-shadow: 8px 8px 0px rgba(44, 44, 44, 0.1);
+  box-shadow: 8px 8px 0px rgba(13,27,42,0.1);
 }
 
 .card-impact:hover {
   transform: translateY(-4px);
-  box-shadow: 12px 12px 0px rgba(44, 44, 44, 0.15);
+  box-shadow: 12px 12px 0px rgba(13,27,42,0.15);
 }
 
 .card-story {
@@ -99,7 +99,7 @@
 
 .card-story:hover {
   transform: translateY(-2px);
-  box-shadow: 4px 4px 0px rgba(44, 44, 44, 0.1);
+  box-shadow: 4px 4px 0px rgba(13,27,42,0.1);
 }
 
 /* Utility Classes */
@@ -173,62 +173,62 @@
 }
 
 /* ============================================================
-   Buzzwin Festival Design System — CSS Tokens
+   Buzzwin Nordic Design System — CSS Tokens
    ============================================================ */
 
 :root {
-  /* ── PRIMARY WARM BASE ──────────────────────────────────── */
-  --bw-amber:               #C9A96E;
-  --bw-amber-light:         #E8C88A;
-  --bw-hope:                #E8B86D;
-  --bw-terracotta:          #C97D60;
-  --bw-terracotta-deep:     #B56540;
-  --bw-terracotta-darker:   #7a3e20;
+  /* ── PRIMARY COOL BASE ──────────────────────────────────── */
+  --bw-amber:               #5BB8D4;  /* Aurora ice blue (primary accent) */
+  --bw-amber-light:         #A8D8EA;  /* Pale ice */
+  --bw-hope:                #5BB8D4;  /* Aurora */
+  --bw-terracotta:          #3B82C4;  /* Steel blue */
+  --bw-terracotta-deep:     #2B5EA7;  /* Deep steel */
+  --bw-terracotta-darker:   #1E3A5F;  /* Navy */
 
-  /* ── FESTIVAL PALETTE ─────────────────────────────────── */
-  --bw-marigold:            #FFB300;
-  --bw-marigold-soft:       rgba(255,179,0,0.14);
-  --bw-saffron:             #FF8A3D;
-  --bw-saffron-soft:        rgba(255,138,61,0.14);
-  --bw-magenta:             #E5407A;
-  --bw-magenta-soft:        rgba(229,64,122,0.14);
-  --bw-rose:                #F472B6;
-  --bw-rose-soft:           rgba(244,114,182,0.14);
-  --bw-festival-green:      #2FB888;
-  --bw-festival-green-soft: rgba(47,184,136,0.14);
-  --bw-emerald:             #34D399;
-  --bw-emerald-soft:        rgba(52,211,153,0.14);
-  --bw-royal:               #6C7CFF;
-  --bw-royal-soft:          rgba(108,124,255,0.14);
-  --bw-plum:                #9B6FD9;
-  --bw-plum-soft:           rgba(155,111,217,0.14);
-  --bw-cherry:              #EF4444;
-  --bw-cherry-soft:         rgba(239,68,68,0.14);
+  /* ── NORDIC PALETTE ───────────────────────────────────── */
+  --bw-marigold:            #3B82C4;  /* Steel blue */
+  --bw-marigold-soft:       rgba(59,130,196,0.14);
+  --bw-saffron:             #5BB8D4;  /* Aurora */
+  --bw-saffron-soft:        rgba(91,184,212,0.14);
+  --bw-magenta:             #5BB8D4;  /* Aurora (replaces magenta) */
+  --bw-magenta-soft:        rgba(91,184,212,0.14);
+  --bw-rose:                #7BBCD8;  /* Pale ice blue */
+  --bw-rose-soft:           rgba(123,188,216,0.14);
+  --bw-festival-green:      #2E8B6E;  /* Fjord green */
+  --bw-festival-green-soft: rgba(46,139,110,0.14);
+  --bw-emerald:             #3DBFA5;  /* Nordic teal */
+  --bw-emerald-soft:        rgba(61,191,165,0.14);
+  --bw-royal:               #2B5EA7;  /* Deep steel */
+  --bw-royal-soft:          rgba(43,94,167,0.14);
+  --bw-plum:                #4A7AB5;  /* Slate blue */
+  --bw-plum-soft:           rgba(74,122,181,0.14);
+  --bw-cherry:              #D64545;  /* Error red */
+  --bw-cherry-soft:         rgba(214,69,69,0.14);
 
   /* ── NEUTRALS — DARK SURFACES ─────────────────────────── */
-  --bw-bg-deep:             #110d07;
-  --bw-bg:                  #1a1108;
-  --bw-surface:             #1c1510;
-  --bw-elevated:            #231a10;
-  --bw-border-dark:         #2a1d10;
-  --bw-border-amber:        rgba(201,169,110,0.18);
-  --bw-border-festival:     rgba(255,179,0,0.20);
+  --bw-bg-deep:             #091528;  /* Deep midnight */
+  --bw-bg:                  #0D1B2A;  /* Midnight navy */
+  --bw-surface:             #122033;  /* Navy surface */
+  --bw-elevated:            #1A2D44;  /* Slightly lighter navy */
+  --bw-border-dark:         #1E3251;  /* Navy border */
+  --bw-border-amber:        rgba(91,184,212,0.18);  /* Ice blue border */
+  --bw-border-festival:     rgba(59,130,196,0.20);  /* Steel border */
 
   /* ── NEUTRALS — LIGHT SURFACES ───────────────────────── */
-  --bw-cream:               #faf8f4;
-  --bw-cream-warm:          #f7f5f3;
-  --bw-paper:               #f5f1ea;
-  --bw-paper-soft:          #ede8de;
-  --bw-border-light:        #e8d8c4;
+  --bw-cream:               #F0F5FA;  /* Snow */
+  --bw-cream-warm:          #EEF3F8;  /* Pale snow */
+  --bw-paper:               #E6EFF7;  /* Light blue-white */
+  --bw-paper-soft:          #DDEAF5;  /* Soft ice */
+  --bw-border-light:        #C4D6E8;  /* Cool light border */
 
   /* ── FOREGROUND TEXT ─────────────────────────────────── */
-  --bw-fg-on-dark:          #F5EFE6;
-  --bw-fg-on-dark-muted:    rgba(245,239,230,0.65);
-  --bw-fg-on-dark-dim:      rgba(245,239,230,0.55);
-  --bw-fg-on-dark-faint:    rgba(245,239,230,0.35);
-  --bw-fg-on-light:         #1a1108;
-  --bw-fg-on-light-muted:   #6b5744;
-  --bw-fg-on-light-dim:     #9E8B76;
+  --bw-fg-on-dark:          #E8F0F8;  /* Cool near-white */
+  --bw-fg-on-dark-muted:    rgba(232,240,248,0.65);
+  --bw-fg-on-dark-dim:      rgba(232,240,248,0.55);
+  --bw-fg-on-dark-faint:    rgba(232,240,248,0.35);
+  --bw-fg-on-light:         #0D1B2A;  /* Midnight */
+  --bw-fg-on-light-muted:   #3D5A78;  /* Dark slate */
+  --bw-fg-on-light-dim:     #7A8FA3;  /* Cool stone */
 
   /* ── TYPE STACKS ─────────────────────────────────────── */
   --bw-font-display: 'Nunito', system-ui, -apple-system, sans-serif;
@@ -264,54 +264,54 @@
   --bw-radius-full: 9999px;
 
   /* ── SHADOWS ─────────────────────────────────────────── */
-  --bw-shadow-glow-amber:    0 0 40px rgba(201,169,110,0.25);
-  --bw-shadow-glow-marigold: 0 0 40px rgba(255,179,0,0.35);
-  --bw-shadow-glow-magenta:  0 0 40px rgba(229,64,122,0.30);
+  --bw-shadow-glow-amber:    0 0 40px rgba(91,184,212,0.25);
+  --bw-shadow-glow-marigold: 0 0 40px rgba(59,130,196,0.35);
+  --bw-shadow-glow-magenta:  0 0 40px rgba(91,184,212,0.30);
 
   /* ── GLOWS ───────────────────────────────────────────── */
-  --bw-glow-amber:      radial-gradient(circle at center, rgba(201,169,110,0.20) 0%, transparent 65%);
-  --bw-glow-terracotta: radial-gradient(circle at center, rgba(181,96,60,0.16) 0%, transparent 65%);
-  --bw-glow-marigold:   radial-gradient(circle at center, rgba(255,179,0,0.18) 0%, transparent 65%);
-  --bw-glow-magenta:    radial-gradient(circle at center, rgba(229,64,122,0.14) 0%, transparent 65%);
-  --bw-glow-royal:      radial-gradient(circle at center, rgba(108,124,255,0.14) 0%, transparent 65%);
+  --bw-glow-amber:      radial-gradient(circle at center, rgba(91,184,212,0.20) 0%, transparent 65%);
+  --bw-glow-terracotta: radial-gradient(circle at center, rgba(43,94,167,0.16) 0%, transparent 65%);
+  --bw-glow-marigold:   radial-gradient(circle at center, rgba(59,130,196,0.18) 0%, transparent 65%);
+  --bw-glow-magenta:    radial-gradient(circle at center, rgba(91,184,212,0.14) 0%, transparent 65%);
+  --bw-glow-royal:      radial-gradient(circle at center, rgba(43,94,167,0.14) 0%, transparent 65%);
 
-  --bw-page-vignette:   linear-gradient(160deg, rgba(17,13,7,0.85) 0%, rgba(28,18,10,0.5) 50%, rgba(12,9,4,0.9) 100%);
+  --bw-page-vignette:   linear-gradient(160deg, rgba(9,21,40,0.85) 0%, rgba(13,27,42,0.5) 50%, rgba(7,13,24,0.9) 100%);
 
   /* ── BRAND GRADIENTS ─────────────────────────────────── */
-  --bw-grad-warm-text:    linear-gradient(135deg, #E8B86D 0%, #D4A574 45%, #C97D60 100%);
-  --bw-grad-cta:          linear-gradient(135deg, #C97D60 0%, #B56540 100%);
+  --bw-grad-warm-text:    linear-gradient(135deg, #A8D8EA 0%, #5BB8D4 45%, #3B82C4 100%);
+  --bw-grad-cta:          linear-gradient(135deg, #3B82C4 0%, #2B5EA7 100%);
 
-  /* ── FESTIVE GRADIENTS ───────────────────────────────── */
+  /* ── NORDIC GRADIENTS ────────────────────────────────── */
   --bw-grad-festival-text:
-    linear-gradient(95deg, #FFB300 0%, #FF8A3D 30%, #E5407A 60%, #9B6FD9 100%);
+    linear-gradient(95deg, #3B82C4 0%, #5BB8D4 35%, #3DBFA5 65%, #4A7AB5 100%);
   --bw-grad-festival-cta:
-    linear-gradient(135deg, #FFB300 0%, #FF8A3D 50%, #E5407A 100%);
+    linear-gradient(135deg, #1E3A5F 0%, #3B82C4 50%, #5BB8D4 100%);
   --bw-grad-confetti:
-    radial-gradient(circle at 20% 25%, rgba(255,179,0,0.28) 0%, transparent 12%),
-    radial-gradient(circle at 78% 18%, rgba(229,64,122,0.26) 0%, transparent 12%),
-    radial-gradient(circle at 35% 78%, rgba(52,211,153,0.22) 0%, transparent 12%),
-    radial-gradient(circle at 85% 70%, rgba(108,124,255,0.24) 0%, transparent 12%),
-    radial-gradient(circle at 55% 45%, rgba(255,138,61,0.20) 0%, transparent 14%);
+    radial-gradient(circle at 20% 25%, rgba(59,130,196,0.28) 0%, transparent 12%),
+    radial-gradient(circle at 78% 18%, rgba(91,184,212,0.26) 0%, transparent 12%),
+    radial-gradient(circle at 35% 78%, rgba(61,191,165,0.22) 0%, transparent 12%),
+    radial-gradient(circle at 85% 70%, rgba(43,94,167,0.24) 0%, transparent 12%),
+    radial-gradient(circle at 55% 45%, rgba(91,184,212,0.20) 0%, transparent 14%);
   --bw-grad-string-lights:
     linear-gradient(90deg,
       transparent 0%,
-      #FFB300 8%, transparent 18%,
-      #E5407A 28%, transparent 38%,
-      #34D399 48%, transparent 58%,
-      #6C7CFF 68%, transparent 78%,
-      #FF8A3D 88%, transparent 100%);
+      #3B82C4 8%, transparent 18%,
+      #5BB8D4 28%, transparent 38%,
+      #3DBFA5 48%, transparent 58%,
+      #2B5EA7 68%, transparent 78%,
+      #5BB8D4 88%, transparent 100%);
   --bw-grad-bokeh:
-    radial-gradient(2px 2px at 10% 20%, rgba(255,179,0,0.7), transparent 60%),
-    radial-gradient(3px 3px at 22% 65%, rgba(229,64,122,0.55), transparent 60%),
-    radial-gradient(2px 2px at 38% 30%, rgba(52,211,153,0.55), transparent 60%),
-    radial-gradient(2.5px 2.5px at 55% 70%, rgba(108,124,255,0.55), transparent 60%),
-    radial-gradient(2px 2px at 72% 22%, rgba(255,138,61,0.65), transparent 60%),
-    radial-gradient(3px 3px at 88% 55%, rgba(232,200,138,0.7), transparent 60%);
+    radial-gradient(2px 2px at 10% 20%, rgba(59,130,196,0.7), transparent 60%),
+    radial-gradient(3px 3px at 22% 65%, rgba(91,184,212,0.55), transparent 60%),
+    radial-gradient(2px 2px at 38% 30%, rgba(61,191,165,0.55), transparent 60%),
+    radial-gradient(2.5px 2.5px at 55% 70%, rgba(43,94,167,0.55), transparent 60%),
+    radial-gradient(2px 2px at 72% 22%, rgba(91,184,212,0.65), transparent 60%),
+    radial-gradient(3px 3px at 88% 55%, rgba(168,216,234,0.7), transparent 60%);
 
   /* ── GRID ────────────────────────────────────────────── */
   --bw-grid-warm:
-    linear-gradient(90deg, rgba(201,169,110,0.07) 1px, transparent 1px),
-    linear-gradient(180deg, rgba(201,169,110,0.05) 1px, transparent 1px);
+    linear-gradient(90deg, rgba(59,130,196,0.07) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(91,184,212,0.05) 1px, transparent 1px);
   --bw-grid-size: 52px 52px;
 
   /* ── MOTION ──────────────────────────────────────────── */
@@ -402,7 +402,7 @@
 }
 
 /* ============================================================
-   FESTIVE MOTION KEYFRAMES & UTILITIES
+   NORDIC MOTION KEYFRAMES & UTILITIES
    ============================================================ */
 
 @keyframes bw-shimmer {
@@ -432,7 +432,7 @@
 .bw-animate-twinkle    { animation: bw-twinkle 1.8s ease-in-out infinite; }
 .bw-animate-pop-in     { animation: bw-pop-in 0.45s var(--bw-ease-pop) both; }
 
-/* String-lights top-edge strip */
+/* Nordic shimmer top-edge strip */
 .bw-string-lights {
   position: relative;
 }
@@ -449,7 +449,7 @@
 }
 
 /* ============================================================
-   FESTIVE BUTTON
+   NORDIC BUTTON
    ============================================================ */
 
 .btn-festive {
@@ -463,7 +463,7 @@
   font-family: var(--bw-font-display);
   font-weight: 800;
   font-size: 15px;
-  color: #1a1108;
+  color: #ffffff;
   background: var(--bw-grad-festival-cta);
   box-shadow: var(--bw-shadow-glow-marigold), 0 2px 0 rgba(0,0,0,0.25);
   cursor: pointer;
@@ -472,9 +472,9 @@
 }
 .btn-festive:hover {
   transform: translateY(-2px);
-  box-shadow: 0 0 52px rgba(255,179,0,0.45), 0 4px 0 rgba(0,0,0,0.2);
+  box-shadow: 0 0 52px rgba(91,184,212,0.45), 0 4px 0 rgba(0,0,0,0.2);
 }
 .btn-festive:active {
   transform: translateY(0);
-  box-shadow: 0 0 24px rgba(255,179,0,0.3), 0 1px 0 rgba(0,0,0,0.3);
+  box-shadow: 0 0 24px rgba(91,184,212,0.3), 0 1px 0 rgba(0,0,0,0.3);
 }

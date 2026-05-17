@@ -4,7 +4,7 @@ import { db } from '@lib/firebase/app';
 import { usersCollection, ritualCardsCollection } from '@lib/firebase/collections';
 import { getDoc, doc } from 'firebase/firestore';
 import type { CreateRitualCardRequest, RitualCard } from '@lib/types/ritual-card';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 
 interface CreateCardResponse {
   success: boolean;
@@ -115,7 +115,7 @@ export default async function handler(
 
     if (emailApi && emailPassword) {
       try {
-        const transporter = nodemailer.createTransport({
+        const transporter = createTransport({
           service: 'gmail',
           auth: {
             user: emailApi,

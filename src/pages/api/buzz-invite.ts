@@ -43,15 +43,15 @@ function buildEmailHtml(opts: {
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>You're invited to add your page to a Buzzbook</title>
 </head>
-<body style="margin:0;padding:0;background:#faf8f4;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
+<body style="margin:0;padding:0;background:#F0F5FA;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;">
   <table role="presentation" style="width:100%;border-collapse:collapse;">
     <tr>
       <td style="padding:40px 16px;text-align:center;">
-        <table role="presentation" style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 4px 32px rgba(181,96,60,0.12);border:1px solid #e8d8c4;">
+        <table role="presentation" style="max-width:520px;margin:0 auto;background:#ffffff;border-radius:20px;overflow:hidden;box-shadow:0 4px 32px rgba(43,94,167,0.12);border:1px solid #C4D6E8;">
 
           <!-- Header -->
           <tr>
-            <td style="background:linear-gradient(135deg,#FFB300 0%,#E5407A 100%);padding:36px 24px;text-align:center;">
+            <td style="background:linear-gradient(135deg,#3B82C4 0%,#5BB8D4 100%);padding:36px 24px;text-align:center;">
               <div style="font-size:48px;margin-bottom:8px;">${emoji}</div>
               <h1 style="margin:0;color:#ffffff;font-size:22px;font-weight:800;letter-spacing:-0.5px;">
                 You're invited to add your page!
@@ -62,11 +62,11 @@ function buildEmailHtml(opts: {
           <!-- Body -->
           <tr>
             <td style="padding:32px 28px;">
-              <p style="margin:0 0 20px;color:#3d2c1a;font-size:16px;line-height:1.6;">
+              <p style="margin:0 0 20px;color:#0D1B2A;font-size:16px;line-height:1.6;">
                 ${cta}
               </p>
-              <div style="margin:0 0 28px;padding:18px 20px;background:#faf8f4;border-left:4px solid #FFB300;border-radius:8px;">
-                <p style="margin:0;color:#6b5744;font-size:14px;line-height:1.6;">
+              <div style="margin:0 0 28px;padding:18px 20px;background:#F0F5FA;border-left:4px solid #3B82C4;border-radius:8px;">
+                <p style="margin:0;color:#3D5A78;font-size:14px;line-height:1.6;">
                   📖 <strong>What's a Buzzbook?</strong><br>
                   Everyone adds a page — a message, memory, or photo. When the time comes, the whole thing is revealed as a beautiful Buzzbook.
                 </p>
@@ -75,23 +75,23 @@ function buildEmailHtml(opts: {
                 <tr>
                   <td style="text-align:center;">
                     <a href="${shareUrl}"
-                       style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#FFB300 0%,#E5407A 100%);color:#ffffff;text-decoration:none;border-radius:12px;font-weight:700;font-size:16px;letter-spacing:-0.3px;">
+                       style="display:inline-block;padding:14px 36px;background:linear-gradient(135deg,#3B82C4 0%,#5BB8D4 100%);color:#ffffff;text-decoration:none;border-radius:12px;font-weight:700;font-size:16px;letter-spacing:-0.3px;">
                       ✨ Add my page
                     </a>
                   </td>
                 </tr>
               </table>
-              <p style="margin:0;color:#9E8B76;font-size:13px;text-align:center;word-break:break-all;">
-                Or open: <a href="${shareUrl}" style="color:#C9A96E;text-decoration:none;">${shareUrl}</a>
+              <p style="margin:0;color:#7A8FA3;font-size:13px;text-align:center;word-break:break-all;">
+                Or open: <a href="${shareUrl}" style="color:#5BB8D4;text-decoration:none;">${shareUrl}</a>
               </p>
             </td>
           </tr>
 
           <!-- Footer -->
           <tr>
-            <td style="padding:16px 28px;background:#faf8f4;border-top:1px solid #e8d8c4;text-align:center;">
-              <p style="margin:0;color:#9E8B76;font-size:12px;line-height:1.6;">
-                Sent by ${senderName} via <a href="${siteUrl}" style="color:#C9A96E;text-decoration:none;">Buzzwin</a>.
+            <td style="padding:16px 28px;background:#F0F5FA;border-top:1px solid #C4D6E8;text-align:center;">
+              <p style="margin:0;color:#7A8FA3;font-size:12px;line-height:1.6;">
+                Sent by ${senderName} via <a href="${siteUrl}" style="color:#5BB8D4;text-decoration:none;">Buzzwin</a>.
                 If you didn't expect this, you can safely ignore it.
               </p>
             </td>

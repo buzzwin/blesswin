@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDoc, doc } from 'firebase/firestore';
 import { usersCollection } from '@lib/firebase/collections';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 import type { ImpactTag, EffortLevel } from '@lib/types/impact-moment';
 
 interface ShareActionRequest {
@@ -255,7 +255,7 @@ This action was shared by ${userName}. If you didn't expect this email, you can 
     const cleanPassword = emailPassword.replace(/\s/g, '');
 
     // Create transporter
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       service: 'gmail',
       auth: {
         user: emailApi,

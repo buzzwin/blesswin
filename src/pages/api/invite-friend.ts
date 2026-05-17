@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { getDoc, doc } from 'firebase/firestore';
 import { usersCollection } from '@lib/firebase/collections';
-import nodemailer from 'nodemailer';
+import { createTransport } from 'nodemailer';
 
 interface InviteFriendRequest {
   userId: string;
@@ -70,14 +70,14 @@ export default async function handler(
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
           <title>You're Invited to Buzzwin</title>
         </head>
-        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f9fafb;">
+        <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #F0F5FA;">
           <table role="presentation" style="width: 100%; border-collapse: collapse;">
             <tr>
               <td style="padding: 40px 20px; text-align: center;">
                 <table role="presentation" style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
                   <!-- Header -->
                   <tr>
-                    <td style="background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%); padding: 40px 20px; text-align: center;">
+                    <td style="background: linear-gradient(135deg, #3B82C4 0%, #5BB8D4 100%); padding: 40px 20px; text-align: center;">
                       <h1 style="margin: 0; color: #ffffff; font-size: 28px; font-weight: 700;">
                         🌱 You're Invited!
                       </h1>
@@ -91,7 +91,7 @@ export default async function handler(
                         ${inviteMessage}
                       </p>
                       
-                      <div style="margin: 30px 0; padding: 20px; background-color: #f3e8ff; border-left: 4px solid #9333ea; border-radius: 4px;">
+                      <div style="margin: 30px 0; padding: 20px; background-color: #E6EFF7; border-left: 4px solid #3B82C4; border-radius: 4px;">
                         <p style="margin: 0; color: #333333; font-size: 15px; line-height: 1.6;">
                           <strong>What is Buzzwin?</strong><br>
                           A storytelling studio that amplifies good causes. Share your impact moments, discover inspiring real stories, practice daily rituals, and join a community of do-gooders making positive change.
@@ -103,27 +103,27 @@ export default async function handler(
                         <tr>
                           <td style="text-align: center;">
                             <a href="${siteURL}/signup?invite=${userId}" 
-                               style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #9333ea 0%, #ec4899 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
+                               style="display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #3B82C4 0%, #5BB8D4 100%); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 600; font-size: 16px;">
                               Join Buzzwin Now
                             </a>
                           </td>
                         </tr>
                       </table>
                       
-                      <p style="margin: 20px 0 0; color: #666666; font-size: 14px; line-height: 1.6; text-align: center;">
-                        Or copy this link: <a href="${siteURL}/signup?invite=${userId}" style="color: #9333ea; text-decoration: none;">${siteURL}/signup?invite=${userId}</a>
+                      <p style="margin: 20px 0 0; color: #7A8FA3; font-size: 14px; line-height: 1.6; text-align: center;">
+                        Or copy this link: <a href="${siteURL}/signup?invite=${userId}" style="color: #3B82C4; text-decoration: none;">${siteURL}/signup?invite=${userId}</a>
                       </p>
                     </td>
                   </tr>
                   
                   <!-- Footer -->
                   <tr>
-                    <td style="padding: 20px 30px; background-color: #f9fafb; text-align: center; border-top: 1px solid #e5e7eb;">
-                      <p style="margin: 0; color: #666666; font-size: 12px; line-height: 1.6;">
+                    <td style="padding: 20px 30px; background-color: #F0F5FA; text-align: center; border-top: 1px solid #C4D6E8;">
+                      <p style="margin: 0; color: #7A8FA3; font-size: 12px; line-height: 1.6;">
                         This invitation was sent by ${userName}. If you didn't expect this email, you can safely ignore it.
                       </p>
-                      <p style="margin: 10px 0 0; color: #666666; font-size: 12px;">
-                        <a href="${siteURL}" style="color: #9333ea; text-decoration: none;">Buzzwin</a> - Amplifying Good Causes
+                      <p style="margin: 10px 0 0; color: #7A8FA3; font-size: 12px;">
+                        <a href="${siteURL}" style="color: #3B82C4; text-decoration: none;">Buzzwin</a> - Amplifying Good Causes
                       </p>
                     </td>
                   </tr>
@@ -166,7 +166,7 @@ This invitation was sent by ${userName}. If you didn't expect this email, you ca
     const cleanPassword = emailPassword.replace(/\s/g, '');
 
     // Create transporter
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
       service: 'gmail',
       auth: {
         user: emailApi,

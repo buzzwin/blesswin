@@ -50,8 +50,8 @@ function ContributorRow({ sig, buzzId }: { sig: Signature; buzzId: string }): JS
       className={cn(
         'flex items-center gap-3 rounded-xl border p-3.5 transition',
         sig.isHidden
-          ? 'border-[#e8d8c4] bg-[#f5f1ea] opacity-50 dark:border-[#2a1d10] dark:bg-[#1c1510]'
-          : 'border-[#e8d8c4] bg-[#faf8f4] dark:border-[#2a1d10] dark:bg-[#1c1510]'
+          ? 'border-[#C4D6E8] bg-[#f5f1ea] opacity-50 dark:border-[#1E3251] dark:bg-[#122033]'
+          : 'border-[#C4D6E8] bg-[#F0F5FA] dark:border-[#1E3251] dark:bg-[#122033]'
       )}
     >
       {/* Avatar */}
@@ -62,30 +62,30 @@ function ContributorRow({ sig, buzzId }: { sig: Signature; buzzId: string }): JS
           className='h-9 w-9 shrink-0 rounded-full object-cover'
         />
       ) : (
-        <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.15)] text-xs font-bold text-[#8a6520] dark:bg-[rgba(201,169,110,0.1)] dark:text-[#C9A96E]'>
+        <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(91,184,212,0.15)] text-xs font-bold text-[#1E4A7A] dark:bg-[rgba(91,184,212,0.1)] dark:text-[#5BB8D4]'>
           {initials}
         </div>
       )}
 
       {/* Name + preview */}
       <div className='min-w-0 flex-1'>
-        <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>{sig.authorName}</p>
+        <p className='text-sm font-semibold text-[#0D1B2A] dark:text-[#E8F0F8]'>{sig.authorName}</p>
         {sig.type === 'text' && sig.text ? (
-          <p className='mt-0.5 truncate text-xs text-[#6b5744] dark:text-[#9E8B76]'>{sig.text}</p>
+          <p className='mt-0.5 truncate text-xs text-[#3D5A78] dark:text-[#7A8FA3]'>{sig.text}</p>
         ) : sig.type === 'photo' ? (
-          <p className='mt-0.5 text-xs text-[#9E8B76]'>📷 Photo</p>
+          <p className='mt-0.5 text-xs text-[#7A8FA3]'>📷 Photo</p>
         ) : null}
       </div>
 
       {/* Type badge */}
-      <span className='shrink-0 rounded-full border border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.08)] px-2 py-0.5 text-xs font-medium text-[#8a6520] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'>
+      <span className='shrink-0 rounded-full border border-[rgba(91,184,212,0.2)] bg-[rgba(91,184,212,0.08)] px-2 py-0.5 text-xs font-medium text-[#1E4A7A] dark:bg-[rgba(91,184,212,0.06)] dark:text-[#5BB8D4]'>
         {sig.type === 'photo' ? '📷' : '💬'}
       </span>
 
       {/* Show/hide toggle */}
       <button
         onClick={() => void toggleHide()}
-        className='shrink-0 rounded-lg p-1.5 text-[#9E8B76] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
+        className='shrink-0 rounded-lg p-1.5 text-[#7A8FA3] transition hover:bg-[rgba(91,184,212,0.08)] hover:text-[#5BB8D4] dark:hover:bg-[rgba(91,184,212,0.06)]'
         title={sig.isHidden ? 'Show in Buzzbook' : 'Hide from Buzzbook'}
       >
         <HeroIcon iconName={sig.isHidden ? 'EyeIcon' : 'EyeSlashIcon'} className='h-4 w-4' />
@@ -101,21 +101,21 @@ function InvitedRow({ email, shareUrl }: { email: string; shareUrl: string }): J
   }
 
   return (
-    <div className='flex items-center gap-3 rounded-xl border border-dashed border-[#e8d8c4] bg-[#faf8f4] p-3.5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+    <div className='flex items-center gap-3 rounded-xl border border-dashed border-[#C4D6E8] bg-[#F0F5FA] p-3.5 dark:border-[#1E3251] dark:bg-[#122033]'>
       {/* Email avatar placeholder */}
-      <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(181,96,60,0.08)] text-sm dark:bg-[rgba(181,96,60,0.06)]'>
+      <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(43,94,167,0.08)] text-sm dark:bg-[rgba(43,94,167,0.06)]'>
         ✉️
       </div>
 
-      <p className='min-w-0 flex-1 truncate text-sm text-[#6b5744] dark:text-[#9E8B76]'>{email}</p>
+      <p className='min-w-0 flex-1 truncate text-sm text-[#3D5A78] dark:text-[#7A8FA3]'>{email}</p>
 
-      <span className='shrink-0 rounded-full bg-[rgba(181,96,60,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
+      <span className='shrink-0 rounded-full bg-[rgba(43,94,167,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(43,94,167,0.08)] dark:text-[#D4845A]'>
         Invited
       </span>
 
       <button
         onClick={copyLink}
-        className='shrink-0 rounded-lg p-1.5 text-[#9E8B76] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
+        className='shrink-0 rounded-lg p-1.5 text-[#7A8FA3] transition hover:bg-[rgba(91,184,212,0.08)] hover:text-[#5BB8D4] dark:hover:bg-[rgba(91,184,212,0.06)]'
         title='Copy invite link'
       >
         <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
@@ -127,24 +127,24 @@ function InvitedRow({ email, shareUrl }: { email: string; shareUrl: string }): J
 function InvitedUserRow({ user, shareUrl }: { user: User; shareUrl: string }): JSX.Element {
   const initials = user.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
   return (
-    <div className='flex items-center gap-3 rounded-xl border border-dashed border-[#e8d8c4] bg-[#faf8f4] p-3.5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+    <div className='flex items-center gap-3 rounded-xl border border-dashed border-[#C4D6E8] bg-[#F0F5FA] p-3.5 dark:border-[#1E3251] dark:bg-[#122033]'>
       {user.photoURL ? (
         <img src={user.photoURL} alt={user.name} className='h-9 w-9 shrink-0 rounded-full object-cover' />
       ) : (
-        <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.15)] text-xs font-bold text-[#8a6520]'>
+        <div className='flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[rgba(91,184,212,0.15)] text-xs font-bold text-[#1E4A7A]'>
           {initials}
         </div>
       )}
       <div className='min-w-0 flex-1'>
-        <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>{user.name}</p>
-        <p className='text-xs text-[#9E8B76]'>@{user.username}</p>
+        <p className='text-sm font-semibold text-[#0D1B2A] dark:text-[#E8F0F8]'>{user.name}</p>
+        <p className='text-xs text-[#7A8FA3]'>@{user.username}</p>
       </div>
-      <span className='shrink-0 rounded-full bg-[rgba(181,96,60,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
+      <span className='shrink-0 rounded-full bg-[rgba(43,94,167,0.1)] px-2.5 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(43,94,167,0.08)] dark:text-[#D4845A]'>
         Invited
       </span>
       <button
         onClick={() => { void navigator.clipboard.writeText(shareUrl); toast.success('Link copied!'); }}
-        className='shrink-0 rounded-lg p-1.5 text-[#9E8B76] transition hover:bg-[rgba(201,169,110,0.08)] hover:text-[#C9A96E] dark:hover:bg-[rgba(201,169,110,0.06)]'
+        className='shrink-0 rounded-lg p-1.5 text-[#7A8FA3] transition hover:bg-[rgba(91,184,212,0.08)] hover:text-[#5BB8D4] dark:hover:bg-[rgba(91,184,212,0.06)]'
         title='Copy invite link'
       >
         <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
@@ -155,9 +155,9 @@ function InvitedUserRow({ user, shareUrl }: { user: User; shareUrl: string }): J
 
 const inputCls = [
   'w-full rounded-xl border px-4 py-3 text-sm outline-none transition',
-  'border-[#e8d8c4] bg-[#faf8f4] text-[#1a1108] placeholder:text-[#9E8B76]',
-  'dark:border-[#2a1d10] dark:bg-[#1c1510] dark:text-white dark:placeholder:text-[#6b5744]',
-  'focus:border-[#C9A96E] focus:ring-2 focus:ring-[rgba(201,169,110,0.2)]'
+  'border-[#C4D6E8] bg-[#F0F5FA] text-[#0D1B2A] placeholder:text-[#7A8FA3]',
+  'dark:border-[#1E3251] dark:bg-[#122033] dark:text-white dark:placeholder:text-[#3D5A78]',
+  'focus:border-[#5BB8D4] focus:ring-2 focus:ring-[rgba(91,184,212,0.2)]'
 ].join(' ');
 
 export default function BuzzManagement(): JSX.Element {
@@ -277,7 +277,7 @@ export default function BuzzManagement(): JSX.Element {
       <MainHeader useActionButton iconName='ArrowLeftIcon' action={() => void router.push('/buzzes')} />
 
       {loading && (
-        <div className='flex justify-center py-20 text-[#9E8B76]'>
+        <div className='flex justify-center py-20 text-[#7A8FA3]'>
           <HeroIcon iconName='ArrowPathIcon' className='h-6 w-6 animate-spin' />
         </div>
       )}
@@ -286,12 +286,12 @@ export default function BuzzManagement(): JSX.Element {
         <div className='mx-auto max-w-lg space-y-5 py-4'>
 
           {/* ── Buzz header card ── */}
-          <div className='rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+          <div className='rounded-2xl border border-[#C4D6E8] bg-[#F0F5FA] p-5 dark:border-[#1E3251] dark:bg-[#122033]'>
             <div className='flex items-start gap-3'>
               <span className='text-3xl'>{OCCASION_EMOJI[buzz.occasion] ?? '✨'}</span>
               <div className='flex-1 min-w-0'>
-                <h1 className='font-bold text-[#1a1108] dark:text-[#F5EFE6]'>{buzz.title}</h1>
-                <p className='mt-0.5 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+                <h1 className='font-bold text-[#0D1B2A] dark:text-[#E8F0F8]'>{buzz.title}</h1>
+                <p className='mt-0.5 text-sm text-[#3D5A78] dark:text-[#7A8FA3]'>
                   {isGroup ? 'Opens' : 'Reveals'} {revealDate} · {buzz.totalSignatures}{' '}
                   {buzz.totalSignatures === 1 ? 'page' : 'pages'} added
                 </p>
@@ -300,10 +300,10 @@ export default function BuzzManagement(): JSX.Element {
                 className={cn(
                   'shrink-0 rounded-full px-2.5 py-0.5 text-xs font-medium',
                   buzz.status === 'revealed'
-                    ? 'bg-[rgba(156,175,136,0.15)] text-[#5a7a48] dark:bg-[rgba(156,175,136,0.12)] dark:text-[#9CAF88]'
+                    ? 'bg-[rgba(61,191,165,0.15)] text-[#2B7A5C] dark:bg-[rgba(61,191,165,0.12)] dark:text-[#3DBFA5]'
                     : isPastReveal
-                    ? 'bg-[rgba(201,169,110,0.15)] text-[#8a6520] dark:bg-[rgba(201,169,110,0.12)] dark:text-[#C9A96E]'
-                    : 'bg-[rgba(181,96,60,0.12)] text-[#9a4422] dark:bg-[rgba(181,96,60,0.1)] dark:text-[#D4845A]'
+                    ? 'bg-[rgba(91,184,212,0.15)] text-[#1E4A7A] dark:bg-[rgba(91,184,212,0.12)] dark:text-[#5BB8D4]'
+                    : 'bg-[rgba(43,94,167,0.12)] text-[#9a4422] dark:bg-[rgba(43,94,167,0.1)] dark:text-[#D4845A]'
                 )}
               >
                 {buzz.status === 'revealed' ? 'Revealed' : isPastReveal ? 'Ready to open' : 'Collecting'}
@@ -312,17 +312,17 @@ export default function BuzzManagement(): JSX.Element {
 
             {/* Actions row */}
             {buzz.status !== 'revealed' && (
-              <div className='mt-4 flex items-center gap-2 border-t border-[#e8d8c4] pt-4 dark:border-[#2a1d10]'>
+              <div className='mt-4 flex items-center gap-2 border-t border-[#C4D6E8] pt-4 dark:border-[#1E3251]'>
                 {/* Add my page */}
                 <Link href={shareUrl || '#'}>
-                  <a className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[rgba(201,169,110,0.35)] bg-[rgba(201,169,110,0.07)] px-3 py-2 text-sm font-semibold text-[#8a6520] transition hover:border-[#C9A96E] hover:bg-[rgba(201,169,110,0.12)] dark:border-[rgba(201,169,110,0.25)] dark:bg-[rgba(201,169,110,0.06)] dark:text-[#C9A96E]'>
+                  <a className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[rgba(91,184,212,0.35)] bg-[rgba(91,184,212,0.07)] px-3 py-2 text-sm font-semibold text-[#1E4A7A] transition hover:border-[#5BB8D4] hover:bg-[rgba(91,184,212,0.12)] dark:border-[rgba(91,184,212,0.25)] dark:bg-[rgba(91,184,212,0.06)] dark:text-[#5BB8D4]'>
                     <HeroIcon iconName='PencilIcon' className='h-4 w-4' />
                     Add my page
                   </a>
                 </Link>
                 <button
                   onClick={() => setEditOpen((o) => !o)}
-                  className='flex items-center gap-1.5 rounded-xl border border-[#e8d8c4] px-3 py-2 text-sm font-medium text-[#6b5744] transition hover:border-[#C9A96E] hover:text-[#C9A96E] dark:border-[#2a1d10] dark:text-[#9E8B76] dark:hover:border-[rgba(201,169,110,0.4)] dark:hover:text-[#C9A96E]'
+                  className='flex items-center gap-1.5 rounded-xl border border-[#C4D6E8] px-3 py-2 text-sm font-medium text-[#3D5A78] transition hover:border-[#5BB8D4] hover:text-[#5BB8D4] dark:border-[#1E3251] dark:text-[#7A8FA3] dark:hover:border-[rgba(91,184,212,0.4)] dark:hover:text-[#5BB8D4]'
                 >
                   <HeroIcon iconName='PencilSquareIcon' className='h-4 w-4' />
                   Edit
@@ -330,7 +330,7 @@ export default function BuzzManagement(): JSX.Element {
                 <button
                   onClick={handleDelete}
                   disabled={deleting}
-                  className='flex items-center gap-1.5 rounded-xl border border-[#e8d8c4] px-3 py-2 text-sm font-medium text-[#9E8B76] transition hover:border-red-300 hover:text-red-500 disabled:opacity-40 dark:border-[#2a1d10] dark:text-[#6b5744] dark:hover:border-red-800 dark:hover:text-red-400'
+                  className='flex items-center gap-1.5 rounded-xl border border-[#C4D6E8] px-3 py-2 text-sm font-medium text-[#7A8FA3] transition hover:border-red-300 hover:text-red-500 disabled:opacity-40 dark:border-[#1E3251] dark:text-[#3D5A78] dark:hover:border-red-800 dark:hover:text-red-400'
                 >
                   <HeroIcon iconName='TrashIcon' className='h-4 w-4' />
                   {deleting ? 'Deleting…' : 'Delete'}
@@ -341,13 +341,13 @@ export default function BuzzManagement(): JSX.Element {
 
           {/* ── Inline edit panel ── */}
           {editOpen && buzz.status !== 'revealed' && (
-            <div className='rounded-2xl border border-[#C9A96E]/30 bg-[rgba(201,169,110,0.04)] p-5 dark:border-[rgba(201,169,110,0.2)] dark:bg-[rgba(201,169,110,0.03)]'>
-              <h2 className='mb-4 font-display text-base font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+            <div className='rounded-2xl border border-[#5BB8D4]/30 bg-[rgba(91,184,212,0.04)] p-5 dark:border-[rgba(91,184,212,0.2)] dark:bg-[rgba(91,184,212,0.03)]'>
+              <h2 className='mb-4 font-display text-base font-bold text-[#0D1B2A] dark:text-[#E8F0F8]'>
                 Edit Buzz
               </h2>
               <div className='space-y-3'>
                 <div>
-                  <label className='mb-1 block text-xs font-medium text-[#6b5744] dark:text-[#9E8B76]'>
+                  <label className='mb-1 block text-xs font-medium text-[#3D5A78] dark:text-[#7A8FA3]'>
                     Title
                   </label>
                   <input
@@ -359,7 +359,7 @@ export default function BuzzManagement(): JSX.Element {
                   />
                 </div>
                 <div>
-                  <label className='mb-1 block text-xs font-medium text-[#6b5744] dark:text-[#9E8B76]'>
+                  <label className='mb-1 block text-xs font-medium text-[#3D5A78] dark:text-[#7A8FA3]'>
                     {isGroup ? 'Group name' : 'Recipient name'}
                   </label>
                   <input
@@ -371,7 +371,7 @@ export default function BuzzManagement(): JSX.Element {
                   />
                 </div>
                 <div>
-                  <label className='mb-1 block text-xs font-medium text-[#6b5744] dark:text-[#9E8B76]'>
+                  <label className='mb-1 block text-xs font-medium text-[#3D5A78] dark:text-[#7A8FA3]'>
                     {isGroup ? 'Open date' : 'Reveal date'}
                   </label>
                   <input
@@ -393,7 +393,7 @@ export default function BuzzManagement(): JSX.Element {
                 </button>
                 <button
                   onClick={() => setEditOpen(false)}
-                  className='rounded-xl border border-[#e8d8c4] px-4 py-2.5 text-sm font-medium text-[#6b5744] transition hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:text-[#9E8B76]'
+                  className='rounded-xl border border-[#C4D6E8] px-4 py-2.5 text-sm font-medium text-[#3D5A78] transition hover:bg-[rgba(91,184,212,0.06)] dark:border-[#1E3251] dark:text-[#7A8FA3]'
                 >
                   Cancel
                 </button>
@@ -402,17 +402,17 @@ export default function BuzzManagement(): JSX.Element {
           )}
 
           {/* ── Share ── */}
-          <div className='rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-5 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
-            <p className='mb-3 text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
+          <div className='rounded-2xl border border-[#C4D6E8] bg-[#F0F5FA] p-5 dark:border-[#1E3251] dark:bg-[#122033]'>
+            <p className='mb-3 text-sm font-semibold text-[#0D1B2A] dark:text-[#A8C8E0]'>
               Share signing link
             </p>
-            <div className='flex overflow-hidden rounded-xl border border-[#e8d8c4] dark:border-[#2a1d10]'>
-              <span className='flex-1 truncate bg-[#faf8f4] px-3 py-2.5 text-sm text-[#6b5744] dark:bg-[#1c1510] dark:text-[#9E8B76]'>
+            <div className='flex overflow-hidden rounded-xl border border-[#C4D6E8] dark:border-[#1E3251]'>
+              <span className='flex-1 truncate bg-[#F0F5FA] px-3 py-2.5 text-sm text-[#3D5A78] dark:bg-[#122033] dark:text-[#7A8FA3]'>
                 {shareUrl}
               </span>
               <button
                 onClick={copyLink}
-                className='flex shrink-0 items-center gap-1.5 border-l border-[#e8d8c4] bg-[#faf8f4] px-3 py-2.5 text-sm font-medium text-[#C9A96E] hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:bg-[rgba(201,169,110,0.06)]'
+                className='flex shrink-0 items-center gap-1.5 border-l border-[#C4D6E8] bg-[#F0F5FA] px-3 py-2.5 text-sm font-medium text-[#5BB8D4] hover:bg-[rgba(91,184,212,0.06)] dark:border-[#1E3251] dark:bg-[#122033] dark:hover:bg-[rgba(91,184,212,0.06)]'
               >
                 <HeroIcon iconName='ClipboardDocumentIcon' className='h-4 w-4' />
                 Copy
@@ -421,7 +421,7 @@ export default function BuzzManagement(): JSX.Element {
             <div className='mt-2 flex gap-2'>
               <button
                 onClick={copyLink}
-                className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#e8d8c4] py-2.5 text-sm font-medium text-[#6b5744] transition hover:border-[#C9A96E] hover:text-[#C9A96E] dark:border-[#2a1d10] dark:text-[#9E8B76]'
+                className='flex flex-1 items-center justify-center gap-1.5 rounded-xl border border-[#C4D6E8] py-2.5 text-sm font-medium text-[#3D5A78] transition hover:border-[#5BB8D4] hover:text-[#5BB8D4] dark:border-[#1E3251] dark:text-[#7A8FA3]'
               >
                 <HeroIcon iconName='LinkIcon' className='h-4 w-4' />
                 Copy link
@@ -457,14 +457,14 @@ export default function BuzzManagement(): JSX.Element {
           <div className='space-y-3'>
             {/* Section header */}
             <div className='flex items-center gap-2'>
-              <p className='text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>People</p>
+              <p className='text-sm font-semibold text-[#0D1B2A] dark:text-[#A8C8E0]'>People</p>
               {(signatures?.length ?? 0) > 0 && (
-                <span className='rounded-full bg-[rgba(156,175,136,0.15)] px-2 py-0.5 text-xs font-medium text-[#5a7a48] dark:bg-[rgba(156,175,136,0.12)] dark:text-[#9CAF88]'>
-                  {signatures!.length} added
+                <span className='rounded-full bg-[rgba(61,191,165,0.15)] px-2 py-0.5 text-xs font-medium text-[#2B7A5C] dark:bg-[rgba(61,191,165,0.12)] dark:text-[#3DBFA5]'>
+                  {signatures?.length ?? 0} added
                 </span>
               )}
               {((buzz.invitedEmails?.length ?? 0) + invitedUsers.length) > 0 && (
-                <span className='rounded-full bg-[rgba(181,96,60,0.1)] px-2 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(181,96,60,0.08)] dark:text-[#D4845A]'>
+                <span className='rounded-full bg-[rgba(43,94,167,0.1)] px-2 py-0.5 text-xs font-medium text-[#9a4422] dark:bg-[rgba(43,94,167,0.08)] dark:text-[#D4845A]'>
                   {(buzz.invitedEmails?.length ?? 0) + invitedUsers.length} invited
                 </span>
               )}
@@ -499,7 +499,7 @@ export default function BuzzManagement(): JSX.Element {
 
             {/* Empty state */}
             {(!signatures || signatures.length === 0) && invitedUsers.length === 0 && (!buzz.invitedEmails || buzz.invitedEmails.length === 0) && (
-              <div className='rounded-2xl border border-dashed border-[#e8d8c4] py-10 text-center text-sm text-[#9E8B76] dark:border-[#2a1d10]'>
+              <div className='rounded-2xl border border-dashed border-[#C4D6E8] py-10 text-center text-sm text-[#7A8FA3] dark:border-[#1E3251]'>
                 No pages yet — share the link or invite people above.
               </div>
             )}

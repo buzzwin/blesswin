@@ -32,7 +32,7 @@ function Avatar({ chip }: { chip: Chip }): JSX.Element {
   if (chip.kind === 'user') {
     const initials = chip.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase();
     return (
-      <span className='flex h-5 w-5 items-center justify-center rounded-full bg-[rgba(201,169,110,0.2)] text-[9px] font-bold text-[#8a6520]'>
+      <span className='flex h-5 w-5 items-center justify-center rounded-full bg-[rgba(91,184,212,0.2)] text-[9px] font-bold text-[#1E4A7A]'>
         {initials}
       </span>
     );
@@ -63,7 +63,8 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
       return;
     }
 
-    searchTimer.current = setTimeout(async () => {
+    searchTimer.current = setTimeout(() => {
+      void (async () => {
       setSearching(true);
       try {
         const usernameQ = query(
@@ -92,7 +93,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
           }
         }
         // Filter out users already chipped
-        const chippedUserIds = new Set(chips.filter((c) => c.kind === 'user').map((c) => (c as UserChip).id));
+        const chippedUserIds = new Set(chips.filter((c): c is UserChip => c.kind === 'user').map((c) => c.id));
         setResults(merged.filter((u) => !chippedUserIds.has(u.id)).slice(0, 6));
         setDropdownOpen(true);
         setActiveIdx(-1);
@@ -101,6 +102,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
       } finally {
         setSearching(false);
       }
+      })();
     }, 250);
   }, [inputVal]);
 
@@ -121,7 +123,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
   }, []);
 
   function addUserChip(user: User): void {
-    if (chips.some((c) => c.kind === 'user' && (c as UserChip).id === user.id)) return;
+    if (chips.some((c) => c.kind === 'user' && c.id === user.id)) return;
     setChips((prev) => [...prev, { kind: 'user', id: user.id, name: user.name, username: user.username, photoURL: user.photoURL }]);
     setInputVal('');
     setResults([]);
@@ -133,7 +135,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
     const email = raw.trim().toLowerCase();
     if (!email) return;
     if (!EMAIL_RE.test(email)) { toast.error(`"${raw.trim()}" isn't a valid email`); return; }
-    if (chips.some((c) => c.kind === 'email' && (c as EmailChip).email === email)) { setInputVal(''); return; }
+    if (chips.some((c) => c.kind === 'email' && c.email === email)) { setInputVal(''); return; }
     setChips((prev) => [...prev, { kind: 'email', email }]);
     setInputVal('');
     setDropdownOpen(false);
@@ -194,15 +196,15 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
     }
   }
 
-  const showEmailOption = EMAIL_RE.test(inputVal.trim()) && !chips.some((c) => c.kind === 'email' && (c as EmailChip).email === inputVal.trim().toLowerCase());
+  const showEmailOption = EMAIL_RE.test(inputVal.trim()) && !chips.some((c) => c.kind === 'email' && c.email === inputVal.trim().toLowerCase());
   const hasItems = chips.length > 0 || EMAIL_RE.test(inputVal.trim());
 
   return (
-    <div className={cn('rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-5 dark:border-[#2a1d10] dark:bg-[#1c1510]', className)}>
-      <p className='mb-1 text-sm font-semibold text-[#1a1108] dark:text-[#C4B5A0]'>
+    <div className={cn('rounded-2xl border border-[#C4D6E8] bg-[#F0F5FA] p-5 dark:border-[#1E3251] dark:bg-[#122033]', className)}>
+      <p className='mb-1 text-sm font-semibold text-[#0D1B2A] dark:text-[#A8C8E0]'>
         Invite people to add a page
       </p>
-      <p className='mb-3 text-xs text-[#9E8B76]'>
+      <p className='mb-3 text-xs text-[#7A8FA3]'>
         Search by name or @username, or type an email address.
       </p>
 
@@ -210,8 +212,8 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
       <div
         className={cn(
           'relative flex min-h-[48px] flex-wrap gap-1.5 rounded-xl border px-3 py-2 transition cursor-text',
-          'border-[#e8d8c4] bg-white dark:border-[#2a1d10] dark:bg-[#120e09]',
-          'focus-within:border-[#C9A96E] focus-within:ring-2 focus-within:ring-[rgba(201,169,110,0.2)]'
+          'border-[#C4D6E8] bg-white dark:border-[#1E3251] dark:bg-[#091528]',
+          'focus-within:border-[#5BB8D4] focus-within:ring-2 focus-within:ring-[rgba(91,184,212,0.2)]'
         )}
         onClick={() => inputRef.current?.focus()}
       >
@@ -219,16 +221,16 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
         {chips.map((chip, idx) => (
           <span
             key={idx}
-            className='flex items-center gap-1.5 rounded-full border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.1)] py-0.5 pl-1.5 pr-1 text-xs font-medium text-[#7a5510] dark:border-[rgba(201,169,110,0.2)] dark:bg-[rgba(201,169,110,0.08)] dark:text-[#C9A96E]'
+            className='flex items-center gap-1.5 rounded-full border border-[rgba(91,184,212,0.3)] bg-[rgba(91,184,212,0.1)] py-0.5 pl-1.5 pr-1 text-xs font-medium text-[#1E4A7A] dark:border-[rgba(91,184,212,0.2)] dark:bg-[rgba(91,184,212,0.08)] dark:text-[#5BB8D4]'
           >
             <Avatar chip={chip} />
             <span>{chip.kind === 'user' ? chip.name : chip.email}</span>
             {chip.kind === 'user' && (
-              <span className='text-[#9E8B76]'>@{chip.username}</span>
+              <span className='text-[#7A8FA3]'>@{chip.username}</span>
             )}
             <button
               onClick={(e) => { e.stopPropagation(); removeChip(idx); }}
-              className='ml-0.5 rounded-full p-0.5 text-[#9E8B76] hover:text-[#C9A96E]'
+              className='ml-0.5 rounded-full p-0.5 text-[#7A8FA3] hover:text-[#5BB8D4]'
             >
               <HeroIcon iconName='XMarkIcon' className='h-3 w-3' />
             </button>
@@ -239,7 +241,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
         <input
           ref={inputRef}
           type='text'
-          className='min-w-[160px] flex-1 bg-transparent text-sm text-[#1a1108] outline-none placeholder:text-[#9E8B76] dark:text-white'
+          className='min-w-[160px] flex-1 bg-transparent text-sm text-[#0D1B2A] outline-none placeholder:text-[#7A8FA3] dark:text-white'
           placeholder={chips.length === 0 ? 'Search name, @username, or email…' : 'Add another…'}
           value={inputVal}
           onChange={(e) => setInputVal(e.target.value)}
@@ -250,7 +252,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
         />
 
         {searching && (
-          <span className='absolute right-3 top-1/2 -translate-y-1/2 text-[#9E8B76]'>
+          <span className='absolute right-3 top-1/2 -translate-y-1/2 text-[#7A8FA3]'>
             <svg className='h-4 w-4 animate-spin' viewBox='0 0 24 24' fill='none'>
               <circle className='opacity-25' cx='12' cy='12' r='10' stroke='currentColor' strokeWidth='4'/>
               <path className='opacity-75' fill='currentColor' d='M4 12a8 8 0 018-8v8z'/>
@@ -263,7 +265,7 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
       {dropdownOpen && (results.length > 0 || showEmailOption) && (
         <div
           ref={dropdownRef}
-          className='mt-1 overflow-hidden rounded-xl border border-[#e8d8c4] bg-white shadow-lg dark:border-[#2a1d10] dark:bg-[#1c1510]'
+          className='mt-1 overflow-hidden rounded-xl border border-[#C4D6E8] bg-white shadow-lg dark:border-[#1E3251] dark:bg-[#122033]'
         >
           {results.map((user, idx) => (
             <button
@@ -273,22 +275,22 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
               className={cn(
                 'flex w-full items-center gap-3 px-4 py-2.5 text-left transition',
                 idx === activeIdx
-                  ? 'bg-[rgba(201,169,110,0.1)] dark:bg-[rgba(201,169,110,0.08)]'
-                  : 'hover:bg-[rgba(201,169,110,0.06)] dark:hover:bg-[rgba(201,169,110,0.05)]'
+                  ? 'bg-[rgba(91,184,212,0.1)] dark:bg-[rgba(91,184,212,0.08)]'
+                  : 'hover:bg-[rgba(91,184,212,0.06)] dark:hover:bg-[rgba(91,184,212,0.05)]'
               )}
             >
               {user.photoURL ? (
                 <img src={user.photoURL} alt={user.name} className='h-8 w-8 shrink-0 rounded-full object-cover' />
               ) : (
-                <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(201,169,110,0.15)] text-xs font-bold text-[#8a6520]'>
+                <div className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(91,184,212,0.15)] text-xs font-bold text-[#1E4A7A]'>
                   {user.name.split(' ').map((w) => w[0]).slice(0, 2).join('').toUpperCase()}
                 </div>
               )}
               <div className='min-w-0 flex-1'>
-                <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>{user.name}</p>
-                <p className='text-xs text-[#9E8B76]'>@{user.username}</p>
+                <p className='text-sm font-semibold text-[#0D1B2A] dark:text-[#E8F0F8]'>{user.name}</p>
+                <p className='text-xs text-[#7A8FA3]'>@{user.username}</p>
               </div>
-              <span className='shrink-0 rounded-full bg-[rgba(156,175,136,0.15)] px-2 py-0.5 text-[10px] font-medium text-[#5a7a48] dark:bg-[rgba(156,175,136,0.12)] dark:text-[#9CAF88]'>
+              <span className='shrink-0 rounded-full bg-[rgba(61,191,165,0.15)] px-2 py-0.5 text-[10px] font-medium text-[#2B7A5C] dark:bg-[rgba(61,191,165,0.12)] dark:text-[#3DBFA5]'>
                 On Buzzwin
               </span>
             </button>
@@ -298,14 +300,14 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
             <button
               type='button'
               onMouseDown={(e) => { e.preventDefault(); tryAddEmailChip(inputVal); }}
-              className='flex w-full items-center gap-3 border-t border-[#e8d8c4] px-4 py-2.5 text-left transition hover:bg-[rgba(201,169,110,0.06)] dark:border-[#2a1d10] dark:hover:bg-[rgba(201,169,110,0.05)]'
+              className='flex w-full items-center gap-3 border-t border-[#C4D6E8] px-4 py-2.5 text-left transition hover:bg-[rgba(91,184,212,0.06)] dark:border-[#1E3251] dark:hover:bg-[rgba(91,184,212,0.05)]'
             >
-              <span className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(181,96,60,0.08)] text-base'>
+              <span className='flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-[rgba(43,94,167,0.08)] text-base'>
                 ✉️
               </span>
               <div className='min-w-0 flex-1'>
-                <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>Invite by email</p>
-                <p className='truncate text-xs text-[#9E8B76]'>{inputVal.trim()}</p>
+                <p className='text-sm font-semibold text-[#0D1B2A] dark:text-[#E8F0F8]'>Invite by email</p>
+                <p className='truncate text-xs text-[#7A8FA3]'>{inputVal.trim()}</p>
               </div>
             </button>
           )}
