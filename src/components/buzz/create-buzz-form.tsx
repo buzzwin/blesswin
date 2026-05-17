@@ -7,6 +7,7 @@ import { useAuth } from '@lib/context/auth-context';
 import { createBuzz, sendBuzzTweet, setBuzzFeedTweetId, awardBuzzKarma } from '@lib/firebase/utils/buzz';
 import { Button } from '@components/ui/button';
 import { HeroIcon } from '@components/ui/hero-icon';
+import { InviteSection } from '@components/buzz/invite-section';
 import type { BuzzOccasion, BuzzBoardMode } from '@lib/types/buzz';
 import { Timestamp } from 'firebase/firestore';
 
@@ -144,6 +145,7 @@ export function CreateBuzzForm(): JSX.Element {
   const [form, setForm] = useState<FormState>(INITIAL);
   const [loading, setLoading] = useState(false);
   const [shareUrl, setShareUrl] = useState('');
+  const [createdBuzzId, setCreatedBuzzId] = useState('');
   const [aiInput, setAiInput] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
 
@@ -201,6 +203,7 @@ export function CreateBuzzForm(): JSX.Element {
       // Buzz created — show done state immediately
       const url = `${window.location.origin}/b/${shareToken}`;
       setShareUrl(url);
+      setCreatedBuzzId(buzzId);
       setStep('done');
       toast.success('Buzz created!');
 
@@ -628,6 +631,13 @@ export function CreateBuzzForm(): JSX.Element {
               Share on WhatsApp
             </span>
           </WhatsappShareButton>
+
+          {createdBuzzId && user?.id && (
+            <InviteSection
+              buzzId={createdBuzzId}
+              senderUserId={user.id}
+            />
+          )}
 
           <button
             onClick={() => void router.push('/buzzes')}

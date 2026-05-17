@@ -15,6 +15,7 @@ import { useDocument } from '@lib/hooks/useDocument';
 import { useSignatures } from '@lib/hooks/useSignatures';
 import { buzzesCollection } from '@lib/firebase/collections';
 import { hideBuzzSignature, updateBuzz, deleteBuzz } from '@lib/firebase/utils/buzz';
+import { InviteSection } from '@components/buzz/invite-section';
 import type { Signature } from '@lib/types/buzz';
 import type { ReactElement, ReactNode } from 'react';
 
@@ -328,6 +329,11 @@ export default function BuzzManagement(): JSX.Element {
               </span>
             </WhatsappShareButton>
           </div>
+
+          {/* ── Invite ── */}
+          {buzz.status !== 'revealed' && user?.id && (
+            <InviteSection buzzId={buzz.id} senderUserId={user.id} />
+          )}
 
           {/* ── Open Buzzbook (once revealed / past reveal) ── */}
           {(isPastReveal || buzz.status === 'revealed') && (
