@@ -100,6 +100,18 @@ export async function hideBuzzSignature(
   await updateDoc(sigRef, { isHidden });
 }
 
+export async function updateBuzz(
+  buzzId: string,
+  data: { title?: string; recipientName?: string; revealAt?: import('firebase/firestore').Timestamp }
+): Promise<void> {
+  await updateDoc(doc(buzzesCollection, buzzId), { ...data, updatedAt: serverTimestamp() });
+}
+
+export async function deleteBuzz(buzzId: string): Promise<void> {
+  const { deleteDoc } = await import('firebase/firestore');
+  await deleteDoc(doc(buzzesCollection, buzzId));
+}
+
 export async function setBuzzFeedTweetId(buzzId: string, tweetId: string): Promise<void> {
   await updateDoc(doc(buzzesCollection, buzzId), { feedTweetId: tweetId });
 }
