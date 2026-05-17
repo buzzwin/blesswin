@@ -35,11 +35,21 @@ const NAV_ITEMS: NavItem[] = [
   }
 ];
 
+// Routes that have their own full-screen header — hide the nav bar on these
+const STANDALONE_ROUTES = new Set([
+  '/b/[token]',
+  '/buzzes/[buzzId]/reveal',
+  '/login',
+  '/',
+  '/privacy',
+  '/tos'
+]);
+
 export function TopNavBar(): JSX.Element | null {
   const { pathname } = useRouter();
   const { user } = useAuth();
 
-  if (!user) return null;
+  if (!user || STANDALONE_ROUTES.has(pathname)) return null;
 
   const profileHref = `/user/${user.username}`;
 
@@ -64,23 +74,32 @@ export function TopNavBar(): JSX.Element | null {
         <Link href='/home'>
           <a className='flex shrink-0 items-center gap-2'>
             <svg
-              viewBox='0 0 28 22'
+              viewBox='0 0 64 64'
               fill='none'
               xmlns='http://www.w3.org/2000/svg'
-              className='h-6 w-8'
-              aria-hidden='true'
+              className='h-7 w-7'
+              aria-label='Buzzwin'
             >
-              {/* mini open book mark */}
-              <rect x='1' y='3' width='11' height='16' rx='2.5'
-                fill='rgba(201,169,110,0.18)' stroke='rgba(201,169,110,0.7)' strokeWidth='1.4' />
-              <rect x='14' y='3' width='11' height='16' rx='2.5'
-                fill='rgba(201,169,110,0.18)' stroke='rgba(201,169,110,0.7)' strokeWidth='1.4' />
-              <rect x='12' y='1.5' width='4' height='19' rx='2'
-                fill='rgba(181,96,60,0.85)' />
-              <rect x='4' y='8' width='5' height='1.5' rx='0.75' fill='rgba(201,169,110,0.6)' />
-              <rect x='4' y='11.5' width='7' height='1.5' rx='0.75' fill='rgba(201,169,110,0.4)' />
-              <rect x='17' y='8' width='5' height='1.5' rx='0.75' fill='rgba(201,169,110,0.6)' />
-              <rect x='17' y='11.5' width='7' height='1.5' rx='0.75' fill='rgba(201,169,110,0.4)' />
+              <path d='M32 28 Q22 24 12 28 L12 50 Q22 46 32 50 Z'
+                fill='#FFB300' stroke='#7a3e20' strokeWidth='1.5' strokeLinejoin='round'/>
+              <path d='M32 28 Q42 24 52 28 L52 50 Q42 46 32 50 Z'
+                fill='#E5407A' stroke='#7a3e20' strokeWidth='1.5' strokeLinejoin='round'/>
+              <line x1='32' y1='28' x2='32' y2='50' stroke='#7a3e20' strokeWidth='1.5' strokeLinecap='round'/>
+              <line x1='17' y1='33' x2='29' y2='32' stroke='#4a2810' strokeOpacity='0.45' strokeWidth='1' strokeLinecap='round'/>
+              <line x1='17' y1='37' x2='27' y2='36' stroke='#4a2810' strokeOpacity='0.45' strokeWidth='1' strokeLinecap='round'/>
+              <line x1='17' y1='41' x2='29' y2='40' stroke='#4a2810' strokeOpacity='0.45' strokeWidth='1' strokeLinecap='round'/>
+              <line x1='35' y1='32' x2='47' y2='33' stroke='#fff' strokeOpacity='0.55' strokeWidth='1' strokeLinecap='round'/>
+              <line x1='37' y1='36' x2='47' y2='37' stroke='#fff' strokeOpacity='0.55' strokeWidth='1' strokeLinecap='round'/>
+              <line x1='35' y1='40' x2='47' y2='41' stroke='#fff' strokeOpacity='0.55' strokeWidth='1' strokeLinecap='round'/>
+              <path d='M32 3 L33.5 10.5 L40.5 12 L33.5 13.5 L32 21 L30.5 13.5 L23.5 12 L30.5 10.5 Z' fill='#FFB300'/>
+              <path d='M48 9 L48.8 12 L52 13 L48.8 14 L48 17 L47.2 14 L44 13 L47.2 12 Z' fill='#2FB888'/>
+              <path d='M14 12 L14.7 14.5 L17.5 15.5 L14.7 16.5 L14 19 L13.3 16.5 L10.5 15.5 L13.3 14.5 Z' fill='#6C7CFF'/>
+              <path d='M21 23 Q23 21 25 23' stroke='#9B6FD9' strokeWidth='1.4' strokeLinecap='round' fill='none'/>
+              <path d='M40 21 Q42 19 44 21' stroke='#FF8A3D' strokeWidth='1.4' strokeLinecap='round' fill='none'/>
+              <circle cx='24' cy='18' r='1' fill='#E5407A'/>
+              <circle cx='42' cy='25' r='0.9' fill='#FFB300'/>
+              <circle cx='37' cy='20' r='0.8' fill='#2FB888'/>
+              <circle cx='20' cy='13' r='0.7' fill='#FF8A3D'/>
             </svg>
             <span className='hidden font-display text-[15px] font-bold text-[#1a1108] dark:text-[#F5EFE6] sm:block'>
               Buzzwin

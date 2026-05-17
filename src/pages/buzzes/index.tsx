@@ -17,6 +17,12 @@ const OCCASION_EMOJI: Record<string, string> = {
   diwali: '🪔', christmas: '🎄', eid: '🌙', custom: '✨'
 };
 
+const OCCASION_COLOR: Record<string, string> = {
+  birthday: '#FFB300', anniversary: '#E5407A', graduation: '#6C7CFF', trip: '#FF8A3D',
+  movie: '#9B6FD9', series: '#6C7CFF', gamenight: '#2FB888', bookclub: '#C9A96E',
+  diwali: '#FFB300', christmas: '#2FB888', eid: '#34D399', custom: '#FFB300'
+};
+
 function statusBadge(buzz: Buzz): { label: string; className: string } {
   if (buzz.status === 'revealed') {
     return {
@@ -41,6 +47,8 @@ function statusBadge(buzz: Buzz): { label: string; className: string } {
 function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
   const badge = statusBadge(buzz);
   const emoji = OCCASION_EMOJI[buzz.occasion] ?? '✨';
+  const accentColor = OCCASION_COLOR[buzz.occasion] ?? '#FFB300';
+  const isReadyToOpen = badge.label === 'Ready to open';
   const revealDate = buzz.revealAt.toDate().toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
@@ -55,10 +63,26 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
 
   return (
     <Link href={`/buzzes/${buzz.id}`}>
-      <a className='block rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-5 shadow-sm transition hover:border-[#C9A96E] hover:shadow-[0_4px_20px_rgba(201,169,110,0.15)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)]'>
+      <a
+        className={cn(
+          'block rounded-2xl border p-5 shadow-sm transition-all',
+          isReadyToOpen
+            ? 'bw-string-lights border-[rgba(255,179,0,0.4)] bg-[rgba(255,179,0,0.04)] hover:border-[rgba(255,179,0,0.65)] hover:shadow-[0_4px_24px_rgba(255,179,0,0.2)] dark:border-[rgba(255,179,0,0.3)] dark:bg-[rgba(255,179,0,0.03)]'
+            : 'border-[#e8d8c4] bg-[#faf8f4] hover:border-[#C9A96E] hover:shadow-[0_4px_20px_rgba(201,169,110,0.15)] dark:border-[#2a1d10] dark:bg-[#1c1510] dark:hover:border-[rgba(201,169,110,0.4)]'
+        )}
+      >
         <div className='flex items-start justify-between gap-3'>
           <div className='flex items-center gap-3'>
-            <span className='text-2xl'>{emoji}</span>
+            {/* Occasion cover */}
+            <span
+              className='flex h-12 w-12 shrink-0 items-center justify-center rounded-xl text-2xl shadow-sm'
+              style={{
+                background: `linear-gradient(135deg, ${accentColor}33 0%, ${accentColor}11 100%)`,
+                border: `1px solid ${accentColor}55`
+              }}
+            >
+              {emoji}
+            </span>
             <div>
               <p className='font-display font-bold text-light-primary dark:text-dark-primary line-clamp-1'>
                 {buzz.title}
@@ -77,13 +101,19 @@ function BuzzCard({ buzz }: { buzz: Buzz }): JSX.Element {
           <span className='text-sm text-[#6b5744] dark:text-[#9E8B76]'>
             {buzz.totalSignatures} {buzz.totalSignatures === 1 ? 'page' : 'pages'} added
           </span>
-          <button
-            onClick={copyLink}
-            className='flex items-center gap-1 text-sm font-medium text-[#C9A96E] hover:text-[#E8B86D]'
-          >
-            <HeroIcon iconName='LinkIcon' className='h-3.5 w-3.5' />
-            Copy link
-          </button>
+          {isReadyToOpen ? (
+            <span className='flex items-center gap-1 text-sm font-bold' style={{ color: accentColor }}>
+              ✨ Tap to open
+            </span>
+          ) : (
+            <button
+              onClick={copyLink}
+              className='flex items-center gap-1 text-sm font-medium text-[#C9A96E] hover:text-[#E8B86D]'
+            >
+              <HeroIcon iconName='LinkIcon' className='h-3.5 w-3.5' />
+              Copy link
+            </button>
+          )}
         </div>
       </a>
     </Link>
@@ -110,9 +140,8 @@ export default function MyBuzzes(): JSX.Element {
         <div className='flex w-full items-center justify-between px-4'>
           <h2 className='font-display text-xl font-bold'>My Buzzes</h2>
           <Link href='/buzzes/new'>
-            <a className='btn-pop px-4 py-2 text-sm'>
-              <HeroIcon iconName='PlusIcon' className='mr-1.5 h-4 w-4' />
-              Start a Buzz
+            <a className='btn-festive px-4 py-2 text-sm'>
+              + New Buzzbook
             </a>
           </Link>
         </div>
@@ -133,9 +162,8 @@ export default function MyBuzzes(): JSX.Element {
               </p>
             </div>
             <Link href='/buzzes/new'>
-              <a className='btn-pop px-5 py-2.5 text-sm'>
-                <HeroIcon iconName='SparklesIcon' className='mr-1.5 h-4 w-4' />
-                Start your first Buzz
+              <a className='btn-festive px-6 py-3 text-sm'>
+                ✨ Start your first Buzzbook
               </a>
             </Link>
           </div>

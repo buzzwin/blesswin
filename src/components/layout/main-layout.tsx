@@ -1,7 +1,6 @@
 import { SWRConfig } from 'swr';
 import { Toaster } from 'react-hot-toast';
 import { fetchJSON } from '@lib/fetch';
-import { TopNavBar } from '@components/sidebar/top-nav-bar';
 import type { DefaultToastOptions } from 'react-hot-toast';
 import type { ReactNode } from 'react';
 
@@ -17,12 +16,8 @@ const toastOptions: DefaultToastOptions = {
 export function MainLayout({ children }: { children: ReactNode }): JSX.Element {
   return (
     <SWRConfig value={{ fetcher: fetchJSON }}>
-      <TopNavBar />
       <div className='w-full'>{children}</div>
-      <Toaster
-        position='bottom-center'
-        toastOptions={toastOptions}
-      />
+      <Toaster position='bottom-center' toastOptions={toastOptions} />
     </SWRConfig>
   );
 }

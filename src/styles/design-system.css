@@ -171,3 +171,310 @@
     transition-duration: 0.01ms !important;
   }
 }
+
+/* ============================================================
+   Buzzwin Festival Design System — CSS Tokens
+   ============================================================ */
+
+:root {
+  /* ── PRIMARY WARM BASE ──────────────────────────────────── */
+  --bw-amber:               #C9A96E;
+  --bw-amber-light:         #E8C88A;
+  --bw-hope:                #E8B86D;
+  --bw-terracotta:          #C97D60;
+  --bw-terracotta-deep:     #B56540;
+  --bw-terracotta-darker:   #7a3e20;
+
+  /* ── FESTIVAL PALETTE ─────────────────────────────────── */
+  --bw-marigold:            #FFB300;
+  --bw-marigold-soft:       rgba(255,179,0,0.14);
+  --bw-saffron:             #FF8A3D;
+  --bw-saffron-soft:        rgba(255,138,61,0.14);
+  --bw-magenta:             #E5407A;
+  --bw-magenta-soft:        rgba(229,64,122,0.14);
+  --bw-rose:                #F472B6;
+  --bw-rose-soft:           rgba(244,114,182,0.14);
+  --bw-festival-green:      #2FB888;
+  --bw-festival-green-soft: rgba(47,184,136,0.14);
+  --bw-emerald:             #34D399;
+  --bw-emerald-soft:        rgba(52,211,153,0.14);
+  --bw-royal:               #6C7CFF;
+  --bw-royal-soft:          rgba(108,124,255,0.14);
+  --bw-plum:                #9B6FD9;
+  --bw-plum-soft:           rgba(155,111,217,0.14);
+  --bw-cherry:              #EF4444;
+  --bw-cherry-soft:         rgba(239,68,68,0.14);
+
+  /* ── NEUTRALS — DARK SURFACES ─────────────────────────── */
+  --bw-bg-deep:             #110d07;
+  --bw-bg:                  #1a1108;
+  --bw-surface:             #1c1510;
+  --bw-elevated:            #231a10;
+  --bw-border-dark:         #2a1d10;
+  --bw-border-amber:        rgba(201,169,110,0.18);
+  --bw-border-festival:     rgba(255,179,0,0.20);
+
+  /* ── NEUTRALS — LIGHT SURFACES ───────────────────────── */
+  --bw-cream:               #faf8f4;
+  --bw-cream-warm:          #f7f5f3;
+  --bw-paper:               #f5f1ea;
+  --bw-paper-soft:          #ede8de;
+  --bw-border-light:        #e8d8c4;
+
+  /* ── FOREGROUND TEXT ─────────────────────────────────── */
+  --bw-fg-on-dark:          #F5EFE6;
+  --bw-fg-on-dark-muted:    rgba(245,239,230,0.65);
+  --bw-fg-on-dark-dim:      rgba(245,239,230,0.55);
+  --bw-fg-on-dark-faint:    rgba(245,239,230,0.35);
+  --bw-fg-on-light:         #1a1108;
+  --bw-fg-on-light-muted:   #6b5744;
+  --bw-fg-on-light-dim:     #9E8B76;
+
+  /* ── TYPE STACKS ─────────────────────────────────────── */
+  --bw-font-display: 'Nunito', system-ui, -apple-system, sans-serif;
+  --bw-font-body:    'Inter', system-ui, -apple-system, sans-serif;
+  --bw-font-serif:   'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --bw-font-script:  'Caveat', 'Bradley Hand', cursive;
+  --bw-font-mono:    ui-monospace, 'SF Mono', Menlo, monospace;
+
+  /* ── TYPE SCALE ──────────────────────────────────────── */
+  --bw-fs-3xs: 11px;  --bw-lh-3xs: 1.4;
+  --bw-fs-2xs: 12px;  --bw-lh-2xs: 1.45;
+  --bw-fs-xs:  13px;  --bw-lh-xs:  1.5;
+  --bw-fs-sm:  14px;  --bw-lh-sm:  1.55;
+  --bw-fs-base:16px;  --bw-lh-base:1.6;
+  --bw-fs-lg:  18px;  --bw-lh-lg:  1.55;
+  --bw-fs-xl:  20px;  --bw-lh-xl:  1.5;
+  --bw-fs-2xl: 24px;  --bw-lh-2xl: 1.4;
+  --bw-fs-3xl: 30px;  --bw-lh-3xl: 1.25;
+  --bw-fs-4xl: 36px;  --bw-lh-4xl: 1.18;
+  --bw-fs-5xl: 48px;  --bw-lh-5xl: 1.1;
+
+  --bw-track-tight:    -0.01em;
+  --bw-track-eyebrow:  0.2em;
+
+  /* ── RADII ───────────────────────────────────────────── */
+  --bw-radius-xs:   6px;
+  --bw-radius-sm:   8px;
+  --bw-radius-md:   12px;
+  --bw-radius-lg:   16px;
+  --bw-radius-xl:   20px;
+  --bw-radius-2xl:  24px;
+  --bw-radius-3xl:  32px;
+  --bw-radius-full: 9999px;
+
+  /* ── SHADOWS ─────────────────────────────────────────── */
+  --bw-shadow-glow-amber:    0 0 40px rgba(201,169,110,0.25);
+  --bw-shadow-glow-marigold: 0 0 40px rgba(255,179,0,0.35);
+  --bw-shadow-glow-magenta:  0 0 40px rgba(229,64,122,0.30);
+
+  /* ── GLOWS ───────────────────────────────────────────── */
+  --bw-glow-amber:      radial-gradient(circle at center, rgba(201,169,110,0.20) 0%, transparent 65%);
+  --bw-glow-terracotta: radial-gradient(circle at center, rgba(181,96,60,0.16) 0%, transparent 65%);
+  --bw-glow-marigold:   radial-gradient(circle at center, rgba(255,179,0,0.18) 0%, transparent 65%);
+  --bw-glow-magenta:    radial-gradient(circle at center, rgba(229,64,122,0.14) 0%, transparent 65%);
+  --bw-glow-royal:      radial-gradient(circle at center, rgba(108,124,255,0.14) 0%, transparent 65%);
+
+  --bw-page-vignette:   linear-gradient(160deg, rgba(17,13,7,0.85) 0%, rgba(28,18,10,0.5) 50%, rgba(12,9,4,0.9) 100%);
+
+  /* ── BRAND GRADIENTS ─────────────────────────────────── */
+  --bw-grad-warm-text:    linear-gradient(135deg, #E8B86D 0%, #D4A574 45%, #C97D60 100%);
+  --bw-grad-cta:          linear-gradient(135deg, #C97D60 0%, #B56540 100%);
+
+  /* ── FESTIVE GRADIENTS ───────────────────────────────── */
+  --bw-grad-festival-text:
+    linear-gradient(95deg, #FFB300 0%, #FF8A3D 30%, #E5407A 60%, #9B6FD9 100%);
+  --bw-grad-festival-cta:
+    linear-gradient(135deg, #FFB300 0%, #FF8A3D 50%, #E5407A 100%);
+  --bw-grad-confetti:
+    radial-gradient(circle at 20% 25%, rgba(255,179,0,0.28) 0%, transparent 12%),
+    radial-gradient(circle at 78% 18%, rgba(229,64,122,0.26) 0%, transparent 12%),
+    radial-gradient(circle at 35% 78%, rgba(52,211,153,0.22) 0%, transparent 12%),
+    radial-gradient(circle at 85% 70%, rgba(108,124,255,0.24) 0%, transparent 12%),
+    radial-gradient(circle at 55% 45%, rgba(255,138,61,0.20) 0%, transparent 14%);
+  --bw-grad-string-lights:
+    linear-gradient(90deg,
+      transparent 0%,
+      #FFB300 8%, transparent 18%,
+      #E5407A 28%, transparent 38%,
+      #34D399 48%, transparent 58%,
+      #6C7CFF 68%, transparent 78%,
+      #FF8A3D 88%, transparent 100%);
+  --bw-grad-bokeh:
+    radial-gradient(2px 2px at 10% 20%, rgba(255,179,0,0.7), transparent 60%),
+    radial-gradient(3px 3px at 22% 65%, rgba(229,64,122,0.55), transparent 60%),
+    radial-gradient(2px 2px at 38% 30%, rgba(52,211,153,0.55), transparent 60%),
+    radial-gradient(2.5px 2.5px at 55% 70%, rgba(108,124,255,0.55), transparent 60%),
+    radial-gradient(2px 2px at 72% 22%, rgba(255,138,61,0.65), transparent 60%),
+    radial-gradient(3px 3px at 88% 55%, rgba(232,200,138,0.7), transparent 60%);
+
+  /* ── GRID ────────────────────────────────────────────── */
+  --bw-grid-warm:
+    linear-gradient(90deg, rgba(201,169,110,0.07) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(201,169,110,0.05) 1px, transparent 1px);
+  --bw-grid-size: 52px 52px;
+
+  /* ── MOTION ──────────────────────────────────────────── */
+  --bw-ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --bw-ease-pop:  cubic-bezier(0.34, 1.56, 0.64, 1);
+  --bw-dur-fast:  120ms;
+  --bw-dur-base:  200ms;
+  --bw-dur-slow:  600ms;
+  --bw-dur-float: 6s;
+  --bw-dur-shimmer: 2.5s;
+}
+
+/* ============================================================
+   SEMANTIC TYPOGRAPHY CLASSES
+   ============================================================ */
+
+.bw-display-1 {
+  font-family: var(--bw-font-display);
+  font-weight: 800;
+  font-size: var(--bw-fs-5xl);
+  line-height: var(--bw-lh-5xl);
+  letter-spacing: var(--bw-track-tight);
+}
+.bw-display-2 {
+  font-family: var(--bw-font-display);
+  font-weight: 700;
+  font-size: var(--bw-fs-3xl);
+  line-height: var(--bw-lh-3xl);
+  letter-spacing: var(--bw-track-tight);
+}
+.bw-display-3 {
+  font-family: var(--bw-font-display);
+  font-weight: 700;
+  font-size: var(--bw-fs-xl);
+  line-height: var(--bw-lh-xl);
+  letter-spacing: var(--bw-track-tight);
+}
+.bw-display-4 {
+  font-family: var(--bw-font-display);
+  font-weight: 700;
+  font-size: var(--bw-fs-base);
+  line-height: 1.35;
+}
+.bw-eyebrow {
+  font-family: var(--bw-font-display);
+  font-weight: 700;
+  font-size: var(--bw-fs-2xs);
+  letter-spacing: var(--bw-track-eyebrow);
+  text-transform: uppercase;
+  color: var(--bw-amber);
+}
+.bw-body    { font-family: var(--bw-font-body); font-size: var(--bw-fs-base); line-height: var(--bw-lh-base); }
+.bw-body-sm { font-family: var(--bw-font-body); font-size: var(--bw-fs-sm);   line-height: var(--bw-lh-sm); }
+.bw-body-bold { font-family: var(--bw-font-body); font-weight: 600; }
+.bw-caption { font-family: var(--bw-font-body); font-weight: 500; font-size: var(--bw-fs-xs); color: var(--bw-fg-on-dark-dim); }
+.bw-quote {
+  font-family: var(--bw-font-serif);
+  font-weight: 400;
+  font-size: var(--bw-fs-xl);
+  line-height: 1.5;
+  font-style: italic;
+}
+.bw-flourish {
+  font-family: var(--bw-font-script);
+  font-weight: 700;
+  font-size: var(--bw-fs-3xl);
+  line-height: 1;
+  color: var(--bw-marigold);
+}
+
+/* ============================================================
+   GRADIENT TEXT HELPERS
+   ============================================================ */
+
+.bw-text-warm-gradient {
+  background-image: var(--bw-grad-warm-text);
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+}
+.bw-text-festival-gradient {
+  background-image: var(--bw-grad-festival-text);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+          background-clip: text;
+  color: transparent;
+  animation: bw-shimmer var(--bw-dur-shimmer) ease-in-out infinite;
+}
+
+/* ============================================================
+   FESTIVE MOTION KEYFRAMES & UTILITIES
+   ============================================================ */
+
+@keyframes bw-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50%      { background-position: 100% 50%; }
+}
+@keyframes bw-fade-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes bw-soft-float {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(-8px); }
+}
+@keyframes bw-twinkle {
+  0%, 100% { opacity: 0.4; transform: scale(1); }
+  50%      { opacity: 1;   transform: scale(1.15); }
+}
+@keyframes bw-pop-in {
+  0%   { opacity: 0; transform: scale(0.85); }
+  60%  { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.bw-animate-fade-up    { animation: bw-fade-up var(--bw-dur-slow) var(--bw-ease-out) both; }
+.bw-animate-soft-float { animation: bw-soft-float var(--bw-dur-float) ease-in-out infinite; }
+.bw-animate-twinkle    { animation: bw-twinkle 1.8s ease-in-out infinite; }
+.bw-animate-pop-in     { animation: bw-pop-in 0.45s var(--bw-ease-pop) both; }
+
+/* String-lights top-edge strip */
+.bw-string-lights {
+  position: relative;
+}
+.bw-string-lights::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 2px;
+  background-image: var(--bw-grad-string-lights);
+  background-size: 200% 100%;
+  filter: blur(0.5px);
+  animation: bw-shimmer 4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* ============================================================
+   FESTIVE BUTTON
+   ============================================================ */
+
+.btn-festive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 24px;
+  border-radius: var(--bw-radius-full);
+  border: none;
+  font-family: var(--bw-font-display);
+  font-weight: 800;
+  font-size: 15px;
+  color: #1a1108;
+  background: var(--bw-grad-festival-cta);
+  box-shadow: var(--bw-shadow-glow-marigold), 0 2px 0 rgba(0,0,0,0.25);
+  cursor: pointer;
+  transition: transform 150ms var(--bw-ease-out), box-shadow 150ms var(--bw-ease-out);
+  text-decoration: none;
+}
+.btn-festive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 52px rgba(255,179,0,0.45), 0 4px 0 rgba(0,0,0,0.2);
+}
+.btn-festive:active {
+  transform: translateY(0);
+  box-shadow: 0 0 24px rgba(255,179,0,0.3), 0 1px 0 rgba(0,0,0,0.3);
+}

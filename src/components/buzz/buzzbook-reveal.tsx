@@ -32,20 +32,20 @@ function CoverPage({ buzz }: { buzz: Buzz }): JSX.Element {
   const emoji = OCCASION_EMOJI[buzz.occasion] ?? '✨';
   return (
     <div className='relative flex h-full flex-col items-center justify-center gap-6 p-8 text-center'>
+      {/* String lights strip */}
+      <div className='pointer-events-none absolute inset-x-0 top-0 h-0.5' style={{ backgroundImage: 'var(--bw-grad-string-lights)', backgroundSize: '200% 100%' }} />
       <BuzzbookCoverOrnament />
-      <span className='relative z-10 text-7xl drop-shadow-sm'>{emoji}</span>
+      <span className='bw-animate-soft-float relative z-10 text-7xl drop-shadow-sm'>{emoji}</span>
       <div className='relative z-10'>
-        <p className='text-sm font-semibold uppercase tracking-widest text-[#8a6520] dark:text-[#C9A96E]'>
-          Buzzbook
-        </p>
-        <h2 className='mt-2 font-display text-3xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-          {buzz.title}
+        <p className='bw-eyebrow'>Buzzbook</p>
+        <h2 className='mt-2 font-display text-3xl font-extrabold'>
+          <span className='bw-text-festival-gradient'>{buzz.title}</span>
         </h2>
       </div>
-      <p className='relative z-10 text-sm text-[#6b5744] dark:text-[#9E8B76]'>
+      <p className='relative z-10 text-sm text-[#6b5744] dark:text-[rgba(245,239,230,0.55)]'>
         {buzz.totalSignatures} {buzz.totalSignatures === 1 ? 'page' : 'pages'} inside
       </p>
-      <div className='relative z-10 mt-2 animate-bounce text-[#C9A96E]/40'>
+      <div className='relative z-10 mt-2 animate-bounce' style={{ color: 'var(--bw-marigold)', opacity: 0.6 }}>
         <HeroIcon iconName='ChevronRightIcon' className='h-6 w-6' />
       </div>
     </div>
@@ -55,13 +55,13 @@ function CoverPage({ buzz }: { buzz: Buzz }): JSX.Element {
 function TextPage({ sig }: { sig: Signature }): JSX.Element {
   return (
     <div className='flex h-full flex-col justify-between p-8'>
-      <span className='font-display text-6xl leading-none text-[rgba(201,169,110,0.25)]'>&ldquo;</span>
-      <p className='flex-1 overflow-y-auto py-4 text-center text-xl font-medium leading-relaxed text-[#1a1108] dark:text-[#F5EFE6]'>
+      <span className='font-display text-6xl leading-none' style={{ color: 'rgba(201,169,110,0.2)' }}>&ldquo;</span>
+      <p className='bw-quote flex-1 overflow-y-auto py-4 text-center text-xl text-[#1a1108] dark:text-[#F5EFE6]'>
         {sig.text}
       </p>
       <div className='mt-4 flex items-center justify-end gap-2'>
         <div className='h-px flex-1 bg-[#e8d8c4] dark:bg-[#2a1d10]' />
-        <span className='text-sm font-semibold text-[#6b5744] dark:text-[#9E8B76]'>
+        <span className='bw-flourish text-lg' style={{ color: 'var(--bw-marigold)' }}>
           — {sig.authorName}
         </span>
       </div>
@@ -160,19 +160,18 @@ export function BuzzbookReveal({ buzz, signatures }: Props): JSX.Element {
           <button
             key={i}
             onClick={() => setPage(i)}
-            className={cn(
-              'h-2 rounded-full transition-all duration-200',
-              i === page
-                ? 'w-6 bg-[#C97D60]'
-                : 'w-2 bg-[#e8d8c4] hover:bg-[#C9A96E]/30 dark:bg-[#2a1d10] dark:hover:bg-[#3d2e1e]'
-            )}
+            className='h-2 rounded-full transition-all duration-200'
+            style={{
+              width: i === page ? 24 : 8,
+              background: i === page ? 'var(--bw-marigold)' : 'rgba(201,169,110,0.25)'
+            }}
           />
         ))}
       </div>
 
       {/* Page label */}
-      <p className='pb-4 text-center text-xs text-[#9E8B76]'>
-        {isCover ? 'Cover' : `Page ${page} of ${visible.length}`}
+      <p className='pb-4 text-center text-xs' style={{ color: 'var(--bw-fg-on-dark-faint)', fontFamily: 'var(--bw-font-body)' }}>
+        {isCover ? '✨ Swipe to open' : `Page ${page} of ${visible.length}`}
       </p>
     </div>
   );

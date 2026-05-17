@@ -1,4 +1,5 @@
 import { useRouter } from 'next/router';
+import { TopNavBar } from '@components/sidebar/top-nav-bar';
 import type { ReactNode } from 'react';
 
 interface GlobalLayoutProps {
@@ -18,5 +19,10 @@ export function GlobalLayout({ children }: GlobalLayoutProps): JSX.Element {
     );
   }
 
-  return <div className='min-h-screen bg-main-background'>{children}</div>;
+  return (
+    <div className='min-h-screen bg-main-background'>
+      <TopNavBar />
+      {children}
+    </div>
+  );
 }

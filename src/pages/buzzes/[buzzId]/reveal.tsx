@@ -76,8 +76,14 @@ export default function RevealPage(): JSX.Element {
       </Head>
 
       <div className='flex min-h-screen flex-col bg-[#f5f1ea] dark:bg-[#110d07]'>
+        {/* Festive glows behind everything */}
+        <div className='pointer-events-none fixed inset-0 overflow-hidden'>
+          <div className='absolute -right-10 -top-32 h-80 w-80 rounded-full opacity-30' style={{ background: 'var(--bw-glow-marigold)', filter: 'blur(60px)' }} />
+          <div className='absolute -bottom-32 -left-10 h-80 w-80 rounded-full opacity-25' style={{ background: 'var(--bw-glow-magenta)', filter: 'blur(60px)' }} />
+        </div>
+
         {/* Top bar */}
-        <header className='flex shrink-0 items-center justify-between border-b border-[#e8d8c4] bg-[#faf8f4] px-4 py-3 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
+        <header className='bw-string-lights relative flex shrink-0 items-center justify-between border-b border-[rgba(255,179,0,0.2)] bg-[#faf8f4]/95 px-4 py-3 backdrop-blur-md dark:border-[rgba(255,179,0,0.12)] dark:bg-[#110d07]/95'>
           <Link href={buzz ? `/buzzes/${buzz.id}` : '/buzzes'}>
             <a className='flex items-center gap-1.5 text-sm font-medium text-[#6b5744] transition hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]'>
               <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
@@ -87,15 +93,20 @@ export default function RevealPage(): JSX.Element {
             </a>
           </Link>
           {buzz && (
+            <span className='bw-eyebrow text-[10px]'>
+              ✨ Buzzbook
+            </span>
+          )}
+          {buzz && (
             <Link href={`/b/${buzz.shareToken}`}>
-              <a className='text-sm text-[#6b5744] transition hover:text-[#C9A96E]'>
+              <a className='text-sm text-[#C9A96E] transition hover:text-[#FFB300]'>
                 Add your page →
               </a>
             </Link>
           )}
         </header>
 
-        <main className='flex flex-1 flex-col'>
+        <main className='relative flex flex-1 flex-col'>
           {/* Loading */}
           {loading && (
             <div className='flex flex-1 flex-col items-center justify-center gap-3 text-[#9E8B76]'>

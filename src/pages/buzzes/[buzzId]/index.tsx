@@ -332,11 +332,8 @@ export default function BuzzManagement(): JSX.Element {
           {/* ── Open Buzzbook (once revealed / past reveal) ── */}
           {(isPastReveal || buzz.status === 'revealed') && (
             <Link href={`/buzzes/${buzz.id}/reveal`}>
-              <a>
-                <Button className='flex w-full items-center justify-center gap-2 rounded-xl bg-[#C97D60] py-3 font-semibold text-white hover:bg-[#B56540]'>
-                  <span>📖</span>
-                  Open the Buzzbook
-                </Button>
+              <a className='bw-string-lights btn-festive w-full py-4 text-base'>
+                ✨ Open the Buzzbook
               </a>
             </Link>
           )}
