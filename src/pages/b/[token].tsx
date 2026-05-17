@@ -133,7 +133,7 @@ export default function SignBuzzPage({ initialMeta }: Props): JSX.Element {
       <div className='min-h-screen bg-[#f5f1ea] dark:bg-[#110d07]'>
         {/* Minimal top bar */}
         <header className='flex items-center justify-between border-b border-[#e8d8c4] bg-[#faf8f4] px-4 py-3 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
-          <Link href='/'>
+          <Link href={auth.currentUser ? '/home' : '/'}>
             <a className='font-display text-lg font-bold text-[#1a1108] dark:text-[#F5EFE6]'>Buzzwin</a>
           </Link>
           <Link href='/buzzes/new'>

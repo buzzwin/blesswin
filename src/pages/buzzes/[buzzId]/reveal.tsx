@@ -78,8 +78,13 @@ export default function RevealPage(): JSX.Element {
       <div className='flex min-h-screen flex-col bg-[#f5f1ea] dark:bg-[#110d07]'>
         {/* Top bar */}
         <header className='flex shrink-0 items-center justify-between border-b border-[#e8d8c4] bg-[#faf8f4] px-4 py-3 dark:border-[#2a1d10] dark:bg-[#1c1510]'>
-          <Link href='/'>
-            <a className='font-display text-lg font-bold text-[#C9A96E]'>Buzzwin</a>
+          <Link href={buzz ? `/buzzes/${buzz.id}` : '/buzzes'}>
+            <a className='flex items-center gap-1.5 text-sm font-medium text-[#6b5744] transition hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]'>
+              <svg xmlns='http://www.w3.org/2000/svg' className='h-4 w-4' fill='none' viewBox='0 0 24 24' stroke='currentColor' strokeWidth={2}>
+                <path strokeLinecap='round' strokeLinejoin='round' d='M15 19l-7-7 7-7' />
+              </svg>
+              Manage
+            </a>
           </Link>
           {buzz && (
             <Link href={`/b/${buzz.shareToken}`}>

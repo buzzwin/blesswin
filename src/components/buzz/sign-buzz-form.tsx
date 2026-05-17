@@ -135,21 +135,39 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
           </span>
         </WhatsappShareButton>
 
-        {/* Account creation nudge */}
-        <div className='rounded-2xl border border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)] p-5 dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
-          <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
-            Want to create your own Buzzbook?
-          </p>
-          <p className='mt-1 text-xs text-[#6b5744] dark:text-[#9E8B76]'>
-            Trips, movie nights, birthdays — collect everyone's pages and reveal together.
-          </p>
-          <Link href='/login'>
-            <a className='mt-3 inline-flex items-center gap-2 rounded-xl bg-[#C97D60] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B56540]'>
-              Create a free account
-              <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
-            </a>
-          </Link>
-        </div>
+        {auth.currentUser && !auth.currentUser.isAnonymous ? (
+          /* Logged-in user — give them a way back to the app */
+          <div className='flex flex-col gap-2'>
+            <Link href='/home'>
+              <a className='flex w-full items-center justify-center gap-2 rounded-xl border border-[rgba(201,169,110,0.3)] bg-[rgba(201,169,110,0.06)] px-5 py-2.5 text-sm font-semibold text-[#8a6520] transition hover:bg-[rgba(201,169,110,0.1)] dark:border-[rgba(201,169,110,0.2)] dark:bg-[rgba(201,169,110,0.05)] dark:text-[#C9A96E]'>
+                Go to home feed
+                <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
+              </a>
+            </Link>
+            <Link href='/buzzes/new'>
+              <a className='flex w-full items-center justify-center gap-2 rounded-xl bg-[#C97D60] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B56540]'>
+                Start your own Buzzbook
+                <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
+              </a>
+            </Link>
+          </div>
+        ) : (
+          /* Anonymous / not signed in — nudge to create account */
+          <div className='rounded-2xl border border-[rgba(201,169,110,0.2)] bg-[rgba(201,169,110,0.05)] p-5 dark:border-[rgba(201,169,110,0.15)] dark:bg-[rgba(201,169,110,0.04)]'>
+            <p className='text-sm font-semibold text-[#1a1108] dark:text-[#F5EFE6]'>
+              Want to create your own Buzzbook?
+            </p>
+            <p className='mt-1 text-xs text-[#6b5744] dark:text-[#9E8B76]'>
+              Trips, movie nights, birthdays — collect everyone&apos;s pages and reveal together.
+            </p>
+            <Link href='/login'>
+              <a className='mt-3 inline-flex items-center gap-2 rounded-xl bg-[#C97D60] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#B56540]'>
+                Create a free account
+                <HeroIcon iconName='ArrowRightIcon' className='h-4 w-4' />
+              </a>
+            </Link>
+          </div>
+        )}
       </div>
     );
   }
