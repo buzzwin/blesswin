@@ -301,34 +301,77 @@ export default function HomeFeed(): JSX.Element {
       />
       <MainHeader title='Home' />
 
+      {/* Two-path chooser — celebrate yourself (ritual) or others (buzz) */}
+      <div className='mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2'>
+        {/* Celebrate yourself → ritual */}
+        <Link href='/rituals'>
+          <a
+            className='flex h-full flex-col gap-2 rounded-2xl border p-4 transition-all
+                       border-[rgba(46,139,110,0.28)] bg-[rgba(46,139,110,0.05)]
+                       hover:border-[rgba(46,139,110,0.5)] hover:bg-[rgba(46,139,110,0.09)] hover:shadow-[0_4px_20px_rgba(46,139,110,0.15)]
+                       dark:border-[rgba(46,139,110,0.22)] dark:bg-[rgba(46,139,110,0.06)]'
+            aria-label='Celebrate yourself — build a ritual'
+          >
+            <span
+              className='flex h-11 w-11 items-center justify-center rounded-xl text-2xl'
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(46,139,110,0.2), rgba(46,139,110,0.06))',
+                border: '1px solid rgba(46,139,110,0.3)'
+              }}
+            >
+              🌱
+            </span>
+            <div className='flex-1'>
+              <p className='font-display text-base font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+                Celebrate yourself
+              </p>
+              <p className='mt-0.5 text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.55)]'>
+                Build a ritual — small daily practices that add up.
+              </p>
+            </div>
+            <span className='text-sm font-bold text-sage'>Start a ritual →</span>
+          </a>
+        </Link>
+
+        {/* Celebrate others → buzz */}
+        <Link href='/buzzes/new'>
+          <a
+            className='flex h-full flex-col gap-2 rounded-2xl border p-4 transition-all
+                       border-[rgba(255,179,0,0.28)] bg-[rgba(255,179,0,0.05)]
+                       hover:border-[rgba(255,179,0,0.5)] hover:bg-[rgba(255,179,0,0.09)] hover:shadow-[0_4px_20px_rgba(255,179,0,0.18)]
+                       dark:border-[rgba(255,179,0,0.2)] dark:bg-[rgba(255,179,0,0.05)]'
+            aria-label='Celebrate others — make a Buzzbook'
+          >
+            <span
+              className='flex h-11 w-11 items-center justify-center rounded-xl text-2xl'
+              style={{
+                background:
+                  'linear-gradient(135deg, rgba(255,179,0,0.22), rgba(229,64,122,0.12))',
+                border: '1px solid rgba(255,179,0,0.35)'
+              }}
+            >
+              🎁
+            </span>
+            <div className='flex-1'>
+              <p className='font-display text-base font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+                Celebrate others
+              </p>
+              <p className='mt-0.5 text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.55)]'>
+                Make a Buzzbook — everyone adds a page, you reveal it together.
+              </p>
+            </div>
+            <span className='text-sm font-bold' style={{ color: '#E5407A' }}>
+              Make a Buzzbook →
+            </span>
+          </a>
+        </Link>
+      </div>
+
       {/* Post to feed */}
       <div className='mb-3'>
         <ImpactMomentInput onSuccess={handleMomentCreated} />
       </div>
-
-      {/* Buzzbook nudge */}
-      <Link href='/buzzes/new'>
-        <a className='mb-4 flex items-center gap-3 rounded-2xl border p-4 transition-all
-                      border-[rgba(255,179,0,0.2)] bg-[rgba(255,179,0,0.04)]
-                      hover:border-[rgba(255,179,0,0.35)] hover:bg-[rgba(255,179,0,0.07)]
-                      dark:border-[rgba(255,179,0,0.15)] dark:bg-[rgba(255,179,0,0.03)]'>
-          <svg viewBox='0 0 64 64' fill='none' className='h-10 w-10 shrink-0' aria-hidden='true'>
-            <path d='M32 28 Q22 24 12 28 L12 50 Q22 46 32 50 Z' fill='#FFB300' stroke='#7a3e20' strokeWidth='1.5' strokeLinejoin='round'/>
-            <path d='M32 28 Q42 24 52 28 L52 50 Q42 46 32 50 Z' fill='#E5407A' stroke='#7a3e20' strokeWidth='1.5' strokeLinejoin='round'/>
-            <line x1='32' y1='28' x2='32' y2='50' stroke='#7a3e20' strokeWidth='1.5' strokeLinecap='round'/>
-            <path d='M32 3 L33.5 10.5 L40.5 12 L33.5 13.5 L32 21 L30.5 13.5 L23.5 12 L30.5 10.5 Z' fill='#FFB300'/>
-          </svg>
-          <div className='min-w-0 flex-1'>
-            <p className='text-sm font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-              Something to celebrate together?
-            </p>
-            <p className='mt-0.5 text-xs text-[#6b5744] dark:text-[rgba(245,239,230,0.5)]'>
-              Everyone adds a page — you open it as a Buzzbook.
-            </p>
-          </div>
-          <span className='shrink-0 text-sm font-bold' style={{ color: '#FFB300' }}>Make one →</span>
-        </a>
-      </Link>
 
       {/* Community feed */}
       <section>
