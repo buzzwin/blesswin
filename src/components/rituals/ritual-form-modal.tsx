@@ -120,7 +120,7 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
         setTriggers([]);
         setActions([]);
         setIsCompletable(true);
-        setIsJoinable(scope === 'public');
+        setIsJoinable((ritual.scope || 'personalized') === 'public');
       }
     } else {
       // Reset form for new ritual
@@ -147,7 +147,11 @@ export function RitualFormModal({ open, closeModal, onSuccess, ritual }: RitualF
       setIsJoinable(false);
       setCategory('wellness');
     }
-  }, [ritual, open, scope]);
+    // Intentionally exclude `scope`: this effect (re)initializes the whole
+    // form and calls setScope itself. Including `scope` would re-run and wipe
+    // the user's input whenever they toggle the Visibility control.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ritual, open]);
 
   const handleGenerateWithAI = async (): Promise<void> => {
     if (!user?.id) {

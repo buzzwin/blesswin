@@ -258,7 +258,7 @@ export function Input({
 
       {/* Always show the form for reply/review modal */}
       <AnimatePresence>
-        {(isExpanded ?? replyModal) && (
+        {(isExpanded || replyModal) && (
           <motion.div
             initial='initial'
             animate='animate'

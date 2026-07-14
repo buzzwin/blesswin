@@ -13,8 +13,13 @@ const OCCASION_EMOJI: Record<string, string> = {
 const GROUP_OCCASIONS = new Set(['trip', 'movie', 'series', 'gamenight', 'bookclub']);
 
 function createTransporter(): Transporter {
-  const emailApi = process.env.EMAIL_API || 'link2sources@gmail.com';
-  const emailPassword = (process.env.EMAIL_API_PASSWORD || 'dyiqmkcl driu tmke').replace(/\s/g, '');
+  const emailApi = process.env.EMAIL_API;
+  const emailPassword = process.env.EMAIL_API_PASSWORD?.replace(/\s/g, '');
+  if (!emailApi || !emailPassword) {
+    throw new Error(
+      'Email service is not configured: EMAIL_API / EMAIL_API_PASSWORD are missing'
+    );
+  }
   return createTransport({
     service: 'gmail',
     auth: { user: emailApi, pass: emailPassword }
@@ -169,48 +174,55 @@ export default async function handler(
 
     let sent = 0;
     let failed = 0;
-    let results: PromiseSettledResult<unknown>[] = [];
+    let sentEmails: string[] = [];
 
     if (validEmails.length > 0) {
-      const transporter = createTransporter();
-      await transporter.verify();
+      // Isolate the email path: a transport/config failure must not discard
+      // the in-app (userIds) invites, which are persisted below regardless.
+      try {
+        const transporter = createTransporter();
+        await transporter.verify();
 
-      const subject = isGroup
-        ? `${senderName} invited you to add your page to "${buzz.title}" 📖`
-        : `${senderName} is making a Buzzbook for ${buzz.recipientName} — add your page! 📖`;
+        const subject = isGroup
+          ? `${senderName} invited you to add your page to "${buzz.title}" 📖`
+          : `${senderName} is making a Buzzbook for ${buzz.recipientName} — add your page! 📖`;
 
-      const html = buildEmailHtml({
-        senderName,
-        buzzTitle: buzz.title,
-        recipientName: buzz.recipientName,
-        occasion: buzz.occasion,
-        isGroup,
-        shareUrl,
-        siteUrl
-      });
+        const html = buildEmailHtml({
+          senderName,
+          buzzTitle: buzz.title,
+          recipientName: buzz.recipientName,
+          occasion: buzz.occasion,
+          isGroup,
+          shareUrl,
+          siteUrl
+        });
 
-      const text = `${senderName} invited you to add your page to the "${buzz.title}" Buzzbook!\n\nAdd your page here: ${shareUrl}\n\nIf you didn't expect this, you can safely ignore it.`;
+        const text = `${senderName} invited you to add your page to the "${buzz.title}" Buzzbook!\n\nAdd your page here: ${shareUrl}\n\nIf you didn't expect this, you can safely ignore it.`;
 
-      const emailApi = process.env.EMAIL_API || 'link2sources@gmail.com';
+        const emailApi = process.env.EMAIL_API as string;
 
-      results = await Promise.allSettled(
-        validEmails.map((to) =>
-          transporter.sendMail({
-            from: `"${senderName} via Buzzwin" <${emailApi}>`,
-            to,
-            subject,
-            html,
-            text
-          })
-        )
-      );
+        const results = await Promise.allSettled(
+          validEmails.map((to) =>
+            transporter.sendMail({
+              from: `"${senderName} via Buzzwin" <${emailApi}>`,
+              to,
+              subject,
+              html,
+              text
+            })
+          )
+        );
 
-      sent = results.filter((r) => r.status === 'fulfilled').length;
-      failed = results.length - sent;
+        sent = results.filter((r) => r.status === 'fulfilled').length;
+        failed = results.length - sent;
+        sentEmails = validEmails.filter((_, i) => results[i].status === 'fulfilled');
+      } catch (emailError) {
+        console.error('[buzz-invite] email transport error:', emailError);
+        failed = validEmails.length;
+      }
     }
 
     // Persist sent emails + user IDs to the Buzz document
-    const sentEmails = validEmails.filter((_, i) => results[i].status === 'fulfilled');
     const updates: Record<string, ReturnType<typeof arrayUnion>> = {};
     if (sentEmails.length > 0) updates['invitedEmails'] = arrayUnion(...sentEmails);
     if (validUserIds.length > 0) updates['invitedUserIds'] = arrayUnion(...validUserIds);

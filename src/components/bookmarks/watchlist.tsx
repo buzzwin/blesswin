@@ -33,21 +33,28 @@ export function Watchlist({ watchlistId }: WatchlistProps): JSX.Element {
       where('watchlistId', '==', watchlistId)
     );
 
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const newBookmarks = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      })) as Bookmark[];
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const newBookmarks = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          // `estimate` gives a client-side value for a just-written
+          // serverTimestamp instead of null (latency compensation).
+          ...doc.data({ serverTimestamps: 'estimate' })
+        })) as Bookmark[];
 
-      newBookmarks.sort((a, b) => {
-        const timeA = a.createdAt.toMillis();
-        const timeB = b.createdAt.toMillis();
-        return timeB - timeA;
-      });
+        newBookmarks.sort((a, b) => {
+          // Guard against null createdAt (pending timestamp or legacy docs)
+          const timeA = a.createdAt?.toMillis() ?? 0;
+          const timeB = b.createdAt?.toMillis() ?? 0;
+          return timeB - timeA;
+        });
 
-      setBookmarks(newBookmarks);
-      setLoading(false);
-    });
+        setBookmarks(newBookmarks);
+        setLoading(false);
+      },
+      () => setLoading(false)
+    );
 
     return () => unsubscribe();
   }, [user?.id, watchlistId]);

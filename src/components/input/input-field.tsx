@@ -30,7 +30,17 @@ export function InputField({
 }: InputFieldProps): JSX.Element {
   const slicedInputValue = inputValue?.slice(0, inputLimit) ?? '';
   const inputLength = slicedInputValue.length;
-  const isHittingInputLimit = inputLimit && inputLength > inputLimit;
+
+  // Enforce the character limit on *input* (typing and paste), not just on
+  // display. Truncating only `value` lets over-limit text reach parent state
+  // and get persisted; here we clamp the value before handing it to the parent.
+  const handleLimitedChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ): void => {
+    if (inputLimit && e.target.value.length > inputLimit)
+      e.target.value = e.target.value.slice(0, inputLimit);
+    handleChange(e);
+  };
 
   return (
     <div className='flex flex-col gap-1'>
@@ -57,7 +67,7 @@ export function InputField({
             )}
             id={inputId}
             placeholder={inputId}
-            onChange={!isHittingInputLimit ? handleChange : undefined}
+            onChange={handleLimitedChange}
             onKeyUp={handleKeyboardShortcut}
             value={slicedInputValue}
             rows={3}
@@ -75,7 +85,7 @@ export function InputField({
             id={inputId}
             type='text'
             placeholder={inputId}
-            onChange={!isHittingInputLimit ? handleChange : undefined}
+            onChange={handleLimitedChange}
             value={slicedInputValue}
             onKeyUp={handleKeyboardShortcut}
           />

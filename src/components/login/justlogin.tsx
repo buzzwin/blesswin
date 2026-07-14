@@ -1,6 +1,5 @@
 import cn from 'clsx';
 import { useState } from 'react';
-import { toast } from 'react-hot-toast';
 import Link from 'next/link';
 import { useAuth } from '@lib/context/auth-context';
 import { GoogleIcon } from '@components/ui/google-icon';
@@ -21,15 +20,13 @@ export default function JustLogin(): JSX.Element {
     try {
       if (isSignUp) {
         await createUserWithEmail(email, password);
-        toast.success('Account created successfully!');
       } else {
         await signInWithEmail(email, password);
-        toast.success('Signed in successfully!');
       }
-    } catch (error) {
-      toast.error(
-        error instanceof Error ? error.message : 'Authentication failed'
-      );
+      // Success and error toasts are handled inside the auth context so we
+      // don't surface duplicate notifications here.
+    } catch {
+      // Error already surfaced by the auth context.
     } finally {
       setLoading(false);
     }
