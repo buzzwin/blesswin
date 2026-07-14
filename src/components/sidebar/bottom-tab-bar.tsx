@@ -14,12 +14,18 @@ type Tab = {
 const TABS: Tab[] = [
   { href: '/home', label: 'Home', icon: 'HomeIcon' },
   {
+    // Celebrate yourself
+    href: '/rituals',
+    label: 'Rituals',
+    icon: 'SparklesIcon',
+    match: (p) => p.startsWith('/rituals') || p.startsWith('/automations')
+  },
+  {
     href: '/buzzes',
     label: 'Buzzes',
     icon: 'GiftIcon',
-    match: (p) => p.startsWith('/buzzes')
-  },
-  { href: '/people', label: 'Discover', icon: 'UsersIcon' }
+    match: (p) => p.startsWith('/buzzes') || p.startsWith('/b/')
+  }
 ];
 
 // Routes where we never show the tab bar
@@ -43,7 +49,6 @@ export function BottomTabBar(): JSX.Element | null {
   const allTabs: Tab[] = [
     TABS[0],
     TABS[1],
-    // "+" new buzzbook — center primary
     TABS[2],
     {
       href: profileHref,
@@ -67,7 +72,7 @@ export function BottomTabBar(): JSX.Element | null {
           boxShadow: '0 8px 32px rgba(0,0,0,0.6), 0 0 0 0.5px rgba(201,169,110,0.1)'
         }}
       >
-        {/* Regular tabs (Home, Buzzes) */}
+        {/* Left tabs — Home, Rituals (celebrate yourself) */}
         {[allTabs[0], allTabs[1]].map(({ href, label, icon, match }) => {
           const isActive = match
             ? match(pathname)
@@ -96,7 +101,7 @@ export function BottomTabBar(): JSX.Element | null {
               boxShadow: 'var(--bw-shadow-glow-marigold), 0 2px 0 rgba(0,0,0,0.3)',
               color: '#1a1108'
             }}
-            aria-label='New Buzzbook'
+            aria-label='Celebrate others — new Buzzbook'
           >
             <svg viewBox='0 0 24 24' fill='none' className='h-6 w-6' stroke='currentColor' strokeWidth={2.5} strokeLinecap='round'>
               <path d='M12 5v14M5 12h14' />
@@ -104,7 +109,7 @@ export function BottomTabBar(): JSX.Element | null {
           </a>
         </Link>
 
-        {/* Regular tabs (Discover, Profile) */}
+        {/* Right tabs — Buzzes, Profile */}
         {[allTabs[2], allTabs[3]].map(({ href, label, icon, match }) => {
           const isActive = match
             ? match(pathname)

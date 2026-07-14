@@ -109,14 +109,29 @@ export function TopNavBar(): JSX.Element | null {
 
         {/* Nav items */}
         <div className='flex items-center gap-0.5 sm:gap-1'>
-          {/* Primary action — always visible so celebrating someone is one click away */}
+          {/* Two primary pillars — celebrate yourself (ritual) or others (buzz) */}
+          <Link href='/rituals'>
+            <a
+              className='mr-1 flex shrink-0 items-center gap-1.5 rounded-full border border-[rgba(46,139,110,0.4)]
+                         bg-[rgba(46,139,110,0.1)] px-3 py-1.5 text-sm font-bold text-sage transition-colors
+                         hover:bg-[rgba(46,139,110,0.18)]'
+              aria-label='Celebrate yourself — build a ritual'
+            >
+              <HeroIcon iconName='SparklesIcon' className='h-4 w-4' solid />
+              <span>
+                <span className='hidden xl:inline'>Celebrate </span>yourself
+              </span>
+            </a>
+          </Link>
           <Link href='/buzzes/new'>
             <a
-              className='btn-festive mr-1 flex shrink-0 items-center gap-1.5 px-3.5 py-1.5 text-sm sm:mr-2'
-              aria-label='Create a new Buzzbook to celebrate someone'
+              className='btn-festive mr-1 flex shrink-0 items-center gap-1.5 px-3 py-1.5 text-sm sm:mr-2'
+              aria-label='Celebrate others — make a Buzzbook'
             >
               <HeroIcon iconName='GiftIcon' className='h-4 w-4' solid />
-              <span>Celebrate</span>
+              <span>
+                <span className='hidden xl:inline'>Celebrate </span>others
+              </span>
             </a>
           </Link>
 
