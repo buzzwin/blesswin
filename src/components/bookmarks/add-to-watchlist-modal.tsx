@@ -49,6 +49,7 @@ export function AddToWatchlistModal({
   const [newWatchlistDesc, setNewWatchlistDesc] = useState('');
   const [saving, setSaving] = useState(false);
   const [isPublic, setIsPublic] = useState(false);
+  const [retryCount, setRetryCount] = useState(0);
 
   // Reset states when modal is opened/closed
   useEffect(() => {
@@ -106,7 +107,9 @@ export function AddToWatchlistModal({
       setWatchlists([]);
       setError(null);
     };
-  }, [user?.id, isOpen]);
+    // `retryCount` is included so the "Try again" button can re-subscribe:
+    // a Firestore listener that has already errored will not fire again.
+  }, [user?.id, isOpen, retryCount]);
 
   const handleCreateWatchlist = async (): Promise<void> => {
     if (!user?.id || !newWatchlistName.trim()) return;
@@ -279,6 +282,7 @@ export function AddToWatchlistModal({
                     onClick={() => {
                       setError(null);
                       setLoading(true);
+                      setRetryCount((c) => c + 1);
                     }}
                     className='mt-2 text-sm text-[#C9A96E] hover:text-[#8a6520]'
                   >

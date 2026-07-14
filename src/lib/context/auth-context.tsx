@@ -86,11 +86,18 @@ export function AuthContextProvider({
         let available = false;
         let randomUsername = '';
 
+        // Derive a base handle from the display name, falling back to the
+        // email local-part, then to a generic 'user' — never 'undefined'.
+        const emailLocalPart = authUser.email?.split('@')[0];
+        const baseName =
+          displayName?.replace(/\s/g, '').toLowerCase() ||
+          emailLocalPart?.replace(/[^a-z0-9]/gi, '').toLowerCase() ||
+          'user';
+
         while (!available) {
-          const normalizeName = displayName?.replace(/\s/g, '').toLowerCase();
           const randomInt = getRandomInt(1, 10_000);
 
-          randomUsername = `${normalizeName as string}${randomInt}`;
+          randomUsername = `${baseName}${randomInt}`;
 
           const randomUserSnapshot = await getDoc(
             doc(usersCollection, randomUsername)

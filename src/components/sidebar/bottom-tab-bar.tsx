@@ -74,7 +74,7 @@ export function BottomTabBar(): JSX.Element | null {
             : pathname === href || pathname.startsWith(href + '/');
           return (
             <Link href={href} key={href}>
-              <a className='flex flex-1 flex-col items-center gap-1 py-1 transition-colors'
+              <a className='relative flex flex-1 flex-col items-center gap-1 py-1 transition-colors'
                 style={{ color: isActive ? '#FFB300' : 'rgba(245,239,230,0.4)' }}>
                 <HeroIcon iconName={icon} className='h-[22px] w-[22px]' solid={isActive} />
                 <span className='text-[10px] font-bold leading-none tracking-wide'>{label}</span>

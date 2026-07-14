@@ -258,7 +258,14 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         mediaThumbnailURL: null
       });
 
-      await awardBuzzKarma(uid, 5);
+      // Karma is a non-critical side effect. The signature is already saved,
+      // so a karma failure (e.g. the user's doc not existing yet) must not
+      // block the success screen or surface an error.
+      try {
+        await awardBuzzKarma(uid, 5);
+      } catch (karmaErr) {
+        console.error('[sign-buzz] karma award failed:', karmaErr);
+      }
       setDone(true);
     } catch (err: any) {
       if (err?.code === 'permission-denied') {

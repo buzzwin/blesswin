@@ -48,7 +48,13 @@ export default function RevealPage(): JSX.Element {
   useEffect(() => {
     if (!buzz || !isPastReveal) return;
 
-    void revealBuzz(buzz.id);
+    // Only the creator may flip the status (Firestore rules reject others).
+    // Gating here avoids an unhandled promise rejection for every viewer.
+    if (user && user.id === buzz.createdBy) {
+      void revealBuzz(buzz.id).catch(() => {
+        // Non-fatal: the reveal view still renders from the reveal time.
+      });
+    }
 
     if (buzz.revealTweetId === null && user && user.id === buzz.createdBy) {
       const tweetUser = {

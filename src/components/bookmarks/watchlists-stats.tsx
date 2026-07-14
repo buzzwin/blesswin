@@ -57,7 +57,10 @@ export function WatchlistsStats({ userId }: { userId: string }): JSX.Element {
 
   useEffect(() => {
     async function fetchStats(): Promise<void> {
-      if (!userId) return;
+      if (!userId) {
+        setLoading(false);
+        return;
+      }
 
       try {
         const watchlistsRef = collection(db, 'watchlists');
