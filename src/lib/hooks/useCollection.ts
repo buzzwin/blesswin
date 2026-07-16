@@ -58,35 +58,51 @@ export function useCollection<T>(
     }
 
     const populateUser = async (currentData: DataWithRef<T>): Promise<void> => {
-      const dataWithUser = await Promise.all(
-        currentData.map(async (currentData) => {
-          const user = (
-            await getDoc(doc(usersCollection, currentData.createdBy))
-          ).data();
-          return { ...currentData, user };
-        })
-      );
-      setData(dataWithUser);
-      setLoading(false);
+      try {
+        const dataWithUser = await Promise.all(
+          currentData.map(async (currentData) => {
+            const user = (
+              await getDoc(doc(usersCollection, currentData.createdBy))
+            ).data();
+            return { ...currentData, user };
+          })
+        );
+        setData(dataWithUser);
+      } catch (error) {
+        console.error('useCollection: failed to populate users:', error);
+        setData(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const unsubscribe = onSnapshot(cachedQuery, (snapshot) => {
-      const data = snapshot.docs.map((doc) =>
-        doc.data({ serverTimestamps: 'estimate' })
-      );
+    const unsubscribe = onSnapshot(
+      cachedQuery,
+      (snapshot) => {
+        const data = snapshot.docs.map((doc) =>
+          doc.data({ serverTimestamps: 'estimate' })
+        );
 
-      if (allowNull && !data.length) {
+        if (allowNull && !data.length) {
+          setData(null);
+          setLoading(false);
+          return;
+        }
+
+        if (includeUser) void populateUser(data as DataWithRef<T>);
+        else {
+          setData(data);
+          setLoading(false);
+        }
+      },
+      // Without this handler a failed query (missing index, offline, rules)
+      // would leave `loading` stuck true forever — an infinite spinner.
+      (error) => {
+        console.error('useCollection: snapshot listener error:', error);
         setData(null);
         setLoading(false);
-        return;
       }
-
-      if (includeUser) void populateUser(data as DataWithRef<T>);
-      else {
-        setData(data);
-        setLoading(false);
-      }
-    });
+    );
 
     return unsubscribe;
     // eslint-disable-next-line react-hooks/exhaustive-deps

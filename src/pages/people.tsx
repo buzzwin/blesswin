@@ -1,6 +1,5 @@
 import { useRouter } from 'next/router';
 import { motion } from 'framer-motion';
-import { where } from 'firebase/firestore';
 import { useAuth } from '@lib/context/auth-context';
 import { usersCollection } from '@lib/firebase/collections';
 import { useInfiniteScroll } from '@lib/hooks/useInfiniteScroll';
@@ -27,12 +26,17 @@ const variants: MotionProps = {
 export default function People(): JSX.Element {
   const { user } = useAuth();
 
+  // Fetch all users and exclude the current user client-side. Using a
+  // Firestore `!=` inequality here required a special index (and broke the
+  // getCountFromServer aggregation), which made the page hang indefinitely.
   const { data, loading, LoadMore } = useInfiniteScroll(
     usersCollection,
-    [where('id', '!=', user?.id)],
+    [],
     { allowNull: true, preserve: true },
     { marginBottom: 500 }
   );
+
+  const people = data?.filter((userData) => userData.id !== user?.id) ?? null;
 
   const { back } = useRouter();
 
@@ -43,12 +47,12 @@ export default function People(): JSX.Element {
       <section>
         {loading ? (
           <Loading className='mt-5' />
-        ) : !data ? (
+        ) : !people ? (
           <Error message='Something went wrong' />
         ) : (
           <>
             <motion.div className='mt-0.5' {...variants}>
-              {data?.map((userData) => (
+              {people.map((userData) => (
                 <UserCard userData={userData} key={userData.id} follow />
               ))}
             </motion.div>
