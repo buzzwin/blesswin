@@ -369,7 +369,12 @@ export function AuthContextProvider({
     }
   };
 
-  const isAdmin = user ? user.username === 'link2sources' : false;
+  const ADMIN_USERNAMES = ['link2sources'];
+  const ADMIN_EMAILS = ['gunjanvi@gmail.com'];
+  const isAdmin = user
+    ? ADMIN_USERNAMES.includes(user.username) ||
+      ADMIN_EMAILS.includes(auth.currentUser?.email ?? '')
+    : false;
   const randomSeed = useMemo(getRandomId, [user?.id]);
 
   const value: AuthContext = {
