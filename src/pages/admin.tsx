@@ -64,7 +64,7 @@ export default function Admin(): JSX.Element {
 
   const { data: recentBuzzes, loading: buzzesLoading } = useCollection(
     query(buzzesCollection, orderBy('createdAt', 'desc'), limit(RECENT_LIMIT)),
-    { allowNull: true, disabled: !isAdmin }
+    { includeUser: true, allowNull: true, disabled: !isAdmin }
   );
 
   const { data: recentRituals, loading: ritualsLoading } = useCollection(
@@ -145,7 +145,9 @@ export default function Admin(): JSX.Element {
                   </span>
                 </div>
                 <p className='text-sm text-light-secondary dark:text-dark-secondary'>
-                  For {buzz.recipientName} · {buzz.occasion}
+                  By {buzz.user?.name ?? 'Unknown'}
+                  {buzz.user?.username ? ` (@${buzz.user.username})` : ''} · For{' '}
+                  {buzz.recipientName} · {buzz.occasion}
                   {buzz.customOccasion ? ` (${buzz.customOccasion})` : ''} ·{' '}
                   {buzz.totalSignatures} signature
                   {buzz.totalSignatures === 1 ? '' : 's'} ·{' '}
