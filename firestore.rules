@@ -371,8 +371,14 @@ service cloud.firestore {
       allow read: if true;
       allow create: if isSignedIn()
         && request.resource.data.createdBy == request.auth.uid;
-      allow update: if isSignedIn()
-        && resource.data.createdBy == request.auth.uid;
+      allow update: if
+        // Creator can update anything
+        (isSignedIn() && resource.data.createdBy == request.auth.uid)
+        ||
+        // Server-side API (/api/buzz-invite) can append to invite lists only
+        (request.auth == null
+          && request.resource.data.diff(resource.data).affectedKeys()
+               .hasOnly(['invitedEmails', 'invitedUserIds']));
       allow delete: if isSignedIn()
         && resource.data.createdBy == request.auth.uid;
 

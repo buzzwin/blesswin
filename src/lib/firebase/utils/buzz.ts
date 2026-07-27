@@ -31,6 +31,8 @@ export async function createBuzz(data: NewBuzzData): Promise<{ buzzId: string; s
     status: 'collecting',
     totalSignatures: 0,
     signedBy: [],
+    invitedEmails: [],
+    invitedUserIds: [],
     feedTweetId: null,
     revealTweetId: null,
     createdAt: serverTimestamp(),

@@ -87,7 +87,12 @@ export const buzzConverter: FirestoreDataConverter<Buzz> = {
   },
   fromFirestore(snapshot, options) {
     const data = snapshot.data(options);
-    return { id: snapshot.id, ...data } as Buzz;
+    return {
+      invitedEmails: [],
+      invitedUserIds: [],
+      ...data,
+      id: snapshot.id
+    } as unknown as Buzz;
   }
 };
 

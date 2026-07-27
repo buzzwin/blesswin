@@ -184,10 +184,10 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
       if (!res.ok || data.error) { toast.error(data.error ?? 'Could not send invites'); return; }
 
       const parts: string[] = [];
-      if ((data.usersAdded ?? 0) > 0) parts.push(`${data.usersAdded} added to Buzzbook`);
+      if ((data.usersAdded ?? 0) > 0) parts.push(`${data.usersAdded} member${(data.usersAdded ?? 0) !== 1 ? 's' : ''} invited`);
       if ((data.sent ?? 0) > 0) parts.push(`${data.sent} email${(data.sent ?? 0) !== 1 ? 's' : ''} sent`);
       if ((data.failed ?? 0) > 0) parts.push(`${data.failed} failed`);
-      toast.success(parts.join(' · ') || 'Invites sent! 🎉');
+      toast.success(parts.join(' · ') || 'Invites sent!');
       setChips([]);
     } catch {
       toast.error('Could not send invites — try again');
@@ -319,7 +319,10 @@ export function InviteSection({ buzzId, senderUserId, className }: Props): JSX.E
         onClick={() => void sendInvites()}
         disabled={sending || !hasItems}
         className={cn(
-          'btn-festive mt-3 w-full justify-center py-2.5 text-sm disabled:opacity-40',
+          'mt-3 flex w-full items-center justify-center gap-2 rounded-xl px-4 py-3',
+          'bg-[#1E3A5F] text-sm font-semibold text-white transition-all',
+          'hover:bg-[#2B5EA7] active:scale-[0.98]',
+          'disabled:cursor-not-allowed disabled:opacity-40',
           sending && 'cursor-not-allowed'
         )}
       >
