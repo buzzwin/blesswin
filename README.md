@@ -83,3 +83,9 @@ The Firestore project it used is still live and untouched, holding 109 accounts
 and four buzzes. The rules that govern that data are still in this repository
 (`firestore.rules`, `firestore.indexes.json`, `storage.rules`, `firebase.json`)
 because nothing else documents them. The app that read it is gone.
+
+The old `/b/<token>` URLs no longer resolve. They briefly served an explanation
+page; that was removed too. The four buzzes and their signatures were exported
+before the app was deleted and are held outside this repository — that export
+is now the only copy, and it is not in git because it contains four people's
+personal messages.

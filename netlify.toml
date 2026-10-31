@@ -12,21 +12,3 @@
   # plugin's own error message documents. Delete this line once the plugin has
   # been uninstalled in the dashboard.
   NETLIFY_NEXT_PLUGIN_SKIP = "true"
-
-# The celebration app's URLs. These were shared with real people, so they
-# resolve to an explanation rather than a 404. Rewrites (200), not redirects,
-# so the original address stays in the address bar.
-[[redirects]]
-  from = "/b/*"
-  to = "/preserved"
-  status = 200
-
-[[redirects]]
-  from = "/buzzes/*"
-  to = "/preserved"
-  status = 200
-
-[[redirects]]
-  from = "/public/*"
-  to = "/preserved"
-  status = 200
