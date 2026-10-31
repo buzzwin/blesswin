@@ -109,21 +109,22 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
         No schedule, no newsletter voice, no &ldquo;hi friends.&rdquo; A note arrives when there is
         one worth sending, which is a few times a month and sometimes not.
       </p>
-      <form action="https://us-central1-blesswin-49a85.cloudfunctions.net/subscribe" method="POST">
+      <form
+        action="https://buttondown.com/api/emails/embed-subscribe/pure"
+        method="post"
+        class="embeddable-buttondown-form"
+      >
         <div class="field-row">
           <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required placeholder="you@company.com" />
+            <label for="bd-email">Email</label>
+            <input id="bd-email" name="email" type="email" required placeholder="you@company.com" />
           </div>
           <button class="btn" type="submit">Subscribe</button>
         </div>
         <p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted);">
-          One email when there's a note worth sending. Nothing else, ever. Unsubscribe any time.
+          One email when there's a note worth sending. Nothing else, ever. Unsubscribe from any of
+          them. <a href="https://buttondown.com/refer/pure" target="_blank" rel="noopener">Powered by Buttondown</a>.
         </p>
-        <div style="position: absolute; left: -9999px;" aria-hidden="true">
-          <label for="website">Leave this empty</label>
-          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-        </div>
       </form>
     </div>
   </section>

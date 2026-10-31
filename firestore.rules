@@ -397,20 +397,6 @@ service cloud.firestore {
       }
     }
 
-    // Newsletter subscribers (Field Notes)
-    // ------------------------------------------------------------------
-    // Written only by the `subscribe` Cloud Function, which uses the Admin
-    // SDK and bypasses these rules. No client may read, write or enumerate
-    // this collection: an email list that any visitor can list is a leak,
-    // and nothing in the site needs to read it back.
-    //
-    // Note: a subscriber here has consented to email and nothing else. They
-    // are NOT the users/{userId} accounts from the old app, and the two must
-    // not be merged. Linking a subscriber to an account is an invitation they
-    // accept, never a conversion done on their behalf.
-    match /subscribers/{subscriberId} {
-      allow read, write: if false;
-    }
 
   }
 }

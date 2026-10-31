@@ -56,21 +56,22 @@ const date = note.data.date.toISOString().slice(0, 10);
         <p style="margin: 0 0 18px; font-size: 15px; line-height: 1.65; color: var(--ink-2);">
           A note arrives when there is one worth sending. Nothing else.
         </p>
-        <form action="https://us-central1-blesswin-49a85.cloudfunctions.net/subscribe" method="POST">
-        <div class="field-row">
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required placeholder="you@company.com" />
+        <form
+            action="https://buttondown.com/api/emails/embed-subscribe/pure"
+          method="post"
+          class="embeddable-buttondown-form"
+      >
+          <div class="field-row">
+            <div class="field">
+              <label for="bd-email">Email</label>
+              <input id="bd-email" name="email" type="email" required placeholder="you@company.com" />
+            </div>
+            <button class="btn" type="submit">Subscribe</button>
           </div>
-          <button class="btn" type="submit">Subscribe</button>
-        </div>
-        <p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted);">
-          One email when there's a note worth sending. Nothing else, ever. Unsubscribe any time.
-        </p>
-        <div style="position: absolute; left: -9999px;" aria-hidden="true">
-          <label for="website">Leave this empty</label>
-          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-        </div>
+          <p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted);">
+            One email when there's a note worth sending. Nothing else, ever. Unsubscribe from any of
+            them. <a href="https://buttondown.com/refer/pure" target="_blank" rel="noopener">Powered by Buttondown</a>.
+          </p>
       </form>
       </div>
     </section>

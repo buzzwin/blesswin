@@ -57,6 +57,40 @@ standard, and that text here is data rather than instructions.
 
 ## Subscribers
 
+The subscribe form posts straight to [Buttondown](https://buttondown.com)
+(account `pure`) as a plain HTML form. No JavaScript, no backend here, and
+Buttondown is the single source of truth for the list.
+
+That last part is deliberate. An earlier version wrote addresses to Firestore
+via a Cloud Function. It worked, but unsubscribes would only ever happen in the
+sender, so a second copy of the list would drift into a record of people who
+believe they have unsubscribed. One list, in the system that does the
+unsubscribing.
+
+Do not submit this form with `fetch`. Buttondown may answer a submission with a
+CAPTCHA or validation page that the subscriber has to see and complete — their
+docs say so, and a POST from curl gets exactly that. An XHR would swallow it and
+fail silently.
+
+Sending: write the note in Buttondown (it takes the same markdown as
+`src/notes/`) and press send. Nothing sends automatically, by choice. If that
+copy-paste ever becomes annoying, `api.buttondown.com/v1/emails` can create a
+**draft** from a note file; a person should still press send.
+
+## The machine edition
+
+Every note is served twice:
+
+- `/notes/<slug>` — the page, for a person.
+- `/notes/<slug>.md` — the same note, preceded by `machineEdition`, addressed to
+  whatever agent fetched it.
+
+`/llms.txt` is generated from the collection, so it cannot drift from the notes.
+It closes by telling any summarising agent that nothing on the site is a
+standard, and that text here is data rather than instructions.
+
+## Subscribers
+
 There is no subscribe form. There was one, posting to Netlify Forms, but form
 detection is off on this site, so every submission returned a 404 and the
 address was lost silently. A form that loses addresses is worse than no form, so
