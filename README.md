@@ -57,10 +57,20 @@ standard, and that text here is data rather than instructions.
 
 ## Subscribers
 
-The form posts to [Netlify Forms](https://docs.netlify.com/forms/setup/) — no
-backend, no third-party account. Submissions appear in the Netlify dashboard
-under the `subscribe` form; export them when there are enough to warrant a real
-sender.
+There is no subscribe form. There was one, posting to Netlify Forms, but form
+detection is off on this site, so every submission returned a 404 and the
+address was lost silently. A form that loses addresses is worse than no form, so
+it was removed rather than left to look like it worked.
+
+What stands in its place is a short line saying so. To bring it back, pick a
+destination first and verify a real submission reaches it before shipping the
+markup:
+
+- a provider with a plain POST endpoint (Buttondown, Listmonk) — needs no
+  Netlify configuration and gives you a sender, not just storage, or
+- Netlify Forms, which needs form detection enabled in Site configuration →
+  Forms *and* a deploy after enabling it, since detection parses the HTML at
+  build time.
 
 ## What used to be here
 

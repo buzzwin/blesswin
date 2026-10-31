@@ -51,21 +51,12 @@ const date = note.data.date.toISOString().slice(0, 10);
     <section id="subscribe" style="margin-bottom: 48px;">
       <div class="subscribe">
         <h2 style="margin: 0 0 10px; font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.015em;">
-          Get the next one
+          There's no way to subscribe yet
         </h2>
-        <p style="margin: 0 0 18px; font-size: 15px; line-height: 1.65; color: var(--ink-2);">
-          No schedule, no newsletter voice. One email when there's a note worth sending.
+        <p style="margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-2);">
+          There is no list to join yet, and a form that quietly loses your address is worse than no
+          form. When there is somewhere for an address to go, it will be here.
         </p>
-        <form name="subscribe" method="POST" data-netlify="true" action="/subscribed">
-          <input type="hidden" name="form-name" value="subscribe" />
-          <div class="field-row">
-            <div class="field">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" required placeholder="you@company.com" />
-            </div>
-            <button class="btn" type="submit">Subscribe</button>
-          </div>
-        </form>
       </div>
     </section>
 
