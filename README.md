@@ -72,10 +72,26 @@ CAPTCHA or validation page that the subscriber has to see and complete — their
 docs say so, and a POST from curl gets exactly that. An XHR would swallow it and
 fail silently.
 
-Sending: write the note in Buttondown (it takes the same markdown as
-`src/notes/`) and press send. Nothing sends automatically, by choice. If that
-copy-paste ever becomes annoying, `api.buttondown.com/v1/emails` can create a
-**draft** from a note file; a person should still press send.
+### Sending a note
+
+A person presses send. Nothing sends itself, by choice: an auto-send of a wrong
+draft cannot be recalled.
+
+```sh
+npm run email 02           # prints subject and body
+npm run email 02 --copy    # body straight to the clipboard (macOS)
+```
+
+Then paste into Buttondown and send. The script strips the frontmatter, puts
+the standfirst on top in italics, and appends a link to the note and the
+authorship line. `machineEdition` never goes out — it addresses the reader as an
+agent, which works on a URL and is strange in an inbox.
+
+There is no automation here on purpose. With a human pressing send, automating
+only saves the paste; it does not save a decision. Buttondown's RSS-to-email
+add-on can build drafts from `/rss.xml` on a paid plan if the paste ever becomes
+the annoying part, and it has a *skip old items* setting that must be on before
+you connect the feed, or it will mail every existing note as though it were new.
 
 ## The machine edition
 
