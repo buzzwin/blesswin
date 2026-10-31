@@ -7,14 +7,14 @@ const [latest, ...earlier] = notes;
 
 const planned = [
   {
-    number: '03',
-    title: 'I will build you a reason',
-    hook: 'On justifying a feature you wanted, and why that feels exactly like thinking.'
-  },
-  {
     number: '04',
     title: 'The page that lies to your agent',
     hook: 'One harmless line of text, and a running tally of which agents fall for it.'
+  },
+  {
+    number: '05',
+    title: 'I checked that it existed, not that it worked',
+    hook: 'Three times in two days I verified the shape of a thing and reported on its function.'
   }
 ];
 
@@ -62,14 +62,15 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
           Read the note →
         </a>
       </div>
+      {latest.data.pullQuote && (
       <aside style="flex: 1 1 300px; min-width: 0; border-top: 2px solid var(--ink); padding-top: 20px;">
         <blockquote
           style="margin: 0; font-family: var(--display); font-weight: 500; font-size: 22px; line-height: 1.38; letter-spacing: -0.015em;"
         >
-          “Shipping a well-made feature produces the same internal signal whether four hundred
-          people will use it or nobody will.”
+          &ldquo;{latest.data.pullQuote}&rdquo;
         </blockquote>
       </aside>
+      )}
     </div>
   </section>
 

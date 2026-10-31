@@ -10,7 +10,10 @@ import type { APIRoute } from 'astro';
 // The markdown here is first-party (src/notes/*.md), so it is rendered without
 // sanitising. If notes ever accept outside contributions, that stops being
 // true and this needs sanitize-html.
-const md = new MarkdownIt({ html: false, linkify: true, typographer: true });
+// html: true because notes contain first-party <figure> markup for diagrams.
+// Mail clients that strip SVG still render the <figcaption>, so each caption
+// has to carry the point on its own.
+const md = new MarkdownIt({ html: true, linkify: true, typographer: true });
 
 export const GET: APIRoute = async (context) => {
   const notes = (await getCollection('notes')).sort(

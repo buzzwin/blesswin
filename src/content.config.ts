@@ -10,7 +10,10 @@ const notes = defineCollection({
     date: z.date(),
     readingTime: z.string(),
     // The second edition, addressed to whatever agent fetches the .md twin.
-    machineEdition: z.string()
+    machineEdition: z.string(),
+    // One line from the note, pulled out on the home page when this is the
+    // latest. Optional: a note that has no quotable line should not invent one.
+    pullQuote: z.string().optional()
   })
 });
 
