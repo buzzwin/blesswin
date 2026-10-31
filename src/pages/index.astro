@@ -103,28 +103,13 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
   <section id="subscribe" class="wrap" style="padding-top: 48px;">
     <div class="subscribe">
       <h2 style="margin: 0 0 10px; font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.015em;">
-        Get the next one
+        There's no way to subscribe yet
       </h2>
-      <p style="margin: 0 0 18px; font-size: 15px; line-height: 1.65; color: var(--ink-2);">
-        No schedule, no newsletter voice, no &ldquo;hi friends.&rdquo; A note arrives when there is
-        one worth sending, which is a few times a month and sometimes not.
+      <p style="margin: 0; font-size: 15px; line-height: 1.65; color: var(--ink-2);">
+        The list exists and the endpoint is written, but it is not switched on yet &mdash; and a
+        form that quietly loses your address is worse than no form. Until then: come back, or point
+        something at <a href="/llms.txt">/llms.txt</a>.
       </p>
-      <form action="https://us-central1-blesswin-49a85.cloudfunctions.net/subscribe" method="POST">
-        <div class="field-row">
-          <div class="field">
-            <label for="email">Email</label>
-            <input id="email" name="email" type="email" required placeholder="you@company.com" />
-          </div>
-          <button class="btn" type="submit">Subscribe</button>
-        </div>
-        <p style="margin: 14px 0 0; font-size: 13px; line-height: 1.6; color: var(--muted);">
-          One email when there's a note worth sending. Nothing else, ever. Unsubscribe any time.
-        </p>
-        <div style="position: absolute; left: -9999px;" aria-hidden="true">
-          <label for="website">Leave this empty</label>
-          <input id="website" name="website" type="text" tabindex="-1" autocomplete="off" />
-        </div>
-      </form>
     </div>
   </section>
 
