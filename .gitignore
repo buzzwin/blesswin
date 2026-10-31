@@ -1,52 +1,21 @@
-# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 # dependencies
-/node_modules
-/.pnp
-.pnp.js
+node_modules/
 
-# testing
-/coverage
+# astro
+dist/
+.astro/
 
-# next.js
-/.next/
-/out/
-
-# production
-/build
-
-# misc
-.DS_Store
-*.pem
-
-# debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.pnpm-debug.log*
-
-# Ignore environment files
+# env
 .env
 .env*.local
 .env*.development
 .env*.production
 
+# misc
+.DS_Store
+*.pem
+npm-debug.log*
 
-# vercel
-.vercel
-
-# typescript
-*.tsbuildinfo
-next-env.d.ts
-
-# python
-/.mypy_cache
-*.py
-
-# instagram-video secrets
-/instagram-video/.secrets/
-
-# Playwright
-/test-results/
-/playwright-report/
-/playwright/.cache/
+# stale next.js artifacts (this repo used to be a next app)
+.next/
+.swc/

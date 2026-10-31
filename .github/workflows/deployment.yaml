@@ -1,4 +1,4 @@
-name: Deploy 🚀
+name: Build
 
 on:
   push:
@@ -7,42 +7,28 @@ on:
     branches: ['main']
 
 jobs:
-  prettier:
-    name: 🧪 Prettier
+  build:
+    name: 🏗 Astro build
     runs-on: ubuntu-latest
     steps:
       - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: 📥 Download deps
+      - name: ⬢ Use Node from .nvmrc
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: '.nvmrc'
+          cache: 'npm'
+
+      - name: 📥 Install deps
         run: npm ci
 
-      - name: 🔍 Format
-        run: npm run format
+      - name: 🏗 Build
+        run: npm run build
 
-  eslint:
-    name: ✅ ESLint
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
-
-      - name: 📥 Download deps
-        run: npm ci
-
-      - name: 🪄 Lint
-        run: npm run lint
-
-  jest:
-    name: 🃏 Jest
-    runs-on: ubuntu-latest
-    steps:
-      - name: ⬇️ Checkout repo
-        uses: actions/checkout@v3
-
-      - name: 📥 Download deps
-        run: npm ci
-
-      # ! uncomment this after you add test
-      # - name: 🔬 Test
-      # run: npm run test:ci
+      - name: 🔍 Check the machine edition built
+        run: |
+          test -f dist/llms.txt || { echo "llms.txt missing"; exit 1; }
+          count=$(ls dist/notes/*.md 2>/dev/null | wc -l | tr -d ' ')
+          test "$count" -gt 0 || { echo "no markdown twins were generated"; exit 1; }
+          echo "ok: llms.txt plus $count markdown twin(s)"
