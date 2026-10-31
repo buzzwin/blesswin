@@ -4,3 +4,21 @@
 
 [build.environment]
   NODE_VERSION = "22.23.4"
+
+# The celebration app's URLs. These were shared with real people, so they
+# resolve to an explanation rather than a 404. Rewrites (200), not redirects,
+# so the original address stays in the address bar.
+[[redirects]]
+  from = "/b/*"
+  to = "/preserved"
+  status = 200
+
+[[redirects]]
+  from = "/buzzes/*"
+  to = "/preserved"
+  status = 200
+
+[[redirects]]
+  from = "/public/*"
+  to = "/preserved"
+  status = 200
