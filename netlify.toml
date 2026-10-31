@@ -5,6 +5,14 @@
 [build.environment]
   NODE_VERSION = "22.23.4"
 
+  # @netlify/plugin-nextjs is still installed on the site from the Netlify UI,
+  # which a repo cannot uninstall. Its onBuild step inspects the publish
+  # directory, finds an Astro build rather than a Next one, and fails the
+  # deploy even though the build itself succeeded. This is the escape hatch the
+  # plugin's own error message documents. Delete this line once the plugin has
+  # been uninstalled in the dashboard.
+  NETLIFY_NEXT_PLUGIN_SKIP = "true"
+
 # The celebration app's URLs. These were shared with real people, so they
 # resolve to an explanation rather than a 404. Rewrites (200), not redirects,
 # so the original address stays in the address bar.
