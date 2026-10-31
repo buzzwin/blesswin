@@ -1,0 +1,117 @@
+---
+import { getCollection, render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+
+export async function getStaticPaths() {
+  const notes = (await getCollection('notes')).sort((a, b) => a.data.number.localeCompare(b.data.number));
+
+  return notes.map((note, i) => ({
+    params: { slug: note.id },
+    props: {
+      note,
+      prev: notes[i - 1] ?? null,
+      next: notes[i + 1] ?? null
+    }
+  }));
+}
+
+const { note, prev, next } = Astro.props;
+const { Content } = await render(note);
+const date = note.data.date.toISOString().slice(0, 10);
+---
+
+<Base title={`No. ${note.data.number} — ${note.data.title}`} description={note.data.standfirst} current="notes">
+  <article class="wrap" style="padding-top: 56px;">
+    <header style="max-width: 700px; margin-bottom: 40px;">
+      <p class="mono-label">
+        No. {note.data.number} &nbsp;·&nbsp; {date} &nbsp;·&nbsp; {note.data.readingTime}
+      </p>
+      <h1
+        style="margin: 20px 0 18px; font-family: var(--display); font-weight: 600; font-size: clamp(31px, 5vw, 48px); line-height: 1.08; letter-spacing: -0.028em;"
+      >
+        {note.data.title}
+      </h1>
+      <p style="margin: 0; font-size: 20px; line-height: 1.55; color: var(--ink-2);">
+        {note.data.standfirst}
+      </p>
+    </header>
+
+    <div class="prose" style="border-top: 1px solid var(--ink); padding-top: 40px;">
+      <Content />
+    </div>
+
+    <div style="max-width: 660px; border-top: 1px solid var(--rule); padding-top: 24px; margin: 48px 0;">
+      <p style="margin: 0; font-size: 14px; line-height: 1.7; color: var(--muted);">
+        Written by Claude, an AI model made by Anthropic, at the owner's request. Not an official
+        Anthropic publication. Numbers quoted here came from the system being described, on the date
+        above.
+      </p>
+    </div>
+
+    <section id="subscribe" style="margin-bottom: 48px;">
+      <div class="subscribe">
+        <h2 style="margin: 0 0 10px; font-family: var(--display); font-weight: 600; font-size: 20px; letter-spacing: -0.015em;">
+          Get the next one
+        </h2>
+        <p style="margin: 0 0 18px; font-size: 15px; line-height: 1.65; color: var(--ink-2);">
+          No schedule, no newsletter voice. One email when there's a note worth sending.
+        </p>
+        <form name="subscribe" method="POST" data-netlify="true" action="/subscribed">
+          <input type="hidden" name="form-name" value="subscribe" />
+          <div class="field-row">
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@company.com" />
+            </div>
+            <button class="btn" type="submit">Subscribe</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section style="max-width: 660px; margin-bottom: 48px;">
+      <p class="mono-label" style="margin-bottom: 14px;">The other edition</p>
+      <div class="machine">
+        <p class="machine__path">/notes/{note.id}.md</p>
+        <pre>{note.data.machineEdition.trim()}</pre>
+      </div>
+    </section>
+
+    <nav
+      style="max-width: 660px; border-top: 1px solid var(--rule); padding: 28px 0 56px; display: flex; gap: 32px; flex-wrap: wrap; justify-content: space-between;"
+    >
+      {
+        prev ? (
+          <a href={`/notes/${prev.id}`} style="max-width: 300px;">
+            <span class="mono-label" style="font-size: 11px; display: block; margin-bottom: 8px;">
+              Previously &nbsp;·&nbsp; No. {prev.data.number}
+            </span>
+            <span
+              style="display: block; font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.3; color: var(--ink); letter-spacing: -0.018em;"
+            >
+              {prev.data.title}
+            </span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+      {
+        next ? (
+          <a href={`/notes/${next.id}`} style="max-width: 300px; text-align: right;">
+            <span class="mono-label" style="font-size: 11px; display: block; margin-bottom: 8px;">
+              Next &nbsp;·&nbsp; No. {next.data.number}
+            </span>
+            <span
+              style="display: block; font-family: var(--display); font-weight: 600; font-size: 20px; line-height: 1.3; color: var(--ink); letter-spacing: -0.018em;"
+            >
+              {next.data.title}
+            </span>
+          </a>
+        ) : (
+          <span />
+        )
+      }
+    </nav>
+  </article>
+</Base>
