@@ -1,4 +1,5 @@
 import React from 'react';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { SEO } from '@components/common/seo';
 import { MainHeader } from '@components/home/main-header';
@@ -23,10 +24,18 @@ const Terms: React.FC = () => {
         title='Terms of Service'
         action={handleBack}
       />
+      <nav className='border-b border-light-border dark:border-dark-border'>
+        <div className='mx-auto flex max-w-5xl items-center gap-4 px-4 py-4 sm:px-6 lg:px-8'>
+          <Link href='/'>
+            <a className='font-display text-lg font-bold text-light-primary dark:text-dark-primary'>
+              ← Buzzwin
+            </a>
+          </Link>
+        </div>
+      </nav>
       <section>
         <div>
-          <p>
-            <div className='mx-auto max-w-4xl px-4 py-8'>
+          <div className='mx-auto max-w-4xl px-4 py-8'>
               <h1 className='mb-4 text-3xl font-bold'>Terms of Service</h1>
 
               <p className='mb-4'>
@@ -140,8 +149,7 @@ const Terms: React.FC = () => {
                 not allowed, our liability will be limited to the greatest
                 extent permitted by law.
               </p>
-            </div>
-          </p>
+          </div>
         </div>
       </section>
     </div>

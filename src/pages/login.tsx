@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { AuthLayout } from '@components/layout/auth-layout';
 import { SEO } from '@components/common/seo';
 import JustLogin from '@components/login/justlogin';
@@ -12,9 +13,11 @@ export default function Login(): JSX.Element {
       />
       <div className='mx-auto max-w-md px-6 py-12'>
         <div className='mb-8 text-center'>
-          <h1 className='font-display text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
-            Welcome to Buzzwin
-          </h1>
+          <Link href='/'>
+            <a className='font-display text-2xl font-bold text-[#1a1108] dark:text-[#F5EFE6]'>
+              Welcome to Buzzwin
+            </a>
+          </Link>
         </div>
         <div className='rounded-2xl border border-[#e8d8c4] bg-[#faf8f4] p-8 shadow-sm dark:border-[#2a1d10] dark:bg-[#1c1510]'>
           <JustLogin />

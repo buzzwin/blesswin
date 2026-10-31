@@ -27,7 +27,7 @@ export function CommonLayout({
 
 export function ProtectedLayout({
   children,
-  redirectUrl
+  redirectUrl = '/login'
 }: {
   children: ReactNode;
   redirectUrl?: string;

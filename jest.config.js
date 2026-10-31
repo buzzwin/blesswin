@@ -13,6 +13,9 @@ const customJestConfig = {
   // if using TypeScript with a baseUrl set to the root directory then you need the below for alias' to work
   modulePaths: ['<rootDir>/src'],
   testEnvironment: 'jest-environment-jsdom',
+  // Playwright owns tests/e2e — running those specs under Jest just crashes it
+  testPathIgnorePatterns: ['<rootDir>/tests/e2e/', '<rootDir>/.next/', '<rootDir>/node_modules/'],
+  passWithNoTests: true,
   // Math aliases too instead of just baseUrl
   moduleNameMapper: {
     '^@components(.*)$': '<rootDir>/src/components$1',

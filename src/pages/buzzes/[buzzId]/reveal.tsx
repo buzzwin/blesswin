@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
 import { doc } from 'firebase/firestore';
@@ -30,6 +30,11 @@ export default function RevealPage(): JSX.Element {
 
   const [isPastReveal, setIsPastReveal] = useState(false);
 
+  // Firestore pushes a new snapshot for every write, so these one-shot
+  // side effects must be keyed by buzz id rather than by effect run.
+  const revealedRef = useRef<string | null>(null);
+  const tweetedRef = useRef<string | null>(null);
+
   useEffect(() => {
     if (!buzz) return;
     setIsPastReveal(Date.now() >= buzz.revealAt.toMillis());
@@ -50,13 +55,17 @@ export default function RevealPage(): JSX.Element {
 
     // Only the creator may flip the status (Firestore rules reject others).
     // Gating here avoids an unhandled promise rejection for every viewer.
-    if (user && user.id === buzz.createdBy) {
+    if (!user || user.id !== buzz.createdBy) return;
+
+    if (revealedRef.current !== buzz.id) {
+      revealedRef.current = buzz.id;
       void revealBuzz(buzz.id).catch(() => {
         // Non-fatal: the reveal view still renders from the reveal time.
       });
     }
 
-    if (buzz.revealTweetId === null && user && user.id === buzz.createdBy) {
+    if (buzz.revealTweetId === null && tweetedRef.current !== buzz.id) {
+      tweetedRef.current = buzz.id;
       const tweetUser = {
         id: user.id,
         name: user.name,
@@ -64,9 +73,12 @@ export default function RevealPage(): JSX.Element {
         photoURL: user.photoURL,
         verified: user.verified
       };
-      void sendBuzzRevealTweet(buzz, tweetUser).then((tweetId) =>
-        setBuzzRevealTweetId(buzz.id, tweetId)
-      );
+      void sendBuzzRevealTweet(buzz, tweetUser)
+        .then((tweetId) => setBuzzRevealTweetId(buzz.id, tweetId))
+        .catch(() => {
+          // Allow a later snapshot to retry if the announcement failed.
+          tweetedRef.current = null;
+        });
     }
   }, [buzz, isPastReveal, user]);
 

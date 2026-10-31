@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { forwardRef, useState } from 'react';
 import Link from 'next/link';
 import {
   MessageCircle,
@@ -30,10 +30,10 @@ interface ImpactMomentCardProps {
   onRipple?: (momentId: string, rippleType: RippleType) => void;
 }
 
-export function ImpactMomentCard({
-  moment,
-  onRipple
-}: ImpactMomentCardProps): JSX.Element {
+export const ImpactMomentCard = forwardRef<
+  HTMLElement,
+  ImpactMomentCardProps
+>(function ImpactMomentCard({ moment, onRipple }, ref): JSX.Element {
   const { user } = useAuth();
   const [rippleMenuOpen, setRippleMenuOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -58,6 +58,7 @@ export function ImpactMomentCard({
 
   return (
     <article
+      ref={ref}
       className='border-b border-[#e8d8c4] py-4 transition-colors hover:bg-[rgba(201,169,110,0.02)] dark:border-[#2a1d10] dark:hover:bg-[rgba(201,169,110,0.03)]'
       onClick={() => setRippleMenuOpen(false)}
     >
@@ -265,4 +266,4 @@ export function ImpactMomentCard({
       />
     </article>
   );
-}
+});

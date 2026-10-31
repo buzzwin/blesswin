@@ -138,7 +138,7 @@ export default function SignBuzzPage({ initialMeta }: Props): JSX.Element {
           </Link>
           <Link href='/buzzes/new'>
             <a className='text-sm text-[#6b5744] transition hover:text-[#C9A96E] dark:text-[#9E8B76] dark:hover:text-[#C9A96E]'>
-              Start your own →
+              Start your own Buzz →
             </a>
           </Link>
         </header>
