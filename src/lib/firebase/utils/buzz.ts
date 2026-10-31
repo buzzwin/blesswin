@@ -15,6 +15,7 @@ import {
 import { db, storage } from '../app';
 import { ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { buzzesCollection, buzzSignaturesCollection, tweetsCollection } from '../collections';
+import { trackEvent } from '@lib/analytics';
 import type { NewBuzzData, NewSignatureData, Buzz } from '@lib/types/buzz';
 import type { TweetUser } from '@lib/types/tweet';
 
@@ -39,6 +40,12 @@ export async function createBuzz(data: NewBuzzData): Promise<{ buzzId: string; s
     updatedAt: null
   } as any);
 
+  trackEvent('buzz_created', {
+    occasion: data.occasion,
+    board_mode: data.boardMode,
+    is_public: data.isPublic
+  });
+
   return { buzzId: docRef.id, shareToken };
 }
 
@@ -58,7 +65,10 @@ export async function getUserBuzzes(userId: string): Promise<Buzz[]> {
   return buzzes.sort((a, b) => b.createdAt.toMillis() - a.createdAt.toMillis());
 }
 
-export async function signBuzz(data: NewSignatureData): Promise<void> {
+export async function signBuzz(
+  data: NewSignatureData,
+  meta?: { isCreator?: boolean }
+): Promise<void> {
   const batch = writeBatch(db);
 
   const sigRef = doc(buzzSignaturesCollection(data.buzzId));
@@ -76,10 +86,19 @@ export async function signBuzz(data: NewSignatureData): Promise<void> {
   });
 
   await batch.commit();
+
+  // `is_creator: false` is the signal that a buzz reached a second person -
+  // the only event that proves the collect-and-reveal loop actually happened.
+  trackEvent('buzz_signed', {
+    type: data.type,
+    is_creator: meta?.isCreator ?? false
+  });
 }
 
 export async function revealBuzz(buzzId: string): Promise<void> {
   const buzzRef = doc(buzzesCollection, buzzId);
+
+  let didReveal = false;
 
   await runTransaction(db, async (tx) => {
     const snap = await tx.get(buzzRef);
@@ -90,7 +109,13 @@ export async function revealBuzz(buzzId: string): Promise<void> {
       status: 'revealed',
       updatedAt: serverTimestamp()
     });
+
+    didReveal = true;
   });
+
+  // Only the transition counts - reveal.tsx calls this on every page view,
+  // so tracking unconditionally would inflate the number with repeat visits.
+  if (didReveal) trackEvent('buzz_revealed', { buzz_id: buzzId });
 }
 
 export async function hideBuzzSignature(

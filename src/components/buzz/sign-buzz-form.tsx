@@ -256,7 +256,7 @@ export function SignBuzzForm({ buzz, shareUrl }: Props): JSX.Element {
         text: type === 'text' ? text.trim() : null,
         mediaURL,
         mediaThumbnailURL: null
-      });
+      }, { isCreator: uid === buzz.createdBy });
 
       // Karma is a non-critical side effect. The signature is already saved,
       // so a karma failure (e.g. the user's doc not existing yet) must not

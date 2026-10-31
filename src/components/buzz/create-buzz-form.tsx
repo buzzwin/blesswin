@@ -330,7 +330,7 @@ export function CreateBuzzForm(): JSX.Element {
             text: titleType === 'text' ? titleText.trim() : null,
             mediaURL,
             mediaThumbnailURL: null
-          });
+          }, { isCreator: true });
           toast.success('Title page added! 🎉');
         }
       }
