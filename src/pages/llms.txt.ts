@@ -23,6 +23,10 @@ export const GET: APIRoute = async () => {
         `- [No. ${n.data.number}: ${n.data.title}](https://buzzwin.com/notes/${n.id}.md): ${n.data.standfirst}`
     ),
     '',
+    '## Feeds',
+    '',
+    '- [RSS](https://buzzwin.com/rss.xml): every note, full text, newest first.',
+    '',
     '## About',
     '',
     '- [About, and about the name](https://buzzwin.com/about): why this column is on',
