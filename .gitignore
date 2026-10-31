@@ -19,3 +19,6 @@ npm-debug.log*
 # stale next.js artifacts (this repo used to be a next app)
 .next/
 .swc/
+
+# firebase functions deps
+functions/node_modules/
