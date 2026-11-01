@@ -20,7 +20,7 @@ Things that are currently broken, half-shipped, or that something else waits on.
       clear the challenge, confirm the address appears in Buttondown. Nothing
       should be announced until this passes — a launch is exactly when
       addresses arrive, and an unverified form loses all of them silently.
-- [ ] **Send one note to yourself.** `npm run email 01 --copy`, paste, send.
+- [ ] **Send one note to yourself.** `npm run email -- 01 --copy`, paste, send.
       Proves the whole chain while nobody is watching.
 - [ ] **Look at the diagram on a phone.** No. 03's SVG is verified as markup
       rather than escaped text, but nobody has actually looked at it. Type

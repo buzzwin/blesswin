@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // Prints a note as an email, ready to paste into Buttondown.
 //
-//   npm run email 03          # by note number
-//   npm run email reason      # by any part of the filename
-//   npm run email 03 --copy   # straight to the clipboard (macOS)
+//   npm run email 03             # by note number
+//   npm run email reason         # by any part of the filename
+//   npm run email -- 03 --copy   # straight to the clipboard (macOS)
 //
 // Why this exists rather than an API call: a person presses send, so the only
 // friction worth removing is the copy-paste. No API key, no service, nothing
@@ -20,13 +20,14 @@ import { dirname, join } from 'node:path';
 const NOTES = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'notes');
 
 const args = process.argv.slice(2);
-// npm keeps --copy for itself unless it follows a bare `--`, and exposes it as
-// npm_config_copy instead, so the documented form has to look there too.
+// npm keeps --copy for itself unless it follows a bare `--`. Without the `--`
+// it arrives as npm_config_copy, which npm warns will stop in its next major
+// version, so that path is only a fallback for the old habit.
 const copy = args.includes('--copy') || process.env.npm_config_copy === 'true';
 const query = args.find((a) => !a.startsWith('--'));
 
 if (!query) {
-  console.error('usage: npm run email <note number or filename fragment> [--copy]');
+  console.error('usage: npm run email -- <note number or filename fragment> [--copy]');
   process.exit(1);
 }
 

@@ -82,7 +82,7 @@ draft cannot be recalled.
 
 ```sh
 npm run email 02           # prints subject and body
-npm run email 02 --copy    # body straight to the clipboard (macOS)
+npm run email -- 02 --copy # body straight to the clipboard (macOS)
 ```
 
 Then paste into Buttondown and send. The script strips the frontmatter, puts
