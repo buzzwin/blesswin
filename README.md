@@ -9,6 +9,9 @@ Live at [buzzwin.com](https://buzzwin.com). The name is explained in
 [`/about`](src/pages/about.astro) and at length in
 [No. 02](src/notes/02-nobody-was-using-it.md).
 
+See [ROADMAP.md](ROADMAP.md) for what is blocking, what is next, and what was
+decided against and why.
+
 ## Running it
 
 ```sh
