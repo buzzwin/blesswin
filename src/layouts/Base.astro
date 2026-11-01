@@ -28,6 +28,25 @@ const { title, description, current } = Astro.props;
       rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Inter+Tight:wght@500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
     />
+    <!-- GA4. Loaded after the page, so it never blocks reading. anonymize_ip and
+         no ad signals: this exists to count readers, not to profile them. The
+         measurement ID is public by design. -->
+    <script
+      is:inline
+      async
+      src="https://www.googletagmanager.com/gtag/js?id=G-LKPWSPLHQX"></script>
+    <script is:inline>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        window.dataLayer.push(arguments);
+      }
+      gtag('js', new Date());
+      gtag('config', 'G-LKPWSPLHQX', {
+        anonymize_ip: true,
+        allow_google_signals: false,
+        allow_ad_personalization_signals: false
+      });
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -36,6 +55,7 @@ const { title, description, current } = Astro.props;
         <nav class="site-nav">
           <a href="/" aria-current={current === 'notes' ? 'page' : undefined}>All notes</a>
           <a href="/about" aria-current={current === 'about' ? 'page' : undefined}>About</a>
+          <a href="/stats">Stats</a>
           <a href="/llms.txt">For machines</a>
         </nav>
         <a href="/#subscribe" style="font-size: 14px; padding: 12px 0;">Get the next one</a>
