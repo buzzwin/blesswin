@@ -35,11 +35,14 @@ Things that are currently broken, half-shipped, or that something else waits on.
 
 No dependencies, no urgency, all cheap.
 
-- [ ] Delete the orphaned `subscribe` Cloud Function:
-      `firebase functions:delete subscribe --project blesswin-49a85`. Removing
-      it from this repo did not remove it from Google.
-- [ ] Delete the old celebration app's email functions, still deployed with
-      live credentials.
+- [x] Delete the orphaned `subscribe` Cloud Function. Done 2026-11-01; its URL
+      now returns 404.
+- [x] Delete the old celebration app's email functions. Done 2026-11-01:
+      `notifyEmail`, `notifyJoinedAction`, `sendRitualReminders` and
+      `sendWeeklySummaries`. `contribute` is now the only deployed function.
+      The source for all five is in git history.
+- [ ] Rotate the credentials those email functions used. Deleting a function
+      does not revoke what it held.
 - [ ] Clear the dead Netlify environment variables: twelve `NEXT_PUBLIC_*`,
       plus `EMAIL_API`, `EMAIL_API_PASSWORD`, `GEMINI_API_KEY`, `OPENAI_KEY`,
       `NEXT_PRIVATE_TARGET`. Keep `NODE_VERSION`. Rotate the three real API
