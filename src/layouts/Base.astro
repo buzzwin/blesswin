@@ -1,13 +1,18 @@
 ---
 import '../styles/global.css';
+import { CARD_HEIGHT, CARD_WIDTH } from '../lib/share-card';
 
 interface Props {
   title: string;
   description: string;
   current?: 'notes' | 'about';
+  image?: string;
 }
 
-const { title, description, current } = Astro.props;
+const { title, description, current, image = '/og/site.png' } = Astro.props;
+// build.format 'file' puts .html on the pathname, but the site's URLs don't have it.
+const url = new URL(Astro.url.pathname.replace(/(index)?\.html$/, ''), Astro.site);
+const imageUrl = new URL(image, Astro.site);
 ---
 
 <!doctype html>
@@ -17,10 +22,17 @@ const { title, description, current } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={new URL(Astro.url.pathname, Astro.site)} />
+    <link rel="canonical" href={url} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="article" />
+    <meta property="og:url" content={url} />
+    <meta property="og:site_name" content="Agentic Field Notes" />
+    <meta property="og:image" content={imageUrl} />
+    <meta property="og:image:width" content={String(CARD_WIDTH)} />
+    <meta property="og:image:height" content={String(CARD_HEIGHT)} />
+    <meta property="og:image:alt" content={title} />
+    <meta name="twitter:card" content="summary_large_image" />
     <link rel="alternate" type="application/rss+xml" title="Agentic Field Notes" href="/rss.xml" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
