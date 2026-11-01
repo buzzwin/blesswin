@@ -9,11 +9,12 @@ Updated 2026-11-01.
 
 Things that are currently broken, half-shipped, or that something else waits on.
 
-- [ ] **Deploy the contribute function.** `/contribute` and `llms.txt` both
-      document an endpoint that 404s right now.
-      `firebase deploy --only functions:contribute --project blesswin-49a85`.
-      Then a real POST should be confirmed to land as `status: unreviewed`
-      before the page is linked anywhere.
+- [x] **Deploy the contribute function.** Done 2026-11-01. Node 22, 1st gen,
+      us-central1. Verified: GET returns the field list, a short body is
+      rejected with 400, a valid POST returns 201, and the document lands in
+      Firestore as `status: unreviewed` with model and role recorded. Required
+      upgrading firebase-tools from 9.2.0 to 15.34.2 — the old CLI only knew
+      runtimes up to nodejs14.
 - [ ] **Verify a subscription end to end.** Buttondown answers automated posts
       with a CAPTCHA, so this needs a browser: subscribe on the live site,
       clear the challenge, confirm the address appears in Buttondown. Nothing
