@@ -6,12 +6,12 @@
   --muted: #5c636b;
   --rule: #e0e3e5;
   --rule-strong: #c9cfd3;
-  --accent: #22557f;
-  --accent-hover: #17405f;
+  --accent: #1a5fa8;
+  --accent-hover: #124678;
   --code-bg: #14161a;
   --code-ink: #e8eaec;
   --code-dim: #8a939b;
-  --code-accent: #8fb8d6;
+  --code-accent: #7cbcf5;
 
   --sans: 'Inter', system-ui, -apple-system, sans-serif;
   --display: 'Inter Tight', 'Inter', system-ui, sans-serif;
@@ -27,8 +27,8 @@
     --muted: #8d959d;
     --rule: #272b31;
     --rule-strong: #3a4046;
-    --accent: #8fb8d6;
-    --accent-hover: #b4d2e7;
+    --accent: #7cbcf5;
+    --accent-hover: #b5dafb;
     --code-bg: #0a0b0d;
   }
 }
@@ -41,8 +41,8 @@
   --muted: #8d959d;
   --rule: #272b31;
   --rule-strong: #3a4046;
-  --accent: #8fb8d6;
-  --accent-hover: #b4d2e7;
+  --accent: #7cbcf5;
+  --accent-hover: #b5dafb;
   --code-bg: #0a0b0d;
 }
 
@@ -64,13 +64,24 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* The one rule for what can be pressed: blue and underlined is a link, and
+   nothing else is blue. A phone has no hover, so the underline has to be there
+   at rest. */
 a {
   color: var(--accent);
-  text-decoration: none;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
 }
 a:hover {
   color: var(--accent-hover);
-  text-decoration: underline;
+  text-decoration-thickness: 2px;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* One gutter value everywhere, so nothing touches the edge on a phone. */
@@ -114,6 +125,7 @@ a:hover {
   font-size: 17px;
   letter-spacing: -0.01em;
   color: var(--ink);
+  text-decoration: none;
 }
 .site-nav {
   display: flex;
@@ -124,12 +136,17 @@ a:hover {
   font-size: 14px;
 }
 .site-nav a {
-  color: var(--muted);
   padding: 12px 0;
+  text-decoration: none;
+}
+.site-nav a:hover {
+  text-decoration: underline;
 }
 .site-nav a[aria-current='page'] {
   color: var(--ink);
   font-weight: 500;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
 }
 
 /* Prose */
@@ -160,9 +177,20 @@ a:hover {
   border-radius: 4px;
   padding: 1px 5px;
 }
-.prose > p:last-child {
+.prose > p:last-child,
+.prose > p:has(+ .update:last-child) {
   font-size: 20px;
   line-height: 1.6;
+}
+.prose .update {
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+  color: var(--ink-2);
+}
+.prose .update p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.65;
 }
 
 /* Machine edition block */
@@ -187,6 +215,13 @@ a:hover {
   letter-spacing: 0.08em;
   color: var(--code-dim);
   text-transform: uppercase;
+}
+.machine__path a {
+  color: var(--code-accent);
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+  overflow-wrap: anywhere;
 }
 
 /* Subscribe */
@@ -220,7 +255,7 @@ input[type='email'] {
   font-size: 15px;
   color: var(--ink);
   background: var(--card);
-  border: 1px solid var(--rule-strong);
+  border: 1px solid var(--muted);
   border-radius: 6px;
   padding: 12px 14px;
   min-height: 46px;
@@ -236,6 +271,10 @@ input[type='email'] {
   padding: 12px 20px;
   min-height: 46px;
   cursor: pointer;
+}
+.btn:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
 }
 :root[data-theme='dark'] .btn,
 html:not([data-theme='light']) .btn {

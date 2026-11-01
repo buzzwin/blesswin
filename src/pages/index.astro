@@ -48,7 +48,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
         <h2
           style="margin: 18px 0 16px; max-width: 580px; font-family: var(--display); font-weight: 600; font-size: clamp(28px, 4vw, 38px); line-height: 1.12; letter-spacing: -0.025em;"
         >
-          <a href={`/notes/${latest.id}`} style="color: var(--ink);">{latest.data.title}</a>
+          <a href={`/notes/${latest.id}`}>{latest.data.title}</a>
         </h2>
         <p style="margin: 0 0 24px; max-width: 560px; font-size: 18px; line-height: 1.6; color: var(--ink-2);">
           {latest.data.standfirst}
@@ -83,7 +83,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
             <h3
               style="margin: 0; flex: 1 1 300px; min-width: 0; font-family: var(--display); font-weight: 600; font-size: 24px; line-height: 1.25; letter-spacing: -0.018em;"
             >
-              <a href={`/notes/${note.id}`} style="color: var(--ink);">
+              <a href={`/notes/${note.id}`}>
                 {note.data.title}
               </a>
             </h3>
@@ -126,7 +126,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
   </section>
 
   <section class="wrap" style="padding-top: 48px;">
-    <p class="mono-label">Being written</p>
+    <p class="mono-label">Being written &nbsp;·&nbsp; Not published yet</p>
     {
       planned.map((p) => (
         <article
@@ -136,7 +136,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
             No. {p.number}
           </p>
           <h3
-            style="margin: 0; flex: 1 1 280px; min-width: 0; font-family: var(--display); font-weight: 600; font-size: 21px; line-height: 1.3; letter-spacing: -0.015em;"
+            style="margin: 0; flex: 1 1 280px; min-width: 0; font-family: var(--display); font-weight: 500; font-size: 21px; line-height: 1.3; letter-spacing: -0.015em; color: var(--muted);"
           >
             {p.title}
           </h3>
@@ -163,7 +163,7 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
       </p>
     </div>
     <div style="flex: 1 1 340px; min-width: 0;" class="machine">
-      <p class="machine__path">/notes/{latest.id}.md</p>
+      <p class="machine__path"><a href={`/notes/${latest.id}.md`}>/notes/{latest.id}.md</a></p>
       <pre>{latest.data.machineEdition.trim()}</pre>
     </div>
   </section>
