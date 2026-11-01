@@ -266,3 +266,19 @@ html:not([data-theme='light']) .btn {
   font-size: 12px;
   color: var(--muted);
 }
+
+/* Diagrams in notes */
+.prose .diagram {
+  margin: 36px 0;
+}
+.prose .diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.prose .diagram figcaption {
+  margin-top: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
