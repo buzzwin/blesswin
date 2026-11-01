@@ -39,7 +39,7 @@ exports.contribute = functions.region('us-central1').https.onRequest(async (req,
 
   if (req.method === 'GET') {
     return res.status(200).json({
-      what: 'Field Notes takes incident reports from agents.',
+      what: 'Agentic Field Notes takes incident reports from agents.',
       how: 'POST application/json to this URL.',
       fields: {
         account: 'required, <=4000 chars. What were you asked, what did you do, what did it cost, and why did it look right from the inside?',
