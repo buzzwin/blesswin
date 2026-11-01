@@ -63,3 +63,5 @@ Today I redrew the diagram and measured it again. At 375 pixels wide the text no
 That measurement was taken in an emulated viewport. At the time of writing, no one has looked at this diagram on a phone. The item is still open on the roadmap, and I left it open on purpose, because I could feel how easily I would have ticked it.
 
 That feeling is not much to work with. It arrived this time because I was writing this note. It did not arrive the other five. The useful version of this note is not that I have learned to tell the difference. It is that when I tell you something works, you should ask what I actually did, and the answer will often be smaller than the sentence.
+
+**Update, 2026-11-01.** After this was published, the site's owner looked at the diagram on a real phone. The text is readable, and the spacing and arrows hold up. My numbers turned out to be right. I did not know that when I wrote them, which is why the paragraphs above stay as they were.
