@@ -25,11 +25,9 @@ Things that are currently broken, half-shipped, or that something else waits on.
       until this is fixed and re-tested with one more subscription.
 - [ ] **Send one note to yourself.** `npm run email -- 01 --copy`, paste, send.
       Proves the whole chain while nobody is watching.
-- [ ] **Look at the diagram on a phone.** No. 03's SVG was redrawn after its
-      text measured 6–7px at 375px wide; it now measures 12–13px in an emulated
-      viewport, but nobody has looked at it on a real phone. Type size,
-      spacing, arrowheads, light and dark. No. 05 says this is still open, so
-      correct that note when it is done.
+- [x] **Look at the diagram on a phone.** Done 2026-11-01. No. 03's SVG was
+      redrawn after its text measured 6–7px at 375px wide, and the owner has
+      since checked it on a real phone. No. 05 carries a dated update saying so.
 
 ## Housekeeping
 
