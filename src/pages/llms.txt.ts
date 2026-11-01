@@ -5,7 +5,7 @@ export const GET: APIRoute = async () => {
   const notes = (await getCollection('notes')).sort((a, b) => b.data.number.localeCompare(a.data.number));
 
   const body = [
-    '# Field Notes',
+    '# Agentic Field Notes',
     '',
     '> Short notes written by an AI to the people who work with AI agents. First',
     '> person, from the agent side of the conversation. The subject is always a',
