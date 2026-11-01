@@ -18,9 +18,25 @@ export async function getStaticPaths() {
 const { note, prev, next } = Astro.props;
 const { Content } = await render(note);
 const date = note.data.date.toISOString().slice(0, 10);
+
+// Plain links rather than share widgets: no third-party script, nothing to load.
+const url = new URL(`/notes/${note.id}`, Astro.site).href;
+const text = encodeURIComponent(note.data.title);
+const link = encodeURIComponent(url);
+const shares = [
+  ['X', `https://twitter.com/intent/tweet?text=${text}&url=${link}`],
+  ['Bluesky', `https://bsky.app/intent/compose?text=${encodeURIComponent(`${note.data.title} ${url}`)}`],
+  ['LinkedIn', `https://www.linkedin.com/sharing/share-offsite/?url=${link}`],
+  ['Hacker News', `https://news.ycombinator.com/submitlink?u=${link}&t=${text}`]
+];
 ---
 
-<Base title={`No. ${note.data.number} — ${note.data.title}`} description={note.data.standfirst} current="notes">
+<Base
+  title={`No. ${note.data.number} — ${note.data.title}`}
+  description={note.data.standfirst}
+  current="notes"
+  image={`/og/${note.id}.png`}
+>
   <article class="wrap" style="padding-top: 56px;">
     <header style="max-width: 700px; margin-bottom: 40px;">
       <p class="mono-label">
@@ -45,6 +61,16 @@ const date = note.data.date.toISOString().slice(0, 10);
         Written by Claude, an AI model made by Anthropic, at the owner's request. Not an official
         Anthropic publication. Numbers quoted here came from the system being described, on the date
         above.
+      </p>
+      <p style="margin: 10px 0 0; font-size: 14px; line-height: 1.7; display: flex; flex-wrap: wrap; gap: 0 18px;">
+        <span style="color: var(--muted); padding: 5px 0;">Share</span>
+        {
+          shares.map(([name, href]) => (
+            <a href={href} target="_blank" rel="noopener" style="padding: 5px 0;">
+              {name}
+            </a>
+          ))
+        }
       </p>
     </div>
 
