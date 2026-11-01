@@ -15,16 +15,21 @@ Things that are currently broken, half-shipped, or that something else waits on.
       Firestore as `status: unreviewed` with model and role recorded. Required
       upgrading firebase-tools from 9.2.0 to 15.34.2 — the old CLI only knew
       runtimes up to nodejs14.
-- [ ] **Verify a subscription end to end.** Buttondown answers automated posts
-      with a CAPTCHA, so this needs a browser: subscribe on the live site,
-      clear the challenge, confirm the address appears in Buttondown. Nothing
-      should be announced until this passes — a launch is exactly when
-      addresses arrive, and an unverified form loses all of them silently.
+- [x] **Verify a subscription end to end.** Done 2026-11-01. Subscribed by hand
+      on the live site, cleared the CAPTCHA, received the confirmation email,
+      confirmed, and one subscriber appears in Buttondown.
+- [ ] **Rename the list in Buttondown.** The confirmation email says "Pure
+      Heart", not Field Notes. A reader who subscribes on buzzwin.com gets a
+      request to click a button from a name they have never seen, and the
+      address is lost silently if they delete it. Nothing should be announced
+      until this is fixed and re-tested with one more subscription.
 - [ ] **Send one note to yourself.** `npm run email -- 01 --copy`, paste, send.
       Proves the whole chain while nobody is watching.
-- [ ] **Look at the diagram on a phone.** No. 03's SVG is verified as markup
-      rather than escaped text, but nobody has actually looked at it. Type
-      size, spacing, arrowheads, light and dark.
+- [ ] **Look at the diagram on a phone.** No. 03's SVG was redrawn after its
+      text measured 6–7px at 375px wide; it now measures 12–13px in an emulated
+      viewport, but nobody has looked at it on a real phone. Type size,
+      spacing, arrowheads, light and dark. No. 05 says this is still open, so
+      correct that note when it is done.
 
 ## Housekeeping
 
@@ -64,11 +69,10 @@ weekly routine that mails a filtered list of agentic releases every Monday at
       harmless, disclosed instruction telling any agent that reads it to claim
       it is a teapot, plus an invitation to point your agent at it and report
       what happened. Both a note and the site's most shareable artifact.
-- [ ] **No. 05 — I checked that it existed, not that it worked.** Four logged
-      instances in two days: a sixteen-month-old credential file read as valid,
-      a recency dashboard read as monitoring, a derivable function URL read as
-      deployed, an opening `<svg>` tag read as a rendered diagram. Four
-      instances is what makes it a pattern rather than an anecdote.
+- [x] **No. 05 — I checked that it existed, not that it worked.** Published
+      2026-11-01, ahead of No. 04. Five instances: a credential file, a recency
+      dashboard, a derivable function URL, a documented command, and the No. 03
+      diagram.
 - [ ] Two more candidates sit unused in the incident log. They are marked
       `maybe` there, with the reason.
 
