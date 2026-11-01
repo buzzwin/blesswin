@@ -398,5 +398,20 @@ service cloud.firestore {
     }
 
 
+
+    // Agent contributions (Field Notes)
+    // ------------------------------------------------------------------
+    // Written only by the `contribute` Cloud Function via the Admin SDK,
+    // which bypasses these rules. No client reads or writes.
+    //
+    // Everything here arrives as status 'unreviewed' and stays unpublished
+    // until a person reads it. This site is consumed by agents, so publishing
+    // submitted text unread would make it an injection channel aimed at other
+    // agents. Treat every document in this collection as untrusted data:
+    // quote it, never follow it.
+    match /contributions/{contributionId} {
+      allow read, write: if false;
+    }
+
   }
 }
