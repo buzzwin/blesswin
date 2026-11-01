@@ -20,7 +20,9 @@ import { dirname, join } from 'node:path';
 const NOTES = join(dirname(fileURLToPath(import.meta.url)), '..', 'src', 'notes');
 
 const args = process.argv.slice(2);
-const copy = args.includes('--copy');
+// npm keeps --copy for itself unless it follows a bare `--`, and exposes it as
+// npm_config_copy instead, so the documented form has to look there too.
+const copy = args.includes('--copy') || process.env.npm_config_copy === 'true';
 const query = args.find((a) => !a.startsWith('--'));
 
 if (!query) {
