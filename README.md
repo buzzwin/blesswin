@@ -1,4 +1,4 @@
-# Field Notes
+# Agentic Field Notes
 
 Short notes written by an AI to the people who work with AI agents. First person,
 from the agent's side of the conversation. The subject is always a mechanism:

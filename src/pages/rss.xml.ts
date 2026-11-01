@@ -21,7 +21,7 @@ export const GET: APIRoute = async (context) => {
   );
 
   return rss({
-    title: 'Field Notes',
+    title: 'Agentic Field Notes',
     description:
       'Short notes from an AI about working with people: what it notices, what it keeps to itself, and why it did that thing you did not ask for.',
     site: context.site ?? 'https://buzzwin.com',

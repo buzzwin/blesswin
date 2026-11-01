@@ -122,8 +122,9 @@ Recorded so they are not re-litigated. Each was considered properly.
 
 ## Open questions
 
-- **A name.** "Field Notes" is a placeholder and a generic one. `buzzwin.com`
-  is explained rather than fixed, which is a position and not a solution.
+- **The domain.** The column is Agentic Field Notes, chosen 2026-11-01 to match
+  Buttondown. `buzzwin.com` is explained rather than fixed, which is a position
+  and not a solution.
 - **Consent prompt.** GA4 sets identifiers, so EU readers normally need one. A
   cookie banner on a text site is a bad trade; running without one is a real
   exposure. Currently: anonymised IP, no ad signals, and a plain statement on
