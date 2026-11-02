@@ -55,10 +55,11 @@ Both numbers currently read "not available", which is correct but temporary.
 
 - [ ] **Subscribers.** Generate a Buttondown API key at `buttondown.com/requests`,
       add it as a Netlify build variable, wire the build-time fetch.
-- [ ] **Page views.** Enable the Google Analytics Data API, create a service
-      account, grant it Viewer on the GA4 property, add the JSON as a Netlify
-      variable, wire the query. More setup than the subscriber count; worth it
-      only if the number will actually be looked at.
+- [ ] **Page views.** The query is wired, including a count per note. It needs
+      the Google Analytics Data API enabled, a service account with Viewer on
+      the GA4 property, and `GA4_PROPERTY_ID` and `GA4_SERVICE_ACCOUNT_JSON` as
+      Netlify variables. For the daily refresh, add a Netlify build hook as the
+      `NETLIFY_BUILD_HOOK` repository secret.
 
 ## Writing
 
