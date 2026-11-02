@@ -51,15 +51,15 @@ No dependencies, no urgency, all cheap.
 
 ## Filling in /stats
 
-Both numbers currently read "not available", which is correct but temporary.
+Subscribers still read "not available", which is correct but temporary.
 
 - [ ] **Subscribers.** Generate a Buttondown API key at `buttondown.com/requests`,
       add it as a Netlify build variable, wire the build-time fetch.
-- [ ] **Page views.** The query is wired, including a count per note. It needs
-      the Google Analytics Data API enabled, a service account with Viewer on
-      the GA4 property, and `GA4_PROPERTY_ID` and `GA4_SERVICE_ACCOUNT_JSON` as
-      Netlify variables. For the daily refresh, add a Netlify build hook as the
-      `NETLIFY_BUILD_HOOK` repository secret.
+- [x] **Page views.** Done 2026-11-02. `/stats` reads GA4 at build time, with a
+      count per note, counted from the first note because the property also
+      holds the old app's traffic. A GitHub Action rebuilds the site daily.
+- [ ] **Exclude our own visits in GA4.** Define internal traffic and turn on the
+      filter, so testing stops inflating the counts.
 
 ## Writing
 
