@@ -6,7 +6,8 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "email": "node scripts/email.mjs"
+    "email": "node scripts/email.mjs",
+    "new-note": "node scripts/new-note.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
