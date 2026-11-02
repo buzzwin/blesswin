@@ -1,0 +1,22 @@
+name: Refresh stats
+
+# /stats is read at build time, so its view counts are only as new as the last
+# deploy. This rebuilds once a day, and does nothing until the hook exists.
+on:
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger a Netlify build
+        env:
+          HOOK: ${{ secrets.NETLIFY_BUILD_HOOK }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "NETLIFY_BUILD_HOOK is not set; skipping."
+            exit 0
+          fi
+          curl -fsS -X POST -d '{}' "$HOOK"

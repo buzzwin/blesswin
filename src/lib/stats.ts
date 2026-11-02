@@ -1,10 +1,18 @@
 import { getCollection } from 'astro:content';
+import { getViews } from './views';
 
 export type Stat = {
   label: string;
   value: string;
   note: string;
   pending?: boolean;
+};
+
+export type NoteViews = {
+  id: string;
+  number: string;
+  title: string;
+  views: number;
 };
 
 const plural = (n: number, one: string, many = one + 's') => `${n} ${n === 1 ? one : many}`;
@@ -16,13 +24,18 @@ const plural = (n: number, one: string, many = one + 's') => `${n} ${n === 1 ? o
  *
  *  - the repository, which is exact and needs no credentials
  *  - outside services (Buttondown, GA4), which need API credentials at build
- *    time and are marked pending until those exist
+ *    time and are marked pending whenever they can't be read
  *
  * A number that is not available is shown as unavailable. It is never
  * estimated, rounded up, or quietly omitted — a stats page that cannot report
  * a zero is the dashboard problem from No. 02 wearing different clothes.
  */
-export async function getStats(): Promise<{ fromRepo: Stat[]; fromServices: Stat[]; builtAt: Date }> {
+export async function getStats(): Promise<{
+  fromRepo: Stat[];
+  fromServices: Stat[];
+  noteViews: NoteViews[] | null;
+  builtAt: Date;
+}> {
   const notes = (await getCollection('notes')).sort((a, b) => a.data.date.valueOf() - b.data.date.valueOf());
 
   const words = notes.reduce((sum, n) => sum + (n.body ?? '').trim().split(/\s+/).filter(Boolean).length, 0);
@@ -32,10 +45,22 @@ export async function getStats(): Promise<{ fromRepo: Stat[]; fromServices: Stat
   const days = first ? Math.max(1, Math.round((Date.now() - first.valueOf()) / 86_400_000)) : 0;
 
   const subscribers = import.meta.env.BUTTONDOWN_SUBSCRIBER_COUNT;
-  const pageviews = import.meta.env.GA4_PAGEVIEWS_30D;
+  const views = await getViews();
+  const unavailable =
+    'Could not be read from GA4 at the last build, because no service account is set up or the request failed. Blank rather than guessed.';
 
   return {
     builtAt: new Date(),
+    noteViews: views
+      ? notes
+          .map((n) => ({
+            id: n.id,
+            number: n.data.number,
+            title: n.data.title,
+            views: views.byNote.get(n.id) ?? 0
+          }))
+          .sort((a, b) => b.views - a.views)
+      : null,
     fromRepo: [
       {
         label: 'Notes published',
@@ -63,12 +88,16 @@ export async function getStats(): Promise<{ fromRepo: Stat[]; fromServices: Stat
         pending: !subscribers
       },
       {
+        label: 'Page views, all time',
+        value: views ? views.total.toLocaleString('en') : 'not available',
+        note: views ? 'Every page on the site, from GA4 at build time.' : unavailable,
+        pending: !views
+      },
+      {
         label: 'Page views, last 30 days',
-        value: pageviews ?? 'not available',
-        note: pageviews
-          ? 'From GA4 at build time.'
-          : 'Needs a GA4 service account to read the Data API at build time. Until then this is blank rather than guessed.',
-        pending: !pageviews
+        value: views ? views.last30Days.toLocaleString('en') : 'not available',
+        note: views ? 'Every page on the site, from GA4 at build time.' : unavailable,
+        pending: !views
       }
     ]
   };
