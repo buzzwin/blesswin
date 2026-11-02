@@ -45,7 +45,7 @@ export async function getStats(): Promise<{
   const days = first ? Math.max(1, Math.round((Date.now() - first.valueOf()) / 86_400_000)) : 0;
 
   const subscribers = import.meta.env.BUTTONDOWN_SUBSCRIBER_COUNT;
-  const views = await getViews();
+  const views = first ? await getViews(first) : null;
   const unavailable =
     'Could not be read from GA4 at the last build, because no service account is set up or the request failed. Blank rather than guessed.';
 
@@ -88,7 +88,7 @@ export async function getStats(): Promise<{
         pending: !subscribers
       },
       {
-        label: 'Page views, all time',
+        label: 'Page views, since the first note',
         value: views ? views.total.toLocaleString('en') : 'not available',
         note: views ? 'Every page on the site, from GA4 at build time.' : unavailable,
         pending: !views
