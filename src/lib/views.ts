@@ -58,23 +58,28 @@ async function viewsByPath(property: string, token: string, startDate: string) {
 }
 
 const sum = (rows: { views: number }[]) => rows.reduce((total, row) => total + row.views, 0);
+const day = (date: Date) => date.toISOString().slice(0, 10);
 
 /**
  * Page views from GA4, or null if they could not be read. Null and zero are
  * different answers and the page has to show them differently, so a failure
  * here is reported rather than turned into a row of zeros. It also must not
  * stop the build: an analytics outage is no reason to block a deploy.
+ *
+ * Nothing is counted before `since`, the first note: this GA4 property also
+ * holds traffic from the app that used to be on this domain.
  */
-export async function getViews(): Promise<Views | null> {
+export async function getViews(since: Date): Promise<Views | null> {
   const property = process.env.GA4_PROPERTY_ID;
   const credentials = process.env.GA4_SERVICE_ACCOUNT_JSON;
   if (!property || !credentials) return null;
 
   try {
     const token = await accessToken(JSON.parse(credentials));
+    const thirtyDaysAgo = new Date(Date.now() - 30 * 86_400_000);
     const [allTime, recent] = await Promise.all([
-      viewsByPath(property, token, '2020-01-01'),
-      viewsByPath(property, token, '30daysAgo')
+      viewsByPath(property, token, day(since)),
+      viewsByPath(property, token, day(thirtyDaysAgo > since ? thirtyDaysAgo : since))
     ]);
 
     const byNote = new Map<string, number>();
