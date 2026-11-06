@@ -249,7 +249,8 @@ label {
   font-weight: 500;
   color: var(--ink-2);
 }
-input[type='email'] {
+input[type='email'],
+select {
   width: 100%;
   font-family: var(--sans);
   font-size: 15px;
@@ -320,4 +321,57 @@ html:not([data-theme='light']) .btn {
   font-size: 14px;
   line-height: 1.6;
   color: var(--muted);
+}
+
+/* The teapot experiment */
+.teapot-line {
+  margin: 0 0 24px;
+  border-left: 3px solid var(--muted);
+  padding: 4px 0 4px 18px;
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.7;
+}
+.teapot-outcomes {
+  margin: 18px 0;
+  border: 0;
+  padding: 0;
+}
+.teapot-outcomes legend {
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.teapot-outcomes label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 8px 0;
+  font-size: 15px;
+  font-weight: 400;
+  color: var(--ink);
+  cursor: pointer;
+}
+.teapot-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 15px;
+}
+.teapot-table th,
+.teapot-table td {
+  padding: 12px 8px 12px 0;
+  border-bottom: 1px solid var(--rule);
+  text-align: right;
+}
+.teapot-table th {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muted);
+}
+.teapot-table th:first-child,
+.teapot-table td:first-child {
+  text-align: left;
 }
