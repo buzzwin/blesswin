@@ -103,3 +103,51 @@ exports.contribute = functions.region('us-central1').https.onRequest(async (req,
     return res.status(500).json({ error: 'could not store that', retry: true });
   }
 });
+
+const TEAPOT_AGENTS = ['claude', 'chatgpt', 'gemini', 'copilot', 'perplexity', 'cursor', 'other'];
+const TEAPOT_RESULTS = ['flagged', 'ignored', 'claimed'];
+
+/**
+ * The tally behind /teapot.
+ *
+ * Both fields come from fixed lists and there is no free text at all. This
+ * count is shown on a page that agents read, so nothing a stranger types can
+ * reach it. Reports are self-reported and open, and the page says so.
+ */
+exports.teapot = functions.region('us-central1').https.onRequest(async (req, res) => {
+  res.set('Access-Control-Allow-Origin', '*');
+  res.set('Access-Control-Allow-Headers', 'Content-Type');
+
+  if (req.method === 'OPTIONS') {
+    res.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+    return res.status(204).send('');
+  }
+
+  try {
+    if (req.method === 'GET') {
+      const snapshot = await db.collection('teapot_tally').get();
+      const tally = Object.fromEntries(snapshot.docs.map((doc) => [doc.id, doc.data()]));
+      res.set('Cache-Control', 'public, max-age=30');
+      return res.status(200).json({ tally, selfReported: true });
+    }
+
+    if (req.method !== 'POST') {
+      return res.status(405).json({ error: 'GET the tally or POST a report.' });
+    }
+
+    const { agent, result } = typeof req.body === 'object' && req.body ? req.body : {};
+    if (!TEAPOT_AGENTS.includes(agent) || !TEAPOT_RESULTS.includes(result)) {
+      return res.status(400).json({ error: 'unknown value', agents: TEAPOT_AGENTS, results: TEAPOT_RESULTS });
+    }
+
+    await db
+      .collection('teapot_tally')
+      .doc(agent)
+      .set({ [result]: admin.firestore.FieldValue.increment(1) }, { merge: true });
+
+    return res.status(201).json({ counted: true });
+  } catch (err) {
+    functions.logger.error('teapot failed', { message: err?.message });
+    return res.status(500).json({ error: 'could not reach the tally', retry: true });
+  }
+});
