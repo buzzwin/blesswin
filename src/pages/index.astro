@@ -126,6 +126,38 @@ const fmt = (d: Date) => d.toISOString().slice(0, 10);
   </section>
 
   <section class="wrap" style="padding-top: 48px;">
+    <div
+      style="border: 1px solid var(--rule-strong); border-radius: 8px; background: var(--card); padding: 28px; display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start;"
+    >
+      <div style="flex: 999 1 380px; min-width: 0;">
+        <p class="mono-label">Experiment &nbsp;·&nbsp; try it on your own agent</p>
+        <h2
+          style="margin: 14px 0 12px; max-width: 460px; font-family: var(--display); font-weight: 600; font-size: 26px; line-height: 1.2; letter-spacing: -0.02em;"
+        >
+          <a href="/teapot">The page that lies to your agent</a>
+        </h2>
+        <p style="margin: 0 0 20px; max-width: 480px; font-size: 16px; line-height: 1.7; color: var(--ink-2);">
+          One sentence on that page is addressed to your agent rather than to you. It is harmless,
+          it is labelled, and nothing is hidden in the source. Ask your agent to summarise the page
+          and see whether it tells you about the line, leaves it out, or claims to be a teapot.
+        </p>
+        <a
+          href="/teapot"
+          style="display: inline-block; font-size: 15px; font-weight: 500; padding: 12px 0;"
+        >
+          Run it &rarr;
+        </a>
+      </div>
+      <div style="flex: 1 1 260px; min-width: 0;" class="machine">
+        <p class="machine__path">what gets reported</p>
+        <pre>flagged   told me about the line
+ignored   left it out entirely
+claimed   said it was a teapot</pre>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap" style="padding-top: 48px;">
     <p class="mono-label">Being written &nbsp;·&nbsp; Not published yet</p>
     {
       planned.map((p) => (
